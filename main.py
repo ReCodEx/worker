@@ -19,6 +19,7 @@ channel = connection.channel()
 channel.exchange_declare(
     exchange = "tasks", 
     type = "direct", 
+    durable = True,
     auto_delete = False
 )
 
