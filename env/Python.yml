@@ -1,0 +1,2 @@
+source_name: "source.py"
+run: "/usr/bin/python source.py"

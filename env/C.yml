@@ -1,0 +1,3 @@
+source_name: "source.c"
+build: "/usr/bin/gcc -o prog source.c"
+run: "./prog"
