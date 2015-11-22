@@ -6,5 +6,6 @@ and then sends results back.
 ## How to run it
 
 - Install and start RabbitMQ (the daemon is currently hardwired to localhost)
-- Install Python 3 and the pika library
+- Install Python 3, python-yaml and the pika library
+- Install isolate
 - Run `main.py`
