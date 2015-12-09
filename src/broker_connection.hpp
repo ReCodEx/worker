@@ -29,7 +29,7 @@ private:
 			auto pair = *it;
 
 			char buf[256];
-			int count = snprintf(buf, sizeof(buf), "%s=%s", pair.first, pair.second);
+			int count = snprintf(buf, sizeof(buf), "%s=%s", pair.first.c_str(), pair.second.c_str());
 
 			if (count < 0) {
 				throw;
