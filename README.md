@@ -5,7 +5,9 @@ and then sends results back.
 
 ## How to run it
 
-- Install and start RabbitMQ (the daemon is currently hardwired to localhost)
-- Install Python 3, python-yaml and the pika library
+- Install ZeroMQ, version at least 4.0. Package name should be `libzmq3-dev`
+- Install ZeroMQ C++ binding. Clone repository from [https://github.com/zeromq/cppzmq](https://github.com/zeromq/cppzmq) to same parent folder as this repo. Eq if you have this repo in path `/opt/src/basic-worker`, so `cppzmq` folder should be in the directory `/etc/src/`.
+- Install CMake, GNU Make, G++ > 5
 - Install isolate
-- Run `main.py`
+- Build as `cmake . && make`
+- Run `./basic-worker`
