@@ -17,7 +17,7 @@ worker_config::worker_config ()
 	headers.insert(std::make_pair("threads", "2"));
 }
 
-const worker_config::header_map_t &worker_config::get_header_map () const
+const worker_config::header_map_t &worker_config::get_headers () const
 {
 	return headers;
 }

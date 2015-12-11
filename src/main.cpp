@@ -2,6 +2,7 @@
 
 #include "worker_config.hpp"
 #include "broker_connection.hpp"
+#include "connection_proxy.hpp"
 
 struct receive_task {
 	bool operator() ()
@@ -14,9 +15,14 @@ struct receive_task {
 int main (int argc, char **argv)
 {
 	worker_config config;
-	broker_connection connection(config);
+	connection_proxy proxy;
 
-	connection.receive_tasks<receive_task>();
+	broker_connection <connection_proxy, receive_task> connection(config, &proxy);
+	connection.connect();
+
+	while (true) {
+		connection.receive_task();
+	}
 
 	return 0;
 }

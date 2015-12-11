@@ -7,21 +7,34 @@
 
 #include "worker_config.hpp"
 
+template <typename proxy, typename task_callback>
 class broker_connection {
 private:
 	const worker_config &config;
-	zmq::context_t context;
-	zmq::socket_t socket;
+	proxy *socket;
+
+	/**
+	 * Send the ACK command to the broker
+	 */
+	void command_ack ()
+	{
+
+	}
+
+public:
+	broker_connection (const worker_config &config, proxy *socket) : config(config), socket(socket)
+	{
+	}
 
 	/**
 	 * Send the INIT command to the broker.
-	 * @param headers A map that specifies which tasks this worker accepts
 	 */
-	void command_init ()
+	void connect ()
 	{
-		const worker_config::header_map_t &headers = config.get_header_map();
+		const worker_config::header_map_t &headers = config.get_headers();
 
-		socket.send("init", 4, ZMQ_SNDMORE);
+		socket->connect(config.get_broker_uri());
+		socket->send("init", 4, ZMQ_SNDMORE);
 
 		auto &last = --headers.end();
 
@@ -35,43 +48,20 @@ private:
 				throw;
 			}
 
-			socket.send(buf, (size_t) count, it == --headers.end() ? 0 : ZMQ_SNDMORE);
+			socket->send(buf, (size_t) count, it == last ? 0 : ZMQ_SNDMORE);
 		}
 	}
 
 	/**
-	 * Send the ACK command to the broker
+	 * Receive a single task
 	 */
-	void command_ack ()
-	{
-
-	}
-
-public:
-	broker_connection (const worker_config &config) :
-		context(1), socket(context, ZMQ_DEALER), config(config)
-	{
-	}
-
-	/**
-	 * Initialize the connection with the broker and receive tasks.
-	 * Blocks execution until interrupted.
-	 *
-	 * @param headers A map that specifies which tasks this worker accepts
-	 */
-	template <typename task_callback>
-	void receive_tasks ()
+	void receive_task ()
 	{
 		task_callback cb;
+		zmq::message_t request;
 
-		socket.connect(config.get_broker_uri());
-		command_init();
-
-		while (true) {
-			zmq::message_t request;
-			socket.recv(&request);
-			cb();
-		}
+		socket->recv(request);
+		cb();
 	}
 };
 

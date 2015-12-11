@@ -26,7 +26,7 @@ public:
 	 * Get the URI of the task broker
 	 * @return A ZeroMQ compatible URI
 	 */
-	std::string get_broker_uri () const;
+	virtual std::string get_broker_uri () const;
 
 	/**
 	 * The type of the header map
@@ -36,7 +36,7 @@ public:
 	/**
 	 * Get the headers this worker uses to describe itself to the broker
 	 */
-	const header_map_t &get_header_map () const;
+	virtual const header_map_t &get_headers () const;
 private:
 	header_map_t headers;
 };

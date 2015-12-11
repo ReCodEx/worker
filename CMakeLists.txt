@@ -13,7 +13,7 @@ set(SOURCE_FILES
         src/worker_config.cpp
         src/worker_config.hpp
         src/broker_connection.hpp
-)
+        src/connection_proxy.hpp)
 
 add_executable(codex_worker ${SOURCE_FILES})
 
