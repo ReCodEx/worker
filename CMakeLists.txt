@@ -1,8 +1,14 @@
 cmake_minimum_required(VERSION 3.3)
 project(codex_worker)
 
-include_directories(AFTER, ../cppzmq)
+include_directories(AFTER, vendor/cppzmq)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -lzmq")
 
-set(SOURCE_FILES src/main.cpp src/worker_config.cpp src/worker_config.hpp src/broker_connection.hpp)
+set(SOURCE_FILES
+        src/main.cpp
+        src/worker_config.cpp
+        src/worker_config.hpp
+        src/broker_connection.hpp
+)
+
 add_executable(codex_worker ${SOURCE_FILES})
