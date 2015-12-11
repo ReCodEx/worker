@@ -8,8 +8,6 @@
 #include "worker_config.hpp"
 
 class broker_connection {
-public:
-	typedef std::multimap<std::string, std::string> header_map_t;
 private:
 	const worker_config &config;
 	zmq::context_t context;
@@ -19,8 +17,10 @@ private:
 	 * Send the INIT command to the broker.
 	 * @param headers A map that specifies which tasks this worker accepts
 	 */
-	void command_init (const header_map_t &headers)
+	void command_init ()
 	{
+		const worker_config::header_map_t &headers = config.get_header_map();
+
 		socket.send("init", 4, ZMQ_SNDMORE);
 
 		auto &last = --headers.end();
@@ -60,12 +60,12 @@ public:
 	 * @param headers A map that specifies which tasks this worker accepts
 	 */
 	template <typename task_callback>
-	void receive_tasks (const header_map_t &headers)
+	void receive_tasks ()
 	{
 		task_callback cb;
 
 		socket.connect(config.get_broker_uri());
-		command_init(headers);
+		command_init();
 
 		while (true) {
 			zmq::message_t request;
