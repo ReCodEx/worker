@@ -92,10 +92,10 @@ TEST(broker_connection, calls_callback)
 	StrictMock<mock_connection_proxy> proxy;
 	broker_connection<mock_connection_proxy, task_callback> connection(config, &proxy);
 
+	zmq::message_t msg("hello", 5);
+
 	{
 		InSequence s;
-		zmq::message_t msg("hello", 5);
-
 		EXPECT_CALL(proxy, recv(_))
 			.Times(1)
 			.WillOnce(DoAll(
