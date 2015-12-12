@@ -16,3 +16,4 @@ add_executable(run_tests
 target_link_libraries(run_tests gtest gtest_main)
 target_link_libraries(run_tests gmock gmock_main)
 target_link_libraries(run_tests yaml-cpp)
+target_link_libraries(run_tests -lzmq)

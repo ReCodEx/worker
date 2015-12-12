@@ -4,9 +4,8 @@ project(codex_worker)
 # ZeroMQ C++ bindings headers
 include_directories(AFTER, vendor/cppzmq)
 
-# Use C++11 and link with ZeroMQ support
+# Use C++11
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-set(CMAKE_EXE_LINKER_FLAGS "-lzmq")
 
 # The worker executable
 set(SOURCE_FILES
@@ -18,6 +17,7 @@ set(SOURCE_FILES
 
 add_executable(codex_worker ${SOURCE_FILES})
 target_link_libraries(codex_worker yaml-cpp)
+target_link_libraries(codex_worker -lzmq)
 
 # Include Google Test libraries and then our very own unit tests
 add_subdirectory(vendor/googletest)
