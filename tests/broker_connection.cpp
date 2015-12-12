@@ -12,7 +12,7 @@ using namespace testing;
 class mock_worker_config : public worker_config {
 public:
 	MOCK_CONST_METHOD0(get_broker_uri, std::string());
-	MOCK_CONST_METHOD0(get_headers, worker_config::header_map_t &());
+	MOCK_CONST_METHOD0(get_headers, const worker_config::header_map_t &());
 };
 
 /**

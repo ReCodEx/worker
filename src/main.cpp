@@ -1,4 +1,5 @@
 #include <iostream>
+#include <yaml-cpp/yaml.h>
 
 #include "worker_config.hpp"
 #include "broker_connection.hpp"
@@ -14,7 +15,16 @@ struct receive_task {
 
 int main (int argc, char **argv)
 {
-	worker_config config;
+	YAML::Node yaml;
+
+	try {
+		yaml = YAML::LoadFile("config.yml");
+	} catch (YAML::Exception) {
+		std::cerr << "Error loading config file" << std::endl;
+		return 1;
+	}
+
+	worker_config config(yaml);
 	connection_proxy proxy;
 
 	broker_connection <connection_proxy, receive_task> connection(config, &proxy);
