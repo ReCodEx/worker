@@ -36,8 +36,6 @@ public:
 		socket->connect(config.get_broker_uri());
 		socket->send("init", 4, ZMQ_SNDMORE);
 
-		auto &last = --headers.end();
-
 		for (auto it = headers.begin(); it != headers.end(); ++it) {
 			auto pair = *it;
 
@@ -48,7 +46,7 @@ public:
 				throw;
 			}
 
-			socket->send(buf, (size_t) count, it == last ? 0 : ZMQ_SNDMORE);
+			socket->send(buf, (size_t) count, std::next(it) == headers.end() ? 0 : ZMQ_SNDMORE);
 		}
 	}
 
