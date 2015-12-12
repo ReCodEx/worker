@@ -30,9 +30,7 @@ int main (int argc, char **argv)
 	broker_connection <connection_proxy, receive_task> connection(config, &proxy);
 	connection.connect();
 
-	while (true) {
-		connection.receive_task();
-	}
+	connection.receive_tasks();
 
 	return 0;
 }

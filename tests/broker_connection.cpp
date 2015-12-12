@@ -92,15 +92,22 @@ TEST(broker_connection, calls_callback)
 	StrictMock<mock_connection_proxy> proxy;
 	broker_connection<mock_connection_proxy, task_callback> connection(config, &proxy);
 
-	zmq::message_t msg("hello", 5);
+	{
+		InSequence s;
+		zmq::message_t msg("hello", 5);
 
-	EXPECT_CALL(proxy, recv(_))
-		.Times(1)
-		.WillOnce(DoAll(
-			SetMsg(&msg),
-			Return(true)
-		));
+		EXPECT_CALL(proxy, recv(_))
+			.Times(1)
+			.WillOnce(DoAll(
+				SetMsg(&msg),
+				Return(true)
+			));
 
-	connection.receive_task();
+		EXPECT_CALL(proxy, recv(_))
+			.Times(1)
+			.WillOnce(Throw(zmq::error_t()));
+	}
+
+	connection.receive_tasks();
 	ASSERT_EQ(task_callback::calls.size(), 1);
 }

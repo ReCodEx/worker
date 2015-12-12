@@ -51,15 +51,23 @@ public:
 	}
 
 	/**
-	 * Receive a single task
+	 * Receive and process tasks
+	 * Blocks execution until the underlying ZeroMQ context is terminated
 	 */
-	void receive_task ()
+	void receive_tasks ()
 	{
 		task_callback cb;
+		bool terminate = false;
 		zmq::message_t request;
 
-		socket->recv(request);
-		cb();
+		while (!terminate) {
+			try {
+				socket->recv(request);
+				cb();
+			} catch (zmq::error_t) {
+				terminate = true;
+			}
+		}
 	}
 };
 
