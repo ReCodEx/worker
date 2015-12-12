@@ -3,17 +3,16 @@ dist: trusty
 language: cpp
 
 before_install:
-  # Install ZeroMQ
-  - sudo add-apt-repository ppa:chris-lea/zeromq -y
   - sudo apt-get update -qq
-  - sudo apt-get install -y libzmq3-dbg libzmq3-dev libzmq3
+  # Install ZeroMQ
+  - sudo apt-get install -y libzmq3-dev libzmq3
   # Install Boost
   - sudo apt-get install -y libboost-all-dev
   # Install yaml-cpp
   - wget https://github.com/jbeder/yaml-cpp/archive/release-0.5.2.zip
   - unzip release-0.5.2.zip
   - cd yaml-cpp-release-0.5.2
-  - mkdir build;cd build;
+  - mkdir build; cd build;
   - cmake .. -DBUILD_SHARED_LIBS=1
   - make -j$(nproc)
   - sudo make install

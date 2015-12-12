@@ -5,7 +5,8 @@ project(codex_worker)
 include_directories(AFTER, vendor/cppzmq)
 
 # Use C++11 and link with ZeroMQ support
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -lzmq")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+set(CMAKE_EXE_LINKER_FLAGS "-lzmq")
 
 # The worker executable
 set(SOURCE_FILES
