@@ -1,4 +1,5 @@
 # BasicWorker
+[![Build Status](https://travis-ci.org/ReCodEx/BasicWorker.svg?branch=master)](https://travis-ci.org/ReCodEx/BasicWorker)
 
 A daemon that consumes assignments from the message queue, builds and runs them 
 and then sends results back.
