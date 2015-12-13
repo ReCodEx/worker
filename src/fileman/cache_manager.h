@@ -7,7 +7,6 @@
 
 #define BOOST_FILESYSTEM_NO_DEPRECATED
 #define BOOST_NO_CXX11_SCOPED_ENUMS
-
 #include <boost/filesystem.hpp>
 
 namespace fs = boost::filesystem;

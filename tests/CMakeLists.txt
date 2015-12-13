@@ -14,7 +14,9 @@ add_executable(run_tests
         ${SRC_DIR}/worker_config.cpp
         worker_config.cpp
         cache_manager.cpp
-        ${FILEMAN_DIR}/cache_manager.cpp)
+        ${FILEMAN_DIR}/cache_manager.cpp
+        http_manager.cpp
+        ${FILEMAN_DIR}/http_manager.cpp)
 
 target_link_libraries(run_tests gtest gtest_main)
 target_link_libraries(run_tests gmock gmock_main)
@@ -22,3 +24,5 @@ target_link_libraries(run_tests yaml-cpp)
 target_link_libraries(run_tests -lzmq)
 target_link_libraries(run_tests -lboost_system)
 target_link_libraries(run_tests -lboost_filesystem)
+target_link_libraries(run_tests -lcurl)
+target_link_libraries(run_tests curlcpp)
