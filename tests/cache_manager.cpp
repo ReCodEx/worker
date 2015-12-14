@@ -12,9 +12,9 @@ using namespace std;
 
 TEST(CacheManager, CacheDir)
 {
-	EXPECT_THROW(cache_manager m("/a"), fm_create_directory_error);
-	EXPECT_THROW(cache_manager m("/a/"), fm_create_directory_error);
-	EXPECT_THROW(cache_manager o(""), fm_create_directory_error);
+	EXPECT_THROW(cache_manager m("/a"), fm_exception);
+	EXPECT_THROW(cache_manager m("/a/"), fm_exception);
+	EXPECT_THROW(cache_manager o(""), fm_exception);
 
 	EXPECT_NO_THROW(cache_manager p("/tmp"));
 	EXPECT_NO_THROW(cache_manager q("/tmp/"));
@@ -40,7 +40,7 @@ TEST(CacheManager, GetExistingFile)
 	EXPECT_NO_THROW(m.get_file("test.txt", "/tmp"));
 
 	//Copy file to nonexisting directory
-	EXPECT_THROW(m.get_file("test.txt", "/a"), fm_copy_error);
+	EXPECT_THROW(m.get_file("test.txt", "/a"), fm_exception);
 
 	//Clean used resources
 	fs::remove("/tmp/test.txt");
@@ -50,9 +50,9 @@ TEST(CacheManager, GetExistingFile)
 TEST(CacheManager, GetNonexistingFile)
 {
 	cache_manager m("/tmp");
-	EXPECT_THROW(m.get_file("abcd.txt", "~"), fm_copy_error);
-	EXPECT_THROW(m.get_file("/tmp/abcd.txt", "~"), fm_copy_error);
-	EXPECT_THROW(m.get_file("abcd.txt", "/a"), fm_copy_error);
+	EXPECT_THROW(m.get_file("abcd.txt", "~"), fm_exception);
+	EXPECT_THROW(m.get_file("/tmp/abcd.txt", "~"), fm_exception);
+	EXPECT_THROW(m.get_file("abcd.txt", "/a"), fm_exception);
 }
 
 TEST(CacheManager, PutExistingFile)
@@ -71,6 +71,6 @@ TEST(CacheManager, PutExistingFile)
 TEST(CacheManager, PutNonexistingFile)
 {
 	cache_manager m("/tmp/recodex");
-	EXPECT_THROW(m.put_file("/tmp/asdfg.txt"), fm_copy_error);
+	EXPECT_THROW(m.put_file("/tmp/asdfg.txt"), fm_exception);
 	fs::remove_all("/tmp/recodex");
 }
