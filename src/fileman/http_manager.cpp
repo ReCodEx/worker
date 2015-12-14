@@ -1,6 +1,7 @@
 #include "http_manager.h"
 #include <stdio.h>
 #include <curl/curl.h>
+#include <regex>
 
 #define BOOST_FILESYSTEM_NO_DEPRECATED
 #define BOOST_NO_CXX11_SCOPED_ENUMS
@@ -28,11 +29,10 @@ static size_t fwrite_wrapper(void *ptr, size_t size, size_t nmemb, FILE *stream)
 
 
 
-//TODO: make sure, that remote_url_ allways ends with '/'
-
 http_manager::http_manager(std::string remote_url, std::string username, std::string password) :
 	remote_url_{remote_url}, username_{username}, password_{password}
 {
+	validate_url();
 }
 
 void http_manager::get_file(std::string src_name, std::string dst_path)
@@ -164,7 +164,20 @@ void http_manager::set_data(std::string remote_url, std::string username, std::s
 	remote_url_ = remote_url;
 	username_ = username;
 	password_ = password;
+	validate_url();
 }
 
+void http_manager::validate_url()
+{
+	//'localhost' is also valid url, so now we don't check against regular expression
+	//just make sure, that URL has trailing '/'
+	if(remote_url_.size() > 0 && remote_url_[remote_url_.size() - 1] != '/') {
+		remote_url_.push_back('/');
+	}
 
+	//Simple regular expression to validate inserted URL. Note use of raw string. \w <=> [_[:alnum:]]
+	/*if(!std::regex_match(remote_url_, std::regex(R"(^https?://\w+(\.\w+)+(/\w+)*(:\d+)?/$)"))) {
+		throw fm_exception("URL '" + remote_url_ + "' is not valid.");
+	}*/
+}
 

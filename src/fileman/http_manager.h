@@ -20,6 +20,7 @@ private:
 	std::string remote_url_;
     std::string username_;
     std::string password_;
+	void validate_url();
 };
 
 #endif //CODEX_WORKER_HTTP_MANAGER_H

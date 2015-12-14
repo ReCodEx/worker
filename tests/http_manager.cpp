@@ -1,17 +1,19 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-#define BOOST_FILESYSTEM_NO_DEPRECATED
-#define BOOST_NO_CXX11_SCOPED_ENUMS
-#include <boost/filesystem.hpp>
 #include <fstream>
 #include <vector>
 #include <iostream>
+
+#define BOOST_FILESYSTEM_NO_DEPRECATED
+#define BOOST_NO_CXX11_SCOPED_ENUMS
+#include <boost/filesystem.hpp>
 
 #include "../src/fileman/http_manager.h"
 
 using namespace testing;
 using namespace std;
 namespace fs = boost::filesystem;
+
 
 TEST(HttpManager, GetExistingFile)
 {
@@ -56,6 +58,18 @@ TEST(HttpManager, NonexistingServer)
 	EXPECT_FALSE(fs::is_regular_file("/tmp/test1.txt"));
 	fs::remove("/tmp/test1.txt");
 }
+
+//Not testing now ...
+/*TEST(HttpManager, ValidInvalidURLs)
+{
+	EXPECT_NO_THROW(http_manager m("https://ps.stdin.cz:8443/", "", ""));
+	EXPECT_NO_THROW(http_manager m("http://ps.stdin.cz/", "", ""));
+
+	EXPECT_THROW(http_manager m("htt://a.b/", "", ""), fm_exception);
+	EXPECT_THROW(http_manager m("http://a.b", "", ""), fm_exception);
+	EXPECT_THROW(http_manager m("htt://a/", "", ""), fm_exception);
+	EXPECT_THROW(http_manager m("htt://a.b/", "", ""), fm_exception);
+}*/
 
 
 std::vector<std::string> codes {
@@ -105,12 +119,38 @@ TEST(HttpManager, DISABLED_AllWrongErrorCodes) {
 TEST(HttpManager, SimplePutFile)
 {
 	{
-		std::ofstream o("/tmp/a.txt");
-		o << "testing string" << std::endl;
+		ofstream o("/tmp/a.txt");
+		o << "testing string" << endl;
 	}
+
 	http_manager m("https://recodex.projekty.ms.mff.cuni.cz/fm_test/", "re", "codex");
-	//EXPECT_NO_THROW(m.put_file("/tmp/a.txt"));
-	m.put_file("/tmp/a.txt");
+	EXPECT_NO_THROW(m.put_file("/tmp/a.txt"));
+
+	//Invalid credentials
+	m.set_data("https://recodex.projekty.ms.mff.cuni.cz/fm_test/", "codex", "re");
+	EXPECT_THROW(m.put_file("/tmp/a.txt"), fm_exception);
+
 	fs::remove("/tmp/a.txt");
 }
 
+TEST(HttpManager, PutFileWrongURL)
+{
+	{
+		ofstream o("/tmp/b.txt");
+		o << "testing string" << endl;
+	}
+
+	http_manager m("https://recodex.projekty.ms.mff.cuni.cz/fm_test_nonexist/", "re", "codex");
+	EXPECT_THROW(m.put_file("/tmp/b.txt"), fm_exception);
+
+	m.set_data("http://ps.stdin.cz/", "", "");
+	EXPECT_THROW(m.put_file("/tmp/b.txt"), fm_exception);
+
+	fs::remove("/tmp/b.txt");
+}
+
+TEST(HttpManager, PutWrongFile)
+{
+	http_manager m("https://recodex.projekty.ms.mff.cuni.cz/fm_test/", "re", "codex");
+	EXPECT_THROW(m.put_file("/tmp/abcxzy.txt"), fm_exception);
+}
