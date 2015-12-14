@@ -32,7 +32,7 @@ TEST(HttpManager, GetExistingFileRedirect)
 TEST(HttpManager, GetNonexistingFile)
 {
 	http_manager m("https://recodex.projekty.ms.mff.cuni.cz/fm_test_nonexist/", "re", "codex");
-	EXPECT_THROW(m.get_file("test3.txt", "/tmp"), fm_connection_error);
+	EXPECT_THROW(m.get_file("test3.txt", "/tmp"), fm_exception);
 	EXPECT_FALSE(fs::is_regular_file("/tmp/test3.txt"));
 	//*
 	try {
@@ -44,7 +44,7 @@ TEST(HttpManager, GetNonexistingFile)
 TEST(HttpManager, WrongAuthentication)
 {
 	http_manager m("https://recodex.projekty.ms.mff.cuni.cz/fm_test/", "codex", "re");
-	EXPECT_THROW(m.get_file("test1.txt", "/tmp"), fm_connection_error);
+	EXPECT_THROW(m.get_file("test1.txt", "/tmp"), fm_exception);
 	EXPECT_FALSE(fs::is_regular_file("/tmp/test1.txt"));
 	fs::remove("/tmp/test1.txt");
 }
@@ -52,7 +52,7 @@ TEST(HttpManager, WrongAuthentication)
 TEST(HttpManager, NonexistingServer)
 {
 	http_manager m("http://abcd.example.com/", "a", "a");
-	EXPECT_THROW(m.get_file("test1.txt", "/tmp"), fm_connection_error);
+	EXPECT_THROW(m.get_file("test1.txt", "/tmp"), fm_exception);
 	EXPECT_FALSE(fs::is_regular_file("/tmp/test1.txt"));
 	fs::remove("/tmp/test1.txt");
 }
@@ -93,12 +93,24 @@ std::vector<std::string> codes {
 		"522",	//Connection timed out
 		"524"	//A timeout occurred
 };
-TEST(HttpManager, AllWrongErrorCodes) {
+TEST(HttpManager, DISABLED_AllWrongErrorCodes) {
 	http_manager m("http://httpstat.us/", "", "");
 	for(auto& i : codes) {
 		//std::cout << i << std::endl;
-		EXPECT_THROW(m.get_file(i, "/tmp"), fm_connection_error);
+		EXPECT_THROW(m.get_file(i, "/tmp"), fm_exception);
 		EXPECT_FALSE(fs::is_regular_file("/tmp/" + i));
 	}
+}
+
+TEST(HttpManager, SimplePutFile)
+{
+	{
+		std::ofstream o("/tmp/a.txt");
+		o << "testing string" << std::endl;
+	}
+	http_manager m("https://recodex.projekty.ms.mff.cuni.cz/fm_test/", "re", "codex");
+	//EXPECT_NO_THROW(m.put_file("/tmp/a.txt"));
+	m.put_file("/tmp/a.txt");
+	fs::remove("/tmp/a.txt");
 }
 

@@ -5,6 +5,7 @@
 #include "broker_connection.hpp"
 #include "connection_proxy.hpp"
 
+
 struct receive_task {
 	bool operator() ()
 	{

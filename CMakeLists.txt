@@ -4,10 +4,6 @@ project(codex_worker)
 # ZeroMQ C++ bindings headers
 include_directories(AFTER, vendor/cppzmq)
 
-# cURL C++ binding library
-add_subdirectory(vendor/curlcpp)
-include_directories(AFTER, vendor/curlcpp/include)
-
 # Use C++11
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
@@ -31,7 +27,6 @@ target_link_libraries(codex_worker -lzmq)
 target_link_libraries(codex_worker -lboost_system)
 target_link_libraries(codex_worker -lboost_filesystem)
 target_link_libraries(codex_worker -lcurl)
-target_link_libraries(codex_worker curlcpp)
 
 # Include Google Test libraries and then our very own unit tests
 add_subdirectory(vendor/googletest)

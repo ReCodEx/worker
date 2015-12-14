@@ -79,7 +79,7 @@ public:
 };
 
 /**
- * Exception for fetch file error..
+ * Exception for connection error..
  */
 class fm_connection_error : public fm_exception {
 public:
