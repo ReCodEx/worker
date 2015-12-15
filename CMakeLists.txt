@@ -19,7 +19,8 @@ set(SOURCE_FILES
 	src/fileman/http_manager.h
 	src/fileman/file_manager.h
 	src/fileman/cache_manager.cpp
-	src/fileman/http_manager.cpp)
+	src/fileman/http_manager.cpp
+	src/fileman/file_manager.cpp)
 
 add_executable(codex_worker ${SOURCE_FILES})
 target_link_libraries(codex_worker yaml-cpp)

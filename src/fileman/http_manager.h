@@ -11,11 +11,16 @@
 class http_manager : public file_manager_base {
 public:
 	http_manager() = default;
-    http_manager(std::string remote_url, std::string username, std::string password);
+	http_manager(const std::string &remote_url, const std::string &username, const std::string &password);
     virtual ~http_manager() {}
-    virtual void get_file(std::string src_name, std::string dst_path);
-    virtual void put_file(std::string name);
-	void set_data(std::string remote_url, std::string username, std::string password);
+	virtual void get_file(const std::string &src_name, const std::string &dst_path);
+	virtual void put_file(const std::string &name);
+	virtual void set_data(const std::string &destination, const std::string &username, const std::string &password);
+	/**
+	 * Get already set remote url.
+	 * @return destination
+	 */
+	virtual std::string get_destination() const;
 private:
 	std::string remote_url_;
     std::string username_;

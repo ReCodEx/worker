@@ -12,5 +12,6 @@ and then sends results back.
 - Install dependencies with `git submodule update --init`
 - Install CMake, GNU Make, G++ > 5
 - Install isolate
+- Install libcurl
 - Build as `cmake . && make`
 - Run `./basic-worker`

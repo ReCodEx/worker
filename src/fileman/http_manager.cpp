@@ -29,13 +29,13 @@ static size_t fwrite_wrapper(void *ptr, size_t size, size_t nmemb, FILE *stream)
 
 
 
-http_manager::http_manager(std::string remote_url, std::string username, std::string password) :
+http_manager::http_manager(const std::string &remote_url, const std::string &username, const std::string &password) :
 	remote_url_{remote_url}, username_{username}, password_{password}
 {
 	validate_url();
 }
 
-void http_manager::get_file(std::string src_name, std::string dst_path)
+void http_manager::get_file(const std::string &src_name, const std::string &dst_path)
 {
 	fs::path dest_file_path = fs::path(dst_path) / src_name;
 
@@ -95,7 +95,7 @@ void http_manager::get_file(std::string src_name, std::string dst_path)
 	}
 }
 
-void http_manager::put_file(std::string name)
+void http_manager::put_file(const std::string &name)
 {
 	fs::path source_file(name);
 	std::string destination_url = remote_url_ + source_file.filename().string();
@@ -159,12 +159,17 @@ void http_manager::put_file(std::string name)
 	}
 }
 
-void http_manager::set_data(std::string remote_url, std::string username, std::string password)
+void http_manager::set_data(const std::string &destination, const std::string &username, const std::string &password)
 {
-	remote_url_ = remote_url;
+	remote_url_ = destination;
 	username_ = username;
 	password_ = password;
 	validate_url();
+}
+
+std::string http_manager::get_destination() const
+{
+	return remote_url_;
 }
 
 void http_manager::validate_url()

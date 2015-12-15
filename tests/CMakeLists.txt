@@ -10,13 +10,15 @@ include_directories(${LIBS_DIR}/googlemock/include)
 
 # The main test executable
 add_executable(run_tests
-        broker_connection.cpp
-        ${SRC_DIR}/worker_config.cpp
-        worker_config.cpp
-        cache_manager.cpp
-        ${FILEMAN_DIR}/cache_manager.cpp
-        http_manager.cpp
-        ${FILEMAN_DIR}/http_manager.cpp)
+	broker_connection.cpp
+	${SRC_DIR}/worker_config.cpp
+	worker_config.cpp
+	cache_manager.cpp
+	${FILEMAN_DIR}/cache_manager.cpp
+	http_manager.cpp
+	${FILEMAN_DIR}/http_manager.cpp
+	file_manager.cpp
+	${FILEMAN_DIR}/file_manager.cpp)
 
 target_link_libraries(run_tests gtest gtest_main)
 target_link_libraries(run_tests gmock gmock_main)

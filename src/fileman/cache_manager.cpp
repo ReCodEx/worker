@@ -1,7 +1,7 @@
 #include "cache_manager.h"
 
 
-cache_manager::cache_manager(std::string caching_dir)
+cache_manager::cache_manager(const std::string &caching_dir)
 {
 	fs::path cache_path(caching_dir);
 
@@ -16,7 +16,7 @@ cache_manager::cache_manager(std::string caching_dir)
 	caching_dir_ = cache_path;
 }
 
-void cache_manager::get_file(std::string src_name, std::string dst_path)
+void cache_manager::get_file(const std::string &src_name, const std::string &dst_path)
 {
 	fs::path source_file = caching_dir_ / src_name;
 	fs::path destination_file = fs::path(dst_path) / src_name;
@@ -28,7 +28,7 @@ void cache_manager::get_file(std::string src_name, std::string dst_path)
 	}
 }
 
-void cache_manager::put_file(std::string name)
+void cache_manager::put_file(const std::string &name)
 {
 	fs::path source_file(name);
 	fs::path destination_file = caching_dir_ / source_file.filename();
@@ -40,3 +40,22 @@ void cache_manager::put_file(std::string name)
 	}
 }
 
+void cache_manager::set_data(const std::string &destination, const std::string & = "", const std::string & = "")
+{
+	fs::path cache_path(destination);
+
+	try {
+		if(!fs::is_directory(cache_path)) {
+			fs::create_directories(cache_path);
+		}
+	} catch (fs::filesystem_error &e) {
+		throw fm_exception("Cannot create directory " + destination + e.what());
+	}
+
+	caching_dir_ = cache_path;
+}
+
+std::string cache_manager::get_destination() const
+{
+	return caching_dir_.string();
+}
