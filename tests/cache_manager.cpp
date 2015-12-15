@@ -74,3 +74,11 @@ TEST(CacheManager, PutNonexistingFile)
 	EXPECT_THROW(m.put_file("/tmp/asdfg.txt"), fm_exception);
 	fs::remove_all("/tmp/recodex");
 }
+
+TEST(CacheManager, GetSetParams)
+{
+	cache_manager m("/tmp/recodex");
+	EXPECT_EQ(m.get_destination(), "/tmp/recodex");
+	m.set_params("/tmp/testing");
+	EXPECT_EQ(m.get_destination(), "/tmp/testing");
+}

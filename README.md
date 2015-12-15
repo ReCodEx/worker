@@ -13,5 +13,6 @@ and then sends results back.
 - Install CMake, GNU Make, G++ > 5
 - Install isolate
 - Install libcurl
+- Install boost filesystem library
 - Build as `cmake . && make`
 - Run `./basic-worker`

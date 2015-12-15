@@ -30,10 +30,10 @@ void file_manager::put_file(const std::string &name)
 	http_man_->put_file(name);
 }
 
-void file_manager::set_data(const std::string &destination, const std::string &username,
+void file_manager::set_params(const std::string &destination, const std::string &username,
 							const std::string &password)
 {
-	http_man_->set_data(destination, username, password);
+	http_man_->set_params(destination, username, password);
 }
 
 std::string file_manager::get_destination() const

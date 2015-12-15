@@ -1,4 +1,3 @@
-
 #ifndef CODEX_WORKER_CACHE_MANAGER_H
 #define CODEX_WORKER_CACHE_MANAGER_H
 
@@ -12,6 +11,10 @@
 namespace fs = boost::filesystem;
 
 
+/**
+ * Manager of local file cache.
+ * Failed operations throws @a fm_exception exception.
+ */
 class cache_manager : public file_manager_base {
 public:
 	/**
@@ -23,6 +26,9 @@ public:
 	 * @param caching_dir Directory where cached files will be stored. If this directory don't exist, it'll be created.
 	 */
 	cache_manager(const std::string &caching_dir);
+	/**
+	 * Destructor.
+	 */
     virtual ~cache_manager() {}
 	/**
 	 * Copy a file from cache to destination.
@@ -41,9 +47,10 @@ public:
 	 * @param username Not used.
 	 * @param password Not used.
 	 */
-	virtual void set_data(const std::string &destination, const std::string &username, const std::string &password);
+	virtual void set_params(const std::string &destination, const std::string &username = "",
+							const std::string &password = "");
 	/**
-	 * Get already set path to caching directory.
+	 * Get actual path to caching directory.
 	 * @return path to cachin directory
 	 */
 	virtual std::string get_destination() const;

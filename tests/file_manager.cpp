@@ -20,7 +20,7 @@ public:
 	MOCK_CONST_METHOD0(get_destination, std::string());
 	MOCK_METHOD1(put_file, void(const std::string &name));
 	MOCK_METHOD2(get_file, void(const std::string &src_name, const std::string &dst_path));
-	MOCK_METHOD3(set_data, void(const std::string &destination, const std::string &username,
+	MOCK_METHOD3(set_params, void(const std::string &destination, const std::string &username,
 								const std::string &password));
 };
 
@@ -30,7 +30,7 @@ public:
 	MOCK_CONST_METHOD0(get_destination, std::string());
 	MOCK_METHOD1(put_file, void(const std::string &name));
 	MOCK_METHOD2(get_file, void(const std::string &src_name, const std::string &dst_path));
-	MOCK_METHOD3(set_data, void(const std::string &destination, const std::string &username,
+	MOCK_METHOD3(set_params, void(const std::string &destination, const std::string &username,
 								const std::string &password));
 };
 
@@ -105,15 +105,15 @@ TEST(FileManager, PutOperationFailed)
 	EXPECT_THROW(m.put_file("file.txt"), fm_exception);
 }
 
-TEST(FileManager, SetGetDestination)
+TEST(FileManager, SetGetParams)
 {
 	auto cache = unique_ptr<mock_cache_manager>(new mock_cache_manager);
 	auto remote = unique_ptr<mock_http_manager>(new mock_http_manager);
 
-	EXPECT_CALL((*remote), set_data("newURL", "user", "pass"));
+	EXPECT_CALL((*remote), set_params("newURL", "user", "pass"));
 	EXPECT_CALL((*remote), get_destination()).Times(1);
 
 	file_manager m(move(cache), move(remote));
-	m.set_data("newURL", "user", "pass");
+	m.set_params("newURL", "user", "pass");
 	m.get_destination();
 }

@@ -127,7 +127,7 @@ TEST(HttpManager, SimplePutFile)
 	EXPECT_NO_THROW(m.put_file("/tmp/a.txt"));
 
 	//Invalid credentials
-	m.set_data("https://recodex.projekty.ms.mff.cuni.cz/fm_test/", "codex", "re");
+	m.set_params("https://recodex.projekty.ms.mff.cuni.cz/fm_test/", "codex", "re");
 	EXPECT_THROW(m.put_file("/tmp/a.txt"), fm_exception);
 
 	fs::remove("/tmp/a.txt");
@@ -143,7 +143,7 @@ TEST(HttpManager, PutFileWrongURL)
 	http_manager m("https://recodex.projekty.ms.mff.cuni.cz/fm_test_nonexist/", "re", "codex");
 	EXPECT_THROW(m.put_file("/tmp/b.txt"), fm_exception);
 
-	m.set_data("http://ps.stdin.cz/", "", "");
+	m.set_params("http://ps.stdin.cz/", "", "");
 	EXPECT_THROW(m.put_file("/tmp/b.txt"), fm_exception);
 
 	fs::remove("/tmp/b.txt");
@@ -153,4 +153,13 @@ TEST(HttpManager, PutWrongFile)
 {
 	http_manager m("https://recodex.projekty.ms.mff.cuni.cz/fm_test/", "re", "codex");
 	EXPECT_THROW(m.put_file("/tmp/abcxzy.txt"), fm_exception);
+}
+
+TEST(HttpManager, GetSetParams)
+{
+	http_manager m("https://recodex.projekty.ms.mff.cuni.cz/fm_test", "re", "codex");
+	//Note we expect the URL with trailing '/' character
+	EXPECT_EQ(m.get_destination(), "https://recodex.projekty.ms.mff.cuni.cz/fm_test/");
+	m.set_params("http://localhost/fm_test/", "", "");
+	EXPECT_EQ(m.get_destination(), "http://localhost/fm_test/");
 }

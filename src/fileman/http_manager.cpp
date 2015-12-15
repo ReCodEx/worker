@@ -159,7 +159,7 @@ void http_manager::put_file(const std::string &name)
 	}
 }
 
-void http_manager::set_data(const std::string &destination, const std::string &username, const std::string &password)
+void http_manager::set_params(const std::string &destination, const std::string &username, const std::string &password)
 {
 	remote_url_ = destination;
 	username_ = username;

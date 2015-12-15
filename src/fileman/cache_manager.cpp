@@ -40,7 +40,7 @@ void cache_manager::put_file(const std::string &name)
 	}
 }
 
-void cache_manager::set_data(const std::string &destination, const std::string & = "", const std::string & = "")
+void cache_manager::set_params(const std::string &destination, const std::string &, const std::string &)
 {
 	fs::path cache_path(destination);
 

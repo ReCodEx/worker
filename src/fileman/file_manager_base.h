@@ -9,15 +9,18 @@
 /**
  * Base class for file manager.
  * File manager can get you a copy of file to some directory or put a file somewhere.
+ * Failed operations throws @a fm_exception exception.
  * For more info, see derived classes.
  */
 class file_manager_base {
 public:
+	/**
+	 * Destructor.
+	 */
     virtual ~file_manager_base() {}
     /**
      * Get the file.
      * @param src_name Name of the file to retrieve. Mostly this is sha1sum of the file.
-     *                 No slashes are allowed.
      * @param dst_path Path to directory, where the file will be copied. Name of the file
      *                 will not change.
      */
@@ -35,7 +38,7 @@ public:
 	 * @param username Username if authentication is required.
 	 * @param password Password if authentication is required.
 	 */
-	virtual void set_data(const std::string &destination, const std::string &username, const std::string &password) = 0;
+	virtual void set_params(const std::string &destination, const std::string &username, const std::string &password) = 0;
 	/**
 	 * Get already set destination string.
 	 * @return destination
