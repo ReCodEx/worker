@@ -8,11 +8,7 @@ and then sends results back.
 
 ## How to run it
 
-- Install ZeroMQ, version at least 4.0. Package name should be `libzmq3-dev`
-- Install dependencies with `git submodule update --init`
-- Install CMake, GNU Make, G++ > 5
-- Install isolate
-- Install libcurl
-- Install boost filesystem library
-- Build as `cmake . && make`
+- Install dependencies according to [common](https://github.com/ReCodEx/GlobalWiki/wiki/System-configuration#common) and [worker-specific](https://github.com/ReCodEx/GlobalWiki/wiki/System-configuration#worker) configuration
+- Download `zmq.hpp` and Google test framework using `git submodule update --init`
+- Build with cmake: `mkdir build && cd build && cmake .. && make`
 - Run `./basic-worker`
