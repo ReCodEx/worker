@@ -17,46 +17,51 @@ namespace fs = boost::filesystem;
 
 TEST(HttpManager, GetExistingFile)
 {
+	auto tmp = fs::temp_directory_path();
 	http_manager m("https://recodex.projekty.ms.mff.cuni.cz/fm_test/", "re", "codex");
-	EXPECT_NO_THROW(m.get_file("test1.txt", "/tmp"));
-	EXPECT_TRUE(fs::is_regular_file("/tmp/test1.txt"));
-	fs::remove("/tmp/test1.txt");
+	EXPECT_NO_THROW(m.get_file("test1.txt", tmp.string()));
+	EXPECT_TRUE(fs::is_regular_file((tmp / "test1.txt").string()));
+	fs::remove(tmp / "test1.txt");
 }
 
 TEST(HttpManager, GetExistingFileRedirect)
 {
+	auto tmp = fs::temp_directory_path();
 	http_manager m("http://recodex.projekty.ms.mff.cuni.cz/fm_test/", "re", "codex");
-	EXPECT_NO_THROW(m.get_file("test2.txt", "/tmp"));
-	EXPECT_TRUE(fs::is_regular_file("/tmp/test2.txt"));
-	fs::remove("/tmp/test2.txt");
+	EXPECT_NO_THROW(m.get_file("test2.txt", tmp.string()));
+	EXPECT_TRUE(fs::is_regular_file((tmp / "test2.txt").string()));
+	fs::remove(tmp / "test2.txt");
 }
 
 TEST(HttpManager, GetNonexistingFile)
 {
+	auto tmp = fs::temp_directory_path();
 	http_manager m("https://recodex.projekty.ms.mff.cuni.cz/fm_test_nonexist/", "re", "codex");
-	EXPECT_THROW(m.get_file("test3.txt", "/tmp"), fm_exception);
-	EXPECT_FALSE(fs::is_regular_file("/tmp/test3.txt"));
+	EXPECT_THROW(m.get_file("test3.txt", tmp.string()), fm_exception);
+	EXPECT_FALSE(fs::is_regular_file((tmp / "test3.txt").string()));
 	//*
 	try {
-		fs::remove("/tmp/test3.txt");
+		fs::remove(tmp / "test3.txt");
 	} catch(...) {}
 	//*/
 }
 
 TEST(HttpManager, WrongAuthentication)
 {
+	auto tmp = fs::temp_directory_path();
 	http_manager m("https://recodex.projekty.ms.mff.cuni.cz/fm_test/", "codex", "re");
-	EXPECT_THROW(m.get_file("test1.txt", "/tmp"), fm_exception);
-	EXPECT_FALSE(fs::is_regular_file("/tmp/test1.txt"));
-	fs::remove("/tmp/test1.txt");
+	EXPECT_THROW(m.get_file("test1.txt", tmp.string()), fm_exception);
+	EXPECT_FALSE(fs::is_regular_file((tmp / "test1.txt").string()));
+	fs::remove(tmp / "test1.txt");
 }
 
 TEST(HttpManager, NonexistingServer)
 {
+	auto tmp = fs::temp_directory_path();
 	http_manager m("http://abcd.example.com/", "a", "a");
-	EXPECT_THROW(m.get_file("test1.txt", "/tmp"), fm_exception);
-	EXPECT_FALSE(fs::is_regular_file("/tmp/test1.txt"));
-	fs::remove("/tmp/test1.txt");
+	EXPECT_THROW(m.get_file("test1.txt", tmp.string()), fm_exception);
+	EXPECT_FALSE(fs::is_regular_file((tmp / "test1.txt").string()));
+	fs::remove(tmp / "test1.txt");
 }
 
 //Not testing now ...
@@ -108,51 +113,55 @@ std::vector<std::string> codes {
 		"524"	//A timeout occurred
 };
 TEST(HttpManager, DISABLED_AllWrongErrorCodes) {
+	auto tmp = fs::temp_directory_path();
 	http_manager m("http://httpstat.us/", "", "");
 	for(auto& i : codes) {
 		//std::cout << i << std::endl;
-		EXPECT_THROW(m.get_file(i, "/tmp"), fm_exception);
-		EXPECT_FALSE(fs::is_regular_file("/tmp/" + i));
+		EXPECT_THROW(m.get_file(i, tmp.string()), fm_exception);
+		EXPECT_FALSE(fs::is_regular_file(tmp / i));
 	}
 }
 
 TEST(HttpManager, SimplePutFile)
 {
+	auto tmp = fs::temp_directory_path();
 	{
-		ofstream o("/tmp/a.txt");
+		ofstream o((tmp / "a.txt").string());
 		o << "testing string" << endl;
 	}
 
 	http_manager m("https://recodex.projekty.ms.mff.cuni.cz/fm_test/", "re", "codex");
-	EXPECT_NO_THROW(m.put_file("/tmp/a.txt"));
+	EXPECT_NO_THROW(m.put_file((tmp / "a.txt").string()));
 
 	//Invalid credentials
 	m.set_params("https://recodex.projekty.ms.mff.cuni.cz/fm_test/", "codex", "re");
-	EXPECT_THROW(m.put_file("/tmp/a.txt"), fm_exception);
+	EXPECT_THROW(m.put_file((tmp / "a.txt").string()), fm_exception);
 
-	fs::remove("/tmp/a.txt");
+	fs::remove(tmp / "a.txt");
 }
 
 TEST(HttpManager, PutFileWrongURL)
 {
+	auto tmp = fs::temp_directory_path();
 	{
-		ofstream o("/tmp/b.txt");
+		ofstream o((tmp / "b.txt").string());
 		o << "testing string" << endl;
 	}
 
 	http_manager m("https://recodex.projekty.ms.mff.cuni.cz/fm_test_nonexist/", "re", "codex");
-	EXPECT_THROW(m.put_file("/tmp/b.txt"), fm_exception);
+	EXPECT_THROW(m.put_file((tmp / "b.txt").string()), fm_exception);
 
 	m.set_params("http://ps.stdin.cz/", "", "");
-	EXPECT_THROW(m.put_file("/tmp/b.txt"), fm_exception);
+	EXPECT_THROW(m.put_file((tmp / "b.txt").string()), fm_exception);
 
-	fs::remove("/tmp/b.txt");
+	fs::remove(tmp / "b.txt");
 }
 
 TEST(HttpManager, PutWrongFile)
 {
+	auto tmp = fs::temp_directory_path();
 	http_manager m("https://recodex.projekty.ms.mff.cuni.cz/fm_test/", "re", "codex");
-	EXPECT_THROW(m.put_file("/tmp/abcxzy.txt"), fm_exception);
+	EXPECT_THROW(m.put_file((tmp / "abc5xyz.txt").string()), fm_exception);
 }
 
 TEST(HttpManager, GetSetParams)
