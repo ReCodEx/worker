@@ -52,8 +52,8 @@ TEST(broker_connection, sends_init)
 	};
 
 	EXPECT_CALL(config, get_broker_uri())
-		.Times(1)
-		.WillOnce(Return(addr));
+		.Times(2)
+		.WillRepeatedly(Return(addr));
 
 	EXPECT_CALL(config, get_headers())
 		.Times(1)

@@ -3,6 +3,7 @@
 
 #include <string>
 #include "file_manager_base.h"
+#include "spdlog/spdlog.h"
 
 #define BOOST_FILESYSTEM_NO_DEPRECATED
 #define BOOST_NO_CXX11_SCOPED_ENUMS
@@ -20,7 +21,7 @@ public:
 	/**
 	  * Allow also default constructor with no parameters.
 	  */
-	cache_manager() = default;
+	cache_manager();
 	/**
 	 * Set up cache manager with working directory.
 	 * @param caching_dir Directory where cached files will be stored. If this directory don't exist, it'll be created.
@@ -56,6 +57,7 @@ public:
 	virtual std::string get_destination() const;
 private:
     fs::path caching_dir_;
+	std::shared_ptr<spdlog::logger> logger_;
 };
 
 #endif //CODEX_WORKER_CACHE_MANAGER_H

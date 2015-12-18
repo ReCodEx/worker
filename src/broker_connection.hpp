@@ -4,6 +4,8 @@
 
 #include <zmq.hpp>
 #include <map>
+#include <memory>
+#include "spdlog/spdlog.h"
 
 #include "worker_config.hpp"
 
@@ -12,6 +14,7 @@ class broker_connection {
 private:
 	const worker_config &config;
 	proxy *socket;
+	std::shared_ptr<spdlog::logger> logger_;
 
 	/**
 	 * Send the ACK command to the broker
@@ -24,6 +27,7 @@ private:
 public:
 	broker_connection (const worker_config &config, proxy *socket) : config(config), socket(socket)
 	{
+		logger_ = spdlog::get("logger");
 	}
 
 	/**
@@ -33,6 +37,7 @@ public:
 	{
 		const worker_config::header_map_t &headers = config.get_headers();
 
+		logger_->debug() << "Connecting to " << config.get_broker_uri();
 		socket->connect(config.get_broker_uri());
 		socket->send("init", 4, ZMQ_SNDMORE);
 
@@ -43,6 +48,7 @@ public:
 			int count = snprintf(buf, sizeof(buf), "%s=%s", pair.first.c_str(), pair.second.c_str());
 
 			if (count < 0) {
+				logger_->emerg() << "Cannot create header for connecting to broker";
 				throw;
 			}
 
@@ -63,8 +69,10 @@ public:
 		while (!terminate) {
 			try {
 				socket->recv(request);
+				logger_->debug() << "Received request from broker";
 				cb();
-			} catch (zmq::error_t) {
+			} catch (zmq::error_t &e) {
+				logger_->emerg() << "Terminating to receive messages. " << e.what();
 				terminate = true;
 			}
 		}

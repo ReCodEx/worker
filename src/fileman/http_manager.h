@@ -3,7 +3,9 @@
 #define CODEX_WORKER_HTTP_MANAGER_H
 
 #include <string>
+#include <memory>
 #include "file_manager_base.h"
+#include "spdlog/spdlog.h"
 
 
 
@@ -16,7 +18,7 @@ public:
 	/**
 	  * Default constructor.
 	  */
-	http_manager() = default;
+	http_manager();
 	/**
 	 * Constructor with initialization.
 	 * @param remote_url URL address of remote server
@@ -55,6 +57,7 @@ private:
 	std::string remote_url_;
     std::string username_;
     std::string password_;
+	std::shared_ptr<spdlog::logger> logger_;
 	void validate_url();
 };
 

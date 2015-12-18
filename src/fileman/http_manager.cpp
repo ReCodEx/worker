@@ -28,10 +28,14 @@ static size_t fwrite_wrapper(void *ptr, size_t size, size_t nmemb, FILE *stream)
 
 
 
+http_manager::http_manager() : http_manager("", "", "")
+{
+}
 
 http_manager::http_manager(const std::string &remote_url, const std::string &username, const std::string &password) :
 	remote_url_{remote_url}, username_{username}, password_{password}
 {
+	logger_ = spdlog::get("logger");
 	validate_url();
 }
 
@@ -43,10 +47,14 @@ void http_manager::get_file(const std::string &src_name, const std::string &dst_
 	CURLcode res;
 	FILE *fd;
 
+	logger_->debug() << "Downloading file " << remote_url_ + src_name << " to " << dest_file_path.string();
+
 	//Open file to upload
 	fd = fopen(dest_file_path.c_str(), "wb");
 	if(!fd) {
-		throw fm_exception("Cannot open file for writing. File: " + dest_file_path.string());
+		auto message = "Cannot open file " + dest_file_path.string() + " for writing.";
+		logger_->warn() << message;
+		throw fm_exception(message);
 	}
 
 	curl = curl_easy_init();
@@ -85,7 +93,9 @@ void http_manager::get_file(const std::string &src_name, const std::string &dst_
 			try {
 				fs::remove(dest_file_path);
 			} catch(...) {}
-			auto error_message = std::string("Failed to download file. Error: ") + curl_easy_strerror(res);
+			auto error_message = "Failed to download " + remote_url_ + src_name + " to " + dest_file_path.string() +
+					". Error: " + curl_easy_strerror(res);
+			logger_->warn() << error_message;
 			curl_easy_cleanup(curl);
 			throw fm_exception(error_message);
 		}
@@ -103,10 +113,14 @@ void http_manager::put_file(const std::string &name)
 	CURLcode res;
 	FILE *fd;
 
+	logger_->debug() << "Uploading file " << name << " to " << destination_url;
+
 	//Open file to upload
 	fd = fopen(name.c_str(), "rb");
 	if(!fd) {
-		throw fm_exception("Cannot open file for reading. File: " + name);
+		auto message = "Cannot open file " + name + " for reading.";
+		logger_->warn() << message;
+		throw fm_exception(message);
 	}
 
 	//Get the file size
@@ -151,7 +165,10 @@ void http_manager::put_file(const std::string &name)
 
 		//Check for errors
 		if(res != CURLE_OK) {
-			throw fm_exception(std::string("Failed to upload file. Error: ") + curl_easy_strerror(res));
+			auto message = "Failed to upload " + name + " to " + destination_url +
+					". Error: " + curl_easy_strerror(res);
+			logger_->warn() << message;
+			throw fm_exception(message);
 		}
 
 		//Always cleanup

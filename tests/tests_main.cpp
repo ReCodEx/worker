@@ -20,7 +20,7 @@ void init()
 	std::string log_suffix = "log";
 	int log_file_size = 1024 * 1024;
 	int log_files_count = 3;
-	spdlog::level log_level = spdlog::level::debug;
+	spdlog::level::level_enum log_level = spdlog::level::debug;
 
 
 	//Globally init curl library
@@ -50,6 +50,10 @@ void init()
 		file_logger->set_level(log_level);
 		//Register logger for global usage
 		spdlog::register_logger(file_logger);
+		//Print header to log
+		file_logger->emerg() << "------------------------------";
+		file_logger->emerg() << "   Started ReCodEx worker";
+		file_logger->emerg() << "------------------------------";
 	} catch(spdlog::spdlog_ex &e) {
 		std::cerr << "Logger: " << e.what() << std::endl;
 		throw;

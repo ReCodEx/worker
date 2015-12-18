@@ -17,10 +17,10 @@ public:
 
 private:
 	/** URI of the task broker */
-	std::string broker_uri = "";
+	std::string broker_uri_ = "";
 
 	/** Headers that describe this worker's capabilities */
-	header_map_t headers;
+	header_map_t headers_;
 
 public:
 	/**
