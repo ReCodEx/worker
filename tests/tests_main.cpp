@@ -1,9 +1,4 @@
-#include <iostream>
-#include <yaml-cpp/yaml.h>
-#include <memory>
-#include "worker_config.hpp"
-#include "broker_connection.hpp"
-#include "connection_proxy.hpp"
+#include "gtest/gtest.h"
 #include "spdlog/spdlog.h"
 #include <curl/curl.h>
 
@@ -23,9 +18,9 @@ void init()
 	std::string log_path = "/tmp/recodex_log/";
 	std::string log_basename = "worker";
 	std::string log_suffix = "log";
-	spdlog::level log_level = spdlog::level::debug;
 	int log_file_size = 1024 * 1024;
 	int log_files_count = 3;
+	spdlog::level log_level = spdlog::level::debug;
 
 
 	//Globally init curl library
@@ -70,40 +65,14 @@ void fini()
 	curl_global_cleanup();
 }
 
-
-struct receive_task {
-	bool operator() ()
-	{
-		std::cout << "Task received" << std::endl;
-		return true;
-	}
-};
-
-int main (int argc, char **argv)
-{
-	try {
+int main(int argc, char **argv) {
+	try{
 		init();
 	} catch(...) {
 		return 1;
 	}
-
-	YAML::Node yaml;
-
-	try {
-		yaml = YAML::LoadFile("config.yml");
-	} catch (YAML::Exception) {
-		std::cerr << "Error loading config file" << std::endl;
-		return 1;
-	}
-
-	worker_config config(yaml);
-	connection_proxy proxy;
-
-	broker_connection <connection_proxy, receive_task> connection(config, &proxy);
-	connection.connect();
-
-	connection.receive_tasks();
-
+	testing::InitGoogleTest(&argc, argv);
+	auto result = RUN_ALL_TESTS();
 	fini();
-	return 0;
+	return result;
 }

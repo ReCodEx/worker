@@ -4,6 +4,9 @@ project(codex_worker)
 # ZeroMQ C++ bindings headers
 include_directories(AFTER, vendor/cppzmq)
 
+# Spdlog logging library
+include_directories(AFTER, vendor/spdlog/include)
+
 # Use C++11
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 

@@ -7,3 +7,6 @@
 [submodule "vendor/curlcpp"]
 	path = vendor/curlcpp
 	url = https://github.com/JosephP91/curlcpp.git
+[submodule "vendor/spdlog"]
+	path = vendor/spdlog
+	url = https://github.com/gabime/spdlog.git
