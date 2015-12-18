@@ -11,4 +11,6 @@ codex_worker
 .idea/vcs.xml
 .idea/workspace.xml
 CMakeLists.txt.user
+doc/
+build/
 
