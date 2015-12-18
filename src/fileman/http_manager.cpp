@@ -26,6 +26,11 @@ static size_t fwrite_wrapper(void *ptr, size_t size, size_t nmemb, FILE *stream)
 	return fwrite(ptr, size, nmemb, stream);
 }
 
+//Tweak for older libcurls
+#ifndef CURL_HTTP_VERSION_2_0
+	#define CURL_HTTP_VERSION_2_0 CURL_HTTP_VERSION_1_1
+#endif
+
 
 
 http_manager::http_manager() : http_manager("", "", "")

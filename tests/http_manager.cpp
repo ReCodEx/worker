@@ -33,6 +33,15 @@ TEST(HttpManager, GetExistingFileRedirect)
 	fs::remove(tmp / "test2.txt");
 }
 
+TEST(HttpManager, GetExistingHttp)
+{
+	auto tmp = fs::temp_directory_path();
+	http_manager m("http://curl.haxx.se/rfc/", "", "");
+	EXPECT_NO_THROW(m.get_file("rfc7234.txt", tmp.string()));
+	EXPECT_TRUE(fs::is_regular_file((tmp / "rfc7234.txt").string()));
+	fs::remove(tmp / "rfc7234.txt");
+}
+
 TEST(HttpManager, GetNonexistingFile)
 {
 	auto tmp = fs::temp_directory_path();
