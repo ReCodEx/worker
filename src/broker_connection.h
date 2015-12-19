@@ -48,6 +48,7 @@ public:
 
 		logger_->debug() << "Connecting to " << config.get_broker_uri();
 		socket->connect(config.get_broker_uri());
+		socket->send("", 0, ZMQ_SNDMORE);
 		socket->send("init", 4, ZMQ_SNDMORE);
 
 		for (auto it = headers.begin(); it != headers.end(); ++it) {
