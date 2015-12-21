@@ -33,14 +33,25 @@ static size_t fwrite_wrapper(void *ptr, size_t size, size_t nmemb, FILE *stream)
 
 
 
-http_manager::http_manager() : http_manager("", "", "")
+http_manager::http_manager(std::shared_ptr<spdlog::logger> logger) :
+	http_manager("", "", "", logger)
 {
 }
 
-http_manager::http_manager(const std::string &remote_url, const std::string &username, const std::string &password) :
+http_manager::http_manager(const std::string &remote_url, const std::string &username, const std::string &password,
+							std::shared_ptr<spdlog::logger> logger) :
 	remote_url_{remote_url}, username_{username}, password_{password}
 {
-	logger_ = spdlog::get("logger");
+	if(logger != nullptr) {
+		logger_ = logger;
+	} else {
+		//Create logger manually to avoid global registration of logger
+		auto sink = std::make_shared<spdlog::sinks::stderr_sink_st>();
+		logger_ = std::make_shared<spdlog::logger>("cache_manager_nolog", sink);
+		//Set loglevel to 'off' cause no logging
+		logger_->set_level(spdlog::level::off);
+	}
+
 	validate_url();
 }
 

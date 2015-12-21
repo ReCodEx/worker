@@ -1,11 +1,11 @@
 #include "file_manager.h"
 #include <memory>
 
-file_manager::file_manager(const std::string &caching_dir, const std::string &remote_url,
-						   const std::string &username, const std::string &password)
+file_manager::file_manager(const std::string &caching_dir, const std::string &remote_url, const std::string &username,
+						   const std::string &password, std::shared_ptr<spdlog::logger> logger)
 {
-	cache_man_ = cache_man_ptr(new cache_manager{caching_dir});
-	http_man_ = http_man_ptr(new http_manager{remote_url, username, password});
+	cache_man_ = cache_man_ptr(new cache_manager{caching_dir, logger});
+	http_man_ = http_man_ptr(new http_manager{remote_url, username, password, logger});
 }
 
 file_manager::file_manager(cache_man_ptr cache_manager, http_man_ptr http_manager)

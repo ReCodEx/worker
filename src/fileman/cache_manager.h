@@ -2,6 +2,7 @@
 #define CODEX_WORKER_CACHE_MANAGER_H
 
 #include <string>
+#include <memory>
 #include "file_manager_base.h"
 #include "spdlog/spdlog.h"
 
@@ -19,14 +20,16 @@ namespace fs = boost::filesystem;
 class cache_manager : public file_manager_base {
 public:
 	/**
-	  * Allow also default constructor with no parameters.
+	  * Constructor with optional logger.
+	  * @param logger Shared pointer to system logger (optional).
 	  */
-	cache_manager();
+	cache_manager(std::shared_ptr<spdlog::logger> logger = nullptr);
 	/**
 	 * Set up cache manager with working directory.
 	 * @param caching_dir Directory where cached files will be stored. If this directory don't exist, it'll be created.
+	 * @param logger Shared pointer to system logger (optional).
 	 */
-	cache_manager(const std::string &caching_dir);
+	cache_manager(const std::string &caching_dir, std::shared_ptr<spdlog::logger> logger = nullptr);
 	/**
 	 * Destructor.
 	 */

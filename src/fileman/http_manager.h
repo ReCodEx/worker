@@ -16,16 +16,19 @@
 class http_manager : public file_manager_base {
 public:
 	/**
-	  * Default constructor.
+	  * Default constructor, optionally can set a system logger.
+	  * @param logger Shared pointer to system logger (optional).
 	  */
-	http_manager();
+	http_manager(std::shared_ptr<spdlog::logger> logger = nullptr);
 	/**
 	 * Constructor with initialization.
 	 * @param remote_url URL address of remote server
 	 * @param username Username for HTTP Basic Authentication
 	 * @param password Password for HTTP Basic Authentication
+	 * @param logger Shared pointer to system logger (optional).
 	 */
-	http_manager(const std::string &remote_url, const std::string &username, const std::string &password);
+	http_manager(const std::string &remote_url, const std::string &username, const std::string &password,
+				 std::shared_ptr<spdlog::logger> logger = nullptr);
 	/**
 	 * Destructor.
 	 */

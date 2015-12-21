@@ -1,4 +1,4 @@
-#include "worker_config.hpp"
+#include "worker_config.h"
 
 worker_config::worker_config ()
 {

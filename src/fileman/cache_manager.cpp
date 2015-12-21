@@ -1,14 +1,24 @@
 #include "cache_manager.h"
 
 
-cache_manager::cache_manager() : cache_manager(fs::temp_directory_path().string())
+cache_manager::cache_manager(std::shared_ptr<spdlog::logger> logger) :
+	cache_manager(fs::temp_directory_path().string(), logger)
 {
 }
 
-cache_manager::cache_manager(const std::string &caching_dir)
+cache_manager::cache_manager(const std::string &caching_dir, std::shared_ptr<spdlog::logger> logger)
 {
+	if(logger != nullptr) {
+		logger_ = logger;
+	} else {
+		//Create logger manually to avoid global registration of logger
+		auto sink = std::make_shared<spdlog::sinks::stderr_sink_st>();
+		logger_ = std::make_shared<spdlog::logger>("cache_manager_nolog", sink);
+		//Set loglevel to 'off' cause no logging
+		logger_->set_level(spdlog::level::off);
+	}
+
 	fs::path cache_path(caching_dir);
-	logger_ = spdlog::get("logger");
 
 	try {
 		if(!fs::is_directory(cache_path)) {

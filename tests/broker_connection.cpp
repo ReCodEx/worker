@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-#include "../src/worker_config.hpp"
-#include "../src/broker_connection.hpp"
+#include "../src/worker_config.h"
+#include "../src/broker_connection.h"
 
 using namespace testing;
 

@@ -23,9 +23,10 @@ public:
 	 * @param remote_url URL address of remote server
 	 * @param username Username for HTTP Basic Authentication
 	 * @param password Password for HTTP Basic Authentication
+	 * @param logger Shared pointer to system logger (optional).
 	 */
-	file_manager(const std::string &caching_dir, const std::string &remote_url,
-				 const std::string &username, const std::string &password);
+	file_manager(const std::string &caching_dir, const std::string &remote_url, const std::string &username,
+				 const std::string &password, std::shared_ptr<spdlog::logger> logger = nullptr);
 	/**
 	 * Constructor for creating this class with instances of @a cache_manager and @a http_manager.
 	 * This is useful especially for testing with mocked classes.

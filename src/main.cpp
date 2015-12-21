@@ -1,9 +1,9 @@
 #include <iostream>
 #include <yaml-cpp/yaml.h>
 #include <memory>
-#include "worker_config.hpp"
-#include "broker_connection.hpp"
-#include "connection_proxy.hpp"
+#include "worker_config.h"
+#include "broker_connection.h"
+#include "connection_proxy.h"
 #include "spdlog/spdlog.h"
 #include <curl/curl.h>
 
@@ -53,7 +53,7 @@ void init()
 		auto file_logger = std::make_shared<spdlog::logger>("logger", rotating_sink);
 		//Set logging level to debug
 		file_logger->set_level(log_level);
-		//Register logger for global usage
+		//Register logger for global usage - wont't be needed after inclusion to worker_core constructor
 		spdlog::register_logger(file_logger);
 		//Print header to log
 		file_logger->emerg() << "------------------------------";
@@ -90,6 +90,8 @@ int main (int argc, char **argv)
 	} catch(...) {
 		return 1;
 	}
+	//Hack before move init() to worker_core constructor
+	auto logger = spdlog::get("logger");
 
 	YAML::Node yaml;
 
@@ -103,7 +105,7 @@ int main (int argc, char **argv)
 	worker_config config(yaml);
 	connection_proxy proxy;
 
-	broker_connection <connection_proxy, receive_task> connection(config, &proxy);
+	broker_connection <connection_proxy, receive_task> connection(config, &proxy, logger);
 	connection.connect();
 
 	connection.receive_tasks();

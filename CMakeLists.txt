@@ -14,9 +14,9 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 set(SOURCE_FILES
 	src/main.cpp
 	src/worker_config.cpp
-	src/worker_config.hpp
-	src/broker_connection.hpp
-	src/connection_proxy.hpp
+	src/worker_config.h
+	src/broker_connection.h
+	src/connection_proxy.h
 	src/fileman/file_manager_base.h
 	src/fileman/cache_manager.h
 	src/fileman/http_manager.h
