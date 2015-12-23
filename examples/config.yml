@@ -1,0 +1,7 @@
+broker: tcp://localhost:9657
+headers:
+        env:
+                - c
+                - python
+        threads: 2
+        hwgroup: group_1

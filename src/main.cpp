@@ -97,8 +97,8 @@ int main (int argc, char **argv)
 
 	try {
 		yaml = YAML::LoadFile("config.yml");
-	} catch (YAML::Exception) {
-		std::cerr << "Error loading config file" << std::endl;
+	} catch (YAML::Exception e) {
+		std::cerr << "Error loading config file: " << e.what() << std::endl;
 		return 1;
 	}
 
