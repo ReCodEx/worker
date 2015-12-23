@@ -8,7 +8,7 @@ cache_manager::cache_manager(std::shared_ptr<spdlog::logger> logger) :
 
 cache_manager::cache_manager(const std::string &caching_dir, std::shared_ptr<spdlog::logger> logger)
 {
-	if(logger != nullptr) {
+	if (logger != nullptr) {
 		logger_ = logger;
 	} else {
 		//Create logger manually to avoid global registration of logger
@@ -21,7 +21,7 @@ cache_manager::cache_manager(const std::string &caching_dir, std::shared_ptr<spd
 	fs::path cache_path(caching_dir);
 
 	try {
-		if(!fs::is_directory(cache_path)) {
+		if (!fs::is_directory(cache_path)) {
 			fs::create_directories(cache_path);
 		}
 	} catch (fs::filesystem_error &e) {
@@ -69,7 +69,7 @@ void cache_manager::set_params(const std::string &destination, const std::string
 	fs::path cache_path(destination);
 
 	try {
-		if(!fs::is_directory(cache_path)) {
+		if (!fs::is_directory(cache_path)) {
 			fs::create_directories(cache_path);
 		}
 	} catch (fs::filesystem_error &e) {

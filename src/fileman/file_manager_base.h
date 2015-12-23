@@ -53,9 +53,23 @@ public:
  */
 class fm_exception : public std::exception {
 public:
-	fm_exception() : what_{"Generic file manager exception"} {}
-	fm_exception(std::string what) : what_{what} {}
+	/**
+	 * Constructor with default string.
+	 */
+	fm_exception() : what_("Generic file manager exception") {}
+	/**
+	 * Constructor with custom string.
+	 * @param what String with description of failure.
+	 */
+	fm_exception(std::string what) : what_(what) {}
+	/**
+	 * Destructor.
+	 */
 	virtual ~fm_exception() {}
+	/**
+	 * Get failure description.
+	 * @return Stored string.
+	 */
 	virtual const char* what() const noexcept
 	{
 		return what_.c_str();

@@ -57,7 +57,7 @@ void init()
 		spdlog::register_logger(file_logger);
 		//Print header to log
 		file_logger->emerg() << "------------------------------";
-		file_logger->emerg() << "   Started ReCodEx worker";
+		file_logger->emerg() << "    Started ReCodEx worker";
 		file_logger->emerg() << "------------------------------";
 	} catch(spdlog::spdlog_ex &e) {
 		std::cerr << "Logger: " << e.what() << std::endl;

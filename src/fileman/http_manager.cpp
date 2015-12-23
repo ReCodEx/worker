@@ -40,9 +40,9 @@ http_manager::http_manager(std::shared_ptr<spdlog::logger> logger) :
 
 http_manager::http_manager(const std::string &remote_url, const std::string &username, const std::string &password,
 							std::shared_ptr<spdlog::logger> logger) :
-	remote_url_{remote_url}, username_{username}, password_{password}
+	remote_url_(remote_url), username_(username), password_(password)
 {
-	if(logger != nullptr) {
+	if (logger != nullptr) {
 		logger_ = logger;
 	} else {
 		//Create logger manually to avoid global registration of logger
@@ -67,14 +67,14 @@ void http_manager::get_file(const std::string &src_name, const std::string &dst_
 
 	//Open file to upload
 	fd = fopen(dest_file_path.c_str(), "wb");
-	if(!fd) {
+	if (!fd) {
 		auto message = "Cannot open file " + dest_file_path.string() + " for writing.";
 		logger_->warn() << message;
 		throw fm_exception(message);
 	}
 
 	curl = curl_easy_init();
-	if(curl) {
+	if (curl) {
 		//Destination URL
 		curl_easy_setopt(curl, CURLOPT_URL, (remote_url_ + src_name).c_str());
 
@@ -105,10 +105,10 @@ void http_manager::get_file(const std::string &src_name, const std::string &dst_
 		fclose(fd);
 
 		//Check for errors
-		if(res != CURLE_OK) {
+		if (res != CURLE_OK) {
 			try {
 				fs::remove(dest_file_path);
-			} catch(...) {}
+			} catch (...) {}
 			auto error_message = "Failed to download " + remote_url_ + src_name + " to " + dest_file_path.string() +
 					". Error: " + curl_easy_strerror(res);
 			logger_->warn() << error_message;
@@ -133,7 +133,7 @@ void http_manager::put_file(const std::string &name)
 
 	//Open file to upload
 	fd = fopen(name.c_str(), "rb");
-	if(!fd) {
+	if (!fd) {
 		auto message = "Cannot open file " + name + " for reading.";
 		logger_->warn() << message;
 		throw fm_exception(message);
@@ -143,7 +143,7 @@ void http_manager::put_file(const std::string &name)
 	auto filesize = fs::file_size(source_file);
 
 	curl = curl_easy_init();
-	if(curl) {
+	if (curl) {
 		//Destination URL
 		curl_easy_setopt(curl, CURLOPT_URL, destination_url.c_str());
 
@@ -180,7 +180,7 @@ void http_manager::put_file(const std::string &name)
 		fclose(fd);
 
 		//Check for errors
-		if(res != CURLE_OK) {
+		if (res != CURLE_OK) {
 			auto message = "Failed to upload " + name + " to " + destination_url +
 					". Error: " + curl_easy_strerror(res);
 			logger_->warn() << message;
@@ -209,7 +209,7 @@ void http_manager::validate_url()
 {
 	//'localhost' is also valid url, so now we don't check against regular expression
 	//just make sure, that URL has trailing '/'
-	if(remote_url_.size() > 0 && remote_url_[remote_url_.size() - 1] != '/') {
+	if (remote_url_.size() > 0 && remote_url_[remote_url_.size() - 1] != '/') {
 		remote_url_.push_back('/');
 	}
 

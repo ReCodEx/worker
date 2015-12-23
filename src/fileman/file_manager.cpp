@@ -19,7 +19,7 @@ void file_manager::get_file(const std::string &src_name, const std::string &dst_
 	try {
 		cache_man_->get_file(src_name, dst_path);
 		return;
-	} catch(...) {}
+	} catch (...) {}
 
 	http_man_->get_file(src_name, cache_man_->get_destination());
 	cache_man_->get_file(src_name, dst_path);
