@@ -23,14 +23,25 @@ struct sandbox_limits {
 	size_t processes;		//limit number of processes, 0 = no limit
 	bool share_net;			//allow use host network
 	std::map<std::string, std::string> environ_vars; //set environment variables
-	std::string meta_log;	//save meta-data log to file
 };
+
+struct task_results {
+	int exitcode;
+	std::string status;
+	int exitsig;
+	size_t time;
+	size_t wall_time;
+	size_t memory;
+	int killed; //or bool?
+	std::string message;
+};
+
 
 class sandbox_base {
 public:
 	virtual ~sandbox_base() {}
 	virtual std::string get_dir() const { return sandboxed_dir_; }
-	virtual void run(const std::string &binary, const std::string &arguments) = 0;
+	virtual task_results run(const std::string &binary, const std::string &arguments) = 0;
 protected:
 	std::string sandboxed_dir_;
 };

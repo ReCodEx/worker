@@ -3,6 +3,7 @@ project(codex_worker_tests)
 set(SRC_DIR ../src)
 set(LIBS_DIR ../vendor)
 set(FILEMAN_DIR ../src/fileman)
+set(SANDBOX_DIR ../src/sandbox)
 
 # Google Test and Google Mock headers
 include_directories(${LIBS_DIR}/googletest/include)
@@ -19,7 +20,10 @@ add_executable(run_tests
 	http_manager.cpp
 	${FILEMAN_DIR}/http_manager.cpp
 	file_manager.cpp
-	${FILEMAN_DIR}/file_manager.cpp)
+    ${FILEMAN_DIR}/file_manager.cpp
+    isolate_sandbox.cpp
+    ${SANDBOX_DIR}/isolate_sandbox.cpp
+)
 
 target_link_libraries(run_tests gtest gtest_main)
 target_link_libraries(run_tests gmock gmock_main)

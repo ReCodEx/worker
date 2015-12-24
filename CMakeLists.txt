@@ -25,6 +25,8 @@ set(SOURCE_FILES
 	src/fileman/http_manager.cpp
     src/fileman/file_manager.cpp
     src/sandbox/sandbox_base.h
+    src/sandbox/isolate_sandbox.h
+    src/sandbox/isolate_sandbox.cpp
 )
 
 add_executable(codex_worker ${SOURCE_FILES})
