@@ -22,6 +22,8 @@ add_executable(run_tests
 	file_manager.cpp
 	${FILEMAN_DIR}/file_manager.cpp)
 
+add_test(NAME MainTest COMMAND run_tests)
+
 target_link_libraries(run_tests gtest gtest_main)
 target_link_libraries(run_tests gmock gmock_main)
 target_link_libraries(run_tests yaml-cpp)
