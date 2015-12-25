@@ -55,7 +55,7 @@ void http_manager::get_file(const std::string &src_name, const std::string &dst_
 	logger_->debug() << "Downloading file " << remote_url_ + src_name << " to " << dest_file_path.string();
 
 	//Open file to upload
-	fd = fopen(dest_file_path.c_str(), "wb");
+	fd = fopen(dest_file_path.string().c_str(), "wb");
 	if(!fd) {
 		auto message = "Cannot open file " + dest_file_path.string() + " for writing.";
 		logger_->warn() << message;
