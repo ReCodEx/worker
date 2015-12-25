@@ -25,7 +25,7 @@ if(MSVC)
 	if(ZEROMQ_LIB)
 		include_directories(${ZEROMQ_INCLUDE})
 	else()
-		message(FATAL_ERRORO "Fail to load ZeroMQ!")
+		message(FATAL_ERROR "Fail to load ZeroMQ!")
 	endif()
 endif()
 
