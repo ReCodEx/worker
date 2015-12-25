@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-#include "../src/worker_config.h"
+#include "../src/config/worker_config.h"
 #include "../src/broker_connection.h"
 
 using namespace testing;

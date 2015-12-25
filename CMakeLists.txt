@@ -13,8 +13,8 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 # The worker executable
 set(SOURCE_FILES
 	src/main.cpp
-	src/worker_config.cpp
-	src/worker_config.h
+	src/config/worker_config.cpp
+	src/config/worker_config.h
 	src/broker_connection.h
 	src/connection_proxy.h
 	src/fileman/file_manager_base.h
@@ -25,6 +25,9 @@ set(SOURCE_FILES
 	src/fileman/http_manager.cpp
     src/fileman/file_manager.cpp
     src/sandbox/sandbox_base.h
+    src/isoeval_core.h
+    src/isoeval_core.cpp
+    src/tasks/job.h
 )
 
 add_executable(codex_worker ${SOURCE_FILES})

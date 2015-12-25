@@ -6,7 +6,16 @@
 #include <map>
 #include <memory>
 #include "spdlog/spdlog.h"
-#include "worker_config.h"
+#include "config/worker_config.h"
+
+
+struct receive_task_callback {
+	bool operator() ()
+	{
+		std::cout << "Task received" << std::endl;
+		return true;
+	}
+};
 
 
 template <typename proxy, typename task_callback>
