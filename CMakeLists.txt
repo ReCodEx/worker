@@ -14,6 +14,7 @@ if(MSVC)
 	find_package(Boost 1.57.0 REQUIRED COMPONENTS filesystem system)
 	include_directories(${Boost_INCLUDE_DIRS})
 	
+	set(CURL_INCLUDE_DIRS $ENV{CURL_INCLUDE_DIRS} CACHE PATH "The location of the CURL header files.")
 	set(CURL_LIBRARY $ENV{CURL_LIBRARY} CACHE PATH "The location of the CURL.")
 	find_package(CURL REQUIRED)
 	include_directories(${CURL_INCLUDE_DIRS})
