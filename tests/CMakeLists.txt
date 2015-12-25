@@ -1,4 +1,5 @@
 project(codex_worker_tests)
+enable_testing()
 
 set(SRC_DIR ../src)
 set(LIBS_DIR ../vendor)
