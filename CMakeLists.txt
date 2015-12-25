@@ -9,6 +9,8 @@ set(gtest_force_shared_crt ON CACHE BOOL "Use shared (DLL) run-time lib even whe
 
 # MS Visual C++ specific bindings
 if(MSVC)
+	set(BOOST_ROOT $ENV{BOOST_ROOT} CACHE PATH "The location of the boost.")
+
 	set(Boost_USE_STATIC_LIBS ON)
 	find_package(Boost 1.57.0 REQUIRED COMPONENTS filesystem system)
 	include_directories(${Boost_INCLUDE_DIRS})
