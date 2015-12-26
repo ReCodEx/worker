@@ -5,8 +5,6 @@ branches:
 configuration: Release
 platform: x86
 clone_folder: c:\projects\codex_worker
-init:
-- ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 install:
 - cmd: >-
     echo Installing NuGet packages...
