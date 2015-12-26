@@ -1,5 +1,4 @@
 project(codex_worker_tests)
-enable_testing()
 
 set(SRC_DIR ../src)
 set(LIBS_DIR ../vendor)
@@ -21,8 +20,6 @@ add_executable(run_tests
 	${FILEMAN_DIR}/http_manager.cpp
 	file_manager.cpp
 	${FILEMAN_DIR}/file_manager.cpp)
-
-add_test(NAME MainTest COMMAND run_tests)
 
 target_link_libraries(run_tests gtest gtest_main)
 target_link_libraries(run_tests gmock gmock_main)

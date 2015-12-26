@@ -1,0 +1,91 @@
+version: 1.0.{build}
+branches:
+  only:
+  - windows-compile
+configuration: Release
+platform: x86
+clone_folder: c:\projects\codex_worker
+init:
+- ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+install:
+- cmd: >-
+    echo Installing NuGet packages...
+
+    mkdir C:\deps
+
+    cd C:\deps
+
+
+    nuget install boost -ExcludeVersion
+
+    mv -f ./boost/lib/native/include/ ./boost/
+
+    nuget install boost_system-vc140 -ExcludeVersion
+
+    mv -f ./boost_system-vc140/lib/native/address-model-32/lib/* ./boost/lib/
+
+    nuget install boost_filesystem-vc140 -ExcludeVersion
+
+    mv -f ./boost_filesystem-vc140/lib/native/address-model-32/lib/* ./boost/lib/
+
+
+    nuget install rmt_libssh2 -ExcludeVersion
+
+    nuget install rmt_curl -ExcludeVersion
+
+    mkdir curl
+
+    cd curl
+
+    mkdir lib
+
+    cd ..
+
+    mv -f ./rmt_curl/build/native/include/ ./curl/
+
+    mv -f ./rmt_curl/build/native/lib/v140/Win32/Release/dynamic/* ./curl/lib/
+
+
+    nuget install fix8.dependencies.zmq -ExcludeVersion
+
+    mkdir libzmq
+
+    cd libzmq
+
+    mkdir lib
+
+    cd ..
+
+    mv -f ./fix8.dependencies.zmq/build/native/include/ ./libzmq/
+
+    mv -f ./fix8.dependencies.zmq/build/native/lib/Win32/v140/Release/Desktop/* ./libzmq/lib/
+before_build:
+- cmd: >-
+    cd c:\projects\codex_worker
+
+
+    echo Downloading submodules...
+
+    git submodule update --init
+
+
+    echo Running cmake...
+
+    cmake -G "Visual Studio 14 2015" -DBOOST_ROOT=C:\deps\boost -DCURL_LIBRARY=C:\deps\curl\lib\libcurl.lib -DCURL_INCLUDE_DIR=C:\deps\curl\include
+build:
+  project: ./tests/run_tests.vcxproj
+  verbosity: minimal
+test_script:
+- cmd: >-
+    cd C:\deps\
+
+    mv -f fix8.dependencies.zmq/build/native/bin/Win32/v140/Release/Desktop/* C:\projects\codex_worker\tests\Release\
+
+    mv -f rmt_curl/build/native/bin/v140/Win32/Release/dynamic/* C:\projects\codex_worker\tests\Release\
+
+    mv -f rmt_libssh2/build/native/bin/v140/Win32/Release/dynamic/* C:\projects\codex_worker\tests\Release\
+
+
+    cd C:\projects\codex_worker\tests\Release
+
+    run_tests.exe
