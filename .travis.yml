@@ -18,6 +18,8 @@ before_install:
   - cd isolate
   - make
   - sudo make install
+  - cd ..
+  - rm -rf isolate
 
 install:
   - git submodule update --init
