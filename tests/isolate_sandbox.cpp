@@ -36,6 +36,9 @@ TEST(IsolateSandbox, RunCommand)
 	EXPECT_EQ(is->get_dir(), "/tmp/box/34");
 	//is->run("/usr/bin/ls", "-a");
 	EXPECT_NO_THROW(is->run("/usr/bin/ls", std::vector<std::string>{"-a", "-l"}));
-	fs::copy_file("/tmp/box/34/box/output.txt", "/tmp/output.txt");
+	EXPECT_TRUE(fs::is_regular_file("/tmp/box/34/box/output.txt"));
+	EXPECT_TRUE(fs::file_size("/tmp/box/34/box/output.txt") > 0);
+	EXPECT_TRUE(fs::is_regular_file("/tmp/recodex_isolate_34/meta.log"));
+	EXPECT_TRUE(fs::file_size("/tmp/recodex_isolate_34/meta.log") > 0);
 	delete is;
 }

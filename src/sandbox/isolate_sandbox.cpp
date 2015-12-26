@@ -8,6 +8,11 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#define BOOST_FILESYSTEM_NO_DEPRECATED
+#define BOOST_NO_CXX11_SCOPED_ENUMS
+#include <boost/filesystem.hpp>
+
+namespace fs = boost::filesystem;
 
 
 isolate_sandbox::isolate_sandbox(sandbox_limits limits, size_t id, std::shared_ptr<spdlog::logger> logger) :
@@ -23,6 +28,17 @@ isolate_sandbox::isolate_sandbox(sandbox_limits limits, size_t id, std::shared_p
 		logger_->set_level(spdlog::level::off);
 	}
 
+	auto meta_dir = fs::temp_directory_path() / ("recodex_isolate_" + std::to_string(id_));
+	try {
+		fs::create_directories(meta_dir);
+	} catch (fs::filesystem_error &e) {
+		auto message = std::string("Failed to create directory for isolate meta file. Error: ") + e.what();
+		logger_->warn() << message;
+		throw sandbox_exception(message);
+	}
+
+	meta_file_ = (meta_dir / "meta.log").string();
+
 	isolate_init();
 }
 
@@ -30,6 +46,7 @@ isolate_sandbox::~isolate_sandbox()
 {
 	try {
 		isolate_cleanup();
+		fs::remove_all(fs::temp_directory_path() / ("recodex_isolate_" + std::to_string(id_)));
 	} catch (...) {
 		//We don't care if this failed. We can't fix it either. Just don't throw an exception in destructor.
 	}
@@ -84,13 +101,12 @@ void isolate_sandbox::isolate_init()
 		dup2(devnull, 2);
 
 		//Exec isolate init command
-		const char *args[6];
+		const char *args[5];
 		args[0] = isolate_binary_.c_str();
 		args[1] = "--cg";
-		args[2] = "-b";
-		args[3] = std::to_string(id_).c_str();
-		args[4] = "--init";
-		args[5] = NULL;
+		args[2] = ("--box-id=" + std::to_string(id_)).c_str();
+		args[3] = "--init";
+		args[4] = NULL;
 		//const_cast is ugly, but this is working with C code - execv does not modify its arguments
 		execvp(isolate_binary_.c_str(), const_cast<char **>(args));
 
@@ -114,7 +130,7 @@ void isolate_sandbox::isolate_init()
 			}
 			sandboxed_dir_ += std::string(buf);
 		}
-		if(ret == -1) {
+		if (ret == -1) {
 			auto message = "Read from pipe error.";
 			logger_->warn() << message;
 			throw sandbox_exception(message);
@@ -161,13 +177,12 @@ void isolate_sandbox::isolate_cleanup()
 		dup2(devnull, 2);
 
 		//Exec isolate cleanup command
-		const char *args[6];
+		const char *args[5];
 		args[0] = isolate_binary_.c_str();
 		args[1] = "--cg";
-		args[2] = "-b";
-		args[3] = std::to_string(id_).c_str();
-		args[4] = "--cleanup";
-		args[5] = NULL;
+		args[2] = ("--box-id=" + std::to_string(id_)).c_str();
+		args[3] = "--cleanup";
+		args[4] = NULL;
 		//const_cast is ugly, but this is working with C code - execv does not modify its arguments
 		execvp(isolate_binary_.c_str(), const_cast<char **>(args));
 
@@ -182,7 +197,7 @@ void isolate_sandbox::isolate_cleanup()
 		//---Parent---
 		int status;
 		waitpid(childpid, &status, 0);
-		if(WEXITSTATUS(status) != 0) {
+		if (WEXITSTATUS(status) != 0) {
 			auto message = "Isolate cleanup error. Return value: " + std::to_string(WEXITSTATUS(status));
 			logger_->warn() << message;
 			throw sandbox_exception(message);
@@ -219,8 +234,8 @@ void isolate_sandbox::isolate_run(const std::string &binary, const std::vector<s
 				logger_->warn() << message;
 				throw sandbox_exception(message);
 			}
-			//dup2(devnull, 1);
-			//dup2(devnull, 2);
+			dup2(devnull, 1);
+			dup2(devnull, 2);
 
 			auto args = isolate_run_args(binary, arguments);
 			execvp(isolate_binary_.c_str(), args);
@@ -236,7 +251,7 @@ void isolate_sandbox::isolate_run(const std::string &binary, const std::vector<s
 			//---Parent---
 			int status;
 			waitpid(childpid, &status, 0);
-			if(WEXITSTATUS(status) != 0 && WEXITSTATUS(status) != 1) {
+			if (WEXITSTATUS(status) != 0 && WEXITSTATUS(status) != 1) {
 				auto message = "Isolate run internal error. Return value: " + std::to_string(WEXITSTATUS(status));
 				logger_->warn() << message;
 				throw sandbox_exception(message);
@@ -255,7 +270,7 @@ char **isolate_sandbox::isolate_run_args(const std::string &binary, const std::v
 	vargs.push_back("--cg-timing");
 	vargs.push_back("--box-id=" + std::to_string(id_));
 
-	vargs.push_back("--mem=" + std::to_string(limits_.memory_usage));
+	vargs.push_back("--cg-mem=" + std::to_string(limits_.memory_usage));
 	vargs.push_back("--time=" + std::to_string(limits_.cpu_time));
 	vargs.push_back("--wall-time=" + std::to_string(limits_.wall_time));
 	vargs.push_back("--extra-time=" + std::to_string(limits_.extra_time));
@@ -289,6 +304,7 @@ char **isolate_sandbox::isolate_run_args(const std::string &binary, const std::v
 	for (auto &i : limits_.environ_vars) {
 		vargs.push_back("--env=" + i.first + "=" + i.second);
 	}
+	vargs.push_back("--meta=" + meta_file_);
 
 	vargs.push_back("--run");
 	vargs.push_back("--");
@@ -297,12 +313,12 @@ char **isolate_sandbox::isolate_run_args(const std::string &binary, const std::v
 		vargs.push_back(i);
 	}
 
-
+	//Convert string to char ** for execv call
 	char **c_args = new char*[vargs.size() + 1];
 	int i = 0;
 	for (auto &it : vargs) {
 		c_args[i++] = strdup(it.c_str());
-		std::cerr << it << " ";
+		//std::cerr << it << " ";
 	}
 	c_args[i] = NULL;
 	return c_args;

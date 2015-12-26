@@ -17,6 +17,7 @@ private:
 	std::shared_ptr<spdlog::logger> logger_;
 	size_t id_;
 	std::string isolate_binary_;
+	std::string meta_file_;
 	void isolate_init();
 	void isolate_cleanup();
 	void isolate_run(const std::string &binary, const std::vector<std::string> &arguments);
