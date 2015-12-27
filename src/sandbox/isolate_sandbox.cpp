@@ -1,3 +1,5 @@
+#ifndef _WIN32
+
 #include "isolate_sandbox.h"
 #include <unistd.h>
 #include <sys/types.h>
@@ -387,3 +389,4 @@ task_results isolate_sandbox::process_meta_file()
 	}
 }
 
+#endif

@@ -1,3 +1,5 @@
+#ifndef _WIN32
+
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
@@ -109,3 +111,6 @@ TEST(IsolateSandbox, NonzeroReturnCommand)
 	EXPECT_TRUE(results.exitcode == 1);
 	delete is;
 }
+
+
+#endif

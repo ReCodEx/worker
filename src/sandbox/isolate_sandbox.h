@@ -1,6 +1,8 @@
 #ifndef CODEX_WORKER_FILE_ISOLATE_SANDBOX_H
 #define CODEX_WORKER_FILE_ISOLATE_SANDBOX_H
 
+#ifndef _WIN32
+
 #include <memory>
 #include <vector>
 #include "spdlog/spdlog.h"
@@ -26,4 +28,5 @@ private:
 };
 
 
+#endif // _WIN32
 #endif // CODEX_WORKER_FILE_ISOLATE_SANDBOX_H
