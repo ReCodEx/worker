@@ -19,8 +19,8 @@
 namespace fs = boost::filesystem;
 
 
-isolate_sandbox::isolate_sandbox(sandbox_limits limits, size_t id, std::shared_ptr<spdlog::logger> logger) :
-	limits_(limits), id_(id), isolate_binary_("/usr/local/bin/isolate")
+isolate_sandbox::isolate_sandbox(sandbox_limits limits, size_t id, int max_timeout, std::shared_ptr<spdlog::logger> logger) :
+	limits_(limits), id_(id), isolate_binary_("/usr/local/bin/isolate"), max_timeout_(max_timeout)
 {
 	if (logger != nullptr) {
 		logger_ = logger;
@@ -30,6 +30,11 @@ isolate_sandbox::isolate_sandbox(sandbox_limits limits, size_t id, std::shared_p
 		logger_ = std::make_shared<spdlog::logger>("cache_manager_nolog", sink);
 		//Set loglevel to 'off' cause no logging
 		logger_->set_level(spdlog::level::off);
+	}
+
+	if (max_timeout_ == -1) {
+		max_timeout_ = limits_.wall_time > limits_.cpu_time ? limits_.wall_time : limits_.cpu_time;
+		max_timeout_ += 300; //5 minutes
 	}
 
 	auto meta_dir = fs::temp_directory_path() / ("recodex_isolate_" + std::to_string(id_));
@@ -254,14 +259,58 @@ void isolate_sandbox::isolate_run(const std::string &binary, const std::vector<s
 	default:
 		{
 			//---Parent---
-			int status;
-			waitpid(childpid, &status, 0);
-			if (WEXITSTATUS(status) != 0 && WEXITSTATUS(status) != 1) {
-				auto message = "Isolate run internal error. Return value: " + std::to_string(WEXITSTATUS(status));
-				logger_->warn() << message;
-				throw sandbox_exception(message);
+			/* Spawn a controll process, that will wait given timeout and then kills isolate process.
+			 * When a isolate process finishes before the timeout, parent thread kills control process
+			 * and calls waitpid() to remove zombie from system.
+			 */
+			pid_t controlpid;
+			controlpid = fork();
+			switch (controlpid) {
+			case -1:
+				{
+					auto message = std::string("Fork failed: ") + strerror(errno);
+					logger_->warn() << message;
+					throw sandbox_exception(message);
+				}
+				break;
+			case 0:
+				//Child---
+				{
+					int remaining = max_timeout_;
+					//Sleep can be interrupted by signal, so make sure to sleep whole time
+					while (remaining > 0) {
+						remaining = sleep(remaining);
+					}
+					kill(childpid, SIGKILL);
+				}
+				break;
+			default:
+				//Parent---
+
+				int status;
+				//Wait for isolate process. Waitpid returns no much longer than timeout if not earlier.
+				waitpid(childpid, &status, 0);
+				//Kill control process. If it already exits, nothing will be done
+				kill(controlpid, SIGKILL);
+				//Remove zombie from controll process.
+				waitpid(controlpid, NULL, 0);
+
+				//isolate was killed
+				if (WIFSIGNALED(status)) {
+					auto message = "Isolate process was killed by signal " + std::to_string(WTERMSIG(status)) +
+							" due to timeout.";
+					logger_->warn() << message;
+					throw sandbox_exception(message);
+				}
+				//isolate exited, but with return value signify internal error
+				if (WEXITSTATUS(status) != 0 && WEXITSTATUS(status) != 1) {
+					auto message = "Isolate run internal error. Return value: " + std::to_string(WEXITSTATUS(status));
+					logger_->warn() << message;
+					throw sandbox_exception(message);
+				}
+				logger_->debug() << "Isolate box " << id_ << " ran successfuly.";
+				break;
 			}
-			logger_->debug() << "Isolate box " << id_ << " ran successfuly.";
 		}
 		break;
 	}

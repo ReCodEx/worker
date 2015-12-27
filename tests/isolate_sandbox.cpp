@@ -14,7 +14,7 @@ TEST(IsolateSandbox, BasicCreation)
 {
 	sandbox_limits limits;
 	EXPECT_NO_THROW(isolate_sandbox s(limits, 34));
-	isolate_sandbox is(limits, 34);
+	isolate_sandbox is(limits, 34, 500);
 	EXPECT_EQ(is.get_dir(), "/tmp/box/34");
 	EXPECT_THROW(isolate_sandbox s(limits, 2365), sandbox_exception);
 }
@@ -109,6 +109,30 @@ TEST(IsolateSandbox, NonzeroReturnCommand)
 	EXPECT_TRUE(results.wall_time > 0);
 	EXPECT_TRUE(results.status == isolate_status::RE);
 	EXPECT_TRUE(results.exitcode == 1);
+	delete is;
+}
+
+TEST(IsolateSandbox, TimeoutIsolate)
+{
+	sandbox_limits limits;
+	limits.wall_time = 10;
+	limits.cpu_time = 10;
+	limits.extra_time = 1;
+	limits.disk_blocks = 500;
+	limits.disk_inodes = 500;
+	limits.memory_usage = 100000;
+	limits.stdin = "";
+	limits.stdout = "";
+	limits.stderr = "";
+	limits.stack_size = 0;
+	limits.files_size = 0;
+	limits.processes = 0;
+	limits.share_net = false;
+	isolate_sandbox *is;
+	EXPECT_NO_THROW(is = new isolate_sandbox(limits, 34, 2));
+	EXPECT_EQ(is->get_dir(), "/tmp/box/34");
+	task_results results;
+	EXPECT_THROW(results = is->run("/bin/sleep", std::vector<std::string>{"5"}), sandbox_exception);
 	delete is;
 }
 

@@ -11,7 +11,8 @@
 
 class isolate_sandbox : public sandbox_base {
 public:
-	isolate_sandbox(sandbox_limits limits, size_t id, std::shared_ptr<spdlog::logger> logger = nullptr);
+	isolate_sandbox(sandbox_limits limits, size_t id, int max_timeout = -1,
+					std::shared_ptr<spdlog::logger> logger = nullptr);
 	virtual ~isolate_sandbox();
 	virtual task_results run(const std::string &binary, const std::vector<std::string> &arguments);
 private:
@@ -20,6 +21,7 @@ private:
 	size_t id_;
 	std::string isolate_binary_;
 	std::string meta_file_;
+	int max_timeout_;
 	void isolate_init();
 	void isolate_cleanup();
 	void isolate_run(const std::string &binary, const std::vector<std::string> &arguments);
