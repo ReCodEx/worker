@@ -5,6 +5,7 @@
 #include <string>
 #include <exception>
 #include <map>
+#include <vector>
 
 
 struct sandbox_limits {
@@ -14,8 +15,8 @@ struct sandbox_limits {
 	float extra_time;		//wait extra time after time limit exceeded (s)
 	size_t stack_size;		//limit stack size (kB), 0 = no limit
 	size_t files_size;		//limit disk usage (kB), 0 = no limit
-	size_t quota_blocks;	//disk quota in blocks
-	size_t quota_inodes;	//disk quota in inodes
+	size_t disk_blocks;		//disk quota in blocks
+	size_t disk_inodes;		//disk quota in inodes
 	std::string stdin;		//redirect stdin from file
 	std::string stdout;		//redirect stdout to file
 	std::string stderr;		//redirect stderr to file
@@ -23,14 +24,28 @@ struct sandbox_limits {
 	size_t processes;		//limit number of processes, 0 = no limit
 	bool share_net;			//allow use host network
 	std::map<std::string, std::string> environ_vars; //set environment variables
-	std::string meta_log;	//save meta-data log to file
 };
+
+enum class isolate_status { RE, SG, TO, XX, NOTSET };
+
+struct task_results {
+	int exitcode;
+	float time;
+	float wall_time;
+	size_t memory;
+	size_t max_rss;
+	isolate_status status;
+	int exitsig;
+	bool killed;
+	std::string message;
+};
+
 
 class sandbox_base {
 public:
 	virtual ~sandbox_base() {}
 	virtual std::string get_dir() const { return sandboxed_dir_; }
-	virtual void run(const std::string &binary, const std::string &arguments) = 0;
+	virtual task_results run(const std::string &binary, const std::vector<std::string> &arguments) = 0;
 protected:
 	std::string sandboxed_dir_;
 };
