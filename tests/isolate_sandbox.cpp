@@ -37,7 +37,7 @@ TEST(IsolateSandbox, NormalCommand)
 	EXPECT_NO_THROW(is = new isolate_sandbox(limits, 34));
 	EXPECT_EQ(is->get_dir(), "/tmp/box/34");
 	task_results results;
-	EXPECT_NO_THROW(results = is->run("/usr/bin/ls", std::vector<std::string>{"-a", "-l", "-i"}));
+	EXPECT_NO_THROW(results = is->run("/bin/ls", std::vector<std::string>{"-a", "-l", "-i"}));
 	EXPECT_TRUE(fs::is_regular_file("/tmp/box/34/box/output.txt"));
 	EXPECT_TRUE(fs::file_size("/tmp/box/34/box/output.txt") > 0);
 	EXPECT_TRUE(fs::is_regular_file("/tmp/recodex_isolate_34/meta.log"));
@@ -69,7 +69,7 @@ TEST(IsolateSandbox, TimeoutCommand)
 	EXPECT_NO_THROW(is = new isolate_sandbox(limits, 34));
 	EXPECT_EQ(is->get_dir(), "/tmp/box/34");
 	task_results results;
-	EXPECT_NO_THROW(results = is->run("/usr/bin/sleep", std::vector<std::string>{"5"}));
+	EXPECT_NO_THROW(results = is->run("/bin/sleep", std::vector<std::string>{"5"}));
 	EXPECT_TRUE(fs::is_regular_file("/tmp/recodex_isolate_34/meta.log"));
 	EXPECT_TRUE(fs::file_size("/tmp/recodex_isolate_34/meta.log") > 0);
 	EXPECT_TRUE(results.killed);
@@ -99,7 +99,7 @@ TEST(IsolateSandbox, NonzeroReturnCommand)
 	EXPECT_NO_THROW(is = new isolate_sandbox(limits, 34));
 	EXPECT_EQ(is->get_dir(), "/tmp/box/34");
 	task_results results;
-	EXPECT_NO_THROW(results = is->run("/usr/bin/false", std::vector<std::string>{}));
+	EXPECT_NO_THROW(results = is->run("/bin/false", std::vector<std::string>{}));
 	EXPECT_TRUE(fs::is_regular_file("/tmp/recodex_isolate_34/meta.log"));
 	EXPECT_TRUE(fs::file_size("/tmp/recodex_isolate_34/meta.log") > 0);
 	EXPECT_TRUE(!results.killed);
