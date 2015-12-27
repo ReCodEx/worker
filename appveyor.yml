@@ -56,9 +56,10 @@ install:
     mv -f ./fix8.dependencies.zmq/build/native/lib/Win32/v140/Release/Desktop/* ./libzmq/lib/
 - ps: >-
     cd C:\Windows\System32
-    Start-FileDownload 'http://curl.haxx.se/ca/cacert.pem'
-    mv cacert.pem curl-ca-bundle.crt
 
+    Start-FileDownload 'http://curl.haxx.se/ca/cacert.pem'
+
+    mv cacert.pem curl-ca-bundle.crt
 before_build:
 - cmd: >-
     cd c:\projects\codex_worker
