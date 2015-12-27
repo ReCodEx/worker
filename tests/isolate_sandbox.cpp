@@ -17,7 +17,7 @@ TEST(IsolateSandbox, BasicCreation)
 	EXPECT_THROW(isolate_sandbox s(limits, 2365), sandbox_exception);
 }
 
-TEST(IsolateSandbox, RunCommand)
+TEST(IsolateSandbox, NormalCommand)
 {
 	sandbox_limits limits;
 	limits.wall_time = 5.1;
@@ -26,7 +26,9 @@ TEST(IsolateSandbox, RunCommand)
 	limits.disk_blocks = 500;
 	limits.disk_inodes = 500;
 	limits.memory_usage = 100000;
+	limits.stdin = "";
 	limits.stdout = "output.txt";
+	limits.stderr = "";
 	limits.stack_size = 0;
 	limits.files_size = 0;
 	limits.processes = 0;
@@ -44,5 +46,66 @@ TEST(IsolateSandbox, RunCommand)
 	EXPECT_TRUE(results.exitcode == 0);
 	EXPECT_TRUE(results.message.empty());
 	EXPECT_TRUE(results.wall_time > 0);
+	delete is;
+}
+
+TEST(IsolateSandbox, TimeoutCommand)
+{
+	sandbox_limits limits;
+	limits.wall_time = 0.5;
+	limits.cpu_time = 0.5;
+	limits.extra_time = 1;
+	limits.disk_blocks = 500;
+	limits.disk_inodes = 500;
+	limits.memory_usage = 100000;
+	limits.stdin = "";
+	limits.stdout = "";
+	limits.stderr = "";
+	limits.stack_size = 0;
+	limits.files_size = 0;
+	limits.processes = 0;
+	limits.share_net = false;
+	isolate_sandbox *is;
+	EXPECT_NO_THROW(is = new isolate_sandbox(limits, 34));
+	EXPECT_EQ(is->get_dir(), "/tmp/box/34");
+	task_results results;
+	EXPECT_NO_THROW(results = is->run("/usr/bin/sleep", std::vector<std::string>{"5"}));
+	EXPECT_TRUE(fs::is_regular_file("/tmp/recodex_isolate_34/meta.log"));
+	EXPECT_TRUE(fs::file_size("/tmp/recodex_isolate_34/meta.log") > 0);
+	EXPECT_TRUE(results.killed);
+	EXPECT_TRUE(results.message == "Time limit exceeded (wall clock)");
+	EXPECT_TRUE(results.wall_time > 1);
+	EXPECT_TRUE(results.status == isolate_status::TO);
+	delete is;
+}
+
+TEST(IsolateSandbox, NonzeroReturnCommand)
+{
+	sandbox_limits limits;
+	limits.wall_time = 0.5;
+	limits.cpu_time = 0.5;
+	limits.extra_time = 1;
+	limits.disk_blocks = 500;
+	limits.disk_inodes = 500;
+	limits.memory_usage = 100000;
+	limits.stdin = "";
+	limits.stdout = "";
+	limits.stderr = "";
+	limits.stack_size = 0;
+	limits.files_size = 0;
+	limits.processes = 0;
+	limits.share_net = false;
+	isolate_sandbox *is;
+	EXPECT_NO_THROW(is = new isolate_sandbox(limits, 34));
+	EXPECT_EQ(is->get_dir(), "/tmp/box/34");
+	task_results results;
+	EXPECT_NO_THROW(results = is->run("/usr/bin/false", std::vector<std::string>{}));
+	EXPECT_TRUE(fs::is_regular_file("/tmp/recodex_isolate_34/meta.log"));
+	EXPECT_TRUE(fs::file_size("/tmp/recodex_isolate_34/meta.log") > 0);
+	EXPECT_TRUE(!results.killed);
+	EXPECT_TRUE(results.message == "Exited with error status 1");
+	EXPECT_TRUE(results.wall_time > 0);
+	EXPECT_TRUE(results.status == isolate_status::RE);
+	EXPECT_TRUE(results.exitcode == 1);
 	delete is;
 }

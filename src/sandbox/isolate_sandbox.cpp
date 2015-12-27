@@ -146,6 +146,7 @@ void isolate_sandbox::isolate_init()
 			throw sandbox_exception(message);
 		}
 		logger_->debug() << "Isolate initialized in " << sandboxed_dir_;
+		close(fd[0]);
 		break;
 	}
 }
@@ -273,6 +274,7 @@ char **isolate_sandbox::isolate_run_args(const std::string &binary, const std::v
 	vargs.push_back("--box-id=" + std::to_string(id_));
 
 	vargs.push_back("--cg-mem=" + std::to_string(limits_.memory_usage));
+	vargs.push_back("--mem=" + std::to_string(limits_.memory_usage));
 	vargs.push_back("--time=" + std::to_string(limits_.cpu_time));
 	vargs.push_back("--wall-time=" + std::to_string(limits_.wall_time));
 	vargs.push_back("--extra-time=" + std::to_string(limits_.extra_time));
@@ -373,6 +375,8 @@ task_results isolate_sandbox::process_meta_file()
 				results.exitcode = std::stoi(second);
 			} else if (first == "cg-mem") {
 				results.memory = std::stoul(second);
+			} else if (first == "max-rss") {
+				results.max_rss = std::stoul(second);
 			}
 		}
 		return results;

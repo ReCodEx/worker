@@ -33,6 +33,7 @@ struct task_results {
 	float time;
 	float wall_time;
 	size_t memory;
+	size_t max_rss;
 	isolate_status status;
 	int exitsig;
 	bool killed;
