@@ -22,6 +22,7 @@ private:
 	void isolate_cleanup();
 	void isolate_run(const std::string &binary, const std::vector<std::string> &arguments);
 	char **isolate_run_args(const std::string &binary, const std::vector<std::string> &arguments);
+	task_results process_meta_file();
 };
 
 

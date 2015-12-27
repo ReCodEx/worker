@@ -8,6 +8,8 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <fstream>
+#include <string>
 #define BOOST_FILESYSTEM_NO_DEPRECATED
 #define BOOST_NO_CXX11_SCOPED_ENUMS
 #include <boost/filesystem.hpp>
@@ -55,7 +57,7 @@ isolate_sandbox::~isolate_sandbox()
 task_results isolate_sandbox::run(const std::string &binary, const std::vector<std::string> &arguments)
 {
 	isolate_run(binary, arguments);
-	return task_results();
+	return process_meta_file();
 }
 
 void isolate_sandbox::isolate_init()
@@ -322,5 +324,62 @@ char **isolate_sandbox::isolate_run_args(const std::string &binary, const std::v
 	}
 	c_args[i] = NULL;
 	return c_args;
+}
+
+task_results isolate_sandbox::process_meta_file()
+{
+	task_results results;
+
+	//Set reasonable defaults
+	results.exitcode = 0;
+	results.exitsig = 0; //no signal
+	results.killed = false;
+	results.memory = 0;
+	results.message = "";
+	results.status = isolate_status::NOTSET;
+	results.time = 0;
+	results.wall_time = 0;
+
+	std::ifstream meta_stream;
+	meta_stream.open(meta_file_);
+	if (meta_stream.is_open()) {
+		std::string line;
+		while (std::getline(meta_stream, line)) {
+			size_t pos = line.find(':');
+			size_t value_size = line.size() - (pos + 1);
+			auto first = line.substr(0, pos);
+			auto second = line.substr(pos + 1, value_size);
+			if (first == "time") {
+				results.time = std::stof(second);
+			} else if (first == "time-wall") {
+				results.wall_time = std::stof(second);
+			} else if (first == "killed") {
+				results.killed = true;
+			} else if (first == "status") {
+				if (second == "RE") {
+					results.status = isolate_status::RE;
+				} else if (second == "SG") {
+					results.status = isolate_status::SG;
+				} else if (second == "TO") {
+					results.status = isolate_status::TO;
+				} else if (second == "XX") {
+					results.status = isolate_status::XX;
+				}
+			} else if (first == "message") {
+				results.message = second;
+			} else if (first == "exitsig") {
+				results.exitsig = std::stoi(second);
+			} else if (first == "exitcode") {
+				results.exitcode = std::stoi(second);
+			} else if (first == "cg-mem") {
+				results.memory = std::stoul(second);
+			}
+		}
+		return results;
+	} else {
+		auto message = "Cannot open " + meta_file_ + " for reading.";
+		logger_->warn() << message;
+		throw sandbox_exception(message);
+	}
 }
 

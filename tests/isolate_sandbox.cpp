@@ -34,11 +34,15 @@ TEST(IsolateSandbox, RunCommand)
 	isolate_sandbox *is;
 	EXPECT_NO_THROW(is = new isolate_sandbox(limits, 34));
 	EXPECT_EQ(is->get_dir(), "/tmp/box/34");
-	//is->run("/usr/bin/ls", "-a");
-	EXPECT_NO_THROW(is->run("/usr/bin/ls", std::vector<std::string>{"-a", "-l"}));
+	task_results results;
+	EXPECT_NO_THROW(results = is->run("/usr/bin/ls", std::vector<std::string>{"-a", "-l", "-i"}));
 	EXPECT_TRUE(fs::is_regular_file("/tmp/box/34/box/output.txt"));
 	EXPECT_TRUE(fs::file_size("/tmp/box/34/box/output.txt") > 0);
 	EXPECT_TRUE(fs::is_regular_file("/tmp/recodex_isolate_34/meta.log"));
 	EXPECT_TRUE(fs::file_size("/tmp/recodex_isolate_34/meta.log") > 0);
+	EXPECT_TRUE(!results.killed);
+	EXPECT_TRUE(results.exitcode == 0);
+	EXPECT_TRUE(results.message.empty());
+	EXPECT_TRUE(results.wall_time > 0);
 	delete is;
 }

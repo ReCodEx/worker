@@ -26,14 +26,16 @@ struct sandbox_limits {
 	std::map<std::string, std::string> environ_vars; //set environment variables
 };
 
+enum class isolate_status { RE, SG, TO, XX, NOTSET };
+
 struct task_results {
 	int exitcode;
-	std::string status;
-	int exitsig;
-	size_t time;
-	size_t wall_time;
+	float time;
+	float wall_time;
 	size_t memory;
-	int killed; //or bool?
+	isolate_status status;
+	int exitsig;
+	bool killed;
 	std::string message;
 };
 
