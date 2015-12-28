@@ -23,7 +23,7 @@ install:
 
     mv -f ./boost_filesystem-vc140/lib/native/address-model-32/lib/* ./boost/lib/
 
-	nuget install boost_program_options-vc140 -ExcludeVersion
+    nuget install boost_program_options-vc140 -ExcludeVersion
 
     mv -f ./boost_program_options-vc140/lib/native/address-model-32/lib/* ./boost/lib/
 
@@ -90,7 +90,7 @@ test_script:
 
     mv -f rmt_libssh2/build/native/bin/v140/Win32/Release/dynamic/* C:\projects\codex_worker\tests\Release\
 
-	mv -f curl-ca-bundle.crt C:\projects\codex_worker\tests\Release\
+    mv -f curl-ca-bundle.crt C:\projects\codex_worker\tests\Release\
 
 
     cd C:\projects\codex_worker\tests\Release

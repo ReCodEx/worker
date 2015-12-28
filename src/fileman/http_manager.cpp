@@ -83,6 +83,10 @@ void http_manager::get_file(const std::string &src_name, const std::string &dst_
 		//Use custom write function (because of Windows DLL issue)
 		curl_easy_setopt(curl, CURLOPT_READFUNCTION, fwrite_wrapper);
 
+#ifdef _WIN32 // Windows needs to have explicitly defined certificate bundle
+		curl_easy_setopt(curl, CURLOPT_CAINFO, "curl-ca-bundle.crt");
+#endif
+
 		//Follow redirects
 		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
 		//Ennable support for HTTP2
@@ -157,6 +161,10 @@ void http_manager::put_file(const std::string &name)
 
 		//Better give size of uploaded file
 		curl_easy_setopt(curl, CURLOPT_INFILESIZE_LARGE, (curl_off_t)filesize);
+
+#ifdef _WIN32 // Windows needs to have explicitly defined certificate bundle
+		curl_easy_setopt(curl, CURLOPT_CAINFO, "curl-ca-bundle.crt");
+#endif
 
 		//Follow redirects
 		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
