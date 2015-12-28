@@ -11,12 +11,14 @@
 #define BOOST_FILESYSTEM_NO_DEPRECATED
 #define BOOST_NO_CXX11_SCOPED_ENUMS
 #include <boost/filesystem.hpp>
+#include <boost/program_options.hpp>
 
 namespace fs = boost::filesystem;
 
 
 // Our very own code includes
 #include "config/worker_config.h"
+#include "config/log_config.h"
 #include "broker_connection.h"
 #include "connection_proxy.h"
 #include "tasks/job.h"
@@ -43,15 +45,22 @@ private:
 	void log_init();
 	void curl_init();
 	void broker_init();
-	void force_exit(std::string msg);
+	void force_exit(std::string msg = "");
 	void parse_params();
 	void load_config();
 
+
+	// PRIVATE DATA MEMBERS
 	std::vector<std::string> args_;
+
+	std::string config_filename_;
 	YAML::Node config_;
+
 	job job_;
-	std::string log_filename_;
+
+	log_config log_config_;
 	std::shared_ptr<spdlog::logger> logger_;
+
 	std::shared_ptr<broker_connection<connection_proxy, receive_task_callback>> broker_;
 };
 

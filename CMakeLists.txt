@@ -10,7 +10,7 @@ set(gtest_force_shared_crt ON CACHE BOOL "Use shared (DLL) run-time lib even whe
 # MS Visual C++ specific bindings
 if(MSVC)
 	set(Boost_USE_STATIC_LIBS ON)
-	find_package(Boost 1.57.0 REQUIRED COMPONENTS filesystem system)
+	find_package(Boost 1.57.0 REQUIRED COMPONENTS filesystem system program_options)
 	include_directories(${Boost_INCLUDE_DIRS})
 	
 	find_package(CURL REQUIRED)
@@ -47,6 +47,7 @@ set(SOURCE_FILES
 	src/main.cpp
 	src/config/worker_config.cpp
 	src/config/worker_config.h
+	src/config/log_config.h
 	src/broker_connection.h
 	src/connection_proxy.h
 	src/fileman/file_manager_base.h
@@ -55,13 +56,15 @@ set(SOURCE_FILES
 	src/fileman/file_manager.h
 	src/fileman/cache_manager.cpp
 	src/fileman/http_manager.cpp
-    src/fileman/file_manager.cpp
-    src/sandbox/sandbox_base.h
-    src/isoeval_core.h
-    src/isoeval_core.cpp
-    src/tasks/job.h
-    src/sandbox/isolate_sandbox.h
-    src/sandbox/isolate_sandbox.cpp
+	src/fileman/file_manager.cpp
+	src/sandbox/sandbox_base.h
+	src/isoeval_core.h
+	src/isoeval_core.cpp
+	src/tasks/job.h
+	src/tasks/task_base.h
+	src/tasks/internal_task_base.h
+	src/sandbox/isolate_sandbox.h
+	src/sandbox/isolate_sandbox.cpp
 )
 
 
@@ -70,8 +73,7 @@ target_link_libraries(${EXEC_NAME} yaml-cpp)
 if(UNIX)
 	target_link_libraries(${EXEC_NAME} -lzmq)
 	target_link_libraries(${EXEC_NAME} -lcurl)
-	target_link_libraries(${EXEC_NAME} -lboost_filesystem)
-	target_link_libraries(${EXEC_NAME} -lboost_system)
+	target_link_libraries(${EXEC_NAME} -lboost_filesystem -lboost_system -lboost_program_options)
 elseif(MSVC)
 	target_link_libraries(${EXEC_NAME} ${Boost_LIBRARIES})
 	target_link_libraries(${EXEC_NAME} ${ZEROMQ_LIB})

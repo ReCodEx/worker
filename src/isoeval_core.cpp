@@ -1,7 +1,8 @@
 #include "isoeval_core.h"
 
 isoeval_core::isoeval_core(std::vector<std::string> args)
-	: args_(args), job_(), logger_(nullptr), broker_(nullptr)
+	: args_(args), job_(), logger_(nullptr), broker_(nullptr),
+	  config_filename_("config.yml"), log_config_()
 {
 	parse_params();
 	curl_init();
@@ -31,7 +32,38 @@ void isoeval_core::push_job_config(std::string filename)
 
 void isoeval_core::parse_params()
 {
-	// use boost::program_options
+	using namespace boost::program_options;
+
+	// Declare the supported options.
+	options_description desc("Allowed options for IsoEval");
+	desc.add_options()
+		("help,h", "Writes this help message to stderr")
+		("config,c", value<std::string>(), "Set default configuration of this program")
+		("log-path,l", value<std::string>(), "Set path to logging folder");
+
+	variables_map vm;
+	try {
+		store(command_line_parser(args_).options(desc).run(), vm);
+		notify(vm);
+	} catch (std::exception &e) {
+		force_exit("Error in loading a parameter: " + std::string(e.what()));
+	}
+
+
+	// Evaluate all information from command line
+	if (vm.count("help")) {
+		std::cerr << desc << std::endl;
+		force_exit();
+	}
+
+	if (vm.count("config")) {
+		config_filename_ = vm["config"].as<std::string>();
+	}
+
+	if (vm.count("log-path")) {
+		log_config_.log_path_ = vm["log-path"].as<std::string>();
+	}
+
 	return;
 }
 
@@ -49,25 +81,19 @@ void isoeval_core::load_config()
 void isoeval_core::force_exit(std::string msg)
 {
 	// write to log
-	if (logger_ != nullptr) {}
-	std::cerr << msg << std::endl;
+	if (msg != "") {
+		if (logger_ != nullptr) {}
+		std::cerr << msg << std::endl;
+	}
 
 	exit(1);
 }
 
 void isoeval_core::log_init()
 {
-	//Params which will be configured - will be implemented later
-	std::string log_path = "/tmp/recodex_log/";
-	std::string log_basename = "worker";
-	std::string log_suffix = "log";
-	spdlog::level::level_enum log_level = spdlog::level::debug;
-	int log_file_size = 1024 * 1024;
-	int log_files_count = 3;
-
 	//Set up logger
 	//Try to create target directory for logs
-	auto path = fs::path(log_path);
+	auto path = fs::path(log_config_.log_path_);
 	try {
 		if(!fs::is_directory(path)) {
 			fs::create_directories(path);
@@ -80,14 +106,14 @@ void isoeval_core::log_init()
 	//Create and register logger
 	try {
 		//Create multithreaded rotating file sink. Max filesize is 1024 * 1024 and we save 5 newest files.
-		auto rotating_sink = std::make_shared<spdlog::sinks::rotating_file_sink_mt>((path / log_basename).string(),
-								log_suffix, log_file_size, log_files_count, false);
+		auto rotating_sink = std::make_shared<spdlog::sinks::rotating_file_sink_mt>((path / log_config_.log_basename_).string(),
+								log_config_.log_suffix_, log_config_.log_file_size, log_config_.log_files_count, false);
 		//Set queue size for asynchronous logging. It must be a power of 2.
 		spdlog::set_async_mode(1048576);
 		//Make log with name "logger"
 		logger_ = std::make_shared<spdlog::logger>("logger", rotating_sink);
 		//Set logging level to debug
-		logger_->set_level(log_level);
+		logger_->set_level(log_config_.log_level);
 		//Print header to log
 		logger_->emerg() << "------------------------------";
 		logger_->emerg() << "    Started ReCodEx worker";
