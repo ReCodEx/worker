@@ -9,6 +9,10 @@
 
 namespace fs = boost::filesystem;
 
+//Disable warning about fopen() on Windows
+#ifdef _WIN32
+	#pragma warning(disable : 4996)
+#endif
 
 
 /* If you want run this program on Windows with libcurl as a

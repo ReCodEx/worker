@@ -7,11 +7,11 @@ if(UNIX)
 	set(CMAKE_C_LINKER_FLAGS "${CMAKE_C_LINKER_FLAGS} -s")
 endif()
 
-# The worker executable
+
 set(SOURCE_FILES
-	main.c
-	io.c
 	io.h
+	io.c
+	main.c
 )
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
