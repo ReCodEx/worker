@@ -65,6 +65,8 @@ set(SOURCE_FILES
 	src/tasks/internal_task_base.h
 	src/sandbox/isolate_sandbox.h
 	src/sandbox/isolate_sandbox.cpp
+	src/job_evaluator.h
+	src/job_evaluator.cpp
 )
 
 

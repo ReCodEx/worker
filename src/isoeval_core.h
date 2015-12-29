@@ -7,6 +7,8 @@
 #include "spdlog/spdlog.h"
 #include <curl/curl.h>
 #include <vector>
+#include <functional>
+#include <thread>
 
 #define BOOST_FILESYSTEM_NO_DEPRECATED
 #define BOOST_NO_CXX11_SCOPED_ENUMS
@@ -21,11 +23,13 @@ namespace fs = boost::filesystem;
 #include "config/log_config.h"
 #include "broker_connection.h"
 #include "connection_proxy.h"
-#include "tasks/job.h"
+#include "job_evaluator.h"
 
 
 /**
- *
+ * Main class of whole program.
+ * It handles all creation and destruction of all used parts.
+ * And of course run all those parts.
  */
 class isoeval_core {
 public:
@@ -35,33 +39,78 @@ public:
 	isoeval_core(const isoeval_core &&source) = delete;
 	isoeval_core& operator=(const isoeval_core &&source) = delete;
 
+	/**
+	 * There is only one constructor, which should get cmd parameters.
+	 * Constructor initializes all variables and structures, parses cmd parameters and load configuration.
+	 * @param args Cmd line parameters
+	 */
 	isoeval_core(std::vector<std::string> args);
+
+	/**
+	 * All structures which need to be explicitly destructed or unitialized should do it now.
+	 */
 	~isoeval_core();
 
+	/**
+	 * Constructors initializes all things,	all we have to do now is launch all the fun.
+	 * This method creates separate thread for broker_connection and starts job_evaluator service.
+	 */
 	void run();
-	void push_job_config(std::string filename);
 private:
 
+	/**
+	 * Setup all things around spdlog logger, creates log path/file if not existing.
+	 */
 	void log_init();
+	/**
+	 * Globally initializes CURL
+	 */
 	void curl_init();
+	/**
+	 * CURL cleanup
+	 */
+	void curl_fini();
+	/**
+	 * Construct and setup broker connection.
+	 * This function does not run broker in separated thread,
+	 * this is done in run() function.
+	 */
 	void broker_init();
+	/**
+	 * Exit whole application with return code 1.
+	 * @param msg string which is copied to stderr and logger if initialized.
+	 */
 	void force_exit(std::string msg = "");
+	/**
+	 * Parse cmd line params given in constructor.
+	 */
 	void parse_params();
+	/**
+	 * Load default worker configuration from default config file
+	 * or from file given in cmd parameters.
+	 */
 	void load_config();
 
 
 	// PRIVATE DATA MEMBERS
+	/** Cmd line parameters */
 	std::vector<std::string> args_;
 
+	/** Filename of default configuration of worker */
 	std::string config_filename_;
-	YAML::Node config_;
+	/** Loaded worker configuration */
+	std::shared_ptr<worker_config> config_;
 
-	job job_;
-
+	/** Configuration of spdlogger */
 	log_config log_config_;
+	/** Pointer to logger itself */
 	std::shared_ptr<spdlog::logger> logger_;
 
+	/** Handles evaluation itself and all things around */
+	std::shared_ptr<job_evaluator> job_evaluator_;
+	/** Handles connection to broker, receiving submission and pushing results */
 	std::shared_ptr<broker_connection<connection_proxy, receive_task_callback>> broker_;
+	connection_proxy broker_proxy_;
 };
 
 #endif //CODEX_WORKER_ISOEVAL_CORE_HPP

@@ -1,32 +1,34 @@
 #include "isoeval_core.h"
 
 isoeval_core::isoeval_core(std::vector<std::string> args)
-	: args_(args), job_(), logger_(nullptr), broker_(nullptr),
+	: args_(args), logger_(nullptr), broker_(nullptr), job_evaluator_(nullptr),
 	  config_filename_("config.yml"), log_config_()
 {
+	// parse cmd parameters
 	parse_params();
+	// initialize curl
 	curl_init();
+	// initialize logger
 	log_init();
+	// load configuration from yaml file
 	load_config();
+	// construct and setup broker connection
 	broker_init();
 }
 
 isoeval_core::~isoeval_core()
 {
-	//Clean after curl library
-	curl_global_cleanup();
+	// curl finalize
+	curl_fini();
 }
 
 void isoeval_core::run()
 {
 	broker_->connect();
-	broker_->receive_tasks();
+	std::thread broker_thread(std::bind(&broker_connection<connection_proxy, receive_task_callback>::receive_tasks, broker_));
 
-	return;
-}
+	broker_thread.join();
 
-void isoeval_core::push_job_config(std::string filename)
-{
 	return;
 }
 
@@ -70,7 +72,8 @@ void isoeval_core::parse_params()
 void isoeval_core::load_config()
 {
 	try {
-		config_ = YAML::LoadFile("config.yml");
+		YAML::Node config_yaml = YAML::LoadFile(config_filename_);
+		config_ = std::make_shared<worker_config>(config_yaml);
 	} catch (YAML::Exception e) {
 		force_exit("Error loading config file: " + std::string(e.what()));
 	}
@@ -134,12 +137,17 @@ void isoeval_core::curl_init()
 	return;
 }
 
+void isoeval_core::curl_fini()
+{
+	//Clean after curl library
+	curl_global_cleanup();
+
+	return;
+}
+
 void isoeval_core::broker_init()
 {
-	worker_config config(config_);
-	connection_proxy proxy;
-
-	broker_ = std::make_shared<broker_connection<connection_proxy, receive_task_callback>>(config, &proxy, logger_);
+	broker_ = std::make_shared<broker_connection<connection_proxy, receive_task_callback>>(*config_, &broker_proxy_, logger_);
 
 	return;
 }
