@@ -87,3 +87,6 @@ add_subdirectory(vendor/yaml-cpp)
 # Include Google Test libraries and then our very own unit tests
 add_subdirectory(vendor/googletest)
 add_subdirectory(tests)
+
+# Include judges
+add_subdirectory(judges)
