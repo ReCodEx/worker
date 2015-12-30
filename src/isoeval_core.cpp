@@ -1,8 +1,9 @@
 #include "isoeval_core.h"
 
+
 isoeval_core::isoeval_core(std::vector<std::string> args)
 	: args_(args), logger_(nullptr), broker_(nullptr), job_evaluator_(nullptr),
-	  fileman_(nullptr), config_filename_("config.yml"), log_config_()
+	  fileman_(nullptr), config_filename_("config.yml"), log_config_(), job_callback_(fileman_)
 {
 	// parse cmd parameters
 	parse_params();
@@ -29,7 +30,7 @@ isoeval_core::~isoeval_core()
 void isoeval_core::run()
 {
 	broker_->connect();
-	std::thread broker_thread(std::bind(&broker_connection<connection_proxy, receive_task_callback>::receive_tasks, broker_));
+	std::thread broker_thread(std::bind(&broker_connection<connection_proxy, job_callback>::receive_tasks, broker_));
 
 	job_evaluator_->run();
 
@@ -152,7 +153,12 @@ void isoeval_core::curl_fini()
 
 void isoeval_core::broker_init()
 {
-	broker_ = std::make_shared<broker_connection<connection_proxy, receive_task_callback>>(*config_, &broker_proxy_, logger_);
+	broker_ = std::make_shared<broker_connection<connection_proxy, job_callback>>(
+		*config_,
+		&broker_proxy_,
+		&job_callback_,
+		logger_
+	);
 
 	return;
 }

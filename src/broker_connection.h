@@ -8,34 +8,35 @@
 #include "spdlog/spdlog.h"
 #include "config/worker_config.h"
 
-
-struct receive_task_callback {
-	bool operator() ()
-	{
-		std::cout << "Task received" << std::endl;
-		return true;
-	}
-};
-
-
 template <typename proxy, typename task_callback>
 class broker_connection {
 private:
 	const worker_config &config;
 	proxy *socket;
 	std::shared_ptr<spdlog::logger> logger_;
+	task_callback *cb_;
 
-	/**
-	 * Send the ACK command to the broker
-	 */
-	void command_ack ()
+	void process_eval (zmq::message_t &request)
 	{
+		socket->recv(request);
+		std::string job_id((char *) request.data(), request.size());
 
+		socket->recv(request);
+		std::string job_url((char *) request.data(), request.size());
+
+		socket->recv(request);
+		std::string result_url((char *) request.data(), request.size());
+
+		(*cb_)(job_id, job_url, result_url);
 	}
-
 public:
-	broker_connection (const worker_config &config, proxy *socket, std::shared_ptr<spdlog::logger> logger = nullptr) :
-		config(config), socket(socket)
+	broker_connection (
+		const worker_config &config,
+		proxy *socket,
+		task_callback *cb,
+		std::shared_ptr<spdlog::logger> logger = nullptr
+	) :
+		config(config), socket(socket), cb_(cb)
 	{
 		if(logger != nullptr) {
 			logger_ = logger;
@@ -80,15 +81,17 @@ public:
 	 */
 	void receive_tasks ()
 	{
-		task_callback cb;
 		bool terminate = false;
 		zmq::message_t request;
 
 		while (!terminate) {
 			try {
 				socket->recv(request);
-				logger_->debug() << "Received request from broker";
-				cb();
+				std::string command((char *) request.data(), request.size());
+
+				if (command == "eval") {
+					process_eval(request);
+				}
 			} catch (zmq::error_t &e) {
 				logger_->emerg() << "Terminating to receive messages. " << e.what();
 				terminate = true;

@@ -69,7 +69,7 @@ set(SOURCE_FILES
 	src/sandbox/isolate_sandbox.cpp
 	src/job_evaluator.h
 	src/job_evaluator.cpp
-)
+		src/job_callback.cpp src/job_callback.h)
 
 
 add_executable(${EXEC_NAME} ${SOURCE_FILES})

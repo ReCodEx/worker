@@ -26,7 +26,7 @@ namespace fs = boost::filesystem;
 #include "job_evaluator.h"
 #include "fileman/file_manager_base.h"
 #include "fileman/file_manager.h"
-
+#include "job_callback.h"
 
 /**
  * Main class of whole program.
@@ -123,8 +123,9 @@ private:
 	/** Handles evaluation and all things around */
 	std::shared_ptr<job_evaluator> job_evaluator_;
 	/** Handles connection to broker, receiving submission and pushing results */
-	std::shared_ptr<broker_connection<connection_proxy, receive_task_callback>> broker_;
+	std::shared_ptr<broker_connection<connection_proxy, job_callback>> broker_;
 	connection_proxy broker_proxy_;
+	job_callback job_callback_;
 };
 
 #endif //CODEX_WORKER_ISOEVAL_CORE_HPP
