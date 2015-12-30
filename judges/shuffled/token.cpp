@@ -86,7 +86,7 @@ inline int CFile::skipWhitespace() {
  * Adds new char into hash code (for calculating hash value) and returns new hash.
  */
 inline unsigned int CToken::addHashChar(unsigned int hash, char ch) {
-	unsigned int x = (hash >> 20) & (1 << 5 - 1);
+	unsigned int x = (hash >> 20) & (1 << (5 - 1));
 	hash = (hash << 5) ^ (unsigned)ch;
 	hash = hash ^ x;
 	return hash;

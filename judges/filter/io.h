@@ -37,9 +37,9 @@ STREAM sopenRead(const char *fileName);
 STREAM sopenWrite(const char *fileName);
 void sclose(STREAM s);
 
-inline int sgetc(STREAM s);
-inline void sputc(STREAM s, int ch);
-inline int serror(STREAM s);
+int sgetc(STREAM s);
+void sputc(STREAM s, int ch);
+int serror(STREAM s);
 
 
 #endif // IO_H_INCLUDED

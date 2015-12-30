@@ -39,7 +39,8 @@ include_directories(AFTER, vendor/yaml-cpp/include)
 
 # Use C++11
 if(UNIX)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+    #-Wno-deprecated-declarations hides warning in yaml-cpp (using std::auto_ptr)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wno-deprecated-declarations")
 endif()
 
 # The worker executable
@@ -77,6 +78,7 @@ if(UNIX)
 	target_link_libraries(${EXEC_NAME} -lzmq)
 	target_link_libraries(${EXEC_NAME} -lcurl)
 	target_link_libraries(${EXEC_NAME} -lboost_filesystem -lboost_system -lboost_program_options)
+	target_link_libraries(${EXEC_NAME} pthread)
 elseif(MSVC)
 	target_link_libraries(${EXEC_NAME} ${Boost_LIBRARIES})
 	target_link_libraries(${EXEC_NAME} ${ZEROMQ_LIB})
