@@ -8,11 +8,25 @@
 #include "spdlog/spdlog.h"
 #include "sandbox_base.h"
 
-
+/**
+ * Class implementing operations with Isolate sandbox.
+ * @note Requirements are unix-like OS with Isolate installed.
+ */
 class isolate_sandbox : public sandbox_base {
 public:
+	/**
+	 * Constructor.
+	 * @param limits Limits for current command.
+	 * @param id Number of current worker. This must be unique for each worker on one machine!
+	 * @param max_timeout Second security level - sandbox must end in this limit othrwise will be killed.
+	 * If not set (or set to -1), this number will be safely computed from @a limits. This limit is in seconds (optional).
+	 * @param logger Set system logger (optional).
+	 */
 	isolate_sandbox(sandbox_limits limits, size_t id, int max_timeout = -1,
 					std::shared_ptr<spdlog::logger> logger = nullptr);
+	/**
+	 * Destructor.
+	 */
 	virtual ~isolate_sandbox();
 	virtual task_results run(const std::string &binary, const std::vector<std::string> &arguments);
 private:
