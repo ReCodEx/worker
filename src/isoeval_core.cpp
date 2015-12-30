@@ -2,18 +2,22 @@
 
 isoeval_core::isoeval_core(std::vector<std::string> args)
 	: args_(args), logger_(nullptr), broker_(nullptr), job_evaluator_(nullptr),
-	  config_filename_("config.yml"), log_config_()
+	  fileman_(nullptr), config_filename_("config.yml"), log_config_()
 {
 	// parse cmd parameters
 	parse_params();
 	// initialize curl
 	curl_init();
-	// initialize logger
-	log_init();
 	// load configuration from yaml file
 	load_config();
+	// initialize logger
+	log_init();
 	// construct and setup broker connection
 	broker_init();
+	// construct filemanager
+	fileman_init();
+	// evaluator initialization
+	evaluator_init();
 }
 
 isoeval_core::~isoeval_core()
@@ -26,6 +30,8 @@ void isoeval_core::run()
 {
 	broker_->connect();
 	std::thread broker_thread(std::bind(&broker_connection<connection_proxy, receive_task_callback>::receive_tasks, broker_));
+
+	job_evaluator_->run();
 
 	broker_thread.join();
 
@@ -40,8 +46,7 @@ void isoeval_core::parse_params()
 	options_description desc("Allowed options for IsoEval");
 	desc.add_options()
 		("help,h", "Writes this help message to stderr")
-		("config,c", value<std::string>(), "Set default configuration of this program")
-		("log-path,l", value<std::string>(), "Set path to logging folder");
+		("config,c", value<std::string>(), "Set default configuration of this program");
 
 	variables_map vm;
 	try {
@@ -149,5 +154,19 @@ void isoeval_core::broker_init()
 {
 	broker_ = std::make_shared<broker_connection<connection_proxy, receive_task_callback>>(*config_, &broker_proxy_, logger_);
 
+	return;
+}
+
+void isoeval_core::fileman_init()
+{
+	// we do not have configuration yet...
+	//file_manager_ = std::make_shared<file_manager>("caching_dir", "remote", "username", "password", logger_);
+
+	return;
+}
+
+void isoeval_core::evaluator_init()
+{
+	job_evaluator_ = std::make_shared<job_evaluator>(logger_, config_, fileman_);
 	return;
 }

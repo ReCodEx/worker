@@ -2,6 +2,7 @@
 #define CODEX_WORKER_TASK_BASE_HPP
 
 #include <vector>
+#include <cstdlib>
 
 
 /**

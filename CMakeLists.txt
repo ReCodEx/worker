@@ -61,6 +61,7 @@ set(SOURCE_FILES
 	src/isoeval_core.h
 	src/isoeval_core.cpp
 	src/tasks/job.h
+	src/tasks/job.cpp
 	src/tasks/task_base.h
 	src/tasks/internal_task_base.h
 	src/sandbox/isolate_sandbox.h

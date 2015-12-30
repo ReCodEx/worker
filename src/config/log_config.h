@@ -3,6 +3,10 @@
 
 #include "spdlog/spdlog.h"
 
+
+/**
+ * Structure which stores all information needed to initialize logger.
+ */
 struct log_config {
 public:
 	std::string log_path_ = "/tmp/recodex/";
