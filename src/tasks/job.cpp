@@ -7,6 +7,12 @@ job::job(std::string submission_path,
 	: submission_path_(submission_path), root_task_(nullptr),
 	  logger_(logger), default_config_(config), fileman_(fileman)
 {
+	if (config == nullptr) {
+		throw job_exception("Default worker config not given");
+	} else if (fileman == nullptr) {
+		throw job_exception("Filemanager not given");
+	}
+
 	load_config();
 	build_job();
 	prepare_job();
@@ -61,24 +67,24 @@ void job::build_job()
 	// get information about submission
 	if (config_["submission"]["job-id"]) {
 		job_id_ = config_["submission"]["job-id"].as<size_t>();
-	} else { throw job_exception("Submission item not loaded properly"); }
+	} else { throw job_exception("Submission.job-id item not loaded properly"); }
 	if (config_["submission"]["language"]) {
 		language_ = config_["submission"]["language"].as<std::string>();
-	} else { throw job_exception("Submission item not loaded properly"); }
+	} else { throw job_exception("Submission.language item not loaded properly"); }
 	if (config_["submission"]["file-collector"]) {
 		if (config_["submission"]["file-collector"].IsMap()) {
 			if (config_["submission"]["file-collector"]["hostname"]) {
 				fileman_hostname_ = config_["submission"]["file-collector"]["hostname"].as<std::string>();
-			} else { throw job_exception("Submission.file-collector item not loaded properly"); }
+			} else { throw job_exception("Submission.file-collector.hostname item not loaded properly"); }
 			if (config_["submission"]["file-collector"]["port"]) {
 				fileman_port_ = config_["submission"]["file-collector"]["port"].as<std::string>();
-			} else { throw job_exception("Submission.file-collector item not loaded properly"); }
+			} else { throw job_exception("Submission.file-collector.port item not loaded properly"); }
 			if (config_["submission"]["file-collector"]["username"]) {
 				fileman_username_ = config_["submission"]["file-collector"]["username"].as<std::string>();
-			} else { throw job_exception("Submission.file-collector item not loaded properly"); }
+			} else { throw job_exception("Submission.file-collector.username item not loaded properly"); }
 			if (config_["submission"]["file-collector"]["password"]) {
 				fileman_passwd_ = config_["submission"]["file-collector"]["password"].as<std::string>();
-			} else { throw job_exception("Submission.file-collector item not loaded properly"); }
+			} else { throw job_exception("Submission.file-collector.password item not loaded properly"); }
 		} else {
 			throw job_exception("Item submission.file-collector is not map");
 		}
@@ -112,22 +118,19 @@ void job::build_job()
 
 		if (config_["tasks"][i]["task-id"]) {
 			task_id = config_["tasks"][i]["task-id"].as<std::string>();
-		} else { throw job_exception("Configuration of one task is in bad format"); }
+		} else { throw job_exception("Configuration of one task has missing task-id"); }
 		if (config_["tasks"][i]["priority"]) {
 			priority = config_["tasks"][i]["priority"].as<size_t>();
-		} else { throw job_exception("Configuration of one task is in bad format"); }
+		} else { throw job_exception("Configuration of one task has missing priority"); }
 		if (config_["tasks"][i]["fatal"]) {
 			fatal = config_["tasks"][i]["fatal"].as<bool>();
-		} else { throw job_exception("Configuration of one task is in bad format"); }
+		} else { throw job_exception("Configuration of one task has missing fatal-failure"); }
 		if (config_["tasks"][i]["cmd"]) {
 			cmd = config_["tasks"][i]["cmd"].as<std::string>();
-		} else { throw job_exception("Configuration of one task is in bad format"); }
+		} else { throw job_exception("Configuration of one task has missing cmd"); }
 		if (config_["tasks"][i]["log"]) {
 			log = config_["tasks"][i]["log"].as<std::string>();
-		} else { throw job_exception("Configuration of one task is in bad format"); }
-		if (config_["tasks"][i]["dependencies"]) {
-			task_depend = config_["tasks"][i]["dependencies"].as<std::vector<std::string>>();
-		} else { throw job_exception("Configuration of one task is in bad format"); }
+		} else { throw job_exception("Configuration of one task has missing log"); }
 
 		// distinguish internal/external command and construct suitable object
 		if (config_["tasks"][i]["sandbox"]) {

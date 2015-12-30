@@ -2,7 +2,11 @@
 #define CODEX_WORKER_JOB_HPP
 
 #include <vector>
+
+#define BOOST_FILESYSTEM_NO_DEPRECATED
+#define BOOST_NO_CXX11_SCOPED_ENUMS
 #include <boost/filesystem.hpp>
+
 #include "spdlog/spdlog.h"
 #include "../config/worker_config.h"
 #include "task_base.h"
