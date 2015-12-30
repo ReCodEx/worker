@@ -2,7 +2,9 @@
 #define CODEX_WORKER_TASK_BASE_HPP
 
 #include <vector>
+#include <string>
 #include <cstdlib>
+#include <memory>
 
 
 /**
@@ -10,12 +12,30 @@
  */
 class task_base {
 public:
+	task_base() = delete;
+	task_base(std::string task_id, size_t priority, bool fatal,
+			  std::string cmd, std::string log, std::vector<std::string> dependencies);
+
 	virtual void run() = 0;
-private:
-	size_t task_id_;
-	std::vector<task_base> parents_;
-	std::vector<task_base> children_;
+	void add_children(std::shared_ptr<task_base> add);
+	void add_parent(std::shared_ptr<task_base> add);
+
+	const std::string &get_task_id();
+	size_t get_priority();
+	bool get_fatal_failure();
+	const std::string &get_cmd();
+	const std::string &get_log();
+	const std::vector<std::string> &get_dependencies();
+protected:
+	std::string task_id_;
 	size_t priority_;
+	bool fatal_failure_;
+	std::string cmd_;
+	std::string log_;
+	std::vector<std::string> dependencies_;
+
+	std::vector<std::weak_ptr<task_base>> parents_;
+	std::vector<std::shared_ptr<task_base>> children_;
 };
 
 #endif //CODEX_WORKER_TASK_BASE_HPP

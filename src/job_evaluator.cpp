@@ -22,7 +22,7 @@ void job_evaluator::prepare_submission()
 
 void job_evaluator::build_job()
 {
-	job_ = std::make_shared<job>(submission_path_, logger_, config_);
+	job_ = std::make_shared<job>(submission_path_, logger_, config_, fileman_);
 	return;
 }
 
