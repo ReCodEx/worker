@@ -13,7 +13,9 @@ class external_task : public task_base {
 public:
 	external_task() = delete;
 
-	external_task(const std::string &binary, const std::vector<std::string> &arguments,
+	external_task(const std::string &task_id, size_t priority, bool fatal, const std::string &log,
+				  const std::vector<std::string> &dependencies,
+				  const std::string &binary, const std::vector<std::string> &arguments,
 				  const std::string &sandbox, sandbox_limits limits);
 	virtual ~external_task();
 

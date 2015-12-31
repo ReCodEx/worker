@@ -98,7 +98,7 @@ void job::build_job(const YAML::Node &conf)
 	root_task_ = std::make_shared<fake_task>();
 
 
-	// construct all tasks and check if they have all datas, but do not connect them
+	// construct all tasks with their ids and check if they have all datas, but do not connect them
 	std::map<std::string, std::shared_ptr<task_base>> unconnected_tasks;
 	for (size_t i = 0; i < conf["tasks"].size(); ++i) {
 		std::string task_id;
@@ -122,13 +122,95 @@ void job::build_job(const YAML::Node &conf)
 		} else { throw job_exception("Configuration of one task has missing cmd"); }
 		if (conf["tasks"][i]["log"]) {
 			log = conf["tasks"][i]["log"].as<std::string>();
-		} else { throw job_exception("Configuration of one task has missing log"); }
+		} // can be omitted... no throw
+
+		// load dependencies and check if defined tasks exists
+		if (conf["tasks"][i]["dependencies"] && conf["tasks"][i]["dependencies"].IsSequence()) {
+			task_depend = conf["tasks"][i]["dependencies"].as<std::vector<std::string>>();
+		}
 
 		// distinguish internal/external command and construct suitable object
-		if (conf["tasks"][i]["sandbox"]) {
-			// external command
-		} else {
-			// internal command
+		if (conf["tasks"][i]["sandbox"]) { // external command
+
+			std::string stdin;
+			std::string stdout;
+			std::string stderr;
+			std::string sandbox_name;
+			std::map<std::string, sandbox_limits> hwgroups;
+			sandbox_limits limits;
+
+			if (conf["tasks"][i]["sandbox"]["name"]) {
+				sandbox_name = conf["tasks"][i]["sandbox"]["name"].as<std::string>();
+			} else { throw job_exception("Name of sandbox not given"); }
+
+			if (conf["tasks"][i]["stdin"]) {
+				stdin = conf["tasks"][i]["stdin"].as<std::string>();
+			} // can be ommited... no throw
+			if (conf["tasks"][i]["stdout"]) {
+				stdout = conf["tasks"][i]["stdout"].as<std::string>();
+			} // can be ommited... no throw
+			if (conf["tasks"][i]["stderr"]) {
+				stderr = conf["tasks"][i]["stderr"].as<std::string>();
+			} // can be ommited... no throw
+
+			// load limits... if they are supplied
+			if (conf["tasks"][i]["sandbox"]["limits"]) {
+				if (!conf["tasks"][i]["sandbox"]["limits"].IsSequence()) {
+					throw job_exception("Sandbox limits are not sequence");
+				}
+
+				for (auto &lim : conf["tasks"][i]["sandbox"]["limits"]) {
+					sandbox_limits sl;
+					std::string hwgroup;
+
+					if (lim["hw-groups-id"]) {
+						hwgroup = lim["hw-groups-id"].as<std::string>();
+					} else { throw job_exception("Hwgroup ID not defined in sandbox limits"); }
+
+					if (lim["time"]) {
+						sl.cpu_time = lim["time"].as<size_t>();
+					} // can be omitted... no throw
+					if (lim["wall-time"]) {
+						sl.wall_time = lim["wall-time"].as<size_t>();
+					} // can be omitted... no throw
+					if (lim["extra-time"]) {
+						sl.extra_time = lim["extra-time"].as<size_t>();
+					} // can be omitted... no throw
+					if (lim["stack-size"]) {
+						sl.stack_size = lim["stack-size"].as<size_t>();
+					} // can be omitted... no throw
+					if (lim["memory"]) {
+						sl.memory_usage = lim["memory"].as<size_t>();
+					} // can be omitted... no throw
+					if (lim["parallel"]) {
+						lim["parallel"].as<bool>(); // TODO not defined properly
+					} // can be omitted... no throw
+					if (lim["disk-blocks"]) {
+						sl.disk_blocks = lim["disk-blocks"].as<size_t>();
+					} // can be omitted... no throw
+					if (lim["disk-inodes"]) {
+						sl.disk_inodes = lim["disk-inodes"].as<size_t>();
+					} // can be omitted... no throw
+
+					if (lim["environ-variable"] && lim["environ-variable"].IsMap()) {
+						for (auto &var : lim["environ-variable"]) {
+							sl.environ_vars.insert(std::make_pair(var.as<std::string>(), var.as<std::string>())); // TODO not loaded properly
+						}
+					}
+
+					hwgroups.insert(std::make_pair(hwgroup, sl));
+				}
+			}
+
+			// and finally construct external task from given information
+			//limits = hwgroups.at(default_config_->get_hwgroup()); // TODO
+			std::shared_ptr<task_base> task =
+					std::make_shared<external_task>(task_id, priority, fatal, log, task_depend,
+													cmd, std::vector<std::string>(), sandbox_name, limits); // TODO args
+			unconnected_tasks.insert(std::make_pair(task_id, task));
+
+		} else {// internal command
+			// TODO
 		}
 	}
 
@@ -146,6 +228,7 @@ void job::build_job(const YAML::Node &conf)
 
 
 	// all should be done now... just linear ordering is missing...
+	// TODO linear ordering
 
 	return;
 }

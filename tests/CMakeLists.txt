@@ -29,6 +29,7 @@ add_executable(${TESTS_NAME}
 	job.cpp
 	${TASKS_DIR}/job.cpp
 	${TASKS_DIR}/task_base.cpp
+	${TASKS_DIR}/external_task.cpp
 	${TASKS_DIR}/fake_task.cpp
 	${SRC_DIR}/job_receiver.cpp
 	job_receiver.cpp
