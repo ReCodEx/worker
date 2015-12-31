@@ -4,6 +4,9 @@ fake_task::fake_task()
 	: task_base("", 0, false, "", "", std::vector<std::string>())
 {}
 
+fake_task::~fake_task()
+{}
+
 void fake_task::run()
 {
 	// Nothing to do here, if evaluation will be recursive,

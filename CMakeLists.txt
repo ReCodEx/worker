@@ -67,7 +67,9 @@ set(SOURCE_FILES
 	src/tasks/fake_task.cpp
 	src/tasks/task_base.h
 	src/tasks/task_base.cpp
-	src/tasks/internal_task_base.h
+	src/tasks/external_task.h
+	src/tasks/external_task.cpp
+	src/tasks/internal/internal_task_base.h
 	src/sandbox/isolate_sandbox.h
 	src/sandbox/isolate_sandbox.cpp
 	src/job_evaluator.h

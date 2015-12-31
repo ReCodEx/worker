@@ -3,6 +3,12 @@
 
 #include <memory>
 #include "spdlog/spdlog.h"
+
+#define BOOST_FILESYSTEM_NO_DEPRECATED
+#define BOOST_NO_CXX11_SCOPED_ENUMS
+#include <boost/filesystem.hpp>
+namespace fs = boost::filesystem;
+
 #include "tasks/job.h"
 #include "config/worker_config.h"
 #include "fileman/file_manager_base.h"
@@ -47,14 +53,15 @@ private:
 	void download_submission();
 
 	/**
-	 * Downloaded submission has prepared for evaluation, that means: to be decompressed and copied to working directory.
+	 * Downloaded submission has prepared for evaluation, that means:
+	 * Decompress archive with submission and copy source codes to working directory.
 	 */
 	void prepare_submission();
 
 	/**
 	 * Build job structure from given job-configuration.
 	 * Aka build working tree and its linear ordering, which will be executed.
-	 * It means call job constructor.
+	 * It means load yaml config and call job constructor.
 	 */
 	void build_job();
 
@@ -78,9 +85,11 @@ private:
 	/** URL of remote archive in which is job configuration and source codes */
 	std::string archive_url_;
 	/** Path in which downloaded archive is stored */
-	std::string archive_local_;
+	fs::path archive_local_;
 	/** Path in which downloaded decompressed submission is stored */
-	std::string submission_path_;
+	fs::path submission_path_;
+	/** Path with only source codes, not job configuration */
+	fs::path source_path_;
 
 	/** ID of downloaded job obtained from broker */
 	std::string job_id_;

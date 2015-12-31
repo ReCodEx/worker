@@ -6,11 +6,13 @@
 #define BOOST_FILESYSTEM_NO_DEPRECATED
 #define BOOST_NO_CXX11_SCOPED_ENUMS
 #include <boost/filesystem.hpp>
+namespace fs = boost::filesystem;
 
 #include "spdlog/spdlog.h"
 #include "../config/worker_config.h"
 #include "task_base.h"
 #include "fake_task.h"
+#include "internal/internal_task_base.h"
 #include "../fileman/file_manager_base.h"
 
 
@@ -21,17 +23,17 @@ class job {
 public:
 	job() = delete;
 
-	job(std::string submission_path,
+	job(const YAML::Node &job_config,
+		fs::path source_path,
 		std::shared_ptr<spdlog::logger> logger,
-		std::shared_ptr<worker_config> config,
+		std::shared_ptr<worker_config> default_config,
 		std::shared_ptr<file_manager_base> fileman);
 	~job();
 
 	void run();
 private:
 
-	void load_config();
-	void build_job();
+	void build_job(const YAML::Node &conf);
 	/**
 	 * Cleanup after job evaluation, should be enough to delete all created files
 	 */
@@ -44,9 +46,7 @@ private:
 
 
 	// PRIVATE DATA MEMBERS
-	YAML::Node config_;
-
-	std::string submission_path_;
+	fs::path source_path_;
 
 	std::shared_ptr<file_manager_base> fileman_;
 

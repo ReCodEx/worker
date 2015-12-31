@@ -22,7 +22,22 @@ void job_evaluator::prepare_submission()
 
 void job_evaluator::build_job()
 {
-	job_ = std::make_shared<job>(submission_path_, logger_, config_, fileman_);
+	using namespace boost::filesystem;
+	path config_path(submission_path_);
+	config_path /= "config.yml";
+	if (!exists(config_path)) {
+		throw job_exception("Job configuration not found");
+	}
+
+	YAML::Node conf;
+	try {
+		conf = YAML::LoadFile(config_path.string());
+	} catch (YAML::Exception e) {
+		throw job_exception("Job configuration not loaded correctly: " + std::string(e.what()));
+	}
+
+	job_ = std::make_shared<job>(conf, source_path_, logger_, config_, fileman_);
+
 	return;
 }
 
@@ -34,6 +49,21 @@ void job_evaluator::run_job()
 
 void job_evaluator::cleanup_submission()
 {
+	// if job did not delete working dir, do it
+	if (fs::exists(source_path_)) {
+		fs::remove_all(source_path_);
+	}
+
+	// delete submission decompressed directory
+	if (fs::exists(submission_path_)) {
+		fs::remove_all(submission_path_);
+	}
+
+	// and finally delete downloaded archive
+	if (fs::exists(archive_local_)) {
+		fs::remove_all(archive_local_);
+	}
+
 	return;
 }
 

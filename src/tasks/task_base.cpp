@@ -6,6 +6,9 @@ task_base::task_base(std::string task_id, size_t priority, bool fatal,
 	  cmd_(cmd), log_(log), dependencies_(dependencies)
 {}
 
+task_base::~task_base()
+{}
+
 void task_base::add_children(std::shared_ptr<task_base> add)
 {
 	children_.push_back(add);

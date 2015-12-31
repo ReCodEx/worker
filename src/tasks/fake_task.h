@@ -11,6 +11,7 @@
 class fake_task : public task_base {
 public:
 	fake_task();
+	virtual ~fake_task();
 
 	virtual void run();
 };

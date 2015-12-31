@@ -15,6 +15,7 @@ public:
 	task_base() = delete;
 	task_base(std::string task_id, size_t priority, bool fatal,
 			  std::string cmd, std::string log, std::vector<std::string> dependencies);
+	virtual ~task_base();
 
 	virtual void run() = 0;
 	void add_children(std::shared_ptr<task_base> add);
@@ -36,6 +37,19 @@ protected:
 
 	std::vector<std::weak_ptr<task_base>> parents_;
 	std::vector<std::shared_ptr<task_base>> children_;
+};
+
+class task_exception : public std::exception {
+public:
+	task_exception() : what_("Generic task exception") {}
+	task_exception(const std::string &what) : what_(what) {}
+	virtual ~task_exception() {}
+	virtual const char* what() const noexcept
+	{
+		return what_.c_str();
+	}
+protected:
+	std::string what_;
 };
 
 #endif //CODEX_WORKER_TASK_BASE_HPP
