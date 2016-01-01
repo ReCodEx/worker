@@ -6,6 +6,7 @@
 #define BOOST_FILESYSTEM_NO_DEPRECATED
 #define BOOST_NO_CXX11_SCOPED_ENUMS
 #include <boost/filesystem.hpp>
+#include <boost/graph/topological_sort.hpp>
 namespace fs = boost::filesystem;
 
 #include "spdlog/spdlog.h"
@@ -61,7 +62,7 @@ private:
 
 	/** Logical start of every job evaluation */
 	std::shared_ptr<task_base> root_task_;
-	/** Tasks in linear ordering prepared to evaluation */
+	/** Tasks in linear ordering prepared for evaluation */
 	std::vector<std::shared_ptr<task_base>> task_queue_;
 	std::shared_ptr<spdlog::logger> logger_;
 	std::shared_ptr<worker_config> default_config_;

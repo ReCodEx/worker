@@ -336,14 +336,14 @@ char **isolate_sandbox::isolate_run_args(const std::string &binary, const std::v
 		vargs.push_back("--fsize=" + std::to_string(limits_.files_size));
 	}
 	vargs.push_back("--quota=" + std::to_string(limits_.disk_blocks) + "," + std::to_string(limits_.disk_inodes));
-	if (!limits_.stdin.empty()) {
-		vargs.push_back("--stdin=" + limits_.stdin);
+	if (!limits_.std_input.empty()) {
+		vargs.push_back("--stdin=" + limits_.std_input);
 	}
-	if (!limits_.stdout.empty()) {
-		vargs.push_back("--stdout=" + limits_.stdout);
+	if (!limits_.std_output.empty()) {
+		vargs.push_back("--stdout=" + limits_.std_output);
 	}
-	if (!limits_.stderr.empty()) {
-		vargs.push_back("--stderr=" + limits_.stderr);
+	if (!limits_.std_error.empty()) {
+		vargs.push_back("--stderr=" + limits_.std_error);
 	}
 	if (!limits_.chdir.empty()) {
 		vargs.push_back("--chdir=" + limits_.chdir);

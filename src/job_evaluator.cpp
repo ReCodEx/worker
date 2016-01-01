@@ -43,7 +43,13 @@ void job_evaluator::build_job()
 
 void job_evaluator::run_job()
 {
-	job_->run();
+	try {
+		job_->run();
+	} catch (std::exception ex) {
+		result_ = 1;
+	} catch (...) {
+		throw;
+	}
 	return;
 }
 

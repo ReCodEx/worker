@@ -95,6 +95,8 @@ private:
 	std::string job_id_;
 	/** Structure of job itself, this will be evaluated */
 	std::shared_ptr<job> job_;
+	/** Indicates result of given job */
+	size_t result_;
 
 	/** File manager which is used to download and upload submission related files */
 	std::shared_ptr<file_manager_base> fileman_;

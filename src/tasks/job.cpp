@@ -83,17 +83,6 @@ void job::build_job(const YAML::Node &conf)
 	} else { throw job_exception("Submission item not loaded properly"); }
 
 
-	// make set of task ids just to know what tasks we have
-	std::set<std::string> dependencies;
-	for (size_t i = 0; i < conf["tasks"].size(); ++i) {
-		if (conf["tasks"][i]["task-id"]) {
-			dependencies.insert(conf["tasks"][i]["task-id"].as<std::string>());
-		} else {
-			throw job_exception("One of the tasks in job configuration do not have task-id set");
-		}
-	}
-
-
 	// create fake task, which is logical root of evaluation
 	root_task_ = std::make_shared<fake_task>();
 
@@ -132,9 +121,9 @@ void job::build_job(const YAML::Node &conf)
 		// distinguish internal/external command and construct suitable object
 		if (conf["tasks"][i]["sandbox"]) { // external command
 
-			std::string stdin;
-			std::string stdout;
-			std::string stderr;
+			std::string std_input;
+			std::string std_output;
+			std::string std_error;
 			std::string sandbox_name;
 			std::map<std::string, sandbox_limits> hwgroups;
 			sandbox_limits limits;
@@ -144,13 +133,13 @@ void job::build_job(const YAML::Node &conf)
 			} else { throw job_exception("Name of sandbox not given"); }
 
 			if (conf["tasks"][i]["stdin"]) {
-				stdin = conf["tasks"][i]["stdin"].as<std::string>();
+				std_input = conf["tasks"][i]["stdin"].as<std::string>();
 			} // can be ommited... no throw
 			if (conf["tasks"][i]["stdout"]) {
-				stdout = conf["tasks"][i]["stdout"].as<std::string>();
+				std_output = conf["tasks"][i]["stdout"].as<std::string>();
 			} // can be ommited... no throw
 			if (conf["tasks"][i]["stderr"]) {
-				stderr = conf["tasks"][i]["stderr"].as<std::string>();
+				std_error = conf["tasks"][i]["stderr"].as<std::string>();
 			} // can be ommited... no throw
 
 			// load limits... if they are supplied
@@ -204,6 +193,9 @@ void job::build_job(const YAML::Node &conf)
 
 			// and finally construct external task from given information
 			//limits = hwgroups.at(default_config_->get_hwgroup()); // TODO
+			limits.std_input = std_input;
+			limits.std_output = std_output;
+			limits.std_error = std_error;
 			std::shared_ptr<task_base> task =
 					std::make_shared<external_task>(task_id, priority, fatal, log, task_depend,
 													cmd, std::vector<std::string>(), sandbox_name, limits); // TODO args
@@ -219,10 +211,20 @@ void job::build_job(const YAML::Node &conf)
 	for (auto &elem : unconnected_tasks) {
 		const std::vector<std::string> &depend = elem.second->get_dependencies();
 
+		// connect all suitable task underneath root
+		if (depend.size() == 0) {
+			root_task_->add_children(elem.second);
+			elem.second->add_parent(root_task_);
+		}
+
 		for (size_t i = 0; i < depend.size(); ++i) {
-			auto ptr = unconnected_tasks.at(depend.at(i));
-			ptr->add_children(elem.second);
-			elem.second->add_parent(ptr);
+			try {
+				auto ptr = unconnected_tasks.at(depend.at(i));
+				ptr->add_children(elem.second);
+				elem.second->add_parent(ptr);
+			} catch (std::out_of_range ex) {
+				throw job_exception("Non existing task-id in dependency list");
+			}
 		}
 	}
 

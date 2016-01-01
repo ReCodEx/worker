@@ -70,10 +70,6 @@ void isoeval_core::parse_params()
 		config_filename_ = vm["config"].as<std::string>();
 	}
 
-	if (vm.count("log-path")) {
-		log_config_.log_path_ = vm["log-path"].as<std::string>();
-	}
-
 	return;
 }
 
@@ -82,7 +78,7 @@ void isoeval_core::load_config()
 	try {
 		YAML::Node config_yaml = YAML::LoadFile(config_filename_);
 		config_ = std::make_shared<worker_config>(config_yaml);
-	} catch (YAML::Exception e) {
+	} catch (std::exception e) {
 		force_exit("Error loading config file: " + std::string(e.what()));
 	}
 
@@ -104,7 +100,7 @@ void isoeval_core::log_init()
 {
 	//Set up logger
 	//Try to create target directory for logs
-	auto path = fs::path(log_config_.log_path_);
+	auto path = fs::path(log_config_.log_path);
 	try {
 		if(!fs::is_directory(path)) {
 			fs::create_directories(path);
@@ -117,8 +113,8 @@ void isoeval_core::log_init()
 	//Create and register logger
 	try {
 		//Create multithreaded rotating file sink. Max filesize is 1024 * 1024 and we save 5 newest files.
-		auto rotating_sink = std::make_shared<spdlog::sinks::rotating_file_sink_mt>((path / log_config_.log_basename_).string(),
-								log_config_.log_suffix_, log_config_.log_file_size, log_config_.log_files_count, false);
+		auto rotating_sink = std::make_shared<spdlog::sinks::rotating_file_sink_mt>((path / log_config_.log_basename).string(),
+								log_config_.log_suffix, log_config_.log_file_size, log_config_.log_files_count, false);
 		//Set queue size for asynchronous logging. It must be a power of 2.
 		spdlog::set_async_mode(1048576);
 		//Make log with name "logger"

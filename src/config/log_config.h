@@ -9,9 +9,9 @@
  */
 struct log_config {
 public:
-	std::string log_path_ = "/tmp/recodex/";
-	std::string log_basename_ = "worker";
-	std::string log_suffix_ = "log";
+	std::string log_path = "/tmp/recodex/";
+	std::string log_basename = "worker";
+	std::string log_suffix = "log";
 	spdlog::level::level_enum log_level = spdlog::level::debug;
 	int log_file_size = 1024 * 1024;
 	int log_files_count = 3;
