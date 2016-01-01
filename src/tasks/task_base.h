@@ -13,8 +13,9 @@
 class task_base {
 public:
 	task_base() = delete;
-	task_base(std::string task_id, size_t priority, bool fatal,
-			  std::string cmd, std::string log, std::vector<std::string> dependencies);
+	task_base(std::string task_id, size_t priority, bool fatal, const std::string &cmd,
+			const std::vector<std::string> &arguments, const std::string &log,
+			const std::vector<std::string> &dependencies);
 	virtual ~task_base();
 
 	virtual void run() = 0;
@@ -34,6 +35,7 @@ protected:
 	std::string cmd_;
 	std::string log_;
 	std::vector<std::string> dependencies_;
+	std::vector<std::string> arguments_;
 
 	std::vector<std::weak_ptr<task_base>> parents_;
 	std::vector<std::shared_ptr<task_base>> children_;

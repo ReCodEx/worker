@@ -69,7 +69,14 @@ set(SOURCE_FILES
 	src/tasks/task_base.cpp
 	src/tasks/external_task.h
 	src/tasks/external_task.cpp
-	src/tasks/internal/internal_task_base.h
+	src/tasks/internal/cp_task.h
+	src/tasks/internal/cp_task.cpp
+	src/tasks/internal/rename_task.h
+	src/tasks/internal/rename_task.cpp
+	src/tasks/internal/mkdir_task.h
+	src/tasks/internal/mkdir_task.cpp
+	src/tasks/internal/rm_task.h
+	src/tasks/internal/rm_task.cpp
 	src/sandbox/isolate_sandbox.h
 	src/sandbox/isolate_sandbox.cpp
 	src/job_evaluator.h

@@ -13,7 +13,6 @@ namespace fs = boost::filesystem;
 #include "task_base.h"
 #include "fake_task.h"
 #include "external_task.h"
-#include "internal/internal_task_base.h"
 #include "../fileman/file_manager_base.h"
 #include "../sandbox/sandbox_base.h"
 
