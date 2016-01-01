@@ -94,6 +94,7 @@ void job::build_job(const YAML::Node &conf)
 		size_t priority;
 		bool fatal;
 		std::string cmd;
+		std::vector<std::string> args; // TODO args
 		std::string log;
 		std::vector<std::string> task_depend;
 
@@ -183,7 +184,7 @@ void job::build_job(const YAML::Node &conf)
 
 					if (lim["environ-variable"] && lim["environ-variable"].IsMap()) {
 						for (auto &var : lim["environ-variable"]) {
-							sl.environ_vars.insert(std::make_pair(var.as<std::string>(), var.as<std::string>())); // TODO not loaded properly
+							sl.environ_vars.insert(std::make_pair(var.first.as<std::string>(), var.second.as<std::string>()));
 						}
 					}
 
@@ -198,11 +199,23 @@ void job::build_job(const YAML::Node &conf)
 			limits.std_error = std_error;
 			std::shared_ptr<task_base> task =
 					std::make_shared<external_task>(task_id, priority, fatal, log, task_depend,
-													cmd, std::vector<std::string>(), sandbox_name, limits); // TODO args
+													cmd, args, sandbox_name, limits);
 			unconnected_tasks.insert(std::make_pair(task_id, task));
 
 		} else {// internal command
-			// TODO
+			std::shared_ptr<task_base> task;
+
+			if (cmd == "cp") {
+				task = std::make_shared<cp_task>(task_id, priority, fatal, cmd, args, log, task_depend);
+			} else if (cmd == "mkdir") {
+				task = std::make_shared<mkdir_task>(task_id, priority, fatal, cmd, args, log, task_depend);
+			} else if (cmd == "rename") {
+				task = std::make_shared<rename_task>(task_id, priority, fatal, cmd, args, log, task_depend);
+			}  else if (cmd == "rm") {
+				task = std::make_shared<rm_task>(task_id, priority, fatal, cmd, args, log, task_depend);
+			}
+
+			unconnected_tasks.insert(std::make_pair(task_id, task));
 		}
 	}
 

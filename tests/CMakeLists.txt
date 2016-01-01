@@ -33,6 +33,10 @@ add_executable(${TESTS_NAME}
 	${TASKS_DIR}/fake_task.cpp
 	${SRC_DIR}/job_receiver.cpp
 	job_receiver.cpp
+	${TASKS_DIR}/internal/cp_task.cpp
+	${TASKS_DIR}/internal/mkdir_task.cpp
+	${TASKS_DIR}/internal/rename_task.cpp
+	${TASKS_DIR}/internal/rm_task.cpp
 )
 
 target_link_libraries(${TESTS_NAME} gtest gtest_main)

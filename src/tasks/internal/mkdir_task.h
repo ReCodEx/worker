@@ -7,7 +7,7 @@
 /**
  *
  */
-class mkdir_task : task_base {
+class mkdir_task : public task_base {
 public:
 	mkdir_task(std::string task_id, size_t priority, bool fatal, const std::string &cmd,
 			const std::vector<std::string> &arguments, const std::string &log,

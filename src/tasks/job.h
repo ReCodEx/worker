@@ -16,6 +16,10 @@ namespace fs = boost::filesystem;
 #include "external_task.h"
 #include "../fileman/file_manager_base.h"
 #include "../sandbox/sandbox_base.h"
+#include "internal/cp_task.h"
+#include "internal/mkdir_task.h"
+#include "internal/rename_task.h"
+#include "internal/rm_task.h"
 
 
 /**

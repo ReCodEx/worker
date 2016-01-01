@@ -7,7 +7,7 @@
 /**
  * Remove all files and directories as specified. Calls boost::filesystem::remove_all().
  */
-class rm_task : task_base {
+class rm_task : public task_base {
 public:
 	rm_task(std::string task_id, size_t priority, bool fatal, const std::string &cmd,
 			const std::vector<std::string> &arguments, const std::string &log,

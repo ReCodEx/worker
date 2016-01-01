@@ -7,7 +7,7 @@
 /**
  * Copy files. Requires 2 arguments (like boost::filesystem::copy).
  */
-class cp_task : task_base {
+class cp_task : public task_base {
 public:
 	cp_task(std::string task_id, size_t priority, bool fatal, const std::string &cmd,
 			const std::vector<std::string> &arguments, const std::string &log,
