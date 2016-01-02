@@ -26,24 +26,23 @@ public:
 };
 
 /**
- * A task callback that stores received calls in a vector
+ * A job callback that stores received calls in a vector
  */
-struct task_callback {
-	static std::vector<std::string> calls;
+struct job_callback {
+	std::vector<std::string> calls;
 
-	void operator() ()
+	void operator() (const std::string &job_id, const std::string &job_url, const std::string &result_url)
 	{
-		task_callback::calls.push_back("call");
+		calls.push_back("call");
 	}
 };
-
-std::vector<std::string> task_callback::calls;
 
 TEST(broker_connection, sends_init)
 {
 	mock_worker_config config;
 	StrictMock<mock_connection_proxy> proxy;
-	broker_connection<mock_connection_proxy, task_callback> connection(config, &proxy);
+	job_callback callback;
+	broker_connection<mock_connection_proxy, job_callback> connection(config, &proxy, &callback);
 
 	std::string addr("tcp://localhost:9876");
 	worker_config::header_map_t headers = {
@@ -90,7 +89,8 @@ TEST(broker_connection, calls_callback)
 {
 	mock_worker_config config;
 	StrictMock<mock_connection_proxy> proxy;
-	broker_connection<mock_connection_proxy, task_callback> connection(config, &proxy);
+	job_callback callback;
+	broker_connection<mock_connection_proxy, job_callback> connection(config, &proxy, &callback);
 
 	zmq::message_t msg(5);
 
@@ -109,5 +109,5 @@ TEST(broker_connection, calls_callback)
 	}
 
 	connection.receive_tasks();
-	ASSERT_EQ(task_callback::calls.size(), 1);
+	ASSERT_EQ(callback.calls.size(), 1);
 }
