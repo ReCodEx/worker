@@ -29,11 +29,11 @@ public:
 	bool send (const std::vector<std::string> &msg)
 	{
 		for (auto it = std::begin(msg); it != std::end(msg); ++it) {
-			bool retval = (bool) socket.send(
+			bool retval = socket.send(
 				it->c_str(),
 				it->size(),
 				std::next(it) != std::end(msg) ? ZMQ_SNDMORE : 0
-			);
+			) >= 0;
 
 			if (!retval) {
 				return false;
@@ -59,15 +59,15 @@ public:
 			} catch (zmq::error_t) {
 				if (terminate != nullptr) {
 					*terminate = true;
-					retval = false;
 				}
+				retval = false;
 			}
 
 			if (!retval) {
 				return false;
 			}
 
-			target.push_back(std::string(static_cast<char *>(msg.data()), msg.size()));
+			target.emplace_back(static_cast<char *>(msg.data()), msg.size());
 		} while (msg.more());
 
 		return true;
