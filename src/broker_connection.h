@@ -2,9 +2,9 @@
 #define CODEX_WORKER_BROKER_CONNECTION_H
 
 
-#include <zmq.hpp>
 #include <map>
 #include <memory>
+
 #include "spdlog/spdlog.h"
 #include "config/worker_config.h"
 
@@ -16,16 +16,15 @@ private:
 	std::shared_ptr<spdlog::logger> logger_;
 	task_callback *cb_;
 
-	void process_eval (zmq::message_t &request)
+	void process_eval (const std::vector<std::string> &msg)
 	{
-		socket->recv(request);
-		std::string job_id((char *) request.data(), request.size());
+		if (msg.size() < 4) {
+			return;
+		}
 
-		socket->recv(request);
-		std::string job_url((char *) request.data(), request.size());
-
-		socket->recv(request);
-		std::string result_url((char *) request.data(), request.size());
+		std::string job_id = msg.at(1);
+		std::string job_url = msg.at(2);
+		std::string result_url = msg.at(3);
 
 		(*cb_)(job_id, job_url, result_url);
 	}
@@ -58,21 +57,14 @@ public:
 
 		logger_->debug() << "Connecting to " << config.get_broker_uri();
 		socket->connect(config.get_broker_uri());
-		socket->send("init", 4, ZMQ_SNDMORE);
 
-		for (auto it = headers.begin(); it != headers.end(); ++it) {
-			auto pair = *it;
+		std::vector<std::string> msg = {"init"};
 
-			char buf[256];
-			int count = snprintf(buf, sizeof(buf), "%s=%s", pair.first.c_str(), pair.second.c_str());
-
-			if (count < 0) {
-				logger_->emerg() << "Cannot create header for connecting to broker";
-				throw;
-			}
-
-			socket->send(buf, (size_t) count, std::next(it) == headers.end() ? 0 : ZMQ_SNDMORE);
+		for (auto &it: headers) {
+			msg.push_back(it.first + "=" + it.second);
 		}
+
+		socket->send(msg);
 	}
 
 	/**
@@ -81,22 +73,22 @@ public:
 	 */
 	void receive_tasks ()
 	{
-		bool terminate = false;
-		zmq::message_t request;
+		while (true) {
+			std::vector<std::string> msg;
+			bool terminate = false;
 
-		while (!terminate) {
-			try {
-				socket->recv(request);
-				std::string command((char *) request.data(), request.size());
+			socket->recv(msg, &terminate);
 
-				if (command == "eval") {
-					process_eval(request);
-				}
-			} catch (zmq::error_t &e) {
-				logger_->emerg() << "Terminating to receive messages. " << e.what();
-				terminate = true;
+			if (terminate) {
+				break;
+			}
+
+			if (msg.at(0) == "eval") {
+				process_eval(msg);
 			}
 		}
+
+		logger_->emerg() << "Terminating to receive messages.";
 	}
 };
 

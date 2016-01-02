@@ -21,14 +21,14 @@ public:
 class mock_connection_proxy {
 public:
 	MOCK_METHOD1(connect, void(const std::string &addr));
-	MOCK_METHOD3(send, size_t(const char *data, size_t size, int flags));
-	MOCK_METHOD1(recv, bool(zmq::message_t &msg));
+	MOCK_METHOD1(send, bool(const std::vector<std::string> &));
+	MOCK_METHOD2(recv, bool(std::vector<std::string> &, bool *));
 };
 
 /**
  * A job callback that stores received calls in a vector
  */
-struct job_callback {
+struct test_callback {
 	std::vector<std::string> calls;
 
 	void operator() (const std::string &job_id, const std::string &job_url, const std::string &result_url)
@@ -41,8 +41,8 @@ TEST(broker_connection, sends_init)
 {
 	mock_worker_config config;
 	StrictMock<mock_connection_proxy> proxy;
-	job_callback callback;
-	broker_connection<mock_connection_proxy, job_callback> connection(config, &proxy, &callback);
+	test_callback callback;
+	broker_connection<mock_connection_proxy, test_callback> connection(config, &proxy, &callback);
 
 	std::string addr("tcp://localhost:9876");
 	worker_config::header_map_t headers = {
@@ -61,51 +61,46 @@ TEST(broker_connection, sends_init)
 	{
 		InSequence s;
 
-		EXPECT_CALL(proxy, connect(StrEq(addr)))
-			.Times(1);
-
-		EXPECT_CALL(proxy, send(StartsWith("init"), 4, ZMQ_SNDMORE))
-			.Times(1);
-
-		EXPECT_CALL(proxy, send(StartsWith("env=c"), 5, ZMQ_SNDMORE))
-			.Times(1);
-
-		EXPECT_CALL(proxy, send(StartsWith("hwgroup=group_1"), 15, 0))
-			.Times(1);
+		EXPECT_CALL(proxy, connect(StrEq(addr)));
+		EXPECT_CALL(proxy, send(ElementsAre(
+			"init",
+			"env=c",
+			"hwgroup=group_1"
+		))).WillOnce(Return(true));
 	}
 
 	connection.connect();
-}
-
-/**
- * Copies the message pointed to by @a msg to the first argument of the mock function
- */
-ACTION_P(SetMsg, msg)
-{
-	((zmq::message_t &) arg0).copy(msg);
 }
 
 TEST(broker_connection, calls_callback)
 {
 	mock_worker_config config;
 	StrictMock<mock_connection_proxy> proxy;
-	job_callback callback;
-	broker_connection<mock_connection_proxy, job_callback> connection(config, &proxy, &callback);
+	test_callback callback;
+	broker_connection<mock_connection_proxy, test_callback> connection(config, &proxy, &callback);
 
-	zmq::message_t msg(5);
+	std::vector<std::string> msg = {
+		"eval",
+		"10",
+		"http://localhost:5487/submission_archives/10.tar.gz",
+		"http://localhost:5487/results/10",
+	};
 
 	{
 		InSequence s;
-		EXPECT_CALL(proxy, recv(_))
+
+		EXPECT_CALL(proxy, recv(_, _))
 			.Times(1)
 			.WillOnce(DoAll(
-				SetMsg(&msg),
+				SetArgReferee<0>(msg),
 				Return(true)
 			));
 
-		EXPECT_CALL(proxy, recv(_))
-			.Times(1)
-			.WillOnce(Throw(zmq::error_t()));
+		EXPECT_CALL(proxy, recv(_, _))
+			.WillOnce(DoAll(
+				SetArgPointee<1>(true),
+				Return(false)
+			));
 	}
 
 	connection.receive_tasks();

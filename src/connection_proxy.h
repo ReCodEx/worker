@@ -20,23 +20,57 @@ public:
 
 	void connect (const std::string &addr)
 	{
-		return socket.connect(addr);
+		socket.connect(addr);
 	}
 
 	/**
 	 * Send data through the socket
 	 */
-	size_t send (const void *data, size_t size, int flags)
+	bool send (const std::vector<std::string> &msg)
 	{
-		return socket.send(data, size, flags);
+		for (auto it = std::begin(msg); it != std::end(msg); ++it) {
+			bool retval = (bool) socket.send(
+				it->c_str(),
+				it->size(),
+				std::next(it) != std::end(msg) ? ZMQ_SNDMORE : 0
+			);
+
+			if (!retval) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	/**
 	 * Receive data from the socket
 	 */
-	bool recv (zmq::message_t &msg)
+	bool recv (std::vector<std::string> &target, bool *terminate = nullptr)
 	{
-		return socket.recv(&msg);
+		zmq::message_t msg;
+		target.clear();
+
+		do {
+			bool retval;
+
+			try {
+				retval = socket.recv(&msg);
+			} catch (zmq::error_t) {
+				if (terminate != nullptr) {
+					*terminate = true;
+					retval = false;
+				}
+			}
+
+			if (!retval) {
+				return false;
+			}
+
+			target.push_back(std::string(static_cast<char *>(msg.data()), msg.size()));
+		} while (msg.more());
+
+		return true;
 	}
 };
 
