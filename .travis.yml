@@ -15,7 +15,7 @@ before_install:
   # Install isolate
   - git clone https://github.com/ioi/isolate.git
   - cd isolate
-  - cat Makefile | sed 's/all: isolate isolate.1 isolate.1.html/all: isolate/' > Makefile_new
+  - "cat Makefile | sed 's/all: isolate isolate.1 isolate.1.html/all: isolate/' > Makefile_new"
   - rm -f Makefile
   - mv Makefile_new Makefile
   - make
