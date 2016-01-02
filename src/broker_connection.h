@@ -8,13 +8,13 @@
 #include "spdlog/spdlog.h"
 #include "config/worker_config.h"
 
-template <typename proxy, typename task_callback>
+template <typename proxy, typename job_callback>
 class broker_connection {
 private:
 	const worker_config &config;
 	proxy *socket;
 	std::shared_ptr<spdlog::logger> logger_;
-	task_callback *cb_;
+	job_callback *cb_;
 
 	void process_eval (const std::vector<std::string> &msg)
 	{
@@ -32,7 +32,7 @@ public:
 	broker_connection (
 		const worker_config &config,
 		proxy *socket,
-		task_callback *cb,
+		job_callback *cb,
 		std::shared_ptr<spdlog::logger> logger = nullptr
 	) :
 		config(config), socket(socket), cb_(cb)
