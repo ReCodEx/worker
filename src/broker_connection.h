@@ -8,6 +8,11 @@
 #include "spdlog/spdlog.h"
 #include "config/worker_config.h"
 
+/**
+ * Represents a connection to the ReCodEx broker
+ * When a job is received from the broker, a job callback is invoked to
+ * process it.
+ */
 template <typename proxy, typename job_callback>
 class broker_connection {
 private:
