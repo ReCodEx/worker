@@ -9,6 +9,20 @@
 #include "config/worker_config.h"
 
 /**
+ * A structure that contains the information received with a job request
+ */
+struct job_request {
+	const std::string job_id;
+	const std::string job_url;
+	const std::string result_url;
+
+	job_request (std::string job_id, std::string job_url, std::string result_url) :
+		job_id(job_id), job_url(job_url), result_url(result_url)
+	{
+	}
+};
+
+/**
  * Represents a connection to the ReCodEx broker
  * When a job is received from the broker, a job callback is invoked to
  * process it.
@@ -27,11 +41,13 @@ private:
 			return;
 		}
 
-		std::string job_id = msg.at(1);
-		std::string job_url = msg.at(2);
-		std::string result_url = msg.at(3);
+		job_request request(
+			msg.at(1),
+			msg.at(2),
+			msg.at(3)
+		);
 
-		(*cb_)(job_id, job_url, result_url);
+		(*cb_)(request);
 	}
 public:
 	broker_connection (

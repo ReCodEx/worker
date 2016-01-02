@@ -5,11 +5,12 @@
 #include <string>
 
 #include "fileman/file_manager_base.h"
+#include "broker_connection.h"
 
 struct job_callback {
 public:
 	job_callback (std::shared_ptr<file_manager_base>);
-	void operator() (const std::string &, const std::string &, const std::string &);
+	void operator() (job_request);
 private:
 	std::shared_ptr<file_manager_base> fm_;
 };

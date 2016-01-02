@@ -29,11 +29,11 @@ public:
  * A job callback that stores received calls in a vector
  */
 struct test_callback {
-	std::vector<std::string> calls;
+	std::vector<job_request> calls;
 
-	void operator() (const std::string &job_id, const std::string &job_url, const std::string &result_url)
+	void operator() (job_request request)
 	{
-		calls.push_back("call");
+		calls.push_back(request);
 	}
 };
 
@@ -105,4 +105,9 @@ TEST(broker_connection, calls_callback)
 
 	connection.receive_tasks();
 	ASSERT_EQ(callback.calls.size(), 1);
+
+	job_request request = callback.calls.at(0);
+	ASSERT_EQ(request.job_id, "10");
+	ASSERT_EQ(request.job_url, "http://localhost:5487/submission_archives/10.tar.gz");
+	ASSERT_EQ(request.result_url, "http://localhost:5487/results/10");
 }
