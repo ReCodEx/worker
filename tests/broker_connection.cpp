@@ -79,25 +79,23 @@ TEST(broker_connection, calls_callback)
 	test_callback callback;
 	broker_connection<mock_connection_proxy, test_callback> connection(config, &proxy, &callback);
 
-	std::vector<std::string> msg = {
-		"eval",
-		"10",
-		"http://localhost:5487/submission_archives/10.tar.gz",
-		"http://localhost:5487/results/10",
-	};
-
 	{
 		InSequence s;
 
 		EXPECT_CALL(proxy, recv(_, _))
 			.Times(1)
 			.WillOnce(DoAll(
-				SetArgReferee<0>(msg),
+				SetArgReferee<0>(std::vector<std::string>{
+					"eval",
+					"10",
+					"http://localhost:5487/submission_archives/10.tar.gz",
+					"http://localhost:5487/results/10",
+				}),
 				Return(true)
 			));
 
 		EXPECT_CALL(proxy, recv(_, _))
-			.WillOnce(DoAll(
+			.WillRepeatedly(DoAll(
 				SetArgPointee<1>(true),
 				Return(false)
 			));
