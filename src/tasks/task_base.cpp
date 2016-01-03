@@ -1,9 +1,9 @@
 #include "task_base.h"
 
-task_base::task_base(std::string task_id, size_t priority, bool fatal, const std::string &cmd,
-		const std::vector<std::string> &arguments, const std::string &log,
-		const std::vector<std::string> &dependencies)
-	: task_id_(task_id), priority_(priority), fatal_failure_(fatal),
+task_base::task_base(size_t id, std::string task_id, size_t priority, bool fatal,
+					 const std::string &cmd, const std::vector<std::string> &arguments,
+					 const std::string &log, const std::vector<std::string> &dependencies)
+	: id_(id), task_id_(task_id), priority_(priority), fatal_failure_(fatal),
 	  cmd_(cmd), log_(log), dependencies_(dependencies), arguments_(arguments)
 {}
 
@@ -16,10 +16,20 @@ void task_base::add_children(std::shared_ptr<task_base> add)
 	return;
 }
 
+const std::vector<std::shared_ptr<task_base>> &task_base::get_children()
+{
+	return children_;
+}
+
 void task_base::add_parent(std::shared_ptr<task_base> add)
 {
 	parents_.push_back(add);
 	return;
+}
+
+size_t task_base::get_id()
+{
+	return id_;
 }
 
 const std::string &task_base::get_task_id()

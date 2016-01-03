@@ -1,7 +1,7 @@
 #include "fake_task.h"
 
-fake_task::fake_task()
-	: task_base("", 0, false, "", {}, "", std::vector<std::string>())
+fake_task::fake_task(size_t id)
+	: task_base(id, "", 0, false, "", {}, "", std::vector<std::string>())
 {}
 
 fake_task::~fake_task()

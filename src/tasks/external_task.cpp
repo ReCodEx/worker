@@ -1,10 +1,10 @@
 #include "external_task.h"
 
-external_task::external_task(const std::string &task_id, size_t priority, bool fatal, const std::string &log,
+external_task::external_task(size_t id, const std::string &task_id, size_t priority, bool fatal, const std::string &log,
 							 const std::vector<std::string> &dependencies,
 							 const std::string &binary, const std::vector<std::string> &arguments,
 							 const std::string &sandbox, sandbox_limits limits)
-	: task_base(task_id, priority, fatal, binary, arguments, log, dependencies),
+	: task_base(id, task_id, priority, fatal, binary, arguments, log, dependencies),
 	  cmd_(binary), sandbox_id_(sandbox), limits_(limits)
 {
 	sandbox_init();

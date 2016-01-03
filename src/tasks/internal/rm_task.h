@@ -9,7 +9,7 @@
  */
 class rm_task : public task_base {
 public:
-	rm_task(std::string task_id, size_t priority, bool fatal, const std::string &cmd,
+	rm_task(size_t id, std::string task_id, size_t priority, bool fatal, const std::string &cmd,
 			const std::vector<std::string> &arguments, const std::string &log,
 			const std::vector<std::string> &dependencies);
 	virtual ~rm_task();

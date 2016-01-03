@@ -13,15 +13,17 @@
 class task_base {
 public:
 	task_base() = delete;
-	task_base(std::string task_id, size_t priority, bool fatal, const std::string &cmd,
-			const std::vector<std::string> &arguments, const std::string &log,
-			const std::vector<std::string> &dependencies);
+	task_base(size_t id, std::string task_id, size_t priority, bool fatal,
+			  const std::string &cmd, const std::vector<std::string> &arguments,
+			  const std::string &log, const std::vector<std::string> &dependencies);
 	virtual ~task_base();
 
 	virtual void run() = 0;
 	void add_children(std::shared_ptr<task_base> add);
+	const std::vector<std::shared_ptr<task_base>> &get_children();
 	void add_parent(std::shared_ptr<task_base> add);
 
+	size_t get_id();
 	const std::string &get_task_id();
 	size_t get_priority();
 	bool get_fatal_failure();
@@ -29,6 +31,7 @@ public:
 	const std::string &get_log();
 	const std::vector<std::string> &get_dependencies();
 protected:
+	size_t id_;
 	std::string task_id_;
 	size_t priority_;
 	bool fatal_failure_;

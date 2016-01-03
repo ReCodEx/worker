@@ -12,10 +12,11 @@
  */
 class fake_task : public task_base {
 public:
+	fake_task() = delete;
 	/**
 	 * Only send some fake information to task_base.
 	 */
-	fake_task();
+	fake_task(size_t id);
 	/**
 	 * Empty destructor.
 	 */

@@ -7,10 +7,10 @@
 namespace fs = boost::filesystem;
 
 
-cp_task::cp_task(std::string task_id, size_t priority, bool fatal, const std::string &cmd,
+cp_task::cp_task(size_t id, std::string task_id, size_t priority, bool fatal, const std::string &cmd,
 			const std::vector<std::string> &arguments, const std::string &log,
 			const std::vector<std::string> &dependencies)
-	: task_base(task_id, priority, fatal, cmd, arguments, log, dependencies)
+	: task_base(id, task_id, priority, fatal, cmd, arguments, log, dependencies)
 {
 }
 

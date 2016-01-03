@@ -2,6 +2,7 @@
 #define CODEX_WORKER_JOB_HPP
 
 #include <vector>
+#include <queue>
 
 #define BOOST_FILESYSTEM_NO_DEPRECATED
 #define BOOST_NO_CXX11_SCOPED_ENUMS
@@ -40,6 +41,14 @@ public:
 private:
 
 	void build_job(const YAML::Node &conf);
+	/**
+	 * Topological sort of tasks starting from root_task_.
+	 * Result order is saved in task_queue_ variable.
+	 * Priorities and configuration file order are taken into account.
+	 * Algorithm itself taken from: http://stackoverflow.com/a/11236027
+	 * @param effective_indegree
+	 */
+	void topological_sort(std::map<std::string, size_t> &effective_indegree);
 	/**
 	 * Cleanup after job evaluation, should be enough to delete all created files
 	 */
