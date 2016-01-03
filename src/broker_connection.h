@@ -4,6 +4,7 @@
 
 #include <map>
 #include <memory>
+#include <bitset>
 
 #include "spdlog/spdlog.h"
 #include "config/worker_config.h"
@@ -20,6 +21,18 @@ struct job_request {
 		job_id(job_id), job_url(job_url), result_url(result_url)
 	{
 	}
+};
+
+/**
+ * Contains types used by the proxy for polling
+ */
+struct message_origin {
+	enum type {
+		BROKER = 0,
+		JOBS = 1
+	};
+
+	typedef std::bitset<2> set;
 };
 
 /**
@@ -85,7 +98,7 @@ public:
 			msg.push_back(it.first + "=" + it.second);
 		}
 
-		socket->send(msg);
+		socket->send_broker(msg);
 	}
 
 	/**
@@ -96,16 +109,33 @@ public:
 	{
 		while (true) {
 			std::vector<std::string> msg;
+			message_origin::set result;
 			bool terminate = false;
 
-			socket->recv(msg, &terminate);
+			socket->poll(result, -1, &terminate);
 
 			if (terminate) {
 				break;
 			}
 
-			if (msg.at(0) == "eval") {
-				process_eval(msg);
+			if (result.test(message_origin::BROKER)) {
+				socket->recv_broker(msg, &terminate);
+
+				if (terminate) {
+					break;
+				}
+
+				if (msg.at(0) == "eval") {
+					process_eval(msg);
+				}
+			}
+
+			if (result.test(message_origin::JOBS)) {
+				socket->recv_jobs(msg, &terminate);
+
+				if (terminate) {
+					break;
+				}
 			}
 		}
 

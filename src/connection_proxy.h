@@ -13,28 +13,12 @@ class connection_proxy {
 private:
 	zmq::socket_t broker_;
 	zmq::socket_t jobs_;
+	zmq::pollitem_t items_[2];
 
-public:
-	const std::string job_socket_id = "jobs";
-
-	connection_proxy (zmq::context_t &context) :
-		broker_(context, ZMQ_DEALER), jobs_(context, ZMQ_PAIR)
-	{
-	}
-
-	void connect (const std::string &addr)
-	{
-		broker_.connect(addr);
-		jobs_.bind("inproc://" + job_socket_id);
-	}
-
-	/**
-	 * Send data through the socket
-	 */
-	bool send (const std::vector<std::string> &msg)
+	bool send_through_socket (zmq::socket_t &socket, const std::vector<std::string> &msg)
 	{
 		for (auto it = std::begin(msg); it != std::end(msg); ++it) {
-			bool retval = broker_.send(
+			bool retval = socket.send(
 				it->c_str(),
 				it->size(),
 				std::next(it) != std::end(msg) ? ZMQ_SNDMORE : 0
@@ -48,10 +32,7 @@ public:
 		return true;
 	}
 
-	/**
-	 * Receive data from the socket
-	 */
-	bool recv (std::vector<std::string> &target, bool *terminate = nullptr)
+	bool recv_from_socket (zmq::socket_t &socket, std::vector<std::string> &target, bool *terminate = nullptr)
 	{
 		zmq::message_t msg;
 		target.clear();
@@ -60,7 +41,7 @@ public:
 			bool retval;
 
 			try {
-				retval = broker_.recv(&msg);
+				retval = socket.recv(&msg);
 			} catch (zmq::error_t) {
 				if (terminate != nullptr) {
 					*terminate = true;
@@ -76,6 +57,86 @@ public:
 		} while (msg.more());
 
 		return true;
+	}
+
+public:
+	const std::string job_socket_id = "jobs";
+
+	connection_proxy (zmq::context_t &context) :
+		broker_(context, ZMQ_DEALER), jobs_(context, ZMQ_PAIR)
+	{
+		items_[0].socket = (void *) broker_;
+		items_[0].fd = 0;
+		items_[0].events = ZMQ_POLLIN;
+		items_[0].revents = 0;
+
+		items_[1].socket = (void *) jobs_;
+		items_[1].fd = 0;
+		items_[1].events = ZMQ_POLLIN;
+		items_[1].revents = 0;
+	}
+
+	void connect (const std::string &addr)
+	{
+		broker_.connect(addr);
+		jobs_.bind("inproc://" + job_socket_id);
+	}
+
+	/**
+	 * Block execution until a message arrives to a socket
+	 */
+	void poll (message_origin::set &result, int timeout, bool *terminate = nullptr)
+	{
+		result.reset();
+
+		try {
+			zmq::poll(items_, 2, timeout);
+		} catch (zmq::error_t) {
+			if (terminate != nullptr) {
+				*terminate = true;
+				return;
+			}
+		}
+
+		if (items_[0].revents & ZMQ_POLLIN) {
+			result.set(message_origin::BROKER, true);
+		}
+
+		if (items_[1].revents & ZMQ_POLLIN) {
+			result.set(message_origin::JOBS, true);
+		}
+	}
+
+	/**
+	 * Send data to the broker
+	 */
+	bool send_broker (const std::vector<std::string> &msg)
+	{
+		return send_through_socket(broker_, msg);
+	}
+
+	/**
+	 * Send data through the job socket
+	 */
+	bool send_jobs (const std::vector<std::string> &msg)
+	{
+		return send_through_socket(jobs_, msg);
+	}
+
+	/**
+	 * Receive data from the broker
+	 */
+	bool recv_broker (std::vector<std::string> &target, bool *terminate = nullptr)
+	{
+		return recv_from_socket(broker_, target, terminate);
+	}
+
+	/**
+	 * Receive data from the job socket
+	 */
+	bool recv_jobs (std::vector<std::string> &target, bool *terminate = nullptr)
+	{
+		return recv_from_socket(jobs_, target, terminate);
 	}
 };
 

@@ -21,8 +21,11 @@ public:
 class mock_connection_proxy {
 public:
 	MOCK_METHOD1(connect, void(const std::string &addr));
-	MOCK_METHOD1(send, bool(const std::vector<std::string> &));
-	MOCK_METHOD2(recv, bool(std::vector<std::string> &, bool *));
+	MOCK_METHOD3(poll, void(message_origin::set &, int, bool *));
+	MOCK_METHOD1(send_broker, bool(const std::vector<std::string> &));
+	MOCK_METHOD2(recv_broker, bool(std::vector<std::string> &, bool *));
+	MOCK_METHOD1(send_jobs, bool(const std::vector<std::string> &));
+	MOCK_METHOD2(recv_jobs, bool(std::vector<std::string> &, bool *));
 };
 
 /**
@@ -62,7 +65,7 @@ TEST(broker_connection, sends_init)
 		InSequence s;
 
 		EXPECT_CALL(*proxy, connect(StrEq(addr)));
-		EXPECT_CALL(*proxy, send(ElementsAre(
+		EXPECT_CALL(*proxy, send_broker(ElementsAre(
 			"init",
 			"env=c",
 			"hwgroup=group_1"
@@ -70,6 +73,16 @@ TEST(broker_connection, sends_init)
 	}
 
 	connection.connect();
+}
+
+ACTION(ClearFlags)
+{
+	((message_origin::set &) arg0).reset();
+}
+
+ACTION_P(SetFlag, flag)
+{
+	((message_origin::set &) arg0).set(flag, true);
 }
 
 TEST(broker_connection, calls_callback)
@@ -82,7 +95,13 @@ TEST(broker_connection, calls_callback)
 	{
 		InSequence s;
 
-		EXPECT_CALL(*proxy, recv(_, _))
+		EXPECT_CALL(*proxy, poll(_, _, _))
+			.WillOnce(DoAll(
+				ClearFlags(),
+				SetFlag(message_origin::BROKER)
+			));
+
+		EXPECT_CALL(*proxy, recv_broker(_, _))
 			.Times(1)
 			.WillOnce(DoAll(
 				SetArgReferee<0>(std::vector<std::string>{
@@ -94,11 +113,8 @@ TEST(broker_connection, calls_callback)
 				Return(true)
 			));
 
-		EXPECT_CALL(*proxy, recv(_, _))
-			.WillRepeatedly(DoAll(
-				SetArgPointee<1>(true),
-				Return(false)
-			));
+		EXPECT_CALL(*proxy, poll(_, _, _))
+			.WillRepeatedly(SetArgPointee<2>(true));
 	}
 
 	connection.receive_tasks();
