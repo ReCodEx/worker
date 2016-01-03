@@ -10,20 +10,6 @@
 #include "config/worker_config.h"
 
 /**
- * A structure that contains the information received with a job request
- */
-struct job_request {
-	const std::string job_id;
-	const std::string job_url;
-	const std::string result_url;
-
-	job_request (std::string job_id, std::string job_url, std::string result_url) :
-		job_id(job_id), job_url(job_url), result_url(result_url)
-	{
-	}
-};
-
-/**
  * Contains types used by the proxy for polling
  */
 struct message_origin {
@@ -40,36 +26,20 @@ struct message_origin {
  * When a job is received from the broker, a job callback is invoked to
  * process it.
  */
-template <typename proxy, typename job_callback>
+template <typename proxy>
 class broker_connection {
 private:
 	const worker_config &config;
 	std::shared_ptr<proxy> socket;
 	std::shared_ptr<spdlog::logger> logger_;
-	job_callback *cb_;
 
-	void process_eval (const std::vector<std::string> &msg)
-	{
-		if (msg.size() < 4) {
-			return;
-		}
-
-		job_request request(
-			msg.at(1),
-			msg.at(2),
-			msg.at(3)
-		);
-
-		(*cb_)(request);
-	}
 public:
 	broker_connection (
 		const worker_config &config,
 		std::shared_ptr<proxy> socket,
-		job_callback *cb,
 		std::shared_ptr<spdlog::logger> logger = nullptr
 	) :
-		config(config), socket(socket), cb_(cb)
+		config(config), socket(socket)
 	{
 		if(logger != nullptr) {
 			logger_ = logger;
@@ -126,7 +96,7 @@ public:
 				}
 
 				if (msg.at(0) == "eval") {
-					process_eval(msg);
+					socket->send_jobs(msg);
 				}
 			}
 

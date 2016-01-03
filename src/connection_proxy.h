@@ -5,6 +5,10 @@
 #include <memory>
 #include <zmq.hpp>
 
+#include "broker_connection.h"
+
+#define JOB_SOCKET_ID "jobs"
+
 /**
  * A trivial wrapper for the ZeroMQ dealer socket used by broker_connection
  * The purpose of this class is to facilitate testing of the broker_connection class
@@ -60,8 +64,6 @@ private:
 	}
 
 public:
-	const std::string job_socket_id = "jobs";
-
 	connection_proxy (zmq::context_t &context) :
 		broker_(context, ZMQ_DEALER), jobs_(context, ZMQ_PAIR)
 	{
@@ -79,7 +81,7 @@ public:
 	void connect (const std::string &addr)
 	{
 		broker_.connect(addr);
-		jobs_.bind("inproc://" + job_socket_id);
+		jobs_.bind("inproc://" JOB_SOCKET_ID);
 	}
 
 	/**

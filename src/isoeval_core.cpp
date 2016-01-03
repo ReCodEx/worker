@@ -1,9 +1,10 @@
 #include "isoeval_core.h"
+#include "job_receiver.h"
 
 
 isoeval_core::isoeval_core(std::vector<std::string> args)
 	: args_(args), logger_(nullptr), broker_(nullptr), job_evaluator_(nullptr),
-	  fileman_(nullptr), config_filename_("config.yml"), log_config_(), job_callback_(fileman_)
+	  fileman_(nullptr), config_filename_("config.yml"), log_config_()
 {
 	// parse cmd parameters
 	parse_params();
@@ -30,9 +31,10 @@ isoeval_core::~isoeval_core()
 void isoeval_core::run()
 {
 	broker_->connect();
-	std::thread broker_thread(std::bind(&broker_connection<connection_proxy, job_callback>::receive_tasks, broker_));
+	std::thread broker_thread(std::bind(&broker_connection<connection_proxy>::receive_tasks, broker_));
 
-	job_evaluator_->run();
+	job_receiver receiver(zmq_context_, job_evaluator_);
+	receiver.start_receiving();
 
 	broker_thread.join();
 
@@ -155,10 +157,9 @@ void isoeval_core::broker_init()
 {
 	auto broker_proxy = std::make_shared<connection_proxy>(zmq_context_);
 
-	broker_ = std::make_shared<broker_connection<connection_proxy, job_callback>>(
+	broker_ = std::make_shared<broker_connection<connection_proxy>>(
 		*config_,
 		broker_proxy,
-		&job_callback_,
 		logger_
 	);
 

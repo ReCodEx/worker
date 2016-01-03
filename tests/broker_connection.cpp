@@ -28,24 +28,11 @@ public:
 	MOCK_METHOD2(recv_jobs, bool(std::vector<std::string> &, bool *));
 };
 
-/**
- * A job callback that stores received calls in a vector
- */
-struct test_callback {
-	std::vector<job_request> calls;
-
-	void operator() (job_request request)
-	{
-		calls.push_back(request);
-	}
-};
-
 TEST(broker_connection, sends_init)
 {
 	mock_worker_config config;
 	auto proxy = std::make_shared<StrictMock<mock_connection_proxy>>();
-	test_callback callback;
-	broker_connection<mock_connection_proxy, test_callback> connection(config, proxy, &callback);
+	broker_connection<mock_connection_proxy> connection(config, proxy);
 
 	std::string addr("tcp://localhost:9876");
 	worker_config::header_map_t headers = {
@@ -54,12 +41,10 @@ TEST(broker_connection, sends_init)
 	};
 
 	EXPECT_CALL(config, get_broker_uri())
-		.Times(2)
 		.WillRepeatedly(Return(addr));
 
 	EXPECT_CALL(config, get_headers())
-		.Times(1)
-		.WillOnce(ReturnRef(headers));
+		.WillRepeatedly(ReturnRef(headers));
 
 	{
 		InSequence s;
@@ -85,12 +70,11 @@ ACTION_P(SetFlag, flag)
 	((message_origin::set &) arg0).set(flag, true);
 }
 
-TEST(broker_connection, calls_callback)
+TEST(broker_connection, forwards_eval)
 {
 	mock_worker_config config;
 	auto proxy = std::make_shared<StrictMock<mock_connection_proxy>>();
-	test_callback callback;
-	broker_connection<mock_connection_proxy, test_callback> connection(config, proxy, &callback);
+	broker_connection<mock_connection_proxy> connection(config, proxy);
 
 	{
 		InSequence s;
@@ -113,15 +97,16 @@ TEST(broker_connection, calls_callback)
 				Return(true)
 			));
 
+		EXPECT_CALL(*proxy, send_jobs(ElementsAre(
+			"eval",
+			"10",
+			"http://localhost:5487/submission_archives/10.tar.gz",
+			"http://localhost:5487/results/10"
+		))).WillOnce(Return(true));
+
 		EXPECT_CALL(*proxy, poll(_, _, _))
 			.WillRepeatedly(SetArgPointee<2>(true));
 	}
 
 	connection.receive_tasks();
-	ASSERT_EQ(callback.calls.size(), 1);
-
-	job_request request = callback.calls.at(0);
-	ASSERT_EQ(request.job_id, "10");
-	ASSERT_EQ(request.job_url, "http://localhost:5487/submission_archives/10.tar.gz");
-	ASSERT_EQ(request.result_url, "http://localhost:5487/results/10");
 }
