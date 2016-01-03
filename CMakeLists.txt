@@ -48,6 +48,7 @@ set(SOURCE_FILES
 	src/main.cpp
 	src/config/worker_config.cpp
 	src/config/worker_config.h
+	src/config/fileman_config.h
 	src/config/log_config.h
 	src/broker_connection.h
 	src/connection_proxy.h

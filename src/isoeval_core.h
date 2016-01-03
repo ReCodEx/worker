@@ -125,9 +125,7 @@ private:
 	/** Loaded worker configuration */
 	std::shared_ptr<worker_config> config_;
 
-	/** Configuration of spdlogger */
-	log_config log_config_;
-	/** Pointer to logger itself */
+	/** Pointer to logger */
 	std::shared_ptr<spdlog::logger> logger_;
 
 	/** File manager which is used to download and upload needed files */

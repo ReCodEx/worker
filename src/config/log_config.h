@@ -12,9 +12,20 @@ public:
 	std::string log_path = "/tmp/recodex/";
 	std::string log_basename = "worker";
 	std::string log_suffix = "log";
-	spdlog::level::level_enum log_level = spdlog::level::debug;
+	std::string log_level = "debug";
 	int log_file_size = 1024 * 1024;
 	int log_files_count = 3;
+
+	static spdlog::level::level_enum get_level(const std::string &lev)
+	{
+		if (lev == "emerg") {
+			return spdlog::level::emerg;
+		} else if (lev == "warn") {
+			return spdlog::level::warn;
+		}
+
+		return spdlog::level::debug;
+	}
 };
 
 #endif //CODEX_WORKER_LOG_CONFIG_H

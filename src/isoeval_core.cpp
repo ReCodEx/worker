@@ -4,7 +4,7 @@
 
 isoeval_core::isoeval_core(std::vector<std::string> args)
 	: args_(args), logger_(nullptr), broker_(nullptr), job_evaluator_(nullptr),
-	  fileman_(nullptr), config_filename_("config.yml"), log_config_()
+	  fileman_(nullptr), config_filename_("config.yml")
 {
 	// parse cmd parameters
 	parse_params();
@@ -98,9 +98,11 @@ void isoeval_core::force_exit(std::string msg)
 
 void isoeval_core::log_init()
 {
+	auto log_conf = config_->get_log_config();
+
 	//Set up logger
 	//Try to create target directory for logs
-	auto path = fs::path(log_config_.log_path);
+	auto path = fs::path(log_conf.log_path);
 	try {
 		if(!fs::is_directory(path)) {
 			fs::create_directories(path);
@@ -113,14 +115,14 @@ void isoeval_core::log_init()
 	//Create and register logger
 	try {
 		//Create multithreaded rotating file sink. Max filesize is 1024 * 1024 and we save 5 newest files.
-		auto rotating_sink = std::make_shared<spdlog::sinks::rotating_file_sink_mt>((path / log_config_.log_basename).string(),
-								log_config_.log_suffix, log_config_.log_file_size, log_config_.log_files_count, false);
+		auto rotating_sink = std::make_shared<spdlog::sinks::rotating_file_sink_mt>((path / log_conf.log_basename).string(),
+								log_conf.log_suffix, log_conf.log_file_size, log_conf.log_files_count, false);
 		//Set queue size for asynchronous logging. It must be a power of 2.
 		spdlog::set_async_mode(1048576);
 		//Make log with name "logger"
 		logger_ = std::make_shared<spdlog::logger>("logger", rotating_sink);
 		//Set logging level to debug
-		logger_->set_level(log_config_.log_level);
+		logger_->set_level(log_config::get_level(log_conf.log_level));
 		//Print header to log
 		logger_->emerg() << "------------------------------";
 		logger_->emerg() << "    Started ReCodEx worker";

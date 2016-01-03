@@ -7,22 +7,25 @@
 #include <map>
 #include <yaml-cpp/yaml.h>
 
+#define BOOST_FILESYSTEM_NO_DEPRECATED
+#define BOOST_NO_CXX11_SCOPED_ENUMS
+#include <boost/filesystem.hpp>
+namespace fs = boost::filesystem;
+
+#include "log_config.h"
+#include "fileman_config.h"
+#include "../sandbox/sandbox_base.h"
+
+
 /**
  * An object representation of a worker's configuration
  */
 class worker_config {
 public:
+
 	/** Type of the header map */
 	typedef std::multimap<std::string, std::string> header_map_t;
 
-private:
-	/** URI of the task broker */
-	std::string broker_uri_ = "";
-
-	/** Headers that describe this worker's capabilities */
-	header_map_t headers_;
-
-public:
 	/**
 	 * The default constructor
 	 */
@@ -33,16 +36,26 @@ public:
 	 */
 	worker_config (const YAML::Node &config);
 
-	/**
-	 * Get the URI of the task broker
-	 * @return A ZeroMQ compatible URI
-	 */
-	virtual std::string get_broker_uri () const;
+	size_t get_worker_id();
+	virtual std::string get_broker_uri() const;
+	virtual const header_map_t &get_headers() const;
+	const log_config &get_log_config();
+	const fileman_config &get_fileman_config();
+	const std::string &get_hwgroup();
+	const sandbox_limits &get_limits();
+	const std::map<std::string, size_t> &get_sandboxes_limits();
 
-	/**
-	 * Get the headers this worker uses to describe itself to the broker
-	 */
-	virtual const header_map_t &get_headers () const;
+private:
+
+	size_t worker_id_;
+	/** Broker URI */
+	std::string broker_uri_;
+	header_map_t headers_;
+	log_config log_config_;
+	fileman_config fileman_config_;
+	std::string hwgroup_;
+	sandbox_limits limits_;
+	std::map<std::string, size_t> sandboxes_limits_;
 };
 
 class config_error : public std::runtime_error {

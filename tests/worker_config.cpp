@@ -6,13 +6,14 @@
 TEST(worker_config, load_yaml_basic)
 {
 	auto yaml = YAML::Load(
-		"broker: tcp://localhost:1234\n"
+		"worker-id: 1\n"
+		"broker-uri: tcp://localhost:1234\n"
 		"headers:\n"
 		"    env:\n"
 		"        - c\n"
 		"        - python\n"
 		"    threads: 10\n"
-		"    hwgroup: group_1\n"
+		"hwgroup: group_1\n"
 	);
 
 	worker_config config(yaml);
@@ -21,7 +22,6 @@ TEST(worker_config, load_yaml_basic)
 		{"env", "c"},
 		{"env", "python"},
 		{"threads", "10"},
-		{"hwgroup", "group_1"}
 	};
 
 	ASSERT_STREQ("tcp://localhost:1234", config.get_broker_uri().c_str());
@@ -34,12 +34,13 @@ TEST(worker_config, load_yaml_basic)
 TEST(worker_config, invalid_header_value_1)
 {
 	auto yaml = YAML::Load(
-		"broker: tcp://localhost:1234\n"
+		"worker-id: 1\n"
+		"broker-uri: tcp://localhost:1234\n"
 		"headers:\n"
 		"    env:\n"
 		"        foo: c\n"
 		"    threads: 10\n"
-		"    hwgroup: group_1\n"
+		"hwgroup: group_1\n"
 	);
 
 	ASSERT_THROW(worker_config config(yaml), config_error);
@@ -51,12 +52,13 @@ TEST(worker_config, invalid_header_value_1)
 TEST(worker_config, invalid_header_value_2)
 {
 	auto yaml = YAML::Load(
-		"broker: tcp://localhost:1234\n"
+		"worker-id: 1\n"
+		"broker-uri: tcp://localhost:1234\n"
 		"headers:\n"
 		"    env:\n"
 		"        - foo: c\n"
 		"    threads: 10\n"
-		"    hwgroup: group_1\n"
+		"hwgroup: group_1\n"
 	);
 
 	ASSERT_THROW(worker_config config(yaml), config_error);
@@ -68,13 +70,14 @@ TEST(worker_config, invalid_header_value_2)
 TEST(worker_config, invalid_broker_uri)
 {
 	auto yaml = YAML::Load(
-		"broker:\n"
+		"worker-id: 1\n"
+		"broker-uri:\n"
 		"    tcp: localhost:1234\n"
 		"headers:\n"
 		"    env:\n"
 		"        - foo: c\n"
 		"    threads: 10\n"
-		"    hwgroup: group_1\n"
+		"hwgroup: group_1\n"
 	);
 
 	ASSERT_THROW(worker_config config(yaml), config_error);
