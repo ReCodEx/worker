@@ -12,38 +12,42 @@ void job_receiver::start_receiving ()
 	socket_.connect("inproc://" JOB_SOCKET_ID);
 
 	while (true) {
-		zmq::message_t msg;
+		try {
+			zmq::message_t msg;
 
-		socket_.recv(&msg);
-		std::string type(static_cast<char *>(msg.data()), msg.size());
+			socket_.recv(&msg);
+			std::string type(static_cast<char *>(msg.data()), msg.size());
 
-		if (type == "eval") {
-			if (!msg.more()) {
-				continue;
+			if (type == "eval") {
+				if (!msg.more()) {
+					continue;
+				}
+
+				socket_.recv(&msg);
+				std::string id(static_cast<char *>(msg.data()), msg.size());
+
+				if (!msg.more()) {
+					continue;
+				}
+
+				socket_.recv(&msg);
+				std::string job_url(static_cast<char *>(msg.data()), msg.size());
+
+				if (!msg.more()) {
+					continue;
+				}
+
+				socket_.recv(&msg);
+				std::string result_url(static_cast<char *>(msg.data()), msg.size());
+
+				evaluator_->evaluate(eval_request(id, job_url, result_url));
 			}
 
-			socket_.recv(&msg);
-			std::string id(static_cast<char *>(msg.data()), msg.size());
-
-			if (!msg.more()) {
-				continue;
+			while (msg.more()) {
+				socket_.recv(&msg);
 			}
-
-			socket_.recv(&msg);
-			std::string job_url(static_cast<char *>(msg.data()), msg.size());
-
-			if (!msg.more()) {
-				continue;
-			}
-
-			socket_.recv(&msg);
-			std::string result_url(static_cast<char *>(msg.data()), msg.size());
-
-			evaluator_->evaluate(eval_request(id, job_url, result_url));
-		}
-
-		while (msg.more()) {
-			socket_.recv(&msg);
+		} catch (zmq::error_t) {
+			break;
 		}
 	}
 }
