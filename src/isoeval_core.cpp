@@ -153,9 +153,11 @@ void isoeval_core::curl_fini()
 
 void isoeval_core::broker_init()
 {
+	auto broker_proxy = std::make_shared<connection_proxy>(zmq_context_);
+
 	broker_ = std::make_shared<broker_connection<connection_proxy, job_callback>>(
 		*config_,
-		&broker_proxy_,
+		broker_proxy,
 		&job_callback_,
 		logger_
 	);

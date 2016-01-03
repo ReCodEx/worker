@@ -40,9 +40,9 @@ struct test_callback {
 TEST(broker_connection, sends_init)
 {
 	mock_worker_config config;
-	StrictMock<mock_connection_proxy> proxy;
+	auto proxy = std::make_shared<StrictMock<mock_connection_proxy>>();
 	test_callback callback;
-	broker_connection<mock_connection_proxy, test_callback> connection(config, &proxy, &callback);
+	broker_connection<mock_connection_proxy, test_callback> connection(config, proxy, &callback);
 
 	std::string addr("tcp://localhost:9876");
 	worker_config::header_map_t headers = {
@@ -61,8 +61,8 @@ TEST(broker_connection, sends_init)
 	{
 		InSequence s;
 
-		EXPECT_CALL(proxy, connect(StrEq(addr)));
-		EXPECT_CALL(proxy, send(ElementsAre(
+		EXPECT_CALL(*proxy, connect(StrEq(addr)));
+		EXPECT_CALL(*proxy, send(ElementsAre(
 			"init",
 			"env=c",
 			"hwgroup=group_1"
@@ -75,14 +75,14 @@ TEST(broker_connection, sends_init)
 TEST(broker_connection, calls_callback)
 {
 	mock_worker_config config;
-	StrictMock<mock_connection_proxy> proxy;
+	auto proxy = std::make_shared<StrictMock<mock_connection_proxy>>();
 	test_callback callback;
-	broker_connection<mock_connection_proxy, test_callback> connection(config, &proxy, &callback);
+	broker_connection<mock_connection_proxy, test_callback> connection(config, proxy, &callback);
 
 	{
 		InSequence s;
 
-		EXPECT_CALL(proxy, recv(_, _))
+		EXPECT_CALL(*proxy, recv(_, _))
 			.Times(1)
 			.WillOnce(DoAll(
 				SetArgReferee<0>(std::vector<std::string>{
@@ -94,7 +94,7 @@ TEST(broker_connection, calls_callback)
 				Return(true)
 			));
 
-		EXPECT_CALL(proxy, recv(_, _))
+		EXPECT_CALL(*proxy, recv(_, _))
 			.WillRepeatedly(DoAll(
 				SetArgPointee<1>(true),
 				Return(false)

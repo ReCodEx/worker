@@ -2,6 +2,7 @@
 #define CODEX_WORKER_CONNECTION_PROXY_HPP
 
 #include <iostream>
+#include <memory>
 #include <zmq.hpp>
 
 /**
@@ -10,17 +11,21 @@
  */
 class connection_proxy {
 private:
-	zmq::context_t context;
-	zmq::socket_t socket;
+	zmq::socket_t broker_;
+	zmq::socket_t jobs_;
 
 public:
-	connection_proxy () : context(1), socket(context, ZMQ_DEALER)
+	const std::string job_socket_id = "jobs";
+
+	connection_proxy (zmq::context_t &context) :
+		broker_(context, ZMQ_DEALER), jobs_(context, ZMQ_PAIR)
 	{
 	}
 
 	void connect (const std::string &addr)
 	{
-		socket.connect(addr);
+		broker_.connect(addr);
+		jobs_.bind("inproc://" + job_socket_id);
 	}
 
 	/**
@@ -29,7 +34,7 @@ public:
 	bool send (const std::vector<std::string> &msg)
 	{
 		for (auto it = std::begin(msg); it != std::end(msg); ++it) {
-			bool retval = socket.send(
+			bool retval = broker_.send(
 				it->c_str(),
 				it->size(),
 				std::next(it) != std::end(msg) ? ZMQ_SNDMORE : 0
@@ -55,7 +60,7 @@ public:
 			bool retval;
 
 			try {
-				retval = socket.recv(&msg);
+				retval = broker_.recv(&msg);
 			} catch (zmq::error_t) {
 				if (terminate != nullptr) {
 					*terminate = true;

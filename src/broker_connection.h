@@ -31,7 +31,7 @@ template <typename proxy, typename job_callback>
 class broker_connection {
 private:
 	const worker_config &config;
-	proxy *socket;
+	std::shared_ptr<proxy> socket;
 	std::shared_ptr<spdlog::logger> logger_;
 	job_callback *cb_;
 
@@ -52,7 +52,7 @@ private:
 public:
 	broker_connection (
 		const worker_config &config,
-		proxy *socket,
+		std::shared_ptr<proxy> socket,
 		job_callback *cb,
 		std::shared_ptr<spdlog::logger> logger = nullptr
 	) :
