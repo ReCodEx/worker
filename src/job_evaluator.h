@@ -6,6 +6,7 @@
 #include "tasks/job.h"
 #include "config/worker_config.h"
 #include "fileman/file_manager_base.h"
+#include "eval_request.h"
 
 
 /**
@@ -35,10 +36,9 @@ public:
 	~job_evaluator();
 
 	/**
-	 * Starts looped jobs evaluation.
-	 * Working thread should never leave this function. Only in case of restart.
+	 * Process an "eval" request
 	 */
-	void run();
+	void evaluate(eval_request request);
 private:
 
 	/**

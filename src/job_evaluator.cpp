@@ -10,23 +10,6 @@ job_evaluator::job_evaluator(std::shared_ptr<spdlog::logger> logger,
 job_evaluator::~job_evaluator()
 {}
 
-void job_evaluator::run()
-{
-	while (true) {
-		try {
-			wait_for_submission();
-			download_submission();
-			prepare_submission();
-			build_job();
-			run_job();
-		} catch (...) {}
-		cleanup_submission();
-		push_result();
-	}
-
-	return;
-}
-
 void job_evaluator::wait_for_submission()
 {
 	return;
@@ -62,4 +45,19 @@ void job_evaluator::cleanup_submission()
 void job_evaluator::push_result()
 {
 	return;
+}
+
+void job_evaluator::evaluate (eval_request request)
+{
+	std::cout << request.job_url << std::endl;
+
+	try {
+		wait_for_submission();
+		download_submission();
+		prepare_submission();
+		build_job();
+		run_job();
+	} catch (...) {}
+	cleanup_submission();
+	push_result();
 }
