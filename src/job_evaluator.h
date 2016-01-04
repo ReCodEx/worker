@@ -33,12 +33,12 @@ public:
 	/**
 	 * Theoretically not needed, but stated for completion.
 	 */
-	~job_evaluator();
+	virtual ~job_evaluator();
 
 	/**
 	 * Process an "eval" request
 	 */
-	void evaluate(eval_request request);
+	virtual void evaluate(eval_request request);
 private:
 
 	/**

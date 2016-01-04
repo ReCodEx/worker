@@ -1,0 +1,74 @@
+#include <gtest/gtest.h>
+#include <gmock/gmock.h>
+#include <zmq.hpp>
+#include <thread>
+
+#include "../src/job_receiver.h"
+#include "../src/eval_request.h"
+#include "../src/connection_proxy.h"
+
+using namespace testing;
+
+class mock_job_evaluator : public job_evaluator {
+public:
+	mock_job_evaluator () :
+		job_evaluator(nullptr, nullptr, nullptr)
+	{
+	}
+
+	MOCK_METHOD1(evaluate, void(eval_request));
+};
+
+TEST(job_receiver, basic) {
+	zmq::context_t context(1);
+	zmq::socket_t socket(context, ZMQ_PAIR);
+	socket.bind("inproc://" JOB_SOCKET_ID);
+
+	auto evaluator = std::make_shared<StrictMock<mock_job_evaluator>>();
+
+	const char *id = "eval_123";
+	const char *job_url = "http://dot.com/a.tar.gz";
+	const char *result_url = "http://dot.com/results/123";
+
+	EXPECT_CALL(*evaluator, evaluate(AllOf(
+		Field(&eval_request::job_id, StrEq(id)),
+		Field(&eval_request::job_url, StrEq(job_url)),
+		Field(&eval_request::result_url, StrEq(result_url))
+	))).Times(1);
+
+	job_receiver receiver(context, evaluator);
+	std::thread r([&receiver] () {
+		receiver.start_receiving();
+	});
+
+	socket.send("eval", 4, ZMQ_SNDMORE);
+	socket.send(id, 8, ZMQ_SNDMORE);
+	socket.send(job_url, 23, ZMQ_SNDMORE);
+	socket.send(result_url, 26, 0);
+
+	usleep(1000);
+	context.close();
+	r.join();
+}
+
+TEST(job_receiver, incomplete_msg) {
+	zmq::context_t context(1);
+	zmq::socket_t socket(context, ZMQ_PAIR);
+	socket.bind("inproc://" JOB_SOCKET_ID);
+
+	// We don't expect any calls
+	auto evaluator = std::make_shared<StrictMock<mock_job_evaluator>>();
+
+	job_receiver receiver(context, evaluator);
+	std::thread r([&receiver] () {
+		receiver.start_receiving();
+	});
+
+	socket.send("eval", 4, ZMQ_SNDMORE);
+	socket.send("foo", 3, ZMQ_SNDMORE);
+	socket.send("foo", 3, 0);
+
+	usleep(1000);
+	context.close();
+	r.join();
+}

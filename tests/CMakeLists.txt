@@ -24,7 +24,10 @@ add_executable(${TESTS_NAME}
     ${FILEMAN_DIR}/file_manager.cpp
     isolate_sandbox.cpp
     ${SANDBOX_DIR}/isolate_sandbox.cpp
-)
+	${SRC_DIR}/job_evaluator.cpp
+	${SRC_DIR}/tasks/job.cpp
+	${SRC_DIR}/job_receiver.cpp
+    job_receiver.cpp)
 
 target_link_libraries(${TESTS_NAME} gtest gtest_main)
 target_link_libraries(${TESTS_NAME} gmock gmock_main)
