@@ -2,6 +2,7 @@
 #include <gmock/gmock.h>
 #include <zmq.hpp>
 #include <thread>
+#include <chrono>
 
 #include "../src/job_receiver.h"
 #include "../src/eval_request.h"
@@ -46,7 +47,7 @@ TEST(job_receiver, basic) {
 	socket.send(job_url, 23, ZMQ_SNDMORE);
 	socket.send(result_url, 26, 0);
 
-	usleep(1000);
+	std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	context.close();
 	r.join();
 }
@@ -68,7 +69,7 @@ TEST(job_receiver, incomplete_msg) {
 	socket.send("foo", 3, ZMQ_SNDMORE);
 	socket.send("foo", 3, 0);
 
-	usleep(1000);
+	std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	context.close();
 	r.join();
 }
