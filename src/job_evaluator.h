@@ -39,37 +39,37 @@ public:
 	 * Process an "eval" request
 	 */
 	virtual void evaluate(eval_request request);
-private:
 
-	/**
-	 * Method which will wait for job.
-	 * This is done with sockets created between broker_connection and this class.
-	 */
-	void wait_for_submission();
+private:
 	/**
 	 * Download submission from remote source through filemanager given during construction.
 	 */
 	void download_submission();
+
 	/**
 	 * Downloaded submission has prepared for evaluation, that means: to be decompressed and copied to working directory.
 	 */
 	void prepare_submission();
+
 	/**
 	 * Build job structure from given job-configuration.
 	 * Aka build working tree and its linear ordering, which will be executed.
 	 * It means call job constructor.
 	 */
 	void build_job();
+
 	/**
 	 * Evaluates job itself. Basically means call function run on job instance.
 	 */
 	void run_job();
+
 	/**
 	 * Cleanup decompressed archive and all other temporary files.
 	 */
 	void cleanup_submission();
+
 	/**
-	 * Alert broker_connection through socket, that we succesfully finish evaluation.
+	 * Upload output files using the filemanager (if desired)
 	 */
 	void push_result();
 
@@ -83,7 +83,7 @@ private:
 	std::string submission_path_;
 
 	/** ID of downloaded job obtained from broker */
-	size_t job_id_;
+	std::string job_id_;
 	/** Structure of job itself, this will be evaluated */
 	std::shared_ptr<job> job_;
 
