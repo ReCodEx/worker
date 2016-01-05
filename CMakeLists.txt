@@ -100,6 +100,11 @@ elseif(MSVC)
 	target_link_libraries(${EXEC_NAME} ${CURL_LIBRARIES})
 endif()
 
+# Include libarchive
+option(ENABLE_CPIO OFF)
+option(ENABLE_TAR OFF)
+option(ENABLE_TEST OFF)
+add_subdirectory(vendor/libarchive)
 
 # Include Yaml-cpp
 add_subdirectory(vendor/yaml-cpp)
