@@ -43,7 +43,7 @@ worker_config::worker_config (const YAML::Node &config)
 
 		// load worker-id
 		if (config["worker-id"] && config["worker-id"].IsScalar()) {
-			worker_id_ = config["worker-id"].as<size_t>();
+			worker_id_ = config["worker-id"].as<std::string>();
 		} else { throw config_error("Item worker-id not defined properly"); }
 
 		// load file-manager
@@ -132,6 +132,11 @@ worker_config::worker_config (const YAML::Node &config)
 	} catch (YAML::Exception &ex) {
 		throw config_error("Default worker configuration was not loaded: " + std::string(ex.what()));
 	}
+}
+
+std::string worker_config::get_worker_id()
+{
+	return worker_id_;
 }
 
 std::string worker_config::get_broker_uri() const

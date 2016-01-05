@@ -1,6 +1,14 @@
 #ifndef CODEX_WORKER_CONNECTION_PROXY_HPP
 #define CODEX_WORKER_CONNECTION_PROXY_HPP
 
+#ifndef	_WINSOCKAPI_
+#define _WINSOCKAPI_
+#endif
+
+#ifndef	WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+
 #include <iostream>
 #include <memory>
 #include <zmq.hpp>

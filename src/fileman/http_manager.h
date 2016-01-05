@@ -1,6 +1,13 @@
-
 #ifndef CODEX_WORKER_HTTP_MANAGER_H
 #define CODEX_WORKER_HTTP_MANAGER_H
+
+#ifndef	_WINSOCKAPI_
+#define _WINSOCKAPI_
+#endif
+
+#ifndef	WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
 
 #include <string>
 #include <memory>

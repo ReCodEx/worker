@@ -26,6 +26,25 @@ public:
 
 		return spdlog::level::debug;
 	}
+
+	bool operator==(const log_config &second) const
+	{
+		if (log_path != second.log_path ||
+				log_basename != second.log_basename ||
+				log_suffix != second.log_suffix ||
+				log_level != second.log_level ||
+				log_file_size != second.log_file_size ||
+				log_files_count != second.log_files_count) {
+			return false;
+		}
+
+		return true;
+	}
+
+	bool operator!=(const log_config &second) const
+	{
+		return !((*this) == second);
+	}
 };
 
 #endif //CODEX_WORKER_LOG_CONFIG_H

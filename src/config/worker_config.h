@@ -36,7 +36,7 @@ public:
 	 */
 	worker_config (const YAML::Node &config);
 
-	size_t get_worker_id();
+	std::string get_worker_id();
 	virtual std::string get_broker_uri() const;
 	virtual const header_map_t &get_headers() const;
 	const log_config &get_log_config();
@@ -46,7 +46,7 @@ public:
 
 private:
 
-	size_t worker_id_;
+	std::string worker_id_;
 	/** Broker URI */
 	std::string broker_uri_;
 	header_map_t headers_;

@@ -1,7 +1,5 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-#include <iostream>
-#include <fstream>
 
 #include "../src/tasks/job.h"
 
@@ -36,9 +34,9 @@ TEST(topological_sort_test, top_sort_1)
 	A->add_children(C);
 	C->add_parent(A);
 	eff_ind = {
-		make_pair("A", 0),
-		make_pair("B", 1),
-		make_pair("C", 1)
+		{ "A", 0 },
+		{ "B", 1 },
+		{ "C", 1 }
 	};
 	expected = { A, C, B };
 
@@ -65,10 +63,10 @@ TEST(topological_sort_test, top_sort_1)
 	C->add_children(D);
 	D->add_parent(C);
 	eff_ind = {
-		make_pair("A", 0),
-		make_pair("B", 1),
-		make_pair("C", 1),
-		make_pair("D", 1)
+		{ "A", 0 },
+		{ "B", 1 },
+		{ "C", 1 },
+		{ "D", 1 }
 	};
 	expected = { A, C, B, D };
 
@@ -108,9 +106,9 @@ TEST(topological_sort_test, top_sort_2)
 	B->add_children(C);
 	C->add_parent(B);
 	eff_ind = {
-		make_pair("A", 0),
-		make_pair("B", 1),
-		make_pair("C", 1)
+		{ "A", 0 },
+		{ "B", 1 },
+		{ "C", 1 }
 	};
 	expected = { A, B, C };
 
@@ -145,12 +143,12 @@ TEST(topological_sort_test, top_sort_2)
 	C->add_children(F);
 	F->add_parent(C);
 	eff_ind = {
-		make_pair("A", 0),
-		make_pair("B", 1),
-		make_pair("C", 1),
-		make_pair("D", 1),
-		make_pair("E", 1),
-		make_pair("F", 1)
+		{ "A", 0 },
+		{ "B", 1 },
+		{ "C", 1 },
+		{ "D", 1 },
+		{ "E", 1 },
+		{ "F", 1 }
 	};
 	expected = { A, B, C, D, E, F };
 
@@ -224,19 +222,19 @@ TEST(topological_sort_test, top_sort_3)
 	L->add_parent(A);
 	M->add_parent(A);
 	eff_ind = {
-		make_pair("A", 0),
-		make_pair("B", 1),
-		make_pair("C", 1),
-		make_pair("D", 1),
-		make_pair("E", 1),
-		make_pair("F", 1),
-		make_pair("G", 1),
-		make_pair("H", 1),
-		make_pair("I", 1),
-		make_pair("J", 1),
-		make_pair("K", 1),
-		make_pair("L", 1),
-		make_pair("M", 1)
+		{ "A", 0 },
+		{ "B", 1 },
+		{ "C", 1 },
+		{ "D", 1 },
+		{ "E", 1 },
+		{ "F", 1 },
+		{ "G", 1 },
+		{ "H", 1 },
+		{ "I", 1 },
+		{ "J", 1 },
+		{ "K", 1 },
+		{ "L", 1 },
+		{ "M", 1 }
 	};
 	expected = { A, B, C, D, H, I, J, E, F, G, K, L, M };
 
@@ -292,13 +290,13 @@ TEST(topological_sort_test, top_sort_4)
 	C->add_children(G);
 	G->add_parent(C);
 	eff_ind = {
-		make_pair("A", 0),
-		make_pair("B", 1),
-		make_pair("C", 2),
-		make_pair("D", 1),
-		make_pair("E", 1),
-		make_pair("F", 1),
-		make_pair("G", 1)
+		{ "A", 0 },
+		{ "B", 1 },
+		{ "C", 2 },
+		{ "D", 1 },
+		{ "E", 1 },
+		{ "F", 1 },
+		{ "G", 1 }
 	};
 	expected = { A, D, E, B, F, C, G };
 
@@ -355,15 +353,56 @@ TEST(topological_sort_test, top_sort_cycle_1)
 	G->add_children(B);
 	B->add_parent(G);
 	eff_ind = {
-		make_pair("A", 0),
-		make_pair("B", 2),
-		make_pair("C", 2),
-		make_pair("D", 1),
-		make_pair("E", 1),
-		make_pair("F", 1),
-		make_pair("G", 1)
+		{ "A", 0 },
+		{ "B", 2 },
+		{ "C", 2 },
+		{ "D", 1 },
+		{ "E", 1 },
+		{ "F", 1 },
+		{ "G", 1 }
 	};
 
 	EXPECT_THROW(job::topological_sort(A, eff_ind, result), job_exception);
 }
 
+TEST(topological_sort_test, top_sort_cycle_2)
+{
+	// initialization
+	size_t id = 0;
+	map<string, size_t> eff_ind;
+	vector<shared_ptr<task_base>> result;
+
+
+	//
+	// TASK TREE:
+	//
+	//          A -> B
+	//          ^    |
+	//          |    |
+	//          D <- C
+	//
+	// priority: A = 1, B = 2, C = 3, D = 4
+	//
+	// expected = throw job_exception("Cycle detected")
+	//
+	shared_ptr<task_base> A = make_shared<fake_task>(id++, "A", 1);
+	shared_ptr<task_base> B = make_shared<fake_task>(id++, "B", 2);
+	shared_ptr<task_base> C = make_shared<fake_task>(id++, "C", 3);
+	shared_ptr<task_base> D = make_shared<fake_task>(id++, "D", 4);
+	A->add_children(B);
+	B->add_parent(A);
+	B->add_children(C);
+	C->add_parent(B);
+	C->add_children(D);
+	D->add_parent(C);
+	D->add_children(A);
+	A->add_parent(D);
+	eff_ind = {
+		{ "A", 1 },
+		{ "B", 1 },
+		{ "C", 1 },
+		{ "D", 1 }
+	};
+
+	EXPECT_THROW(job::topological_sort(A, eff_ind, result), job_exception);
+}
