@@ -3,15 +3,15 @@
 class task_compare {
 public:
 	/**
-	 * Less than operator on task_base objects.
+	 * Greater than operator on task_base objects.
 	 * @param a
 	 * @param b
 	 * @return
 	 */
 	bool operator()(std::shared_ptr<task_base> a, std::shared_ptr<task_base> b) {
-		if (a->get_priority() < b->get_priority()) {
+		if (a->get_priority() > b->get_priority()) {
 			return true;
-		} else if (a->get_priority() == b->get_priority() && a->get_id() < b->get_id()) {
+		} else if (a->get_priority() == b->get_priority() && a->get_id() > b->get_id()) {
 			return true;
 		}
 
@@ -54,6 +54,11 @@ job::~job()
 
 void job::run()
 {
+	// simply run all tasks in given topological order
+	for (auto &i : task_queue_) {
+		i->run();
+	}
+
 	return;
 }
 
@@ -78,25 +83,26 @@ void job::build_job(const YAML::Node &conf)
 
 		// get information about submission
 		auto submiss = conf["submission"];
-		if (submiss["job-id"]) {
+		if (submiss["job-id"] && submiss["job-id"].IsScalar()) {
 			job_id_ = submiss["job-id"].as<size_t>();
 		} else { throw job_exception("Submission.job-id item not loaded properly"); }
-		if (submiss["language"]) {
+		if (submiss["language"] && submiss["language"].IsScalar()) {
 			language_ = submiss["language"].as<std::string>();
 		} else { throw job_exception("Submission.language item not loaded properly"); }
 		if (submiss["file-collector"]) {
-			if (submiss["file-collector"].IsMap()) {
-				if (submiss["file-collector"]["hostname"]) {
-					fileman_hostname_ = submiss["file-collector"]["hostname"].as<std::string>();
+			auto filecol = submiss["file-collector"];
+			if (filecol.IsMap()) {
+				if (filecol["hostname"] && filecol["hostname"].IsScalar()) {
+					fileman_hostname_ = filecol["hostname"].as<std::string>();
 				} else { throw job_exception("Submission.file-collector.hostname item not loaded properly"); }
-				if (submiss["file-collector"]["port"]) {
-					fileman_port_ = submiss["file-collector"]["port"].as<std::string>();
+				if (filecol["port"] && filecol["port"].IsScalar()) {
+					fileman_port_ = filecol["port"].as<std::string>();
 				} else { throw job_exception("Submission.file-collector.port item not loaded properly"); }
-				if (submiss["file-collector"]["username"]) {
-					fileman_username_ = submiss["file-collector"]["username"].as<std::string>();
+				if (filecol["username"] && filecol["username"].IsScalar()) {
+					fileman_username_ = filecol["username"].as<std::string>();
 				} else { throw job_exception("Submission.file-collector.username item not loaded properly"); }
-				if (submiss["file-collector"]["password"]) {
-					fileman_passwd_ = submiss["file-collector"]["password"].as<std::string>();
+				if (filecol["password"] && filecol["password"].IsScalar()) {
+					fileman_passwd_ = filecol["password"].as<std::string>();
 				} else { throw job_exception("Submission.file-collector.password item not loaded properly"); }
 			} else {
 				throw job_exception("Item submission.file-collector is not map");
@@ -106,12 +112,13 @@ void job::build_job(const YAML::Node &conf)
 
 		// create fake task, which is logical root of evaluation
 		size_t id = 0;
+		std::map<std::string, size_t> eff_indegree;
 		root_task_ = std::make_shared<fake_task>(id++);
+		eff_indegree.insert(std::make_pair(root_task_->get_task_id(), 0));
 
 
 		// construct all tasks with their ids and check if they have all datas, but do not connect them
 		std::map<std::string, std::shared_ptr<task_base>> unconnected_tasks;
-		std::map<std::string, size_t> eff_indegree;
 		for (auto &ctask : conf["tasks"]) {
 			std::string task_id;
 			size_t priority;
@@ -121,18 +128,18 @@ void job::build_job(const YAML::Node &conf)
 			std::string log;
 			std::vector<std::string> task_depend;
 
-			if (ctask["task-id"]) {
+			if (ctask["task-id"] && ctask["task-id"].IsScalar()) {
 				task_id = ctask["task-id"].as<std::string>();
-			} else { throw job_exception("Configuration of one task has missing task-id"); }
-			if (ctask["priority"]) {
+			} else { throw job_exception("Configuration task has missing task-id"); }
+			if (ctask["priority"] && ctask["priority"].IsScalar()) {
 				priority = ctask["priority"].as<size_t>();
-			} else { throw job_exception("Configuration of one task has missing priority"); }
-			if (ctask["fatal-failure"]) {
+			} else { throw job_exception("Configuration task has missing priority"); }
+			if (ctask["fatal-failure"] && ctask["fatal-failure"].IsScalar()) {
 				fatal = ctask["fatal-failure"].as<bool>();
-			} else { throw job_exception("Configuration of one task has missing fatal-failure"); }
+			} else { throw job_exception("Configuration task has missing fatal-failure"); }
 			if (ctask["cmd"]) {
 				if (ctask["cmd"].IsMap()) {
-					if (ctask["cmd"]["bin"]) {
+					if (ctask["cmd"]["bin"] && ctask["cmd"]["bin"].IsScalar()) {
 						cmd = ctask["cmd"]["bin"].as<std::string>();
 					} else { throw job_exception(); }
 
@@ -141,7 +148,7 @@ void job::build_job(const YAML::Node &conf)
 					} else { throw job_exception("Command arguments is not defined properly"); }
 				} else { throw job_exception("Command in task is not a map"); }
 			} else { throw job_exception("Configuration of one task has missing cmd"); }
-			if (ctask["log"]) {
+			if (ctask["log"] && ctask["log"].IsScalar()) {
 				log = ctask["log"].as<std::string>();
 			} // can be omitted... no throw
 
@@ -164,17 +171,17 @@ void job::build_job(const YAML::Node &conf)
 				std::map<std::string, sandbox_limits> hwgroups;
 				sandbox_limits limits;
 
-				if (ctask["sandbox"]["name"]) {
+				if (ctask["sandbox"]["name"] && ctask["sandbox"]["name"].IsScalar()) {
 					sandbox_name = ctask["sandbox"]["name"].as<std::string>();
 				} else { throw job_exception("Name of sandbox not given"); }
 
-				if (ctask["stdin"]) {
+				if (ctask["stdin"] && ctask["stdin"].IsScalar()) {
 					std_input = ctask["stdin"].as<std::string>();
 				} // can be ommited... no throw
-				if (ctask["stdout"]) {
+				if (ctask["stdout"] && ctask["stdout"].IsScalar()) {
 					std_output = ctask["stdout"].as<std::string>();
 				} // can be ommited... no throw
-				if (ctask["stderr"]) {
+				if (ctask["stderr"] && ctask["stderr"].IsScalar()) {
 					std_error = ctask["stderr"].as<std::string>();
 				} // can be ommited... no throw
 
@@ -188,32 +195,32 @@ void job::build_job(const YAML::Node &conf)
 						sandbox_limits sl;
 						std::string hwgroup;
 
-						if (lim["hw-group-id"]) {
+						if (lim["hw-group-id"] && lim["hw-group-id"].IsScalar()) {
 							hwgroup = lim["hw-group-id"].as<std::string>();
 						} else { throw job_exception("Hwgroup ID not defined in sandbox limits"); }
 
-						if (lim["time"]) {
+						if (lim["time"] && lim["time"].IsScalar()) {
 							sl.cpu_time = lim["time"].as<size_t>();
 						} // can be omitted... no throw
-						if (lim["wall-time"]) {
+						if (lim["wall-time"] && lim["wall-time"].IsScalar()) {
 							sl.wall_time = lim["wall-time"].as<size_t>();
 						} // can be omitted... no throw
-						if (lim["extra-time"]) {
+						if (lim["extra-time"] && lim["extra-time"].IsScalar()) {
 							sl.extra_time = lim["extra-time"].as<size_t>();
 						} // can be omitted... no throw
-						if (lim["stack-size"]) {
+						if (lim["stack-size"] && lim["stack-size"].IsScalar()) {
 							sl.stack_size = lim["stack-size"].as<size_t>();
 						} // can be omitted... no throw
-						if (lim["memory"]) {
+						if (lim["memory"] && lim["memory"].IsScalar()) {
 							sl.memory_usage = lim["memory"].as<size_t>();
 						} // can be omitted... no throw
-						if (lim["parallel"]) {
+						if (lim["parallel"] && lim["parallel"].IsScalar()) {
 							lim["parallel"].as<bool>(); // TODO not defined properly
 						} // can be omitted... no throw
-						if (lim["disk-blocks"]) {
+						if (lim["disk-blocks"] && lim["disk-blocks"].IsScalar()) {
 							sl.disk_blocks = lim["disk-blocks"].as<size_t>();
 						} // can be omitted... no throw
-						if (lim["disk-inodes"]) {
+						if (lim["disk-inodes"] && lim["disk-inodes"].IsScalar()) {
 							sl.disk_inodes = lim["disk-inodes"].as<size_t>();
 						} // can be omitted... no throw
 
@@ -289,7 +296,7 @@ void job::build_job(const YAML::Node &conf)
 
 
 		// all should be done now... just linear ordering is missing...
-		topological_sort(eff_indegree);
+		topological_sort(root_task_, eff_indegree, task_queue_);
 
 	} catch (YAML::Exception &e) {
 		throw job_exception("Exception in yaml-cpp: " + std::string(e.what()));
@@ -298,20 +305,24 @@ void job::build_job(const YAML::Node &conf)
 	return;
 }
 
-void job::topological_sort(std::map<std::string, size_t> &effective_indegree)
+void job::topological_sort(std::shared_ptr<task_base> root,
+						   std::map<std::string, size_t> &effective_indegree,
+						   std::vector<std::shared_ptr<task_base>> &result)
 {
 	// clean queue of tasks if there are any elements
-	task_queue_.clear();
+	result.clear();
 
 	std::priority_queue<std::shared_ptr<task_base>, std::vector<std::shared_ptr<task_base>>, task_compare> prior_queue;
+	std::set<std::string> passed; // store tasks that were visited and queued
 
-	prior_queue.push(root_task_);
+	prior_queue.push(root);
+	passed.insert(root->get_task_id());
 
 	while (!prior_queue.empty()) {
 		auto top = prior_queue.top();
 		prior_queue.pop();
 
-		task_queue_.push_back(top);
+		result.push_back(top);
 
 		auto deps = top->get_children();
 		for (auto &dep : deps) {
@@ -320,11 +331,18 @@ void job::topological_sort(std::map<std::string, size_t> &effective_indegree)
 
 				if (tmp == 0) {
 					prior_queue.push(dep);
+					passed.insert(dep->get_task_id());
 				}
 			} else {
 				throw job_exception("Cycle in tasks dependencies detected");
 			}
 		}
+	}
+
+	// In case that we do not walk through whole tree.
+	// Usually it means that there are cycles in tree.
+	if (passed.size() != effective_indegree.size()) {
+		throw job_exception("Cycle in tasks dependencies detected");
 	}
 
 	return;

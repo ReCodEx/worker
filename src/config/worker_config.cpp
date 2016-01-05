@@ -46,11 +46,6 @@ worker_config::worker_config (const YAML::Node &config)
 			worker_id_ = config["worker-id"].as<size_t>();
 		} else { throw config_error("Item worker-id not defined properly"); }
 
-		// load hwgroup
-		if (config["hwgroup"] && config["hwgroup"].IsScalar()) {
-			hwgroup_ = config["hwgroup"].as<std::string>();
-		} else { throw config_error("Item hwgroup not defined properly"); }
-
 		// load file-manager
 		if (config["file-manager"] && config["file-manager"].IsMap()) {
 			auto fileman = config["file-manager"];
@@ -157,11 +152,6 @@ const log_config &worker_config::get_log_config()
 const fileman_config &worker_config::get_fileman_config()
 {
 	return fileman_config_;
-}
-
-const std::string &worker_config::get_hwgroup()
-{
-	return hwgroup_;
 }
 
 const sandbox_limits &worker_config::get_limits()

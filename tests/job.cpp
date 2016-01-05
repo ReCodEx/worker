@@ -150,6 +150,7 @@ TEST(job_test, config_format)
 					  "...\n");
 	EXPECT_THROW(job j(yaml, dir.string(), nullptr, conf_ptr, fileman_ptr), job_exception);
 
+#ifndef _WIN32
 	// task-id missing in external task
 	yaml = YAML::Load("---\n"
 					  "submission:\n"
@@ -198,6 +199,7 @@ TEST(job_test, config_format)
 					  "                    ISOLATE_TMP: /tmp\n"
 					  "...\n");
 	EXPECT_THROW(job j(yaml, dir.string(), nullptr, conf_ptr, fileman_ptr), job_exception);
+#endif
 
 	// correct configuration
 	yaml = YAML::Load("---\n"
@@ -274,4 +276,3 @@ TEST(job_test, config_data) // TODO
 	// cleanup
 	remove_all(dir_root);
 }
-

@@ -1,8 +1,9 @@
 #include "task_base.h"
 
 task_base::task_base(size_t id, std::string task_id, size_t priority, bool fatal,
+					 const std::vector<std::string> &dependencies,
 					 const std::string &cmd, const std::vector<std::string> &arguments,
-					 const std::string &log, const std::vector<std::string> &dependencies)
+					 const std::string &log)
 	: id_(id), task_id_(task_id), priority_(priority), fatal_failure_(fatal),
 	  cmd_(cmd), log_(log), dependencies_(dependencies), arguments_(arguments)
 {}

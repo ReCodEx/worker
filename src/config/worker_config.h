@@ -41,7 +41,6 @@ public:
 	virtual const header_map_t &get_headers() const;
 	const log_config &get_log_config();
 	const fileman_config &get_fileman_config();
-	const std::string &get_hwgroup();
 	const sandbox_limits &get_limits();
 	const std::map<std::string, size_t> &get_sandboxes_limits();
 
@@ -53,7 +52,6 @@ private:
 	header_map_t headers_;
 	log_config log_config_;
 	fileman_config fileman_config_;
-	std::string hwgroup_;
 	sandbox_limits limits_;
 	std::map<std::string, size_t> sandboxes_limits_;
 };

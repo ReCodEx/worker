@@ -47,6 +47,7 @@ public:
 	virtual void evaluate(eval_request request);
 
 private:
+
 	/**
 	 * Download submission from remote source through filemanager given during construction.
 	 */

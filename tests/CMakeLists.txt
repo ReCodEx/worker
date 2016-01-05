@@ -27,6 +27,7 @@ add_executable(${TESTS_NAME}
 	${SANDBOX_DIR}/isolate_sandbox.cpp
 	${SRC_DIR}/job_evaluator.cpp
 	job.cpp
+	topological_sort.cpp
 	${TASKS_DIR}/job.cpp
 	${TASKS_DIR}/task_base.cpp
 	${TASKS_DIR}/external_task.cpp

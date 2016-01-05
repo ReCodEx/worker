@@ -4,7 +4,7 @@ external_task::external_task(size_t id, const std::string &task_id, size_t prior
 							 const std::vector<std::string> &dependencies,
 							 const std::string &binary, const std::vector<std::string> &arguments,
 							 const std::string &sandbox, sandbox_limits limits)
-	: task_base(id, task_id, priority, fatal, binary, arguments, log, dependencies),
+	: task_base(id, task_id, priority, fatal, dependencies, binary, arguments, log),
 	  cmd_(binary), sandbox_id_(sandbox), limits_(limits)
 {
 	sandbox_init();

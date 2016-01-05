@@ -38,17 +38,23 @@ public:
 	~job();
 
 	void run();
+
+	/**
+	 * Topological sort of tasks starting from root.
+	 * Result order is saved in result variable, which is cleared before computation.
+	 * Priorities and configuration file order are taken into account.
+	 * Algorithm itself taken from: http://stackoverflow.com/a/11236027
+	 * @param root
+	 * @param effective_indegree
+	 * @param result
+	 */
+	static void topological_sort(std::shared_ptr<task_base> root,
+								 std::map<std::string, size_t> &effective_indegree,
+								 std::vector<std::shared_ptr<task_base>> &result);
+
 private:
 
 	void build_job(const YAML::Node &conf);
-	/**
-	 * Topological sort of tasks starting from root_task_.
-	 * Result order is saved in task_queue_ variable.
-	 * Priorities and configuration file order are taken into account.
-	 * Algorithm itself taken from: http://stackoverflow.com/a/11236027
-	 * @param effective_indegree
-	 */
-	void topological_sort(std::map<std::string, size_t> &effective_indegree);
 	/**
 	 * Cleanup after job evaluation, should be enough to delete all created files
 	 */

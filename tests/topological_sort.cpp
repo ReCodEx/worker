@@ -1,0 +1,369 @@
+#include <gtest/gtest.h>
+#include <gmock/gmock.h>
+#include <iostream>
+#include <fstream>
+
+#include "../src/tasks/job.h"
+
+using namespace std;
+
+
+TEST(topological_sort_test, top_sort_1)
+{
+	// initialization
+	size_t id = 0;
+	map<string, size_t> eff_ind;
+	vector<shared_ptr<task_base>> result;
+	vector<shared_ptr<task_base>> expected;
+
+
+	//
+	// TASK TREE:
+	//
+	//    A
+	//   / \
+	//  B   C
+	//
+	// priority: A = 1; B = 3; C = 2
+	//
+	// expected = A, C, B
+	//
+	shared_ptr<task_base> A = make_shared<fake_task>(id++, "A", 1);
+	shared_ptr<task_base> B = make_shared<fake_task>(id++, "B", 3);
+	shared_ptr<task_base> C = make_shared<fake_task>(id++, "C", 2);
+	A->add_children(B);
+	B->add_parent(A);
+	A->add_children(C);
+	C->add_parent(A);
+	eff_ind = {
+		make_pair("A", 0),
+		make_pair("B", 1),
+		make_pair("C", 1)
+	};
+	expected = { A, C, B };
+
+	// sort itself
+	job::topological_sort(A, eff_ind, result);
+	// and check it
+	ASSERT_EQ(result, expected);
+
+
+	//
+	// TASK TREE:
+	//
+	//    A
+	//   / \
+	//  B   C
+	//       \
+	//        D
+	//
+	// priority: A = 1; B = 3; C = 2, D = 4
+	//
+	// expected = A, C, B, D
+	//
+	shared_ptr<task_base> D = make_shared<fake_task>(id++, "D", 4);
+	C->add_children(D);
+	D->add_parent(C);
+	eff_ind = {
+		make_pair("A", 0),
+		make_pair("B", 1),
+		make_pair("C", 1),
+		make_pair("D", 1)
+	};
+	expected = { A, C, B, D };
+
+	// sort itself
+	job::topological_sort(A, eff_ind, result);
+	// and check it
+	ASSERT_EQ(result, expected);
+}
+
+TEST(topological_sort_test, top_sort_2)
+{
+	// initialization
+	size_t id = 0;
+	map<string, size_t> eff_ind;
+	vector<shared_ptr<task_base>> result;
+	vector<shared_ptr<task_base>> expected;
+
+
+	//
+	// TASK TREE:
+	//
+	//   A
+	//    \
+	//     B
+	//      \
+	//       C
+	//
+	// priority: A = 1; B = 3; C = 2
+	//
+	// expected = A, B, C
+	//
+	shared_ptr<task_base> A = make_shared<fake_task>(id++, "A", 1);
+	shared_ptr<task_base> B = make_shared<fake_task>(id++, "B", 2);
+	shared_ptr<task_base> C = make_shared<fake_task>(id++, "C", 3);
+	A->add_children(B);
+	B->add_parent(A);
+	B->add_children(C);
+	C->add_parent(B);
+	eff_ind = {
+		make_pair("A", 0),
+		make_pair("B", 1),
+		make_pair("C", 1)
+	};
+	expected = { A, B, C };
+
+	// sort itself
+	job::topological_sort(A, eff_ind, result);
+	// and check it
+	ASSERT_EQ(result, expected);
+
+
+	//
+	// TASK TREE:
+	//
+	//   A
+	//    \
+	//     B
+	//      \
+	//       C
+	//       /\\
+	//      F E D
+	//
+	// priority: A = 1; B = 3; C = 2, D = 4, E = 4, F = 4
+	//
+	// expected = A, B, C, D, E, F
+	//
+	shared_ptr<task_base> D = make_shared<fake_task>(id++, "D", 4);
+	shared_ptr<task_base> E = make_shared<fake_task>(id++, "E", 4);
+	shared_ptr<task_base> F = make_shared<fake_task>(id++, "F", 4);
+	C->add_children(D);
+	D->add_parent(C);
+	C->add_children(E);
+	E->add_parent(C);
+	C->add_children(F);
+	F->add_parent(C);
+	eff_ind = {
+		make_pair("A", 0),
+		make_pair("B", 1),
+		make_pair("C", 1),
+		make_pair("D", 1),
+		make_pair("E", 1),
+		make_pair("F", 1)
+	};
+	expected = { A, B, C, D, E, F };
+
+	// sort itself
+	job::topological_sort(A, eff_ind, result);
+	// and check it
+	ASSERT_EQ(result, expected);
+}
+
+TEST(topological_sort_test, top_sort_3)
+{
+	// initialization
+	size_t id = 0;
+	map<string, size_t> eff_ind;
+	vector<shared_ptr<task_base>> result;
+	vector<shared_ptr<task_base>> expected;
+
+
+	//
+	// TASK TREE:
+	//
+	//     __________ A _________
+	//    ///    ///     \\\   \\\
+	//   D B C  G E F   J H I  M K L
+	//
+	// priority: A = 1, B = 2, C = 2, D = 2,
+	//           H = 3, I = 3, J = 3,
+	//           E = 4, F = 4, G = 4,
+	//           K = 5, L = 5, M = 5
+	//
+	// expected = A, B, C, D,
+	//            H, I, J,
+	//            E, F, G,
+	//            K, L, M
+	//
+	shared_ptr<task_base> A = make_shared<fake_task>(id++, "A", 1);
+	shared_ptr<task_base> B = make_shared<fake_task>(id++, "B", 2);
+	shared_ptr<task_base> C = make_shared<fake_task>(id++, "C", 2);
+	shared_ptr<task_base> D = make_shared<fake_task>(id++, "D", 2);
+	shared_ptr<task_base> E = make_shared<fake_task>(id++, "E", 4);
+	shared_ptr<task_base> F = make_shared<fake_task>(id++, "F", 4);
+	shared_ptr<task_base> G = make_shared<fake_task>(id++, "G", 4);
+	shared_ptr<task_base> H = make_shared<fake_task>(id++, "H", 3);
+	shared_ptr<task_base> I = make_shared<fake_task>(id++, "I", 3);
+	shared_ptr<task_base> J = make_shared<fake_task>(id++, "J", 3);
+	shared_ptr<task_base> K = make_shared<fake_task>(id++, "K", 5);
+	shared_ptr<task_base> L = make_shared<fake_task>(id++, "L", 5);
+	shared_ptr<task_base> M = make_shared<fake_task>(id++, "M", 5);
+	A->add_children(B);
+	A->add_children(C);
+	A->add_children(D);
+	A->add_children(E);
+	A->add_children(F);
+	A->add_children(G);
+	A->add_children(H);
+	A->add_children(I);
+	A->add_children(J);
+	A->add_children(K);
+	A->add_children(L);
+	A->add_children(M);
+	B->add_parent(A);
+	C->add_parent(A);
+	D->add_parent(A);
+	E->add_parent(A);
+	F->add_parent(A);
+	G->add_parent(A);
+	H->add_parent(A);
+	I->add_parent(A);
+	J->add_parent(A);
+	K->add_parent(A);
+	L->add_parent(A);
+	M->add_parent(A);
+	eff_ind = {
+		make_pair("A", 0),
+		make_pair("B", 1),
+		make_pair("C", 1),
+		make_pair("D", 1),
+		make_pair("E", 1),
+		make_pair("F", 1),
+		make_pair("G", 1),
+		make_pair("H", 1),
+		make_pair("I", 1),
+		make_pair("J", 1),
+		make_pair("K", 1),
+		make_pair("L", 1),
+		make_pair("M", 1)
+	};
+	expected = { A, B, C, D, H, I, J, E, F, G, K, L, M };
+
+	// sort itself
+	job::topological_sort(A, eff_ind, result);
+	// and check it
+	ASSERT_EQ(result, expected);
+}
+
+TEST(topological_sort_test, top_sort_4)
+{
+	// initialization
+	size_t id = 0;
+	map<string, size_t> eff_ind;
+	vector<shared_ptr<task_base>> result;
+	vector<shared_ptr<task_base>> expected;
+
+
+	//
+	// TASK TREE:
+	//
+	//      A
+	//     / \
+	//    B   D _
+	//     \ /  \\
+	//      C   E F
+	//     /
+	//    G
+	//
+	// priority: A = 1, B = 4, C = 6, D = 2, E = 3, F = 5, G = 7
+	//
+	// expected = A, D, E, B, F, C, G
+	//
+	shared_ptr<task_base> A = make_shared<fake_task>(id++, "A", 1);
+	shared_ptr<task_base> B = make_shared<fake_task>(id++, "B", 4);
+	shared_ptr<task_base> C = make_shared<fake_task>(id++, "C", 6);
+	shared_ptr<task_base> D = make_shared<fake_task>(id++, "D", 2);
+	shared_ptr<task_base> E = make_shared<fake_task>(id++, "E", 3);
+	shared_ptr<task_base> F = make_shared<fake_task>(id++, "F", 5);
+	shared_ptr<task_base> G = make_shared<fake_task>(id++, "G", 7);
+	A->add_children(B);
+	B->add_parent(A);
+	B->add_children(C);
+	C->add_parent(B);
+	D->add_children(C);
+	C->add_parent(D);
+	A->add_children(D);
+	D->add_parent(A);
+	D->add_children(E);
+	E->add_parent(D);
+	D->add_children(F);
+	F->add_parent(D);
+	C->add_children(G);
+	G->add_parent(C);
+	eff_ind = {
+		make_pair("A", 0),
+		make_pair("B", 1),
+		make_pair("C", 2),
+		make_pair("D", 1),
+		make_pair("E", 1),
+		make_pair("F", 1),
+		make_pair("G", 1)
+	};
+	expected = { A, D, E, B, F, C, G };
+
+	// sort itself
+	job::topological_sort(A, eff_ind, result);
+	// and check it
+	ASSERT_EQ(result, expected);
+}
+
+TEST(topological_sort_test, top_sort_cycle_1)
+{
+	// initialization
+	size_t id = 0;
+	map<string, size_t> eff_ind;
+	vector<shared_ptr<task_base>> result;
+
+
+	//
+	// TASK TREE:
+	//
+	//          A
+	//         / \
+	//   ---> B   D _
+	//   |     \ /  \\
+	//   |      C   E F
+	//   |     /
+	//   ---- G
+	//
+	// priority: A = 1, B = 4, C = 6, D = 2, E = 3, F = 5, G = 7
+	//
+	// expected = throw job_exception("Cycle detected")
+	//
+	shared_ptr<task_base> A = make_shared<fake_task>(id++, "A", 1);
+	shared_ptr<task_base> B = make_shared<fake_task>(id++, "B", 4);
+	shared_ptr<task_base> C = make_shared<fake_task>(id++, "C", 6);
+	shared_ptr<task_base> D = make_shared<fake_task>(id++, "D", 2);
+	shared_ptr<task_base> E = make_shared<fake_task>(id++, "E", 3);
+	shared_ptr<task_base> F = make_shared<fake_task>(id++, "F", 5);
+	shared_ptr<task_base> G = make_shared<fake_task>(id++, "G", 7);
+	A->add_children(B);
+	B->add_parent(A);
+	B->add_children(C);
+	C->add_parent(B);
+	D->add_children(C);
+	C->add_parent(D);
+	A->add_children(D);
+	D->add_parent(A);
+	D->add_children(E);
+	E->add_parent(D);
+	D->add_children(F);
+	F->add_parent(D);
+	C->add_children(G);
+	G->add_parent(C);
+	G->add_children(B);
+	B->add_parent(G);
+	eff_ind = {
+		make_pair("A", 0),
+		make_pair("B", 2),
+		make_pair("C", 2),
+		make_pair("D", 1),
+		make_pair("E", 1),
+		make_pair("F", 1),
+		make_pair("G", 1)
+	};
+
+	EXPECT_THROW(job::topological_sort(A, eff_ind, result), job_exception);
+}
+
