@@ -84,7 +84,9 @@ set(SOURCE_FILES
 	src/job_evaluator.h
 	src/job_evaluator.cpp
     src/job_receiver.cpp
-    src/job_receiver.h src/eval_request.h)
+    src/job_receiver.h
+	src/eval_request.h
+	src/eval_response.h)
 
 
 add_executable(${EXEC_NAME} ${SOURCE_FILES})

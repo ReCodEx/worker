@@ -78,7 +78,7 @@ void job_evaluator::push_result()
 	return;
 }
 
-void job_evaluator::evaluate (eval_request request)
+eval_response job_evaluator::evaluate (eval_request request)
 {
 	std::cout << request.job_url << std::endl;
 
