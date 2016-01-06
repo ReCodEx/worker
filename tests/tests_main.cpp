@@ -1,9 +1,6 @@
-#ifndef	_WINSOCKAPI_
-#define _WINSOCKAPI_
-#endif
-
-#ifndef	WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
+// Include of WinSock2 has to be before including curl.h
+#ifdef _WIN32
+#include <WinSock2.h>
 #endif
 
 #include "gtest/gtest.h"

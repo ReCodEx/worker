@@ -77,8 +77,9 @@ before_build:
     echo Running cmake...
 
     cmake -G "Visual Studio 14 2015" -DBOOST_ROOT=C:\deps\boost -DCURL_LIBRARY=C:\deps\curl\lib\libcurl.lib -DCURL_INCLUDE_DIR=C:\deps\curl\include
-build_script:
-- cmd: msbuild "./tests/run_tests.vcxproj" /verbosity:d /p:ShowIncludes=true
+build:
+    project: ./tests/run_tests.vcxproj
+    verbosity: quiet
 test_script:
 - cmd: >-
     cd C:\deps\
