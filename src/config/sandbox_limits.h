@@ -54,17 +54,17 @@ public:
 	* Redirect standard input from given file.
 	* @note Path must be accessible from inside of sandbox.
 	*/
-	std::string stdin;
+	std::string std_input;
 	/**
 	* Redirect standard output to given file.
 	* @note Path must be accessible from inside of sandbox.
 	*/
-	std::string stdout;
+	std::string std_output;
 	/**
 	* Redirect standard error output to given file.
 	* @note Path must be accessible from inside of sandbox.
 	*/
-	std::string stderr;
+	std::string std_error;
 	/**
 	* Change working directory to subdirectory inside the sandbox.
 	* @note Path must be accessible from inside of sandbox.
