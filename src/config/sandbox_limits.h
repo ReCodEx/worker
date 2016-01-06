@@ -14,42 +14,42 @@ public:
 	* Limit memory usage. For Isolate, this limits whole control group (--cg-mem switch).
 	* Memory size is set in kilobytes.
 	*/
-	size_t memory_usage;
+	size_t memory_usage = 0;
 	/**
 	* Limit total run time by CPU time. For Isolate, this is for whole control group.
 	* Time is set in seconds and can be fractional.
 	*/
-	float cpu_time;
+	float cpu_time = 0;
 	/**
 	* Limit total run time by wall clock. Time is set in seconds and can be fractional.
 	*/
-	float wall_time;
+	float wall_time = 0;
 	/**
 	* Set extra time before kill the process. If program finishes in this extra amount of
 	* time, it won't succeeded, but total run time will be reported to results log. This
 	* time is also in (fractional) seconds.
 	*/
-	float extra_time;
+	float extra_time = 0;
 	/**
 	* Limit stack size. This is additional memory limit, 0 is no special limit for stack,
 	* global memory rules will aply. Otherwise, max stack size is @a stack_size kilobytes.
 	*/
-	size_t stack_size;
+	size_t stack_size = 0;
 	/**
 	* Limit size of created files. This could be useful, if your filesystem doesn't support
 	* quotas. Otherwise, see items @a disk_blocks and @a disk_inodes. 0 means not set.
 	*/
-	size_t files_size;
+	size_t files_size = 0;
 	/**
 	* Set disk quota to given number of blocks.
 	* @warning Underlying filesystem must support quotas.
 	*/
-	size_t disk_blocks;
+	size_t disk_blocks = 0;
 	/**
 	* Set disk quota to given number of inodes.
 	* @warning Underlying filesystem must support quotas.
 	*/
-	size_t disk_inodes;
+	size_t disk_inodes = 0;
 	/**
 	* Redirect standard input from given file.
 	* @note Path must be accessible from inside of sandbox.
@@ -74,12 +74,12 @@ public:
 	* Limit number of processes/threads that could be created.
 	* 0 means no limit.
 	*/
-	size_t processes;
+	size_t processes = 0;
 	/**
 	* Allow to share host computers network. Otherwise, dedicated
 	* local interface will be created.
 	*/
-	bool share_net;
+	bool share_net = false;
 	/**
 	* Set environment variables before run command inside the sandbox.
 	*/
