@@ -96,7 +96,7 @@ void sclose(STREAM s) {
 /*
  * Fetch one character from a stream. Negative value is returned on eof or error.
  */
-inline int sgetc(STREAM s) {
+int sgetc(STREAM s) {
 	if (s->pos > s->len)
 		error("Can not read from write-only stream.");
 
@@ -117,7 +117,7 @@ inline int sgetc(STREAM s) {
 /*
  * Write one character into a stream.
  */
-inline void sputc(STREAM s, int ch) {
+void sputc(STREAM s, int ch) {
 	if (s->len != -1)
 		error("Can not write into read-only stream.");
 
@@ -134,6 +134,6 @@ inline void sputc(STREAM s, int ch) {
 /*
  * Check given stream for errors. Nonzero value is returned if any error occured in the stream.
  */
-inline int serror(STREAM s) {
+int serror(STREAM s) {
 	return ferror(s->fp);
 }

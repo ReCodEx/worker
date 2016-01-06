@@ -199,7 +199,6 @@ TEST(job_test, config_format)
 					  "                    ISOLATE_TMP: /tmp\n"
 					  "...\n");
 	EXPECT_THROW(job j(yaml, dir.string(), nullptr, conf_ptr, fileman_ptr), job_exception);
-#endif
 
 	// correct configuration
 	yaml = YAML::Load("---\n"
@@ -250,6 +249,7 @@ TEST(job_test, config_format)
 					  "                    ISOLATE_TMP: /tmp\n"
 					  "...\n");
 	EXPECT_NO_THROW(job j(yaml, dir.string(), nullptr, conf_ptr, fileman_ptr));
+#endif
 
 	// cleanup
 	remove_all(dir_root);
