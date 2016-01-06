@@ -114,3 +114,5 @@ public:
 		return !((*this) == second);
 	}
 };
+
+#endif
