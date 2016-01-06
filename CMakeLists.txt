@@ -40,7 +40,7 @@ include_directories(AFTER, vendor/yaml-cpp/include)
 # Use C++11
 if(UNIX)
     #-Wno-deprecated-declarations hides warning in yaml-cpp (using std::auto_ptr)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wno-deprecated-declarations")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wno-deprecated-declarations")
 endif()
 
 # The worker executable
