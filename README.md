@@ -10,6 +10,6 @@ and then sends results back.
 ## How to run it
 
 - Install dependencies according to [common](https://github.com/ReCodEx/GlobalWiki/wiki/System-configuration#common) and [worker-specific](https://github.com/ReCodEx/GlobalWiki/wiki/System-configuration#worker) configuration
-- Download `zmq.hpp` and Google test framework using `git submodule update --init`
+- Download dependencies using `git submodule update --init`
 - Build with cmake: `mkdir build && cd build && cmake .. && make`
-- Run `./basic-worker`
+- Run `./basic-worker` (or unit tests `./tests/run_tests`)
