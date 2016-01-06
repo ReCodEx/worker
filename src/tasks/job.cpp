@@ -200,13 +200,13 @@ void job::build_job(const YAML::Node &conf)
 						} else { throw job_exception("Hwgroup ID not defined in sandbox limits"); }
 
 						if (lim["time"] && lim["time"].IsScalar()) {
-							sl.cpu_time = lim["time"].as<size_t>();
+							sl.cpu_time = lim["time"].as<float>();
 						} // can be omitted... no throw
 						if (lim["wall-time"] && lim["wall-time"].IsScalar()) {
-							sl.wall_time = lim["wall-time"].as<size_t>();
+							sl.wall_time = lim["wall-time"].as<float>();
 						} // can be omitted... no throw
 						if (lim["extra-time"] && lim["extra-time"].IsScalar()) {
-							sl.extra_time = lim["extra-time"].as<size_t>();
+							sl.extra_time = lim["extra-time"].as<float>();
 						} // can be omitted... no throw
 						if (lim["stack-size"] && lim["stack-size"].IsScalar()) {
 							sl.stack_size = lim["stack-size"].as<size_t>();

@@ -1,8 +1,3 @@
-// Include of WinSock2 has to be before including curl.h
-#ifdef _WIN32
-#include <WinSock2.h>
-#endif
-
 #include "gtest/gtest.h"
 #include "spdlog/spdlog.h"
 #include <curl/curl.h>

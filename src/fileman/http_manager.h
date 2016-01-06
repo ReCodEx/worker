@@ -1,11 +1,6 @@
 #ifndef CODEX_WORKER_HTTP_MANAGER_H
 #define CODEX_WORKER_HTTP_MANAGER_H
 
-// Include of WinSock2 has to be before including curl.h
-#ifdef _WIN32
-#include <WinSock2.h>
-#endif
-
 #include <string>
 #include <memory>
 #include "file_manager_base.h"
