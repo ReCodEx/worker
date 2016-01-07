@@ -35,7 +35,7 @@ TEST(IsolateSandbox, NormalCommand)
 	limits.files_size = 0;
 	limits.processes = 0;
 	limits.share_net = false;
-	isolate_sandbox *is;
+	isolate_sandbox *is = nullptr;
 	EXPECT_NO_THROW(is = new isolate_sandbox(limits, 34));
 	EXPECT_EQ(is->get_dir(), "/tmp/box/34");
 	task_results results;
@@ -67,7 +67,7 @@ TEST(IsolateSandbox, TimeoutCommand)
 	limits.files_size = 0;
 	limits.processes = 0;
 	limits.share_net = false;
-	isolate_sandbox *is;
+	isolate_sandbox *is = nullptr;
 	EXPECT_NO_THROW(is = new isolate_sandbox(limits, 34));
 	EXPECT_EQ(is->get_dir(), "/tmp/box/34");
 	task_results results;
@@ -97,7 +97,7 @@ TEST(IsolateSandbox, NonzeroReturnCommand)
 	limits.files_size = 0;
 	limits.processes = 0;
 	limits.share_net = false;
-	isolate_sandbox *is;
+	isolate_sandbox *is = nullptr;
 	EXPECT_NO_THROW(is = new isolate_sandbox(limits, 34));
 	EXPECT_EQ(is->get_dir(), "/tmp/box/34");
 	task_results results;
@@ -128,7 +128,7 @@ TEST(IsolateSandbox, TimeoutIsolate)
 	limits.files_size = 0;
 	limits.processes = 0;
 	limits.share_net = false;
-	isolate_sandbox *is;
+	isolate_sandbox *is = nullptr;
 	EXPECT_NO_THROW(is = new isolate_sandbox(limits, 34, 2));
 	EXPECT_EQ(is->get_dir(), "/tmp/box/34");
 	task_results results;

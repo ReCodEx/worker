@@ -23,8 +23,8 @@ job::job(const YAML::Node &job_config, boost::filesystem::path source_path,
 		 std::shared_ptr<spdlog::logger> logger,
 		 std::shared_ptr<worker_config> default_config,
 		 std::shared_ptr<file_manager_base> fileman)
-	: source_path_(source_path), root_task_(nullptr),
-	  logger_(logger), default_config_(default_config), fileman_(fileman)
+	: source_path_(source_path), fileman_(fileman), root_task_(nullptr),
+	  logger_(logger), default_config_(default_config)
 {
 	// check construction parameters if they are in right format
 	if (default_config_ == nullptr) {

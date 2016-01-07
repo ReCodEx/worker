@@ -19,7 +19,7 @@ TEST(topological_sort_test, top_sort_1)
 	// TASK TREE:
 	//
 	//    A
-	//   / \
+	//   / |
 	//  B   C
 	//
 	// priority: A = 1; B = 3; C = 2
@@ -50,9 +50,9 @@ TEST(topological_sort_test, top_sort_1)
 	// TASK TREE:
 	//
 	//    A
-	//   / \
+	//   / |
 	//  B   C
-	//       \
+	//       |
 	//        D
 	//
 	// priority: A = 1; B = 3; C = 2, D = 4
@@ -89,9 +89,9 @@ TEST(topological_sort_test, top_sort_2)
 	// TASK TREE:
 	//
 	//   A
-	//    \
+	//    |
 	//     B
-	//      \
+	//      |
 	//       C
 	//
 	// priority: A = 1; B = 3; C = 2
@@ -122,11 +122,11 @@ TEST(topological_sort_test, top_sort_2)
 	// TASK TREE:
 	//
 	//   A
-	//    \
+	//    |
 	//     B
-	//      \
+	//      |
 	//       C
-	//       /\\
+	//       /||
 	//      F E D
 	//
 	// priority: A = 1; B = 3; C = 2, D = 4, E = 4, F = 4
@@ -170,8 +170,8 @@ TEST(topological_sort_test, top_sort_3)
 	//
 	// TASK TREE:
 	//
-	//     __________ A _________
-	//    ///    ///     \\\   \\\
+	//     __________ A ___________
+	//    ///    ///     \\\   \\  |
 	//   D B C  G E F   J H I  M K L
 	//
 	// priority: A = 1, B = 2, C = 2, D = 2,
@@ -257,9 +257,9 @@ TEST(topological_sort_test, top_sort_4)
 	// TASK TREE:
 	//
 	//      A
-	//     / \
-	//    B   D _
-	//     \ /  \\
+	//     / |
+	//    B   D __
+	//     \ /  | |
 	//      C   E F
 	//     /
 	//    G
@@ -318,9 +318,9 @@ TEST(topological_sort_test, top_sort_cycle_1)
 	// TASK TREE:
 	//
 	//          A
-	//         / \
-	//   ---> B   D _
-	//   |     \ /  \\
+	//         / |
+	//   ---> B   D __
+	//   |     \ /  | |
 	//   |      C   E F
 	//   |     /
 	//   ---- G

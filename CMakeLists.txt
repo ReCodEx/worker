@@ -39,7 +39,7 @@ include_directories(AFTER, vendor/yaml-cpp/include)
 
 # Use C++11
 if(UNIX)
-    #-Wno-deprecated-declarations hides warning in yaml-cpp (using std::auto_ptr)
+	#-Wno-deprecated-declarations hides warning in yaml-cpp (using std::auto_ptr)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wno-deprecated-declarations")
 endif()
 
@@ -83,8 +83,10 @@ set(SOURCE_FILES
 	src/sandbox/isolate_sandbox.cpp
 	src/job_evaluator.h
 	src/job_evaluator.cpp
-    src/job_receiver.cpp
-    src/job_receiver.h src/eval_request.h)
+	src/job_receiver.cpp
+	src/job_receiver.h
+	src/eval_request.h
+)
 
 
 add_executable(${EXEC_NAME} ${SOURCE_FILES})
