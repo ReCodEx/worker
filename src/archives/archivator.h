@@ -18,7 +18,7 @@ namespace fs = boost::filesystem;
 
 class archivator {
 public:
-	static void compress();
+	static void compress(const std::string &dir, const std::string &destination);
 	static void decompress(const std::string &filename, const std::string &destination);
 private:
 	static void copy_data(archive *ar, archive *aw);

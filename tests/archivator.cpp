@@ -53,5 +53,26 @@ TEST(Archivator, DecompressTarBz2)
 
 TEST(Archivator, DecompressCorruptedZip)
 {
-	EXPECT_THROW(archivator::decompress("../tests/testing_archives/corrupted_zip.zip", fs::temp_directory_path().string()), archive_exception);
+	EXPECT_THROW(archivator::decompress("../tests/testing_archives/corrupted_zip.zip",
+										fs::temp_directory_path().string()), archive_exception);
+}
+
+TEST(Archivator, DecompressDotPathZip)
+{
+	EXPECT_THROW(archivator::decompress("../tests/testing_archives/dot_path.zip",
+										fs::temp_directory_path().string()), archive_exception);
+}
+
+TEST(Archivator, CompressZip)
+{
+	EXPECT_NO_THROW(archivator::compress("../tests", (fs::temp_directory_path() / "archive.zip").string()));
+	EXPECT_TRUE(fs::is_regular_file(fs::temp_directory_path() / "archive.zip"));
+	EXPECT_TRUE(fs::file_size(fs::temp_directory_path() / "archive.zip") > 0);
+	fs::remove_all(fs::temp_directory_path() / "archive.zip");
+}
+
+TEST(Archivator, CompressNonexistingDir)
+{
+	EXPECT_THROW(archivator::compress((fs::current_path().root_path() / "nonexisting_dir").string(),
+										 (fs::temp_directory_path() / "archive.zip").string()), archive_exception);
 }
