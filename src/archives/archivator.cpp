@@ -70,7 +70,7 @@ void archivator::copy_data(archive *ar, archive *aw)
 	int r;
 	const void *buff;
 	size_t size;
-	off_t offset;
+	int64_t offset;
 
 	while (true) {
 		r = archive_read_data_block(ar, &buff, &size, &offset);
