@@ -90,4 +90,6 @@ eval_response job_evaluator::evaluate (eval_request request)
 	} catch (...) {}
 	cleanup_submission();
 	push_result();
+
+	return eval_response(request.job_id, "OK");
 }
