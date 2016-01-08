@@ -64,7 +64,15 @@ TEST(job_test, bad_paths)
 TEST(job_test, config_format)
 {
 	// prepare all things which need to be prepared
-	worker_config conf;
+	auto yaml_default = YAML::Load("worker-id: eval_1\n"
+								   "broker-uri: tcp://localhost:1234\n"
+								   "headers:\n"
+								   "    env:\n"
+								   "        - c\n"
+								   "        - python\n"
+								   "    threads: 10\n"
+								   "    hwgroup: group1\n");
+	worker_config conf(yaml_default);
 	auto conf_ptr = std::make_shared<worker_config>(conf);
 	cache_manager fileman;
 	auto fileman_ptr = std::make_shared<cache_manager>(fileman);

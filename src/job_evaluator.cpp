@@ -3,8 +3,8 @@
 job_evaluator::job_evaluator(std::shared_ptr<spdlog::logger> logger,
 							 std::shared_ptr<worker_config> config,
 							 std::shared_ptr<file_manager_base> fileman)
-	: job_(nullptr), logger_(logger), archive_local_(), archive_url_(),
-	  config_(config), fileman_(fileman)
+	: archive_url_(), archive_local_(), job_(nullptr),
+	  fileman_(fileman), logger_(logger), config_(config)
 {}
 
 job_evaluator::~job_evaluator()

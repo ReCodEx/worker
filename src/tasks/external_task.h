@@ -43,9 +43,14 @@ public:
 private:
 
 	/**
+	 * Check if sandbox_id have counterpart in sandbox classes.
+	 */
+	void sandbox_check();
+	/**
 	 * Construct apropriate sandbox according his name give during construction.
 	 */
 	void sandbox_init();
+	void sandbox_fini();
 
 	/** Name of program which will be run in sandbox */
 	std::string cmd_;
