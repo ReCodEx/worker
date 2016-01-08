@@ -37,6 +37,7 @@ private:
 	std::string meta_file_;
 	int max_timeout_;
 	void isolate_init();
+	void isolate_init_child(int fd_0, int fd_1);
 	void isolate_cleanup();
 	void isolate_run(const std::string &binary, const std::vector<std::string> &arguments);
 	char **isolate_run_args(const std::string &binary, const std::vector<std::string> &arguments);
