@@ -288,7 +288,7 @@ void job::build_job(const YAML::Node &conf)
 					auto ptr = unconnected_tasks.at(depend.at(i));
 					ptr->add_children(elem.second);
 					elem.second->add_parent(ptr);
-				} catch (std::out_of_range &ex) {
+				} catch (std::out_of_range) {
 					throw job_exception("Non existing task-id in dependency list");
 				}
 			}

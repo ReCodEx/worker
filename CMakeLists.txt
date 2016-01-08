@@ -37,6 +37,9 @@ include_directories(AFTER, vendor/spdlog/include)
 # Yaml-cpp
 include_directories(AFTER, vendor/yaml-cpp/include)
 
+# Libarchive
+include_directories(AFTER, vendor/libarchive/libarchive)
+
 # Use C++11
 if(UNIX)
 	#-Wno-deprecated-declarations hides warning in yaml-cpp (using std::auto_ptr)
@@ -86,11 +89,14 @@ set(SOURCE_FILES
 	src/job_receiver.cpp
 	src/job_receiver.h
 	src/eval_request.h
+	src/archives/archivator.h
+	src/archives/archivator.cpp
 )
 
 
 add_executable(${EXEC_NAME} ${SOURCE_FILES})
 target_link_libraries(${EXEC_NAME} yaml-cpp)
+target_link_libraries(${EXEC_NAME} archive)
 if(UNIX)
 	target_link_libraries(${EXEC_NAME} -lzmq)
 	target_link_libraries(${EXEC_NAME} -lcurl)

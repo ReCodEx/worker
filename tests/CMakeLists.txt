@@ -38,11 +38,15 @@ add_executable(${TESTS_NAME}
 	${TASKS_DIR}/internal/mkdir_task.cpp
 	${TASKS_DIR}/internal/rename_task.cpp
 	${TASKS_DIR}/internal/rm_task.cpp
+	${SRC_DIR}/archives/archivator.h
+	${SRC_DIR}/archives/archivator.cpp
+	archivator.cpp
 )
 
 target_link_libraries(${TESTS_NAME} gtest gtest_main)
 target_link_libraries(${TESTS_NAME} gmock gmock_main)
 target_link_libraries(${TESTS_NAME} yaml-cpp)
+target_link_libraries(${TESTS_NAME} archive)
 
 if(UNIX)
 	target_link_libraries(${TESTS_NAME} -lzmq)
