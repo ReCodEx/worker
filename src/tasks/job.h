@@ -55,13 +55,17 @@ public:
 
 private:
 
+	/**
+	 * From given @a conf construct a evaluation tree,
+	 * which includes parsing of configuration and constructing all tasks
+	 * @param conf input configuration which will be loaded
+	 */
 	void build_job(const YAML::Node &conf);
 	/**
 	 * Cleanup after job evaluation, should be enough to delete all created files
 	 */
 	void cleanup_job();
 	/**
-	 * Prepare downloaded source codes to working directory
 	 * Prepare file manager for hostname from config file
 	 */
 	void prepare_job();

@@ -14,6 +14,7 @@ namespace fs = boost::filesystem;
 #include "fileman/file_manager_base.h"
 #include "eval_request.h"
 #include "eval_response.h"
+#include "archives/archivator.h"
 
 
 /**
@@ -92,6 +93,8 @@ private:
 	fs::path submission_path_;
 	/** Path with only source codes, not job configuration */
 	fs::path source_path_;
+	/** Url of remote file server which receives result of jobs */
+	std::string result_url_;
 
 	/** ID of downloaded job obtained from broker */
 	std::string job_id_;

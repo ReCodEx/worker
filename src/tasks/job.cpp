@@ -241,8 +241,8 @@ void job::build_job(const YAML::Node &conf)
 							sl.chdir = lim["chdir"].as<size_t>();
 						} // can be omitted... no throw
 
-						if (lim["directory-bindings"] && lim["directory-bindings"].IsMap()) { // TODO not defined yet
-							//sl.directory-bindings = lim["directory-bindings"].as<std::map<std::string, std::string>>();
+						if (lim["bound-directories"] && lim["bound-directories"].IsMap()) { // TODO not defined yet
+							//sl.bound-directories = lim["bound-directories"].as<std::map<std::string, std::string>>();
 						} // can be omitted... no throw
 
 						if (lim["environ-variable"] && lim["environ-variable"].IsMap()) {
@@ -391,14 +391,16 @@ void job::prepare_job()
 	// prepare file manager
 	fileman_->set_params(fileman_hostname_, fileman_username_, fileman_passwd_);
 
-	// prepare working directory (maybe not necessary)
-
 	return;
 }
 
 void job::cleanup_job()
 {
 	// destroy all files in working directory
+	fs::directory_iterator endit;
+	for (fs::directory_iterator it(source_path_); it != endit; ++it) {
+		fs::remove_all(it->path());
+	}
 
 	return;
 }
