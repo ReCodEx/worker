@@ -26,10 +26,8 @@ isolate_sandbox::isolate_sandbox(sandbox_limits limits, size_t id, int max_timeo
 		logger_ = logger;
 	} else {
 		//Create logger manually to avoid global registration of logger
-		auto sink = std::make_shared<spdlog::sinks::stderr_sink_st>();
+		auto sink = std::make_shared<spdlog::sinks::null_sink_st>();
 		logger_ = std::make_shared<spdlog::logger>("cache_manager_nolog", sink);
-		//Set loglevel to 'off' cause no logging
-		logger_->set_level(spdlog::level::off);
 	}
 
 	if (max_timeout_ == -1) {

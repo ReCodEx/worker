@@ -6,6 +6,7 @@
 #include <memory>
 #include <vector>
 #include "spdlog/spdlog.h"
+#include "spdlog/sinks/null_sink.h"
 #include "sandbox_base.h"
 
 /**

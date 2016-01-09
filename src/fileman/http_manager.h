@@ -5,6 +5,7 @@
 #include <memory>
 #include "file_manager_base.h"
 #include "spdlog/spdlog.h"
+#include "spdlog/sinks/null_sink.h"
 
 
 

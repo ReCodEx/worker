@@ -32,7 +32,7 @@ void external_task::sandbox_init()
 {
 #ifndef _WIN32
 	if (sandbox_id_ == "isolate") {
-		// TODO: isolate uid not given (its constant 1)
+		// TODO: isolate uid not given (it is constant 1)
 		sandbox_ = std::make_shared<isolate_sandbox>(limits_, 1);
 	}
 #endif
