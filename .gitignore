@@ -3,13 +3,7 @@ CMakeFiles/
 Makefile
 cmake_install.cmake
 codex_worker				
-.idea/BasicWorker.iml
-.idea/dictionaries/
-.idea/encodings.xml
-.idea/misc.xml
-.idea/modules.xml
-.idea/vcs.xml
-.idea/workspace.xml
+.idea/
 CMakeLists.txt.user
 doc/
 build/
