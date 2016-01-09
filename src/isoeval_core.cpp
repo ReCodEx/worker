@@ -170,8 +170,9 @@ void isoeval_core::broker_init()
 
 void isoeval_core::fileman_init()
 {
-	// we do not have configuration yet...
-	//file_manager_ = std::make_shared<file_manager>("caching_dir", "remote", "username", "password", logger_);
+	auto fileman = config_->get_fileman_config();
+	fileman_ = std::make_shared<file_manager>(fileman.cache_dir, fileman.hostname,
+												   fileman.username, fileman.password, logger_);
 
 	return;
 }

@@ -53,6 +53,11 @@ const std::string &task_base::get_cmd()
 	return cmd_;
 }
 
+const std::vector<std::string> &task_base::get_args()
+{
+	return arguments_;
+}
+
 const std::string &task_base::get_log()
 {
 	return log_;

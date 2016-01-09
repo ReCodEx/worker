@@ -12,11 +12,39 @@ job_evaluator::~job_evaluator()
 
 void job_evaluator::download_submission()
 {
+	// initialize all paths
+	fs::path archive_url = archive_url_;
+	archive_local_ = fs::temp_directory_path() / "isoeval" / "tmp" / "download" /
+			config_->get_worker_id() / job_id_;
+	fs::create_directories(archive_local_);
+
+	// download a file
+	fileman_->get_file(archive_url.filename().string(), archive_local_.string());
 	return;
 }
 
 void job_evaluator::prepare_submission()
 {
+	// initialize all paths
+	submission_path_ = fs::temp_directory_path() / "isoeval" / "tmp" / "submission" /
+			config_->get_worker_id() / job_id_;
+	source_path_ = fs::temp_directory_path() / "isoeval" / config_->get_worker_id() / job_id_;
+	fs::create_directories(submission_path_);
+	fs::create_directories(source_path_);
+
+	// decompress downloaded archive
+	archivator::decompress(archive_local_.string(), submission_path_.string());
+
+	// copy source codes to source code folder
+	if (fs::is_directory(submission_path_)) {
+		fs::directory_iterator endit;
+		for (fs::directory_iterator it(submission_path_); it != endit; ++it) {
+			if (fs::is_regular_file(it->status())) {
+				fs::copy(it->path(), source_path_);
+			}
+		}
+	}
+
 	return;
 }
 
@@ -45,7 +73,7 @@ void job_evaluator::run_job()
 {
 	try {
 		job_->run();
-	} catch (std::exception ex) {
+	} catch (std::exception &ex) {
 		result_ = 1;
 	} catch (...) {
 		throw;
@@ -75,12 +103,18 @@ void job_evaluator::cleanup_submission()
 
 void job_evaluator::push_result()
 {
+	// nothing to do here right now
 	return;
 }
 
 eval_response job_evaluator::evaluate (eval_request request)
 {
 	std::cout << request.job_url << std::endl;
+
+	// set all needed variables for evaluation
+	job_id_ = request.job_id;
+	archive_url_ = request.job_url;
+	result_url_ = request.result_url;
 
 	try {
 		download_submission();
