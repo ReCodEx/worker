@@ -12,6 +12,9 @@ rm_task::rm_task(size_t id, std::string task_id, size_t priority, bool fatal, co
 			const std::vector<std::string> &dependencies)
 	: task_base(id, task_id, priority, fatal, dependencies, cmd, arguments, log)
 {
+	if (arguments_.empty()) {
+		throw task_exception("At least one argument required.");
+	}
 }
 
 
@@ -22,10 +25,6 @@ rm_task::~rm_task()
 
 void rm_task::run()
 {
-	if (!arguments_.empty()) {
-		throw task_exception("At least one argument required.");
-	}
-
 	//Try to delete all items
 	bool result = true;
 	for (auto &i : arguments_) {

@@ -12,6 +12,9 @@ mkdir_task::mkdir_task(size_t id, std::string task_id, size_t priority, bool fat
 			const std::vector<std::string> &dependencies)
 	: task_base(id, task_id, priority, fatal, dependencies, cmd, arguments, log)
 {
+	if (arguments_.empty()) {
+		throw task_exception("At least one argument required.");
+	}
 }
 
 
@@ -22,9 +25,6 @@ mkdir_task::~mkdir_task()
 
 void mkdir_task::run()
 {
-	if (!arguments_.empty()) {
-		throw task_exception("At least one argument required.");
-	}
 	try {
 		for (auto &i : arguments_) {
 			fs::create_directories(i);
