@@ -10,6 +10,10 @@
 extern "C" {
 #endif
 
+//Disable warning about fopen() on Windows
+#ifdef _WIN32
+	#pragma warning(disable : 4996)
+#endif
 
 #define	_ISOC99_SOURCE
 #include <stdio.h>

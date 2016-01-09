@@ -5,6 +5,11 @@
 #ifndef IO_H_INCLUDED
 #define IO_H_INCLUDED
 
+//Disable warning about fopen() on Windows
+#ifdef _WIN32
+	#pragma warning(disable : 4996)
+#endif
+
 
 #include <stdio.h>
 #include <stdlib.h>

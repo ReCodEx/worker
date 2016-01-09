@@ -11,6 +11,11 @@
 #include <cstring>
 #include <vector>
 
+//Disable warning about fopen() on Windows
+#ifdef _WIN32
+	#pragma warning(disable : 4996)
+#endif
+
 #ifdef DEBUG
 	#include <cstdio>
 #endif

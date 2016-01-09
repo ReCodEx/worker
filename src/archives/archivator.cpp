@@ -48,7 +48,7 @@ void archivator::compress(const std::string &dir, const std::string &destination
 
 	for (auto &file : files) {
 		entry = archive_entry_new();
-		archive_entry_set_pathname(entry, (fs::path(destination).stem() / file).c_str());
+		archive_entry_set_pathname(entry, (fs::path(destination).stem() / file).string().c_str());
 		archive_entry_set_size(entry, fs::file_size(dir_path / file));
 		archive_entry_set_mtime(entry, fs::last_write_time(dir_path / file), 0);
 		archive_entry_set_filetype(entry, AE_IFREG);
@@ -62,7 +62,7 @@ void archivator::compress(const std::string &dir, const std::string &destination
 		if (ifs.is_open()) {
 			// get length of file:
 			ifs.seekg(0, ifs.end);
-			int length = ifs.tellg();
+			int length = static_cast<int>(ifs.tellg());
 			ifs.seekg(0, ifs.beg);
 
 			// read data by small blocks to avoid memory overfill on possibly large files
@@ -76,7 +76,7 @@ void archivator::compress(const std::string &dir, const std::string &destination
 				}
 			}
 			if (ifs.tellg() < length) {
-				int last_size = length - ifs.tellg();
+				int last_size = length - static_cast<int>(ifs.tellg());
 				ifs.read(buff, last_size);
 				r = archive_write_data(a, buff, last_size);
 				if (r < ARCHIVE_OK) {
