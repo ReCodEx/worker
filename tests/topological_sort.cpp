@@ -15,17 +15,17 @@ TEST(topological_sort_test, top_sort_1)
 	vector<shared_ptr<task_base>> expected;
 
 
-	//
-	// TASK TREE:
-	//
-	//    A
-	//   / |
-	//  B   C
-	//
-	// priority: A = 1; B = 3; C = 2
-	//
-	// expected = A, C, B
-	//
+	/*
+	 * TASK TREE:
+	 *
+	 *    A
+	 *   / \
+	 *  B   C
+	 *
+	 * priority: A = 1; B = 3; C = 2
+	 *
+	 * expected = A, C, B
+	 */
 	shared_ptr<task_base> A = make_shared<fake_task>(id++, "A", 1);
 	shared_ptr<task_base> B = make_shared<fake_task>(id++, "B", 3);
 	shared_ptr<task_base> C = make_shared<fake_task>(id++, "C", 2);
@@ -46,19 +46,19 @@ TEST(topological_sort_test, top_sort_1)
 	ASSERT_EQ(result, expected);
 
 
-	//
-	// TASK TREE:
-	//
-	//    A
-	//   / |
-	//  B   C
-	//       |
-	//        D
-	//
-	// priority: A = 1; B = 3; C = 2, D = 4
-	//
-	// expected = A, C, B, D
-	//
+	/*
+	 * TASK TREE:
+	 *
+	 *    A
+	 *   / \
+	 *  B   C
+	 *       \
+	 *        D
+	 *
+	 * priority: A = 1; B = 3; C = 2, D = 4
+	 *
+	 * expected = A, C, B, D
+	 */
 	shared_ptr<task_base> D = make_shared<fake_task>(id++, "D", 4);
 	C->add_children(D);
 	D->add_parent(C);
@@ -85,19 +85,19 @@ TEST(topological_sort_test, top_sort_2)
 	vector<shared_ptr<task_base>> expected;
 
 
-	//
-	// TASK TREE:
-	//
-	//   A
-	//    |
-	//     B
-	//      |
-	//       C
-	//
-	// priority: A = 1; B = 3; C = 2
-	//
-	// expected = A, B, C
-	//
+	/*
+	 * TASK TREE:
+	 *
+	 *   A
+	 *    \
+	 *     B
+	 *      \
+	 *       C
+	 *
+	 * priority: A = 1; B = 3; C = 2
+	 *
+	 * expected = A, B, C
+	 */
 	shared_ptr<task_base> A = make_shared<fake_task>(id++, "A", 1);
 	shared_ptr<task_base> B = make_shared<fake_task>(id++, "B", 2);
 	shared_ptr<task_base> C = make_shared<fake_task>(id++, "C", 3);
@@ -118,21 +118,21 @@ TEST(topological_sort_test, top_sort_2)
 	ASSERT_EQ(result, expected);
 
 
-	//
-	// TASK TREE:
-	//
-	//   A
-	//    |
-	//     B
-	//      |
-	//       C
-	//       /||
-	//      F E D
-	//
-	// priority: A = 1; B = 3; C = 2, D = 4, E = 4, F = 4
-	//
-	// expected = A, B, C, D, E, F
-	//
+	/*
+	 * TASK TREE:
+	 *
+	 *   A
+	 *    \
+	 *     B
+	 *      \
+	 *       C
+	 *       /\\
+	 *      F E D
+	 *
+	 * priority: A = 1; B = 3; C = 2, D = 4, E = 4, F = 4
+	 *
+	 * expected = A, B, C, D, E, F
+	 */
 	shared_ptr<task_base> D = make_shared<fake_task>(id++, "D", 4);
 	shared_ptr<task_base> E = make_shared<fake_task>(id++, "E", 4);
 	shared_ptr<task_base> F = make_shared<fake_task>(id++, "F", 4);
@@ -167,23 +167,23 @@ TEST(topological_sort_test, top_sort_3)
 	vector<shared_ptr<task_base>> expected;
 
 
-	//
-	// TASK TREE:
-	//
-	//     __________ A ___________
-	//    ///    ///     \\\   \\  |
-	//   D B C  G E F   J H I  M K L
-	//
-	// priority: A = 1, B = 2, C = 2, D = 2,
-	//           H = 3, I = 3, J = 3,
-	//           E = 4, F = 4, G = 4,
-	//           K = 5, L = 5, M = 5
-	//
-	// expected = A, B, C, D,
-	//            H, I, J,
-	//            E, F, G,
-	//            K, L, M
-	//
+	/*
+	 * TASK TREE:
+	 *
+	 *     __________ A _________
+	 *    ///    ///     \\\   \\\
+	 *   D B C  G E F   J H I  M K L
+	 *
+	 * priority: A = 1, B = 2, C = 2, D = 2,
+	 *           H = 3, I = 3, J = 3,
+	 *           E = 4, F = 4, G = 4,
+	 *           K = 5, L = 5, M = 5
+	 *
+	 * expected = A, B, C, D,
+	 *            H, I, J,
+	 *            E, F, G,
+	 *            K, L, M
+	 */
 	shared_ptr<task_base> A = make_shared<fake_task>(id++, "A", 1);
 	shared_ptr<task_base> B = make_shared<fake_task>(id++, "B", 2);
 	shared_ptr<task_base> C = make_shared<fake_task>(id++, "C", 2);
@@ -253,21 +253,21 @@ TEST(topological_sort_test, top_sort_4)
 	vector<shared_ptr<task_base>> expected;
 
 
-	//
-	// TASK TREE:
-	//
-	//      A
-	//     / |
-	//    B   D __
-	//     \ /  | |
-	//      C   E F
-	//     /
-	//    G
-	//
-	// priority: A = 1, B = 4, C = 6, D = 2, E = 3, F = 5, G = 7
-	//
-	// expected = A, D, E, B, F, C, G
-	//
+	/*
+	 * TASK TREE:
+	 *
+	 *      A
+	 *     / \
+	 *    B   D _
+	 *     \ /  \\
+	 *      C   E F
+	 *     /
+	 *    G
+	 *
+	 * priority: A = 1, B = 4, C = 6, D = 2, E = 3, F = 5, G = 7
+	 *
+	 * expected = A, D, E, B, F, C, G
+	 */
 	shared_ptr<task_base> A = make_shared<fake_task>(id++, "A", 1);
 	shared_ptr<task_base> B = make_shared<fake_task>(id++, "B", 4);
 	shared_ptr<task_base> C = make_shared<fake_task>(id++, "C", 6);
@@ -314,21 +314,21 @@ TEST(topological_sort_test, top_sort_cycle_1)
 	vector<shared_ptr<task_base>> result;
 
 
-	//
-	// TASK TREE:
-	//
-	//          A
-	//         / |
-	//   ---> B   D __
-	//   |     \ /  | |
-	//   |      C   E F
-	//   |     /
-	//   ---- G
-	//
-	// priority: A = 1, B = 4, C = 6, D = 2, E = 3, F = 5, G = 7
-	//
-	// expected = throw job_exception("Cycle detected")
-	//
+	/*
+	 * TASK TREE:
+	 *
+	 *          A
+	 *         / \
+	 *   ---> B   D _
+	 *   |     \ /  \\
+	 *   |      C   E F
+	 *   |     /
+	 *   ---- G
+	 *
+	 * priority: A = 1, B = 4, C = 6, D = 2, E = 3, F = 5, G = 7
+	 *
+	 * expected = throw job_exception("Cycle detected")
+	 */
 	shared_ptr<task_base> A = make_shared<fake_task>(id++, "A", 1);
 	shared_ptr<task_base> B = make_shared<fake_task>(id++, "B", 4);
 	shared_ptr<task_base> C = make_shared<fake_task>(id++, "C", 6);
@@ -373,18 +373,18 @@ TEST(topological_sort_test, top_sort_cycle_2)
 	vector<shared_ptr<task_base>> result;
 
 
-	//
-	// TASK TREE:
-	//
-	//          A -> B
-	//          ^    |
-	//          |    |
-	//          D <- C
-	//
-	// priority: A = 1, B = 2, C = 3, D = 4
-	//
-	// expected = throw job_exception("Cycle detected")
-	//
+	/*
+	 * TASK TREE:
+	 *
+	 *          A -> B
+	 *          ^    |
+	 *          |    |
+	 *          D <- C
+	 *
+	 * priority: A = 1, B = 2, C = 3, D = 4
+	 *
+	 * expected = throw job_exception("Cycle detected")
+	 */
 	shared_ptr<task_base> A = make_shared<fake_task>(id++, "A", 1);
 	shared_ptr<task_base> B = make_shared<fake_task>(id++, "B", 2);
 	shared_ptr<task_base> C = make_shared<fake_task>(id++, "C", 3);

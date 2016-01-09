@@ -13,6 +13,7 @@ namespace fs = boost::filesystem;
 #include "config/worker_config.h"
 #include "fileman/file_manager_base.h"
 #include "eval_request.h"
+#include "eval_response.h"
 
 
 /**
@@ -44,7 +45,7 @@ public:
 	/**
 	 * Process an "eval" request
 	 */
-	virtual void evaluate(eval_request request);
+	virtual eval_response evaluate(eval_request request);
 
 private:
 

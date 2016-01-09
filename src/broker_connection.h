@@ -106,6 +106,10 @@ public:
 				if (terminate) {
 					break;
 				}
+
+				if (msg.at(0) == "eval_finished") {
+					socket->send_broker(msg);
+				}
 			}
 		}
 

@@ -17,7 +17,7 @@ public:
 	{
 	}
 
-	MOCK_METHOD1(evaluate, void(eval_request));
+	MOCK_METHOD1(evaluate, eval_response(eval_request));
 };
 
 TEST(job_receiver, basic) {
@@ -31,11 +31,13 @@ TEST(job_receiver, basic) {
 	const char *job_url = "http://dot.com/a.tar.gz";
 	const char *result_url = "http://dot.com/results/123";
 
+	eval_response response(id, "OK");
+
 	EXPECT_CALL(*evaluator, evaluate(AllOf(
 		Field(&eval_request::job_id, StrEq(id)),
 		Field(&eval_request::job_url, StrEq(job_url)),
 		Field(&eval_request::result_url, StrEq(result_url))
-	))).Times(1);
+	))).Times(1).WillOnce(Return(response));
 
 	job_receiver receiver(context, evaluator);
 	std::thread r([&receiver] () {
@@ -48,6 +50,25 @@ TEST(job_receiver, basic) {
 	socket.send(result_url, 26, 0);
 
 	std::this_thread::sleep_for(std::chrono::milliseconds(1));
+
+	zmq::message_t msg;
+	bool retval;
+
+	retval = socket.recv(&msg, ZMQ_NOBLOCK);
+	ASSERT_TRUE(retval);
+	ASSERT_EQ("eval_finished", std::string((char *) msg.data(), msg.size()));
+	ASSERT_TRUE(msg.more());
+
+	retval = socket.recv(&msg, ZMQ_NOBLOCK);
+	ASSERT_TRUE(retval);
+	ASSERT_EQ(id, std::string((char *) msg.data(), msg.size()));
+	ASSERT_TRUE(msg.more());
+
+	retval = socket.recv(&msg, ZMQ_NOBLOCK);
+	ASSERT_TRUE(retval);
+	ASSERT_EQ("OK", std::string((char *) msg.data(), msg.size()));
+	ASSERT_FALSE(msg.more());
+
 	context.close();
 	r.join();
 }

@@ -7,8 +7,8 @@
 
 
 isoeval_core::isoeval_core(std::vector<std::string> args)
-	: args_(args), config_filename_("config.yml"), logger_(nullptr), fileman_(nullptr),
-	  job_evaluator_(nullptr), broker_(nullptr)
+	: args_(args), config_filename_("config.yml"), logger_(nullptr),
+	  fileman_(nullptr), job_evaluator_(nullptr), broker_(nullptr)
 {
 	// parse cmd parameters
 	parse_params();

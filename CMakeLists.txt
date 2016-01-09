@@ -42,7 +42,7 @@ include_directories(AFTER, vendor/libarchive/libarchive)
 
 # Use C++11
 if(UNIX)
-	#-Wno-deprecated-declarations hides warning in yaml-cpp (using std::auto_ptr)
+    #-Wno-deprecated-declarations hides warning in yaml-cpp (using std::auto_ptr)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wno-deprecated-declarations")
 endif()
 
@@ -95,6 +95,7 @@ set(SOURCE_FILES
 	src/eval_request.h
 	src/archives/archivator.h
 	src/archives/archivator.cpp
+	src/eval_response.h
 )
 
 

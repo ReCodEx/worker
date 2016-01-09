@@ -6,7 +6,7 @@ public:
 	 * Greater than operator on task_base objects.
 	 * @param a
 	 * @param b
-	 * @return
+	 * @return bool if parameter a is greater than b
 	 */
 	bool operator()(std::shared_ptr<task_base> a, std::shared_ptr<task_base> b) {
 		if (a->get_priority() > b->get_priority()) {
@@ -141,18 +141,18 @@ void job::build_job(const YAML::Node &conf)
 				if (ctask["cmd"].IsMap()) {
 					if (ctask["cmd"]["bin"] && ctask["cmd"]["bin"].IsScalar()) {
 						cmd = ctask["cmd"]["bin"].as<std::string>();
-					} else { throw job_exception(); }
+					} else { throw job_exception("Runnable binary for task not given"); }
 
 					if (ctask["cmd"]["args"] && ctask["cmd"]["args"].IsSequence()) {
 						args = ctask["cmd"]["args"].as<std::vector<std::string>>();
-					} else { throw job_exception("Command arguments is not defined properly"); }
+					} // can be omitted... no throw
 				} else { throw job_exception("Command in task is not a map"); }
 			} else { throw job_exception("Configuration of one task has missing cmd"); }
 			if (ctask["log"] && ctask["log"].IsScalar()) {
 				log = ctask["log"].as<std::string>();
 			} // can be omitted... no throw
 
-			// load dependencies and check if defined tasks exists
+			// load dependencies
 			if (ctask["dependencies"] && ctask["dependencies"].IsSequence()) {
 				task_depend = ctask["dependencies"].as<std::vector<std::string>>();
 			}
@@ -201,27 +201,48 @@ void job::build_job(const YAML::Node &conf)
 
 						if (lim["time"] && lim["time"].IsScalar()) {
 							sl.cpu_time = lim["time"].as<float>();
-						} // can be omitted... no throw
+						} else { // if not defined, load from default config
+							sl.cpu_time = default_config_->get_limits().cpu_time;
+						}
 						if (lim["wall-time"] && lim["wall-time"].IsScalar()) {
 							sl.wall_time = lim["wall-time"].as<float>();
-						} // can be omitted... no throw
+						} else { // if not defined, load from default config
+							sl.wall_time = default_config_->get_limits().wall_time;
+						}
 						if (lim["extra-time"] && lim["extra-time"].IsScalar()) {
 							sl.extra_time = lim["extra-time"].as<float>();
-						} // can be omitted... no throw
+						} else { // if not defined, load from default config
+							sl.extra_time = default_config_->get_limits().extra_time;
+						}
 						if (lim["stack-size"] && lim["stack-size"].IsScalar()) {
 							sl.stack_size = lim["stack-size"].as<size_t>();
-						} // can be omitted... no throw
+						} else { // if not defined, load from default config
+							sl.stack_size = default_config_->get_limits().stack_size;
+						}
 						if (lim["memory"] && lim["memory"].IsScalar()) {
 							sl.memory_usage = lim["memory"].as<size_t>();
-						} // can be omitted... no throw
-						if (lim["parallel"] && lim["parallel"].IsScalar()) {
-							lim["parallel"].as<bool>(); // TODO not defined properly
+						} else { // if not defined, load from default config
+							sl.memory_usage = default_config_->get_limits().memory_usage;
+						}
+						if (lim["parallel"] && lim["parallel"].IsScalar()) { // TODO not defined properly
+							lim["parallel"].as<bool>();
 						} // can be omitted... no throw
 						if (lim["disk-blocks"] && lim["disk-blocks"].IsScalar()) {
 							sl.disk_blocks = lim["disk-blocks"].as<size_t>();
-						} // can be omitted... no throw
+						} else { // if not defined, load from default config
+							sl.disk_blocks = default_config_->get_limits().disk_blocks;
+						}
 						if (lim["disk-inodes"] && lim["disk-inodes"].IsScalar()) {
 							sl.disk_inodes = lim["disk-inodes"].as<size_t>();
+						} else { // if not defined, load from default config
+							sl.disk_inodes = default_config_->get_limits().disk_inodes;
+						}
+						if (lim["chdir"] && lim["chdir"].IsScalar()) {
+							sl.chdir = lim["chdir"].as<size_t>();
+						} // can be omitted... no throw
+
+						if (lim["directory-bindings"] && lim["directory-bindings"].IsMap()) { // TODO not defined yet
+							//sl.directory-bindings = lim["directory-bindings"].as<std::map<std::string, std::string>>();
 						} // can be omitted... no throw
 
 						if (lim["environ-variable"] && lim["environ-variable"].IsMap()) {
@@ -235,7 +256,20 @@ void job::build_job(const YAML::Node &conf)
 				}
 
 				// and finally construct external task from given information
-				//limits = hwgroups.at(default_config_->get_hwgroup()); // TODO
+				// first we have to get propriate hwgroup limits
+				bool hw_found = false;
+				auto its = default_config_->get_headers().equal_range("hwgroup");
+				for (auto it = its.first; it != its.second; ++it) {
+					auto hwit = hwgroups.find(it->second);
+					if (hwit != hwgroups.end()) {
+						limits = hwit->second;
+						hw_found = true;
+					}
+				}
+				if (!hw_found) {
+					throw job_exception("Hwgroup with specified name not defined");
+				}
+
 				limits.std_input = std_input;
 				limits.std_output = std_output;
 				limits.std_error = std_error;

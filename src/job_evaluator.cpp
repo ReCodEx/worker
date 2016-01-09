@@ -3,8 +3,8 @@
 job_evaluator::job_evaluator(std::shared_ptr<spdlog::logger> logger,
 							 std::shared_ptr<worker_config> config,
 							 std::shared_ptr<file_manager_base> fileman)
-	: archive_url_(), archive_local_(), job_(nullptr), fileman_(fileman),
-	  logger_(logger), config_(config)
+	: archive_url_(), archive_local_(), job_(nullptr),
+	  fileman_(fileman), logger_(logger), config_(config)
 {}
 
 job_evaluator::~job_evaluator()
@@ -78,7 +78,7 @@ void job_evaluator::push_result()
 	return;
 }
 
-void job_evaluator::evaluate (eval_request request)
+eval_response job_evaluator::evaluate (eval_request request)
 {
 	std::cout << request.job_url << std::endl;
 
@@ -90,4 +90,6 @@ void job_evaluator::evaluate (eval_request request)
 	} catch (...) {}
 	cleanup_submission();
 	push_result();
+
+	return eval_response(request.job_id, "OK");
 }

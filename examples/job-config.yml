@@ -1,0 +1,431 @@
+---  # only one document which contains job, aka. list of tasks and some general infos
+submission:  # happy hippoes fence
+    job-id: eval_1
+    language: c
+    file-collector:
+        hostname: https://recodex.projekty.ms.mff.cuni.cz/
+        port: 80
+        username: "re"
+        password: "codex"
+tasks:  # its assumed that source codes are placed into /tmp/isoeval/eval_5 folder
+    - task-id: "compilation"
+      priority: 2
+      fatal-failure: true
+      cmd:
+          bin: "gcc"
+          args:
+              - "solution.c"
+      log: "compilation.log"
+      sandbox:
+          name: "isolate"
+          limits:
+              - hw-group-id: group
+			    chdir: /evaluate
+                directory-bindings:
+                    /tmp/isoeval/eval_5: /evaluate
+    - task-id: "delete_source"
+      priority: 3
+      fatal-failure: false
+      dependencies:
+          - compilation
+      cmd:
+          bin: "rm"
+          args:
+              - "solution.c"
+    - task-id: "fetch_test_1"
+      priority: 4
+      fatal-failure: false
+      dependencies:
+          - compilation
+      cmd:
+          bin: "fetch"
+          args:
+              - "1.in"
+			  - "/tmp/isoeval/eval_5/kuly.in"
+    - task-id: "evaluation_test_1"
+      priority: 5
+      fatal-failure: false
+	  dependencies:
+          - fetch_test_1
+      cmd:
+          bin: "a.out"
+      log: "evaluation.log"
+      sandbox:
+          name: "isolate"
+          limits:
+              - hw-group-id: group
+			    time: 0.5
+				memory: 8192
+			    chdir: /evaluate
+                directory-bindings:
+                    /tmp/isoeval/eval_5: /evaluate
+    - task-id: "fetch_test_solution_1"
+      priority: 6
+      fatal-failure: false
+      dependencies:
+          - evaluation_test_1
+      cmd:
+          bin: "fetch"
+          args:
+              - "1.out"
+			  - "/tmp/isoeval/eval_5/1.out"
+    - task-id: "judging_test_1"
+      priority: 7
+      fatal-failure: false
+	  dependencies:
+          - evaluation_test_1
+      cmd:
+          bin: "/bin/codex_judge"
+		  args:
+		      - "1.out"
+			    "plot.out"
+      log: "judging.log"
+      sandbox:
+          name: "isolate"
+          limits:
+              - hw-group-id: group
+			    chdir: /evaluate
+                directory-bindings:
+                    /tmp/isoeval/eval_5: /evaluate
+    - task-id: "rm_junk_test_1"
+      priority: 8
+      fatal-failure: false
+      dependencies:
+          - judging_test_1
+      cmd:
+          bin: "rm"
+          args:
+		      - "/tmp/isoeval/eval_5/1.in"
+              - "/tmp/isoeval/eval_5/plot.out"
+			  - "/tmp/isoeval/eval_5/1.out"
+    - task-id: "fetch_test_2"
+      priority: 4
+      fatal-failure: false
+      dependencies:
+          - compilation
+      cmd:
+          bin: "fetch"
+          args:
+              - "2.in"
+			  - "/tmp/isoeval/eval_5/kuly.in"
+    - task-id: "evaluation_test_2"
+      priority: 5
+      fatal-failure: false
+	  dependencies:
+          - fetch_test_2
+      cmd:
+          bin: "a.out"
+      log: "evaluation.log"
+      sandbox:
+          name: "isolate"
+          limits:
+              - hw-group-id: group
+			    time: 0.5
+				memory: 8192
+			    chdir: /evaluate
+                directory-bindings:
+                    /tmp/isoeval/eval_5: /evaluate
+    - task-id: "fetch_test_solution_2"
+      priority: 6
+      fatal-failure: false
+      dependencies:
+          - evaluation_test_2
+      cmd:
+          bin: "fetch"
+          args:
+              - "2.out"
+			  - "/tmp/isoeval/eval_5/2.out"
+    - task-id: "judging_test_2"
+      priority: 7
+      fatal-failure: false
+	  dependencies:
+          - evaluation_test_2
+      cmd:
+          bin: "/bin/codex_judge"
+		  args:
+		      - "2.out"
+			    "plot.out"
+      log: "judging.log"
+      sandbox:
+          name: "isolate"
+          limits:
+              - hw-group-id: group
+			    chdir: /evaluate
+                directory-bindings:
+                    /tmp/isoeval/eval_5: /evaluate
+    - task-id: "rm_junk_test_2"
+      priority: 8
+      fatal-failure: false
+      dependencies:
+          - judging_test_2
+      cmd:
+          bin: "rm"
+          args:
+		      - "/tmp/isoeval/eval_5/2.in"
+              - "/tmp/isoeval/eval_5/plot.out"
+			  - "/tmp/isoeval/eval_5/2.out"
+    - task-id: "fetch_test_3"
+      priority: 4
+      fatal-failure: false
+      dependencies:
+          - compilation
+      cmd:
+          bin: "fetch"
+          args:
+              - "3.in"
+			  - "/tmp/isoeval/eval_5/kuly.in"
+    - task-id: "evaluation_test_1"
+      priority: 5
+      fatal-failure: false
+	  dependencies:
+          - fetch_test_3
+      cmd:
+          bin: "a.out"
+      log: "evaluation.log"
+      sandbox:
+          name: "isolate"
+          limits:
+              - hw-group-id: group
+			    time: 0.5
+				memory: 8192
+			    chdir: /evaluate
+                directory-bindings:
+                    /tmp/isoeval/eval_5: /evaluate
+    - task-id: "fetch_test_solution_3"
+      priority: 6
+      fatal-failure: false
+      dependencies:
+          - evaluation_test_3
+      cmd:
+          bin: "fetch"
+          args:
+              - "3.out"
+			  - "/tmp/isoeval/eval_5/3.out"
+    - task-id: "judging_test_1"
+      priority: 7
+      fatal-failure: false
+	  dependencies:
+          - evaluation_test_3
+      cmd:
+          bin: "/bin/codex_judge"
+		  args:
+		      - "3.out"
+			    "plot.out"
+      log: "judging.log"
+      sandbox:
+          name: "isolate"
+          limits:
+              - hw-group-id: group
+			    chdir: /evaluate
+                directory-bindings:
+                    /tmp/isoeval/eval_5: /evaluate
+    - task-id: "rm_junk_test_3"
+      priority: 8
+      fatal-failure: false
+      dependencies:
+          - judging_test_3
+      cmd:
+          bin: "rm"
+          args:
+		      - "/tmp/isoeval/eval_5/3.in"
+              - "/tmp/isoeval/eval_5/plot.out"
+			  - "/tmp/isoeval/eval_5/3.out"
+    - task-id: "fetch_test_4"
+      priority: 4
+      fatal-failure: false
+      dependencies:
+          - compilation
+      cmd:
+          bin: "fetch"
+          args:
+              - "4.in"
+			  - "/tmp/isoeval/eval_5/kuly.in"
+    - task-id: "evaluation_test_4"
+      priority: 5
+      fatal-failure: false
+	  dependencies:
+          - fetch_test_4
+      cmd:
+          bin: "a.out"
+      log: "evaluation.log"
+      sandbox:
+          name: "isolate"
+          limits:
+              - hw-group-id: group
+			    time: 0.5
+				memory: 8192
+			    chdir: /evaluate
+                directory-bindings:
+                    /tmp/isoeval/eval_5: /evaluate
+    - task-id: "fetch_test_solution_4"
+      priority: 6
+      fatal-failure: false
+      dependencies:
+          - evaluation_test_4
+      cmd:
+          bin: "fetch"
+          args:
+              - "4.out"
+			  - "/tmp/isoeval/eval_5/4.out"
+    - task-id: "judging_test_4"
+      priority: 7
+      fatal-failure: false
+	  dependencies:
+          - evaluation_test_4
+      cmd:
+          bin: "/bin/codex_judge"
+		  args:
+		      - "4.out"
+			    "plot.out"
+      log: "judging.log"
+      sandbox:
+          name: "isolate"
+          limits:
+              - hw-group-id: group
+			    chdir: /evaluate
+                directory-bindings:
+                    /tmp/isoeval/eval_5: /evaluate
+    - task-id: "rm_junk_test_4"
+      priority: 8
+      fatal-failure: false
+      dependencies:
+          - judging_test_4
+      cmd:
+          bin: "rm"
+          args:
+		      - "/tmp/isoeval/eval_5/4.in"
+              - "/tmp/isoeval/eval_5/plot.out"
+			  - "/tmp/isoeval/eval_5/4.out"
+    - task-id: "fetch_test_5"
+      priority: 4
+      fatal-failure: false
+      dependencies:
+          - compilation
+      cmd:
+          bin: "fetch"
+          args:
+              - "5.in"
+			  - "/tmp/isoeval/eval_5/kuly.in"
+    - task-id: "evaluation_test_5"
+      priority: 5
+      fatal-failure: false
+	  dependencies:
+          - fetch_test_5
+      cmd:
+          bin: "a.out"
+      log: "evaluation.log"
+      sandbox:
+          name: "isolate"
+          limits:
+              - hw-group-id: group
+			    time: 0.5
+				memory: 8192
+			    chdir: /evaluate
+                directory-bindings:
+                    /tmp/isoeval/eval_5: /evaluate
+    - task-id: "fetch_test_solution_5"
+      priority: 6
+      fatal-failure: false
+      dependencies:
+          - evaluation_test_5
+      cmd:
+          bin: "fetch"
+          args:
+              - "5.out"
+			  - "/tmp/isoeval/eval_5/5.out"
+    - task-id: "judging_test_5"
+      priority: 7
+      fatal-failure: false
+	  dependencies:
+          - evaluation_test_5
+      cmd:
+          bin: "/bin/codex_judge"
+		  args:
+		      - "5.out"
+			    "plot.out"
+      log: "judging.log"
+      sandbox:
+          name: "isolate"
+          limits:
+              - hw-group-id: group
+			    chdir: /evaluate
+                directory-bindings:
+                    /tmp/isoeval/eval_5: /evaluate
+    - task-id: "rm_junk_test_5"
+      priority: 8
+      fatal-failure: false
+      dependencies:
+          - judging_test_5
+      cmd:
+          bin: "rm"
+          args:
+		      - "/tmp/isoeval/eval_5/5.in"
+              - "/tmp/isoeval/eval_5/plot.out"
+			  - "/tmp/isoeval/eval_5/5.out"
+    - task-id: "fetch_test_6"
+      priority: 4
+      fatal-failure: false
+      dependencies:
+          - compilation
+      cmd:
+          bin: "fetch"
+          args:
+              - "6.in"
+			  - "/tmp/isoeval/eval_5/kuly.in"
+    - task-id: "evaluation_test_6"
+      priority: 5
+      fatal-failure: false
+	  dependencies:
+          - fetch_test_6
+      cmd:
+          bin: "a.out"
+      log: "evaluation.log"
+      sandbox:
+          name: "isolate"
+          limits:
+              - hw-group-id: group
+			    time: 0.75
+				memory: 8192
+			    chdir: /evaluate
+                directory-bindings:
+                    /tmp/isoeval/eval_5: /evaluate
+    - task-id: "fetch_test_solution_6"
+      priority: 6
+      fatal-failure: false
+      dependencies:
+          - evaluation_test_6
+      cmd:
+          bin: "fetch"
+          args:
+              - "6.out"
+			  - "/tmp/isoeval/eval_5/6.out"
+    - task-id: "judging_test_6"
+      priority: 7
+      fatal-failure: false
+	  dependencies:
+          - evaluation_test_6
+      cmd:
+          bin: "/bin/codex_judge"
+		  args:
+		      - "6.out"
+			    "plot.out"
+      log: "judging.log"
+      sandbox:
+          name: "isolate"
+          limits:
+              - hw-group-id: group
+			    chdir: /evaluate
+                directory-bindings:
+                    /tmp/isoeval/eval_5: /evaluate
+    - task-id: "rm_junk_test_6"
+      priority: 8
+      fatal-failure: false
+      dependencies:
+          - judging_test_6
+      cmd:
+          bin: "rm"
+          args:
+		      - "/tmp/isoeval/eval_5/6.in"
+              - "/tmp/isoeval/eval_5/plot.out"
+			  - "/tmp/isoeval/eval_5/6.out"
+...
