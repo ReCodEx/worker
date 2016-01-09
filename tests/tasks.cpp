@@ -7,6 +7,7 @@
 #include "../src/tasks/internal/mkdir_task.h"
 #include "../src/tasks/internal/rename_task.h"
 #include "../src/tasks/internal/rm_task.h"
+#include "../src/tasks/internal/fetch_task.h"
 
 
 TEST(Tasks, InternalArchivateTask)
@@ -55,6 +56,14 @@ TEST(Tasks, InternalRmTask)
 	EXPECT_NO_THROW(rm_task(1, "2", 3, false, "", {"one"}, "", {}));
 	EXPECT_THROW(rm_task(1, "2", 3, false, "", {}, "", {}), task_exception);
 	EXPECT_NO_THROW(rm_task(1, "2", 3, false, "", {"one", "two"}, "", {}));
+}
+
+TEST(Tasks, InternalFetchTask)
+{
+	EXPECT_THROW(fetch_task(1, "2", 3, false, "", {"one", "two", "three"}, "", {}, nullptr), task_exception);
+	EXPECT_THROW(fetch_task(1, "2", 3, false, "", {"one"}, "", {}, nullptr), task_exception);
+	EXPECT_THROW(fetch_task(1, "2", 3, false, "", {}, "", {}, nullptr), task_exception);
+	EXPECT_NO_THROW(fetch_task(1, "2", 3, false, "", {"one", "two"}, "", {}, nullptr));
 }
 
 

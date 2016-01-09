@@ -40,6 +40,7 @@ add_executable(${TESTS_NAME}
 	${TASKS_DIR}/internal/rm_task.cpp
 	${TASKS_DIR}/internal/archivate_task.cpp
 	${TASKS_DIR}/internal/extract_task.cpp
+	${TASKS_DIR}/internal/fetch_task.cpp
 	tasks.cpp
 	${SRC_DIR}/archives/archivator.cpp
 	archivator.cpp
