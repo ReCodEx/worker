@@ -28,6 +28,8 @@ install:
     mv -f ./boost_program_options-vc140/lib/native/address-model-32/lib/* ./boost/lib/
 
 
+    nuget install rmt_zlib -ExcludeVersion
+
     nuget install rmt_libssh2 -ExcludeVersion
 
     nuget install rmt_curl -ExcludeVersion
@@ -78,8 +80,8 @@ before_build:
 
     cmake -G "Visual Studio 14 2015" -DBOOST_ROOT=C:\deps\boost -DCURL_LIBRARY=C:\deps\curl\lib\libcurl.lib -DCURL_INCLUDE_DIR=C:\deps\curl\include
 build:
-    project: ./ALL_BUILD.vcxproj
-    verbosity: quiet
+  project: ./ALL_BUILD.vcxproj
+  verbosity: quiet
 test_script:
 - cmd: >-
     cd C:\deps\
@@ -90,9 +92,16 @@ test_script:
 
     mv -f rmt_libssh2/build/native/bin/v140/Win32/Release/dynamic/* C:\projects\codex_worker\tests\Release\
 
-    mv -f curl-ca-bundle.crt C:\projects\codex_worker\tests\Release\
+    mv -f rmt_zlib/build/native/bin/v140/Win32/Release/dynamic/* C:\projects\codex_worker\tests\Release\
+
+    mv -f curl-ca-bundle.crt C:\projects\codex_worker\tests\
 
 
-    cd C:\projects\codex_worker\tests\Release
+    cd C:\projects\codex_worker
 
-    run_tests.exe
+    mv -f vendor/libarchive/bin/Release/* tests/Release
+
+
+    cd C:\projects\codex_worker\tests
+
+    .\Release\run_tests.exe
