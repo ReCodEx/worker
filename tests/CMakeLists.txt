@@ -38,7 +38,8 @@ add_executable(${TESTS_NAME}
 	${TASKS_DIR}/internal/mkdir_task.cpp
 	${TASKS_DIR}/internal/rename_task.cpp
 	${TASKS_DIR}/internal/rm_task.cpp
-	${SRC_DIR}/archives/archivator.h
+	${TASKS_DIR}/internal/archivate_task.cpp
+	${TASKS_DIR}/internal/extract_task.cpp
 	${SRC_DIR}/archives/archivator.cpp
 	archivator.cpp
 )

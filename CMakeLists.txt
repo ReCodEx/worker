@@ -82,6 +82,10 @@ set(SOURCE_FILES
 	src/tasks/internal/mkdir_task.cpp
 	src/tasks/internal/rm_task.h
 	src/tasks/internal/rm_task.cpp
+	src/tasks/internal/archivate_task.h
+	src/tasks/internal/archivate_task.cpp
+	src/tasks/internal/extract_task.h
+	src/tasks/internal/extract_task.cpp
 	src/sandbox/isolate_sandbox.h
 	src/sandbox/isolate_sandbox.cpp
 	src/job_evaluator.h
