@@ -20,6 +20,8 @@ namespace fs = boost::filesystem;
 #include "internal/mkdir_task.h"
 #include "internal/rename_task.h"
 #include "internal/rm_task.h"
+#include "internal/archivate_task.h"
+#include "internal/extract_task.h"
 
 
 /**

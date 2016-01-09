@@ -293,8 +293,12 @@ void job::build_job(const YAML::Node &conf)
 					task = std::make_shared<mkdir_task>(id++, task_id, priority, fatal, cmd, args, log, task_depend);
 				} else if (cmd == "rename") {
 					task = std::make_shared<rename_task>(id++, task_id, priority, fatal, cmd, args, log, task_depend);
-				}  else if (cmd == "rm") {
+				} else if (cmd == "rm") {
 					task = std::make_shared<rm_task>(id++, task_id, priority, fatal, cmd, args, log, task_depend);
+				} else if (cmd == "archivate") {
+					task = std::make_shared<archivate_task>(id++, task_id, priority, fatal, cmd, args, log, task_depend);
+				} else if (cmd == "extract") {
+					task = std::make_shared<extract_task>(id++, task_id, priority, fatal, cmd, args, log, task_depend);
 				}
 
 				unconnected_tasks.insert(std::make_pair(task_id, task));
