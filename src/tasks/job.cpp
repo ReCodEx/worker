@@ -238,7 +238,7 @@ void job::build_job(const YAML::Node &conf)
 							sl.disk_inodes = default_config_->get_limits().disk_inodes;
 						}
 						if (lim["chdir"] && lim["chdir"].IsScalar()) {
-							sl.chdir = lim["chdir"].as<size_t>();
+							sl.chdir = lim["chdir"].as<std::string>();
 						} // can be omitted... no throw
 
 						if (lim["bound-directories"] && lim["bound-directories"].IsMap()) { // TODO not defined yet

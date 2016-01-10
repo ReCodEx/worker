@@ -73,7 +73,7 @@ void job_evaluator::run_job()
 {
 	try {
 		job_->run();
-	} catch (std::exception &ex) {
+	} catch (std::exception) {
 		result_ = 1;
 	} catch (...) {
 		throw;
