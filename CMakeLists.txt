@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 2.8.11)
 project(codex_worker)
 
 
@@ -6,16 +6,30 @@ set(EXEC_NAME ${PROJECT_NAME})
 set(YAML_CPP_BUILD_TOOLS OFF CACHE BOOL "Enable yaml-cpp testing and parse tools")
 set(gtest_force_shared_crt ON CACHE BOOL "Use shared (DLL) run-time lib even when Google Test is built as static lib.")
 
+# Find installed packages on system
+# -- LibArchive
+find_package(LibArchive)
+
+# -- Boost
+set(Boost_USE_STATIC_LIBS OFF)
+set (Boost_USE_MULTITHREADED ON)
+find_package(Boost 1.57.0 REQUIRED COMPONENTS filesystem system program_options)
+include_directories(${Boost_INCLUDE_DIRS})
+if (WIN32)
+	# disable autolinking in boost
+	add_definitions(-DBOOST_ALL_NO_LIB)
+	# force all boost libraries to dynamic link (we already disabled
+	# autolinking, so I don't know why we need this, but we do!)
+	add_definitions(-DBOOST_ALL_DYN_LINK)
+endif()
+
+# -- cURL
+find_package(CURL REQUIRED)
+include_directories(${CURL_INCLUDE_DIRS})
+
 
 # MS Visual C++ specific bindings
-if(MSVC)
-	set(Boost_USE_STATIC_LIBS ON)
-	find_package(Boost 1.57.0 REQUIRED COMPONENTS filesystem system program_options)
-	include_directories(${Boost_INCLUDE_DIRS})
-	
-	find_package(CURL REQUIRED)
-	include_directories(${CURL_INCLUDE_DIRS})
-	
+if(MSVC)	
 	# ZeroMQ on Windows...
 	find_path(ZEROMQ_INCLUDE NAMES zmq.h PATHS "C:\\deps\\libzmq\\include")
 	find_library(ZEROMQ_LIB NAMES libzmq PATHS "C:\\deps\\libzmq\\lib")
@@ -38,7 +52,11 @@ include_directories(AFTER, vendor/spdlog/include)
 include_directories(AFTER, vendor/yaml-cpp/include)
 
 # Libarchive
-include_directories(AFTER, vendor/libarchive/libarchive)
+if(LibArchive_FOUND)
+	include_directories(AFTER, ${LibArchive_INCLUDE_DIRS})
+else()
+	include_directories(AFTER, vendor/libarchive/libarchive)
+endif()
 
 # Use C++11
 if(UNIX)
@@ -103,23 +121,31 @@ set(SOURCE_FILES
 
 add_executable(${EXEC_NAME} ${SOURCE_FILES})
 target_link_libraries(${EXEC_NAME} yaml-cpp)
-target_link_libraries(${EXEC_NAME} archive)
-if(UNIX)
-	target_link_libraries(${EXEC_NAME} -lzmq)
-	target_link_libraries(${EXEC_NAME} -lcurl)
-	target_link_libraries(${EXEC_NAME} -lboost_filesystem -lboost_system -lboost_program_options)
-	target_link_libraries(${EXEC_NAME} pthread)
-elseif(MSVC)
-	target_link_libraries(${EXEC_NAME} ${Boost_LIBRARIES})
-	target_link_libraries(${EXEC_NAME} ${ZEROMQ_LIB})
-	target_link_libraries(${EXEC_NAME} ${CURL_LIBRARIES})
+
+if(LibArchive_FOUND)
+	target_link_libraries(${EXEC_NAME} ${LibArchive_LIBRARIES})
+else()
+	target_link_libraries(${EXEC_NAME} archive)
 endif()
 
-# Include libarchive
-option(ENABLE_CPIO OFF)
-option(ENABLE_TAR OFF)
-option(ENABLE_TEST OFF)
-add_subdirectory(vendor/libarchive)
+target_link_libraries(${EXEC_NAME} ${CURL_LIBRARIES})
+target_link_libraries(${EXEC_NAME} ${Boost_LIBRARIES})
+
+if(UNIX)
+	target_link_libraries(${EXEC_NAME} -lzmq)
+	target_link_libraries(${EXEC_NAME} pthread)
+elseif(MSVC)
+	target_link_libraries(${EXEC_NAME} ${ZEROMQ_LIB})	
+endif()
+
+
+if(NOT LibArchive_FOUND)
+	# Include libarchive
+	option(ENABLE_CPIO OFF)
+	option(ENABLE_TAR OFF)
+	option(ENABLE_TEST OFF)
+	add_subdirectory(vendor/libarchive)
+endif()
 
 # Include Yaml-cpp
 add_subdirectory(vendor/yaml-cpp)
