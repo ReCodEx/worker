@@ -129,6 +129,23 @@ worker_config::worker_config (const YAML::Node &config)
 			}
 		} // no throw... can be omitted
 
+		if (config["bound-directories"] && config["bound-directories"].IsMap()) {
+			for (auto &dir: config["bound-directories"]) {
+				if (!dir.first.IsScalar()) {
+					throw config_error("A bound directory alias is not scalar");
+				}
+
+				if (!dir.second.IsScalar()) {
+					throw config_error("A bound directory path is not scalar");
+				}
+
+				limits_.bound_dirs.emplace(
+					dir.first.as<std::string>(),
+					dir.second.as<std::string>()
+				);
+			}
+		}
+
 	} catch (YAML::Exception &ex) {
 		throw config_error("Default worker configuration was not loaded: " + std::string(ex.what()));
 	}

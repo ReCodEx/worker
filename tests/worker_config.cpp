@@ -42,6 +42,9 @@ TEST(worker_config, load_yaml_basic)
 		"      time: 10\n"
 		"    - name: csharp\n"
 		"      time: 20\n"
+		"bound-directories:\n"
+		"    localbin: /usr/local/bin\n"
+		"    share: /usr/share\n"
 		"..."
 	);
 
@@ -67,6 +70,10 @@ TEST(worker_config, load_yaml_basic)
 	expected_limits.stack_size = 50000;
 	expected_limits.disk_blocks = 50;
 	expected_limits.disk_inodes = 7;
+	expected_limits.bound_dirs = {
+		std::make_pair("localbin", "/usr/local/bin"),
+		std::make_pair("share", "/usr/share")
+	};
 
 	log_config expected_log;
 	expected_log.log_path = "/var/log";

@@ -90,39 +90,7 @@ void isolate_sandbox::isolate_init()
 		}
 		break;
 	case 0:
-		//---Child---
-		//Close up output side of pipe
-		close(fd[0]);
-
-		//Close stdout, duplicate the input side of pipe to stdout
-		dup2(fd[1], 1);
-
-		//Redirect stderr to /dev/null file
-		int devnull;
-		devnull = open("/dev/null", O_WRONLY);
-		if (devnull == -1) {
-			auto message = "Cannot open /dev/null file for writing.";
-			logger_->warn() << message;
-			throw sandbox_exception(message);
-		}
-		dup2(devnull, 2);
-
-		//Exec isolate init command
-		const char *args[5];
-		args[0] = isolate_binary_.c_str();
-		args[1] = "--cg";
-		args[2] = ("--box-id=" + std::to_string(id_)).c_str();
-		args[3] = "--init";
-		args[4] = NULL;
-		//const_cast is ugly, but this is working with C code - execv does not modify its arguments
-		execvp(isolate_binary_.c_str(), const_cast<char **>(args));
-
-		//Never reached
-		{
-			auto message = std::string("Exec returned to child: ") + strerror(errno);
-			logger_->warn() << message;
-			throw sandbox_exception(message);
-		}
+		isolate_init_child(fd[0], fd[1]);
 		break;
 	default:
 		//---Parent---
@@ -153,6 +121,54 @@ void isolate_sandbox::isolate_init()
 		logger_->debug() << "Isolate initialized in " << sandboxed_dir_;
 		close(fd[0]);
 		break;
+	}
+}
+
+void isolate_sandbox::isolate_init_child(int fd_0, int fd_1)
+{
+	//Close up output side of pipe
+	close(fd_0);
+
+	//Close stdout, duplicate the input side of pipe to stdout
+	dup2(fd_1, 1);
+
+	//Redirect stderr to /dev/null file
+	int devnull;
+	devnull = open("/dev/null", O_WRONLY);
+	if (devnull == -1) {
+		auto message = "Cannot open /dev/null file for writing.";
+		logger_->warn() << message;
+		throw sandbox_exception(message);
+	}
+	dup2(devnull, 2);
+
+	//Exec isolate init command
+	size_t arg_count = 5 + limits_.bound_dirs.size();
+	const char *args[arg_count];
+
+	args[0] = isolate_binary_.c_str();
+	args[1] = "--cg";
+	args[2] = ("--box-id=" + std::to_string(id_)).c_str();
+	args[3] = "--init";
+
+	size_t i = 3;
+	for (auto it: limits_.bound_dirs) {
+		std::string arg = std::string("--dir=")
+				  + it.first + "="
+				  + it.second + ":rw";
+		args[++i] = arg.c_str();
+	}
+
+	args[arg_count - 1] = NULL;
+
+	//const_cast is ugly, but this is working with C code - execv does not modify its arguments
+	execvp(isolate_binary_.c_str(), const_cast<char **>(args));
+
+	//Never reached
+	{
+		auto message = std::string("Exec returned to child: ") + strerror(errno);
+		logger_->warn() << message;
+		throw sandbox_exception(message);
 	}
 }
 
