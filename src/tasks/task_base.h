@@ -5,6 +5,7 @@
 #include <string>
 #include <cstdlib>
 #include <memory>
+#include "../config/task_results.h"
 
 
 /**
@@ -100,6 +101,11 @@ public:
 	 * @return textual vector array of dependencies
 	 */
 	const std::vector<std::string> &get_dependencies();
+	/**
+	 * Return results of task. Should be only used in external tasks.
+	 * @return
+	 */
+	virtual std::shared_ptr<task_results> get_result();
 
 protected:
 	size_t id_;

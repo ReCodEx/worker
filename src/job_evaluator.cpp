@@ -103,7 +103,60 @@ void job_evaluator::cleanup_submission()
 
 void job_evaluator::push_result()
 {
-	// nothing to do here right now
+	// just checkout for errors
+	if (job_ == nullptr) {
+		return;
+	}
+
+	// get results which will be processed from job
+	auto results = job_->get_results();
+
+	// create result directory for temporary files
+	fs::path results_path = fs::temp_directory_path() / "isoeval" / "tmp" / "results" /
+			config_->get_worker_id() / job_id_;
+	fs::create_directories(results_path);
+	// define path to result yaml file and archived result
+	fs::path result_path = results_path / "result.yml";
+	fs::path archive_path = results_path / "result.zip";
+
+	// build yaml tree
+	YAML::Node res;
+	res["job-id"] = job_id_;
+	for (auto &i : results) {
+		if (i.second != nullptr) {
+			YAML::Node node;
+			node["task-id"] = i.first;
+			node["exitcode"] = i.second->exitcode;
+			node["time"] = i.second->time;
+			node["wall-time"] = i.second->wall_time;
+			node["memory"] = i.second->memory;
+			node["max-rss"] = i.second->max_rss;
+			//node["status"] = i.second->status; // TODO: omitted for now
+			node["exitsig"] = i.second->exitsig;
+			node["killed"] = i.second->killed;
+			node["message"] = i.second->message;
+
+			res["results"].push_back(node);
+		}
+	}
+
+	// open output stream and write constructed yaml
+	std::ofstream out(result_path.string());
+	out << res;
+
+	// compress given result.yml file
+	try {
+		archivator::compress(results_path.string(), archive_path.string());
+	} catch (archive_exception &ex) {
+		logger_->warn() << "Result of job (id: " + job_id_ +
+						   ") was not send properly to file server: " +
+						   std::string(ex.what());
+		return;
+	}
+
+	// send archived result to file server
+	fileman_->put_file(archive_path.string());
+
 	return;
 }
 
@@ -121,9 +174,9 @@ eval_response job_evaluator::evaluate (eval_request request)
 		prepare_submission();
 		build_job();
 		run_job();
+		cleanup_submission();
+		push_result();
 	} catch (...) {}
-	cleanup_submission();
-	push_result();
 
 	return eval_response(request.job_id, "OK");
 }

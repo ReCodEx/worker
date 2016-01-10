@@ -11,8 +11,8 @@ file-manager:
     file-collector:
         hostname: "localhost"
         port: 80  # can be ignored in specific modules
-        username: "654321"  # can be ignored in specific modules
-        password: "123456"  # can be ignored in specific modules
+        username: ""  # can be ignored in specific modules
+        password: ""  # can be ignored in specific modules
     cache:  # only in case that there is cache module
         cache-dir: "/tmp/cache"
 logger:
