@@ -20,7 +20,7 @@ namespace fs = boost::filesystem;
 
 
 isolate_sandbox::isolate_sandbox(sandbox_limits limits, size_t id, int max_timeout, std::shared_ptr<spdlog::logger> logger) :
-	limits_(limits), id_(id), isolate_binary_("/usr/local/bin/isolate"), max_timeout_(max_timeout)
+	limits_(limits), id_(id), isolate_binary_("isolate"), max_timeout_(max_timeout)
 {
 	if (logger != nullptr) {
 		logger_ = logger;

@@ -11,7 +11,8 @@
 
 /**
  * Class implementing operations with Isolate sandbox.
- * @note Requirements are unix-like OS with Isolate installed.
+ * @note Requirements are Linux OS with Isolate installed. Isolate binary must be named "isolate"
+ * and must be in PATH.
  */
 class isolate_sandbox : public sandbox_base {
 public:
