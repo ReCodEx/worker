@@ -11,21 +11,51 @@ set(gtest_force_shared_crt ON CACHE BOOL "Use shared (DLL) run-time lib even whe
 find_package(LibArchive)
 
 # -- Boost
-set(Boost_USE_STATIC_LIBS OFF)
-set (Boost_USE_MULTITHREADED ON)
-find_package(Boost 1.57.0 REQUIRED COMPONENTS filesystem system program_options)
-include_directories(${Boost_INCLUDE_DIRS})
-if (WIN32)
-	# disable autolinking in boost
-	add_definitions(-DBOOST_ALL_NO_LIB)
-	# force all boost libraries to dynamic link (we already disabled
-	# autolinking, so I don't know why we need this, but we do!)
-	add_definitions(-DBOOST_ALL_DYN_LINK)
+if(WIN32)
+	set(Boost_USE_STATIC_LIBS ON)
+else()
+	set(Boost_USE_STATIC_LIBS OFF)
 endif()
+set (Boost_USE_MULTITHREADED ON)
+find_package(Boost 1.53.0 REQUIRED COMPONENTS filesystem system program_options)
+include_directories(${Boost_INCLUDE_DIRS})
 
 # -- cURL
 find_package(CURL REQUIRED)
 include_directories(${CURL_INCLUDE_DIRS})
+
+# -- Yaml-cpp
+# find the yaml-cpp include directory
+find_path(YAMLCPP_INCLUDE_DIR yaml-cpp/yaml.h
+		  PATH_SUFFIXES include
+		  PATHS
+		  ~/Library/Frameworks/yaml-cpp/include/
+		  /Library/Frameworks/yaml-cpp/include/
+		  /usr/local/include/
+		  /usr/include/
+		  /sw/yaml-cpp/         # Fink
+		  /opt/local/yaml-cpp/  # DarwinPorts
+		  /opt/csw/yaml-cpp/    # Blastwave
+		  /opt/yaml-cpp/
+		  ${YAMLCPP_DIR}/include/)
+
+# find the yaml-cpp library
+find_library(YAMLCPP_LIBRARY
+			 NAMES ${YAMLCPP_STATIC} yaml-cpp
+			 PATH_SUFFIXES lib64 lib
+			 PATHS ~/Library/Frameworks
+					/Library/Frameworks
+					/usr/local
+					/usr
+					/sw
+					/opt/local
+					/opt/csw
+					/opt
+					${YAMLCPP_DIR}/lib)
+
+if(YAMLCPP_INCLUDE_DIR AND YAMLCPP_LIBRARY)
+	set(YAMLCPP_FOUND true)
+endif()
 
 
 # MS Visual C++ specific bindings
@@ -49,7 +79,11 @@ include_directories(AFTER, vendor/cppzmq)
 include_directories(AFTER, vendor/spdlog/include)
 
 # Yaml-cpp
-include_directories(AFTER, vendor/yaml-cpp/include)
+if(YAMLCPP_FOUND)
+	include_directories(AFTER, ${YAMLCPP_INCLUDE_DIR})
+else()
+	include_directories(AFTER, vendor/yaml-cpp/include)
+endif()
 
 # Libarchive
 if(LibArchive_FOUND)
@@ -120,7 +154,12 @@ set(SOURCE_FILES
 
 
 add_executable(${EXEC_NAME} ${SOURCE_FILES})
-target_link_libraries(${EXEC_NAME} yaml-cpp)
+
+if(YAMLCPP_FOUND)
+	target_link_libraries(${EXEC_NAME} ${YAMLCPP_LIBRARY})
+else()
+	target_link_libraries(${EXEC_NAME} yaml-cpp)
+endif()
 
 if(LibArchive_FOUND)
 	target_link_libraries(${EXEC_NAME} ${LibArchive_LIBRARIES})
@@ -147,8 +186,10 @@ if(NOT LibArchive_FOUND)
 	add_subdirectory(vendor/libarchive)
 endif()
 
-# Include Yaml-cpp
-add_subdirectory(vendor/yaml-cpp)
+if(NOT YAMLCPP_FOUND)
+	# Include Yaml-cpp
+	add_subdirectory(vendor/yaml-cpp)
+endif()
 
 # Include Google Test libraries and then our very own unit tests
 add_subdirectory(vendor/googletest)
