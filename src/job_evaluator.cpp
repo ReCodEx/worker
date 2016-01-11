@@ -219,6 +219,7 @@ void job_evaluator::push_result()
 	// open output stream and write constructed yaml
 	std::ofstream out(result_path.string());
 	out << res;
+	out.close();
 	logger_->info() << "Yaml result file written succesfully.";
 
 	// compress given result.yml file
