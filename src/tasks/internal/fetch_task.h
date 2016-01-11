@@ -13,11 +13,11 @@ class fetch_task : public task_base {
 public:
 	fetch_task(size_t id, std::string task_id, size_t priority, bool fatal, const std::string &cmd,
 			const std::vector<std::string> &arguments, const std::string &log,
-			const std::vector<std::string> &dependencies, std::shared_ptr<file_manager> filemanager);
+			const std::vector<std::string> &dependencies, std::shared_ptr<file_manager_base> filemanager);
 	virtual ~fetch_task();
 	virtual void run();
 private:
-	std::shared_ptr<file_manager> filemanager_;
+	std::shared_ptr<file_manager_base> filemanager_;
 };
 
 #endif //CODEX_WORKER_INTERNAL_FETCH_TASK_H

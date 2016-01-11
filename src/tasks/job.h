@@ -22,6 +22,7 @@ namespace fs = boost::filesystem;
 #include "internal/rm_task.h"
 #include "internal/archivate_task.h"
 #include "internal/extract_task.h"
+#include "internal/fetch_task.h"
 
 
 /**

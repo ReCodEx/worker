@@ -299,6 +299,8 @@ void job::build_job(const YAML::Node &conf)
 					task = std::make_shared<archivate_task>(id++, task_id, priority, fatal, cmd, args, log, task_depend);
 				} else if (cmd == "extract") {
 					task = std::make_shared<extract_task>(id++, task_id, priority, fatal, cmd, args, log, task_depend);
+				} else if (cmd == "fetch") {
+					task = std::make_shared<fetch_task>(id++, task_id, priority, fatal, cmd, args, log, task_depend, fileman_);
 				}
 
 				unconnected_tasks.insert(std::make_pair(task_id, task));
