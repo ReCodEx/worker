@@ -8,7 +8,7 @@ void archivator::compress(const std::string &dir, const std::string &destination
 {
 	archive *a;
 	archive_entry *entry;
-	ssize_t r;
+	long r;
 
 	std::vector<fs::path> files;
 	fs::path dir_path;
@@ -91,7 +91,7 @@ void archivator::decompress(const std::string &filename, const std::string &dest
 	archive *ext;
 	archive_entry *entry;
 	int flags;
-	int r;
+	long r;
 
 	// Select which attributes we want to restore.
 	flags = ARCHIVE_EXTRACT_TIME;
