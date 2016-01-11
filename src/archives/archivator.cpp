@@ -8,7 +8,7 @@ void archivator::compress(const std::string &dir, const std::string &destination
 {
 	archive *a;
 	archive_entry *entry;
-	int r;
+	ssize_t r;
 
 	std::vector<fs::path> files;
 	fs::path dir_path;
@@ -48,37 +48,31 @@ void archivator::compress(const std::string &dir, const std::string &destination
 
 	for (auto &file : files) {
 		entry = archive_entry_new();
+
 		archive_entry_set_pathname(entry, (fs::path(destination).stem() / file).string().c_str());
 		archive_entry_set_size(entry, fs::file_size(dir_path / file));
 		archive_entry_set_mtime(entry, fs::last_write_time(dir_path / file), 0);
 		archive_entry_set_filetype(entry, AE_IFREG);
 		archive_entry_set_perm(entry, 0644);
+
 		r = archive_write_header(a, entry);
 		if (r < ARCHIVE_OK) {
 			throw archive_exception(archive_error_string(a));
 		}
 
-		std::ifstream ifs(file.string(), std::ios::binary);
+		std::ifstream ifs((dir_path / file).string(), std::ios::binary);
 		if (ifs.is_open()) {
-			// get length of file:
-			ifs.seekg(0, ifs.end);
-			int length = static_cast<int>(ifs.tellg());
-			ifs.seekg(0, ifs.beg);
-
 			// read data by small blocks to avoid memory overfill on possibly large files
-			const int buff_size = 4096;
-			char buff[buff_size];
-			while (static_cast<int>(ifs.tellg()) + buff_size <= length) {
-				ifs.read(buff, buff_size);
-				r = archive_write_data(a, buff, buff_size);
-				if (r < ARCHIVE_OK) {
-					throw archive_exception(archive_error_string(a));
+			char buff[4096];
+
+			while (!ifs.eof()) {
+				ifs.read(buff, sizeof(buff));
+
+				if (ifs.gcount() <= 0) {
+					throw archive_exception("Error reading input file");
 				}
-			}
-			if (ifs.tellg() < length) {
-				int last_size = length - static_cast<int>(ifs.tellg());
-				ifs.read(buff, last_size);
-				r = archive_write_data(a, buff, last_size);
+
+				r = archive_write_data(a, buff, (size_t) ifs.gcount());
 				if (r < ARCHIVE_OK) {
 					throw archive_exception(archive_error_string(a));
 				}
