@@ -62,6 +62,17 @@ void job::run()
 	return;
 }
 
+std::map<std::string, std::shared_ptr<task_results>> job::get_results()
+{
+	std::map<std::string, std::shared_ptr<task_results>> res;
+
+	for (auto &i : task_queue_) {
+		res.emplace(i->get_task_id(), i->get_result());
+	}
+
+	return res;
+}
+
 void job::build_job(const YAML::Node &conf)
 {
 	try {

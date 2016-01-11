@@ -49,7 +49,12 @@ void external_task::run()
 	if (sandbox_ == nullptr) { return; }
 
 	sandbox_init();
-	sandbox_->run(cmd_, arguments_);
+	results_ = std::make_shared<task_results>(sandbox_->run(cmd_, arguments_));
 	sandbox_fini();
 	return;
+}
+
+std::shared_ptr<task_results> external_task::get_result()
+{
+	return results_;
 }

@@ -41,6 +41,8 @@ public:
 
 	void run();
 
+	std::map<std::string, std::shared_ptr<task_results>> get_results();
+
 	/**
 	 * Topological sort of tasks starting from root.
 	 * Result order is saved in result variable, which is cleared before computation.

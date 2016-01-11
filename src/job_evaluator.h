@@ -2,6 +2,7 @@
 #define CODEX_WORKER_JOB_EVALUATOR_HPP
 
 #include <memory>
+#include <fstream>
 #include "spdlog/spdlog.h"
 
 #define BOOST_FILESYSTEM_NO_DEPRECATED
@@ -79,6 +80,7 @@ private:
 	void cleanup_submission();
 
 	/**
+	 * Get results from job and push them to filemanager.
 	 * Upload output files using the filemanager (if desired)
 	 */
 	void push_result();

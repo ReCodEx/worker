@@ -106,6 +106,7 @@ set(SOURCE_FILES
 	src/config/fileman_config.h
 	src/config/log_config.h
 	src/config/sandbox_limits.h
+	src/config/task_results.h
 	src/broker_connection.h
 	src/connection_proxy.h
 	src/fileman/file_manager_base.h

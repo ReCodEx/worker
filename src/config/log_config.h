@@ -22,6 +22,8 @@ public:
 			return spdlog::level::emerg;
 		} else if (lev == "warn") {
 			return spdlog::level::warn;
+		} else if (lev == "info") {
+			return spdlog::level::info;
 		}
 
 		return spdlog::level::debug;
