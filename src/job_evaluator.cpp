@@ -20,6 +20,7 @@ void job_evaluator::download_submission()
 
 	// download a file
 	fileman_->get_file(archive_url.string(), archive_local_.string());
+	archive_local_ /= archive_url.filename();
 	return;
 }
 
@@ -37,10 +38,10 @@ void job_evaluator::prepare_submission()
 
 	// copy source codes to source code folder
 	if (fs::is_directory(submission_path_)) {
-		fs::directory_iterator endit;
-		for (fs::directory_iterator it(submission_path_); it != endit; ++it) {
-			if (fs::is_regular_file(it->status())) {
-				fs::copy(it->path(), source_path_);
+		fs::recursive_directory_iterator endit;
+		for (fs::recursive_directory_iterator it(submission_path_); it != endit; ++it) {
+			if (fs::is_regular_file(*it)) {
+				fs::copy(*it, source_path_ / it->path().filename());
 			}
 		}
 	}
@@ -176,7 +177,9 @@ eval_response job_evaluator::evaluate (eval_request request)
 		run_job();
 		cleanup_submission();
 		push_result();
-	} catch (...) {}
+	} catch (std::exception &e) {
+		logger_->warn() << "Job evaluator: " << e.what();
+	}
 
 	return eval_response(request.job_id, "OK");
 }
