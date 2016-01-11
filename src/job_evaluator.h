@@ -16,6 +16,7 @@ namespace fs = boost::filesystem;
 #include "eval_request.h"
 #include "eval_response.h"
 #include "archives/archivator.h"
+#include "helpers/filesystem.h"
 
 
 /**

@@ -1,7 +1,8 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-#include "../src/tasks/job.h"
+#include "../src/tasks/fake_task.h"
+#include "../src/helpers/topological_sort.h"
 
 using namespace std;
 
@@ -41,7 +42,7 @@ TEST(topological_sort_test, top_sort_1)
 	expected = { A, C, B };
 
 	// sort itself
-	job::topological_sort(A, eff_ind, result);
+	helpers::topological_sort(A, eff_ind, result);
 	// and check it
 	ASSERT_EQ(result, expected);
 
@@ -71,7 +72,7 @@ TEST(topological_sort_test, top_sort_1)
 	expected = { A, C, B, D };
 
 	// sort itself
-	job::topological_sort(A, eff_ind, result);
+	helpers::topological_sort(A, eff_ind, result);
 	// and check it
 	ASSERT_EQ(result, expected);
 }
@@ -113,7 +114,7 @@ TEST(topological_sort_test, top_sort_2)
 	expected = { A, B, C };
 
 	// sort itself
-	job::topological_sort(A, eff_ind, result);
+	helpers::topological_sort(A, eff_ind, result);
 	// and check it
 	ASSERT_EQ(result, expected);
 
@@ -153,7 +154,7 @@ TEST(topological_sort_test, top_sort_2)
 	expected = { A, B, C, D, E, F };
 
 	// sort itself
-	job::topological_sort(A, eff_ind, result);
+	helpers::topological_sort(A, eff_ind, result);
 	// and check it
 	ASSERT_EQ(result, expected);
 }
@@ -239,7 +240,7 @@ TEST(topological_sort_test, top_sort_3)
 	expected = { A, B, C, D, H, I, J, E, F, G, K, L, M };
 
 	// sort itself
-	job::topological_sort(A, eff_ind, result);
+	helpers::topological_sort(A, eff_ind, result);
 	// and check it
 	ASSERT_EQ(result, expected);
 }
@@ -301,7 +302,7 @@ TEST(topological_sort_test, top_sort_4)
 	expected = { A, D, E, B, F, C, G };
 
 	// sort itself
-	job::topological_sort(A, eff_ind, result);
+	helpers::topological_sort(A, eff_ind, result);
 	// and check it
 	ASSERT_EQ(result, expected);
 }
@@ -362,7 +363,7 @@ TEST(topological_sort_test, top_sort_cycle_1)
 		{ "G", 1 }
 	};
 
-	EXPECT_THROW(job::topological_sort(A, eff_ind, result), job_exception);
+	EXPECT_THROW(helpers::topological_sort(A, eff_ind, result), helpers::top_sort_exception);
 }
 
 TEST(topological_sort_test, top_sort_cycle_2)
@@ -404,5 +405,5 @@ TEST(topological_sort_test, top_sort_cycle_2)
 		{ "D", 1 }
 	};
 
-	EXPECT_THROW(job::topological_sort(A, eff_ind, result), job_exception);
+	EXPECT_THROW(helpers::topological_sort(A, eff_ind, result), helpers::top_sort_exception);
 }

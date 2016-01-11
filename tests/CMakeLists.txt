@@ -6,6 +6,7 @@ set(LIBS_DIR ../vendor)
 set(FILEMAN_DIR ../src/fileman)
 set(SANDBOX_DIR ../src/sandbox)
 set(TASKS_DIR ../src/tasks)
+set(HELPERS_DIR ../src/helpers)
 
 # Google Test and Google Mock headers
 include_directories(${LIBS_DIR}/googletest/include)
@@ -44,6 +45,10 @@ add_executable(${TESTS_NAME}
 	tasks.cpp
 	${SRC_DIR}/archives/archivator.cpp
 	archivator.cpp
+	${HELPERS_DIR}/topological_sort.h
+	${HELPERS_DIR}/topological_sort.cpp
+	${HELPERS_DIR}/filesystem.h
+	${HELPERS_DIR}/filesystem.cpp
 )
 
 target_link_libraries(${TESTS_NAME} gtest gtest_main)

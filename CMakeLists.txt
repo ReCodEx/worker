@@ -151,6 +151,10 @@ set(SOURCE_FILES
 	src/archives/archivator.h
 	src/archives/archivator.cpp
 	src/eval_response.h
+	src/helpers/filesystem.h
+	src/helpers/filesystem.cpp
+	src/helpers/topological_sort.h
+	src/helpers/topological_sort.cpp
 )
 
 

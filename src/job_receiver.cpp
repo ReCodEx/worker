@@ -17,6 +17,7 @@ void job_receiver::start_receiving ()
 		try {
 			zmq::message_t msg;
 
+			if (logger_ != nullptr) { logger_->info() << "Job-receiver: Waiting for incomings requests..."; }
 			socket_.recv(&msg);
 			std::string type(static_cast<char *>(msg.data()), msg.size());
 
@@ -42,18 +43,23 @@ void job_receiver::start_receiving ()
 				socket_.recv(&msg);
 				std::string result_url(static_cast<char *>(msg.data()), msg.size());
 
+				if (logger_ != nullptr) { logger_->info() << "Job-receiver: Job evaluating request received."; }
+
 				eval_response response = evaluator_->evaluate(eval_request(id, job_url, result_url));
 				std::string response_command("eval_finished");
 
 				socket_.send(response_command.c_str(), response_command.size(), ZMQ_SNDMORE);
 				socket_.send(response.job_id.c_str(), response.job_id.size(), ZMQ_SNDMORE);
 				socket_.send(response.result.c_str(), response.result.size(), 0);
+
+				if (logger_ != nullptr) { logger_->info() << "Job-receiver: Job evaluated and respond sent."; }
 			}
 
 			while (msg.more()) {
 				socket_.recv(&msg);
 			}
-		} catch (zmq::error_t) {
+		} catch (zmq::error_t &e) {
+			if (logger_ != nullptr) { logger_->emerg() << "Job-receiver error: " << e.what(); }
 			break;
 		}
 	}

@@ -91,6 +91,11 @@ public:
 	std::map<std::string, std::string> bound_dirs;
 
 
+	/**
+	 * Classical equality operator on two structures.
+	 * @param second
+	 * @return true if compared structures has same variable values
+	 */
 	bool operator==(const sandbox_limits &second) const
 	{
 		return (memory_usage == second.memory_usage &&
@@ -112,6 +117,11 @@ public:
 		);
 	}
 
+	/**
+	 * Opposite of equality operator.
+	 * @param second
+	 * @return true if structures are not the same
+	 */
 	bool operator!=(const sandbox_limits &second) const
 	{
 		return !((*this) == second);

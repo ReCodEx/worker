@@ -46,12 +46,14 @@ void external_task::sandbox_fini()
 
 void external_task::run()
 {
+	sandbox_init();
+
 	// TODO: only temporary solution, should be removed
 	if (sandbox_ == nullptr) { return; }
 
-	sandbox_init();
 	results_ = std::make_shared<task_results>(sandbox_->run(cmd_, arguments_));
 	sandbox_fini();
+
 	return;
 }
 
