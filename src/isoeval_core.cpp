@@ -8,22 +8,23 @@
 
 isoeval_core::isoeval_core(std::vector<std::string> args)
 	: args_(args), config_filename_("config.yml"), logger_(nullptr),
-	  fileman_(nullptr), job_evaluator_(nullptr), broker_(nullptr)
+	  submission_fileman_(nullptr), fileman_(nullptr),
+	  job_receiver_(nullptr), broker_(nullptr)
 {
 	// parse cmd parameters
 	parse_params();
-	// initialize curl
-	curl_init();
 	// load configuration from yaml file
 	load_config();
 	// initialize logger
 	log_init();
+	// initialize curl
+	curl_init();
 	// construct and setup broker connection
 	broker_init();
-	// construct filemanager
+	// construct filemanagers
 	fileman_init();
 	// evaluator initialization
-	evaluator_init();
+	receiver_init();
 }
 
 isoeval_core::~isoeval_core()
@@ -34,14 +35,23 @@ isoeval_core::~isoeval_core()
 
 void isoeval_core::run()
 {
+	// connect broker_connection to real broker server
 	broker_->connect();
-	std::thread broker_thread(std::bind(&broker_connection<connection_proxy>::receive_tasks, broker_));
+	// start execution thread which will be receiving jobs
+	std::thread broker_thread;
+	logger_->info() << "Trying to create broker connection thread.";
+	try {
+		 broker_thread = std::thread(std::bind(&broker_connection<connection_proxy>::receive_tasks, broker_));
+	} catch (std::system_error &e) {
+		logger_->emerg() << "Broker connection thread cannot be started: " << e.what();
+		return;
+	}
+	logger_->info() << "Broker connection thread created succesfully.";
 
-	job_receiver receiver(zmq_context_, job_evaluator_);
-	receiver.start_receiving();
+	logger_->info() << "Job receiver will now start receiving.";
+	job_receiver_->start_receiving();
 
 	broker_thread.join();
-
 	return;
 }
 
@@ -82,7 +92,7 @@ void isoeval_core::load_config()
 	try {
 		YAML::Node config_yaml = YAML::LoadFile(config_filename_);
 		config_ = std::make_shared<worker_config>(config_yaml);
-	} catch (std::exception e) {
+	} catch (std::exception &e) {
 		force_exit("Error loading config file: " + std::string(e.what()));
 	}
 
@@ -93,7 +103,9 @@ void isoeval_core::force_exit(std::string msg)
 {
 	// write to log
 	if (msg != "") {
-		if (logger_ != nullptr) {}
+		if (logger_ != nullptr) {
+			logger_->emerg() << msg;
+		}
 		std::cerr << msg << std::endl;
 	}
 
@@ -142,7 +154,10 @@ void isoeval_core::log_init()
 void isoeval_core::curl_init()
 {
 	//Globally init curl library
+
+	logger_->info() << "Initializing CURL...";
 	curl_global_init(CURL_GLOBAL_DEFAULT);
+	logger_->info() << "CURL initialized.";
 
 	return;
 }
@@ -150,13 +165,16 @@ void isoeval_core::curl_init()
 void isoeval_core::curl_fini()
 {
 	//Clean after curl library
+	logger_->info() << "Cleanup after CURL...";
 	curl_global_cleanup();
+	logger_->info() << "CURL cleaned.";
 
 	return;
 }
 
 void isoeval_core::broker_init()
 {
+	logger_->info() << "Initializing broker connection...";
 	auto broker_proxy = std::make_shared<connection_proxy>(zmq_context_);
 
 	broker_ = std::make_shared<broker_connection<connection_proxy>>(
@@ -164,21 +182,29 @@ void isoeval_core::broker_init()
 		broker_proxy,
 		logger_
 	);
+	logger_->info() << "Broker connection initialized.";
 
 	return;
 }
 
 void isoeval_core::fileman_init()
-{
-	auto fileman = config_->get_fileman_config();
-	fileman_ = std::make_shared<file_manager>(fileman.cache_dir, fileman.hostname,
-												   fileman.username, fileman.password, logger_);
+{	
+	logger_->info() << "Initializing file managers...";
+	auto fileman_conf = config_->get_fileman_config();
+	submission_fileman_ = std::make_shared<http_manager>(fileman_conf.remote_url, fileman_conf.username,
+														 fileman_conf.password, logger_);
+	fileman_ = std::make_shared<file_manager>(fileman_conf.cache_dir, fileman_conf.remote_url,
+											  fileman_conf.username, fileman_conf.password, logger_);
+	logger_->info() << "File managers initialized.";
 
 	return;
 }
 
-void isoeval_core::evaluator_init()
+void isoeval_core::receiver_init()
 {
-	job_evaluator_ = std::make_shared<job_evaluator>(logger_, config_, fileman_);
+	logger_->info() << "Initializing job receiver and evaluator...";
+	auto evaluator = std::make_shared<job_evaluator>(logger_, config_, fileman_, submission_fileman_);
+	job_receiver_ = std::make_shared<job_receiver>(zmq_context_, evaluator, logger_);
+	logger_->info() << "Job receiver and evaluator initialized.";
 	return;
 }

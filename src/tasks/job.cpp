@@ -1,30 +1,10 @@
 #include "job.h"
 
-class task_compare {
-public:
-	/**
-	 * Greater than operator on task_base objects.
-	 * @param a
-	 * @param b
-	 * @return bool if parameter a is greater than b
-	 */
-	bool operator()(std::shared_ptr<task_base> a, std::shared_ptr<task_base> b) {
-		if (a->get_priority() > b->get_priority()) {
-			return true;
-		} else if (a->get_priority() == b->get_priority() && a->get_id() > b->get_id()) {
-			return true;
-		}
-
-		return false;
-	}
-};
-
 job::job(const YAML::Node &job_config, boost::filesystem::path source_path,
-		 std::shared_ptr<spdlog::logger> logger,
 		 std::shared_ptr<worker_config> default_config,
 		 std::shared_ptr<file_manager_base> fileman)
-	: source_path_(source_path), fileman_(fileman), root_task_(nullptr),
-	  logger_(logger), default_config_(default_config)
+	: source_path_(source_path), fileman_(fileman),
+	  root_task_(nullptr), default_config_(default_config)
 {
 	// check construction parameters if they are in right format
 	if (default_config_ == nullptr) {
@@ -56,7 +36,13 @@ void job::run()
 {
 	// simply run all tasks in given topological order
 	for (auto &i : task_queue_) {
-		i->run();
+		try {
+			i->run();
+		} catch (...) {
+			if (i->get_fatal_failure()) {
+				break;
+			}
+		}
 	}
 
 	return;
@@ -95,7 +81,7 @@ void job::build_job(const YAML::Node &conf)
 		// get information about submission
 		auto submiss = conf["submission"];
 		if (submiss["job-id"] && submiss["job-id"].IsScalar()) {
-			job_id_ = submiss["job-id"].as<size_t>();
+			job_id_ = submiss["job-id"].as<std::string>();
 		} else { throw job_exception("Submission.job-id item not loaded properly"); }
 		if (submiss["language"] && submiss["language"].IsScalar()) {
 			language_ = submiss["language"].as<std::string>();
@@ -285,7 +271,8 @@ void job::build_job(const YAML::Node &conf)
 				limits.std_output = std_output;
 				limits.std_error = std_error;
 				std::shared_ptr<task_base> task =
-						std::make_shared<external_task>(id++, task_id, priority, fatal, log, task_depend,
+						std::make_shared<external_task>(default_config_->get_worker_id(), id++, task_id,
+														priority, fatal, log, task_depend,
 														cmd, args, sandbox_name, limits);
 				unconnected_tasks.insert(std::make_pair(task_id, task));
 				eff_indegree.insert(std::make_pair(task_id, 0));
@@ -410,10 +397,7 @@ void job::prepare_job()
 void job::cleanup_job()
 {
 	// destroy all files in working directory
-	fs::directory_iterator endit;
-	for (fs::directory_iterator it(source_path_); it != endit; ++it) {
-		fs::remove_all(it->path());
-	}
+	// -> job_evaluator will handle this for us...
 
 	return;
 }

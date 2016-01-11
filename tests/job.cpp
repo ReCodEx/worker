@@ -17,17 +17,17 @@ TEST(job_test, bad_parameters)
 	auto yaml = YAML::Load("");
 
 	// config not given
-	EXPECT_THROW(job j(yaml, "", nullptr, nullptr, nullptr), job_exception);
+	EXPECT_THROW(job j(yaml, "", nullptr, nullptr), job_exception);
 
 	// file manager not given
 	worker_config conf;
 	auto conf_ptr = std::make_shared<worker_config>(conf);
-	EXPECT_THROW(job j(yaml, "", nullptr, conf_ptr, nullptr), job_exception);
+	EXPECT_THROW(job j(yaml, "", conf_ptr, nullptr), job_exception);
 
 	// source code path not given
 	cache_manager fileman;
 	auto fileman_ptr = std::make_shared<cache_manager>(fileman);
-	EXPECT_THROW(job j(yaml, "", nullptr, conf_ptr, fileman_ptr), job_exception);
+	EXPECT_THROW(job j(yaml, "", conf_ptr, fileman_ptr), job_exception);
 }
 
 TEST(job_test, bad_paths)
@@ -44,18 +44,18 @@ TEST(job_test, bad_paths)
 	auto fileman_ptr = std::make_shared<cache_manager>(fileman);
 
 	// non-existing source code folder
-	EXPECT_THROW(job j(yaml, dir.string(), nullptr, conf_ptr, fileman_ptr), job_exception);
+	EXPECT_THROW(job j(yaml, dir.string(), conf_ptr, fileman_ptr), job_exception);
 
 	// source code path with no source codes in it
 	create_directories(dir);
-	EXPECT_THROW(job j(yaml, dir.string(), nullptr, conf_ptr, fileman_ptr), job_exception);
+	EXPECT_THROW(job j(yaml, dir.string(), conf_ptr, fileman_ptr), job_exception);
 
 	// source code directory is not a directory
 	dir = dir / "hello";
 	std::ofstream hello(dir.string());
 	hello << "hello" << std::endl;
 	hello.close();
-	EXPECT_THROW(job j(yaml, dir.string(), nullptr, conf_ptr, fileman_ptr), job_exception);
+	EXPECT_THROW(job j(yaml, dir.string(), conf_ptr, fileman_ptr), job_exception);
 
 	// cleanup after yourself
 	remove_all(dir_root);
@@ -85,7 +85,7 @@ TEST(job_test, config_format)
 
 	// empty configuration
 	auto yaml = YAML::Load("");
-	EXPECT_THROW(job j(yaml, dir.string(), nullptr, conf_ptr, fileman_ptr), job_exception);
+	EXPECT_THROW(job j(yaml, dir.string(), conf_ptr, fileman_ptr), job_exception);
 
 	// tasks is not a sequence
 	yaml = YAML::Load("---\n"
@@ -99,7 +99,7 @@ TEST(job_test, config_format)
 					  "        password: 123456\n"
 					  "tasks: hello\n"
 					  "...\n");
-	EXPECT_THROW(job j(yaml, dir.string(), nullptr, conf_ptr, fileman_ptr), job_exception);
+	EXPECT_THROW(job j(yaml, dir.string(), conf_ptr, fileman_ptr), job_exception);
 
 	// submission is not a map
 	yaml = YAML::Load("---\n"
@@ -114,7 +114,7 @@ TEST(job_test, config_format)
 					  "              - hello.cpp\n"
 					  "              - hello_world.cpp\n"
 					  "...\n");
-	EXPECT_THROW(job j(yaml, dir.string(), nullptr, conf_ptr, fileman_ptr), job_exception);
+	EXPECT_THROW(job j(yaml, dir.string(), conf_ptr, fileman_ptr), job_exception);
 
 	// item job-id	missing in submission
 	yaml = YAML::Load("---\n"
@@ -135,7 +135,7 @@ TEST(job_test, config_format)
 					  "              - hello.cpp\n"
 					  "              - hello_world.cpp\n"
 					  "...\n");
-	EXPECT_THROW(job j(yaml, dir.string(), nullptr, conf_ptr, fileman_ptr), job_exception);
+	EXPECT_THROW(job j(yaml, dir.string(), conf_ptr, fileman_ptr), job_exception);
 
 	// priority missing in internal task
 	yaml = YAML::Load("---\n"
@@ -156,7 +156,7 @@ TEST(job_test, config_format)
 					  "              - hello.cpp\n"
 					  "              - hello_world.cpp\n"
 					  "...\n");
-	EXPECT_THROW(job j(yaml, dir.string(), nullptr, conf_ptr, fileman_ptr), job_exception);
+	EXPECT_THROW(job j(yaml, dir.string(), conf_ptr, fileman_ptr), job_exception);
 
 #ifndef _WIN32
 	// task-id missing in external task
@@ -206,7 +206,7 @@ TEST(job_test, config_format)
 					  "                    ISOLATE_BOX: /box\n"
 					  "                    ISOLATE_TMP: /tmp\n"
 					  "...\n");
-	EXPECT_THROW(job j(yaml, dir.string(), nullptr, conf_ptr, fileman_ptr), job_exception);
+	EXPECT_THROW(job j(yaml, dir.string(), conf_ptr, fileman_ptr), job_exception);
 
 	// correct configuration
 	yaml = YAML::Load("---\n"
@@ -256,7 +256,7 @@ TEST(job_test, config_format)
 					  "                    ISOLATE_BOX: /box\n"
 					  "                    ISOLATE_TMP: /tmp\n"
 					  "...\n");
-	EXPECT_NO_THROW(job j(yaml, dir.string(), nullptr, conf_ptr, fileman_ptr));
+	EXPECT_NO_THROW(job j(yaml, dir.string(), conf_ptr, fileman_ptr));
 #endif
 
 	// cleanup
@@ -279,7 +279,7 @@ TEST(job_test, config_data) // TODO
 
 	// empty configuration
 	auto yaml = YAML::Load("");
-	EXPECT_THROW(job j(yaml, dir.string(), nullptr, conf_ptr, fileman_ptr), job_exception);
+	EXPECT_THROW(job j(yaml, dir.string(), conf_ptr, fileman_ptr), job_exception);
 
 	// cleanup
 	remove_all(dir_root);

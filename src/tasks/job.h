@@ -34,7 +34,6 @@ public:
 
 	job(const YAML::Node &job_config,
 		fs::path source_path,
-		std::shared_ptr<spdlog::logger> logger,
 		std::shared_ptr<worker_config> default_config,
 		std::shared_ptr<file_manager_base> fileman);
 	~job();
@@ -80,7 +79,7 @@ private:
 	std::shared_ptr<file_manager_base> fileman_;
 
 	//* Information about submission  *//
-	size_t job_id_;
+	std::string job_id_;
 	std::string language_;
 	std::string fileman_hostname_;
 	std::string fileman_port_;
@@ -91,7 +90,6 @@ private:
 	std::shared_ptr<task_base> root_task_;
 	/** Tasks in linear ordering prepared for evaluation */
 	std::vector<std::shared_ptr<task_base>> task_queue_;
-	std::shared_ptr<spdlog::logger> logger_;
 	std::shared_ptr<worker_config> default_config_;
 };
 

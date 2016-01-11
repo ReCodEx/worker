@@ -83,7 +83,7 @@ TEST(worker_config, load_yaml_basic)
 	expected_log.log_files_count = 5;
 
 	fileman_config expected_fileman;
-	expected_fileman.hostname = "localhost";
+	expected_fileman.remote_url = "localhost";
 	expected_fileman.port = 80;
 	expected_fileman.username = "654321";
 	expected_fileman.password = "123456";

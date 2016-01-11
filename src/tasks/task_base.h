@@ -21,14 +21,14 @@ public:
 	task_base() = delete;
 	/**
 	 * Only possible way of construction which just store all given parameters into private variables.
-	 * @param id
-	 * @param task_id
-	 * @param priority
-	 * @param fatal
-	 * @param dependencies
-	 * @param cmd
-	 * @param arguments
-	 * @param log
+	 * @param id unique identificator of load order of tasks
+	 * @param task_id task identificator as written in job configuration
+	 * @param priority integer identificator of priority, smaller number, higher priority
+	 * @param fatal if true, than failure in this task will end all execution
+	 * @param dependencies array of names of task which has to be evaluated before this task
+	 * @param cmd command which will be executed in this task
+	 * @param arguments just command line arguments to executed command
+	 * @param log name of log to which errors will be reported
 	 */
 	task_base(size_t id, std::string task_id, size_t priority, bool fatal,
 			  const std::vector<std::string> &dependencies,
@@ -103,7 +103,7 @@ public:
 	const std::vector<std::string> &get_dependencies();
 	/**
 	 * Return results of task. Should be only used in external tasks.
-	 * @return
+	 * @return nullptr if there are no results to be pushed back
 	 */
 	virtual std::shared_ptr<task_results> get_result();
 
@@ -132,6 +132,29 @@ public:
 	}
 protected:
 	std::string what_;
+};
+
+
+/**
+ * Comparator which is used for topological sorting of tasks
+ */
+class task_compare {
+public:
+	/**
+	 * Greater than operator on task_base objects.
+	 * @param a first parameter
+	 * @param b second parameter
+	 * @return true if parameter a is greater than b
+	 */
+	bool operator()(std::shared_ptr<task_base> a, std::shared_ptr<task_base> b) {
+		if (a->get_priority() > b->get_priority()) {
+			return true;
+		} else if (a->get_priority() == b->get_priority() && a->get_id() > b->get_id()) {
+			return true;
+		}
+
+		return false;
+	}
 };
 
 #endif //CODEX_WORKER_TASK_BASE_HPP

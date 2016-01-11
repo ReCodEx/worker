@@ -51,7 +51,7 @@ worker_config::worker_config (const YAML::Node &config)
 			auto fileman = config["file-manager"];
 			if (fileman["file-collector"] && fileman["file-collector"].IsMap()) {
 				if (fileman["file-collector"]["hostname"] && fileman["file-collector"]["hostname"].IsScalar()) {
-					fileman_config_.hostname = fileman["file-collector"]["hostname"].as<std::string>();
+					fileman_config_.remote_url = fileman["file-collector"]["hostname"].as<std::string>();
 				} // no throw... can be omitted
 				if (fileman["file-collector"]["port"] && fileman["file-collector"]["port"].IsScalar()) {
 					fileman_config_.port = fileman["file-collector"]["port"].as<size_t>();

@@ -23,9 +23,10 @@ namespace fs = boost::filesystem;
 #include "config/log_config.h"
 #include "broker_connection.h"
 #include "connection_proxy.h"
-#include "job_evaluator.h"
+#include "job_receiver.h"
 #include "fileman/file_manager_base.h"
 #include "fileman/file_manager.h"
+
 
 /**
  * Main class of whole program.
@@ -111,9 +112,9 @@ private:
 	void fileman_init ();
 
 	/**
-	 * Job evaluator construction and initialization.
+	 * Job receiver and evaluator construction and initialization.
 	 */
-	void evaluator_init ();
+	void receiver_init ();
 
 
 	// PRIVATE DATA MEMBERS
@@ -129,11 +130,13 @@ private:
 	/** Pointer to logger */
 	std::shared_ptr<spdlog::logger> logger_;
 
+	/** File manager for submission archives which need no caching */
+	std::shared_ptr<file_manager_base> submission_fileman_;
 	/** File manager which is used to download and upload needed files */
 	std::shared_ptr<file_manager_base> fileman_;
 
 	/** Handles evaluation and all things around */
-	std::shared_ptr<job_evaluator> job_evaluator_;
+	std::shared_ptr<job_receiver> job_receiver_;
 
 	/** Handles connection to broker, receiving submission and pushing results */
 	std::shared_ptr<broker_connection<connection_proxy>> broker_;

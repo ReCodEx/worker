@@ -4,7 +4,7 @@
 
 struct fileman_config {
 public:
-	std::string hostname = "";
+	std::string remote_url = "";
 	size_t port = 0;
 	std::string username = "";
 	std::string password = "";
@@ -12,7 +12,7 @@ public:
 
 	bool operator==(const fileman_config &second) const
 	{
-		if (hostname != second.hostname ||
+		if (remote_url != second.remote_url ||
 				port != second.port ||
 				username != second.username ||
 				password != second.password ||

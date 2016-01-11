@@ -28,7 +28,8 @@ public:
 	 * @param sandbox name of sandbox which will be used
 	 * @param limits limits for sandbox
 	 */
-	external_task(size_t id, const std::string &task_id, size_t priority, bool fatal, const std::string &log,
+	external_task(std::string worker_id, size_t id, const std::string &task_id, size_t priority,
+				  bool fatal, const std::string &log,
 				  const std::vector<std::string> &dependencies,
 				  const std::string &binary, const std::vector<std::string> &arguments,
 				  const std::string &sandbox, sandbox_limits limits);
@@ -60,6 +61,8 @@ private:
 	void sandbox_init();
 	void sandbox_fini();
 
+	/** Id of this instance of worker loaded from default configuration */
+	std::string worker_id_;
 	/** Name of program which will be run in sandbox */
 	std::string cmd_;
 	/** Cmd line arguments to program */

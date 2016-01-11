@@ -1,6 +1,7 @@
 #include "external_task.h"
 
-external_task::external_task(size_t id, const std::string &task_id, size_t priority, bool fatal, const std::string &log,
+external_task::external_task(std::string worker_id, size_t id, const std::string &task_id, size_t priority,
+							 bool fatal, const std::string &log,
 							 const std::vector<std::string> &dependencies,
 							 const std::string &binary, const std::vector<std::string> &arguments,
 							 const std::string &sandbox, sandbox_limits limits)

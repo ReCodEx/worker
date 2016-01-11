@@ -13,7 +13,7 @@ using namespace testing;
 class mock_job_evaluator : public job_evaluator {
 public:
 	mock_job_evaluator () :
-		job_evaluator(nullptr, nullptr, nullptr)
+		job_evaluator(nullptr, nullptr, nullptr, nullptr)
 	{
 	}
 
@@ -39,7 +39,7 @@ TEST(job_receiver, basic) {
 		Field(&eval_request::result_url, StrEq(result_url))
 	))).Times(1).WillOnce(Return(response));
 
-	job_receiver receiver(context, evaluator);
+	job_receiver receiver(context, evaluator, nullptr);
 	std::thread r([&receiver] () {
 		receiver.start_receiving();
 	});
@@ -81,7 +81,7 @@ TEST(job_receiver, incomplete_msg) {
 	// We don't expect any calls
 	auto evaluator = std::make_shared<StrictMock<mock_job_evaluator>>();
 
-	job_receiver receiver(context, evaluator);
+	job_receiver receiver(context, evaluator, nullptr);
 	std::thread r([&receiver] () {
 		receiver.start_receiving();
 	});

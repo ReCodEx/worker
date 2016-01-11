@@ -3,8 +3,9 @@
 #include "eval_request.h"
 #include "eval_response.h"
 
-job_receiver::job_receiver (zmq::context_t &context, std::shared_ptr<job_evaluator> evaluator) :
-	socket_(context, ZMQ_PAIR), evaluator_(evaluator)
+job_receiver::job_receiver (zmq::context_t &context, std::shared_ptr<job_evaluator> evaluator,
+							std::shared_ptr<spdlog::logger> logger) :
+	socket_(context, ZMQ_PAIR), evaluator_(evaluator), logger_(logger)
 {
 }
 

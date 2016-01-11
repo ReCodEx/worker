@@ -38,7 +38,8 @@ public:
 	 */
 	job_evaluator(std::shared_ptr<spdlog::logger> logger,
 				  std::shared_ptr<worker_config> config,
-				  std::shared_ptr<file_manager_base> fileman);
+				  std::shared_ptr<file_manager_base> fileman,
+				  std::shared_ptr<file_manager_base> submission_fileman);
 	/**
 	 * Theoretically not needed, but stated for completion.
 	 */
@@ -76,8 +77,15 @@ private:
 
 	/**
 	 * Cleanup decompressed archive and all other temporary files.
+	 * This function should never throw an exception.
 	 */
 	void cleanup_submission();
+
+	/**
+	 * Cleanup all variables before new iteration.
+	 * No throw function.
+	 */
+	void cleanup_evaluator();
 
 	/**
 	 * Get results from job and push them to filemanager.
@@ -93,8 +101,10 @@ private:
 	fs::path archive_local_;
 	/** Path in which downloaded decompressed submission is stored */
 	fs::path submission_path_;
-	/** Path with only source codes, not job configuration */
+	/** Path only with source codes and job configuration, no subfolders */
 	fs::path source_path_;
+	/** Results path in which result.yml and result.zip are stored */
+	fs::path results_path_;
 	/** Url of remote file server which receives result of jobs */
 	std::string result_url_;
 
@@ -107,6 +117,8 @@ private:
 
 	/** File manager which is used to download and upload submission related files */
 	std::shared_ptr<file_manager_base> fileman_;
+	/** File manager used to download submission archives without caching */
+	std::shared_ptr<file_manager_base> submission_fileman_;
 	/** Logger given during construction */
 	std::shared_ptr<spdlog::logger> logger_;
 	/** Default configuration of worker */
