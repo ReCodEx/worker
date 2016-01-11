@@ -19,7 +19,8 @@ void job_evaluator::download_submission()
 	fs::create_directories(archive_local_);
 
 	// download a file
-	fileman_->get_file(archive_url.string(), archive_local_.string());
+	auto fileman = std::make_shared<http_manager>("", "", "", logger_);
+	fileman->get_file(archive_url.string(), archive_local_.string());
 	archive_local_ /= archive_url.filename();
 	return;
 }
@@ -52,7 +53,7 @@ void job_evaluator::prepare_submission()
 void job_evaluator::build_job()
 {
 	using namespace boost::filesystem;
-	path config_path(submission_path_);
+	path config_path(source_path_);
 	config_path /= "config.yml";
 	if (!exists(config_path)) {
 		throw job_exception("Job configuration not found");
