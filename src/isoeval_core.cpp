@@ -179,6 +179,7 @@ void isoeval_core::fileman_init()
 
 void isoeval_core::evaluator_init()
 {
-	job_evaluator_ = std::make_shared<job_evaluator>(logger_, config_, fileman_);
+	auto fileman = std::make_shared<http_manager>(logger_);
+	job_evaluator_ = std::make_shared<job_evaluator>(logger_, config_, fileman);
 	return;
 }

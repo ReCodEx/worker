@@ -59,7 +59,7 @@ http_manager::http_manager(const std::string &remote_url, const std::string &use
 
 void http_manager::get_file(const std::string &src_name, const std::string &dst_path)
 {
-	fs::path dest_file_path = fs::path(dst_path) / src_name;
+	fs::path dest_file_path = fs::path(dst_path) / fs::path(src_name).filename();
 
 	CURL *curl;
 	CURLcode res;

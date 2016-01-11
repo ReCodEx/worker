@@ -19,7 +19,7 @@ void job_evaluator::download_submission()
 	fs::create_directories(archive_local_);
 
 	// download a file
-	fileman_->get_file(archive_url.filename().string(), archive_local_.string());
+	fileman_->get_file(archive_url.string(), archive_local_.string());
 	return;
 }
 
