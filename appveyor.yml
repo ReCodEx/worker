@@ -7,8 +7,6 @@ install:
 - cmd: >-
     echo Installing NuGet packages...
 
-    IF EXISTS "C:\deps" GOTO NUGETDONE
-
     mkdir C:\deps
 
     cd C:\deps
@@ -63,8 +61,6 @@ install:
     mv -f ./fix8.dependencies.zmq/build/native/include/ ./libzmq/
 
     mv -f ./fix8.dependencies.zmq/build/native/lib/Win32/v140/Release/Desktop/* ./libzmq/lib/
-
-    :NUGETDONE
 - ps: >-
     cd C:\deps
 
