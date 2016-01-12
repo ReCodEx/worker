@@ -17,21 +17,17 @@ using namespace std;
 class mock_cache_manager : public cache_manager {
 public:
 	mock_cache_manager() {}
-	MOCK_CONST_METHOD0(get_destination, std::string());
-	MOCK_METHOD1(put_file, void(const std::string &name));
+	MOCK_CONST_METHOD0(get_caching_dir, std::string());
+	MOCK_METHOD2(put_file, void(const std::string &name, const std::string &dst_path));
 	MOCK_METHOD2(get_file, void(const std::string &src_name, const std::string &dst_path));
-	MOCK_METHOD3(set_params, void(const std::string &destination, const std::string &username,
-								const std::string &password));
 };
 
 class mock_http_manager : public http_manager {
 public:
 	mock_http_manager() {}
-	MOCK_CONST_METHOD0(get_destination, std::string());
-	MOCK_METHOD1(put_file, void(const std::string &name));
+	MOCK_METHOD2(put_file, void(const std::string &name, const std::string &dst_path));
 	MOCK_METHOD2(get_file, void(const std::string &src_name, const std::string &dst_path));
-	MOCK_METHOD3(set_params, void(const std::string &destination, const std::string &username,
-								const std::string &password));
+	MOCK_METHOD2(set_params, void(const std::string &username, const std::string &password));
 };
 
 TEST(FileManager, GetFileFromCache)
@@ -54,8 +50,6 @@ TEST(FileManager, GetFileFromRemote)
 		InSequence s;
 		EXPECT_CALL((*cache), get_file("file.txt", "/tmp/"))
 				.WillOnce(Throw(fm_exception("")));
-		EXPECT_CALL((*cache), get_destination())
-				.WillOnce(Return("/tmp/recodex/"));
 		EXPECT_CALL((*remote), get_file("file.txt", "/tmp/recodex/"))
 				.Times(1);
 		EXPECT_CALL((*cache), get_file("file.txt", "/tmp/"))
@@ -84,8 +78,6 @@ TEST(FileManager, GetOperationFailed)
 
 	EXPECT_CALL((*cache), get_file("file.txt", "/tmp/"))
 			.WillOnce(Throw(fm_exception("")));
-	EXPECT_CALL((*cache), get_destination())
-			.WillOnce(Return("/tmp/recodex/"));
 	EXPECT_CALL((*remote), get_file("file.txt", "/tmp/recodex/"))
 			.WillOnce(Throw(fm_exception("")));
 
@@ -111,9 +103,7 @@ TEST(FileManager, SetGetParams)
 	auto remote = unique_ptr<mock_http_manager>(new mock_http_manager);
 
 	EXPECT_CALL((*remote), set_params("newURL", "user", "pass"));
-	EXPECT_CALL((*remote), get_destination()).Times(1);
 
 	file_manager m(move(cache), move(remote));
-	m.set_params("newURL", "user", "pass");
-	m.get_destination();
+	m.set_params("user", "pass");
 }

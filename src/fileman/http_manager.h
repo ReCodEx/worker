@@ -22,17 +22,16 @@ public:
 	http_manager(std::shared_ptr<spdlog::logger> logger = nullptr);
 	/**
 	 * Constructor with initialization.
-	 * @param remote_url URL address of remote server
 	 * @param username Username for HTTP Basic Authentication
 	 * @param password Password for HTTP Basic Authentication
 	 * @param logger Shared pointer to system logger (optional).
 	 */
-	http_manager(const std::string &remote_url, const std::string &username, const std::string &password,
+	http_manager(const std::string &username, const std::string &password,
 				 std::shared_ptr<spdlog::logger> logger = nullptr);
 	/**
 	 * Destructor.
 	 */
-    virtual ~http_manager() {}
+	virtual ~http_manager() {}
 	/**
 	 * Get and save file locally.
 	 * @param src_name Name of requested file (without path)
@@ -43,25 +42,18 @@ public:
 	 * Upload file to remote server with HTTP PUT method.
 	 * @param name Name with path to a file to upload.
 	 */
-	virtual void put_file(const std::string &name);
+	virtual void put_file(const std::string &src_name, const std::string &dst_path);
 	/**
 	 * Change parameters in runtime.
-	 * @param destination URL address of remote server
 	 * @param username Username for HTTP Basic Authentication
 	 * @param password Password for HTTP Basic Authentication
 	 */
-	virtual void set_params(const std::string &destination, const std::string &username, const std::string &password);
-	/**
-	 * Get actual remote URL.
-	 * @return destination
-	 */
-	virtual std::string get_destination() const;
+	virtual void set_params(const std::string &username, const std::string &password);
+
 private:
-	std::string remote_url_;
-    std::string username_;
-    std::string password_;
+	std::string username_;
+	std::string password_;
 	std::shared_ptr<spdlog::logger> logger_;
-	void validate_url();
 };
 
 #endif //CODEX_WORKER_HTTP_MANAGER_H

@@ -37,7 +37,7 @@ public:
 	/**
 	 * Destructor.
 	 */
-    virtual ~file_manager() {}
+	virtual ~file_manager() {}
 	/**
 	 * Get file. If requested file is in cache, it'll be copied to @a dst_path immediately,
 	 * otherwise it'll be downloaded to cache first.
@@ -49,19 +49,13 @@ public:
 	 * Upload file to remote server. It won't be saved to cache.
 	 * @param name Name of the file to upload.
 	 */
-	virtual void put_file(const std::string &name);
+	virtual void put_file(const std::string &src_name, const std::string &dst_path);
 	/**
 	 * Alter parameters at runtime.
-	 * @param destination URL of remote server
 	 * @param username Username for HTTP Basic Authentication
 	 * @param password Password for HTTP Basic Authentication
 	 */
-	virtual void set_params(const std::string &destination, const std::string &username,
-						  const std::string &password);
-	/**
-	 * Return actual URL of remote server.
-	 */
-	virtual std::string get_destination() const;
+	virtual void set_params(const std::string &username, const std::string &password);
 private:
 	cache_man_ptr cache_man_;
 	http_man_ptr http_man_;
