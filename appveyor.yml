@@ -7,6 +7,8 @@ install:
 - cmd: >-
     echo Installing NuGet packages...
 
+    IF EXISTS C:\deps GOTO NUGETDONE
+
     mkdir C:\deps
 
     cd C:\deps
@@ -61,13 +63,17 @@ install:
     mv -f ./fix8.dependencies.zmq/build/native/include/ ./libzmq/
 
     mv -f ./fix8.dependencies.zmq/build/native/lib/Win32/v140/Release/Desktop/* ./libzmq/lib/
+
+    :NUGETDONE
 - ps: >-
     cd C:\deps
 
     Start-FileDownload 'http://curl.haxx.se/ca/cacert.pem'
 
     mv cacert.pem curl-ca-bundle.crt
-cache: C:\deps
+cache:
+- C:\deps -> C:\projects\codex_worker\appveyor.yml
+- C:\projects\codex_worker\CMakeCache.txt -> C:\projects\codex_worker\CMakeLists.txt
 before_build:
 - cmd: >-
     cd c:\projects\codex_worker
