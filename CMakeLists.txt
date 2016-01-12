@@ -96,6 +96,8 @@ endif()
 if(UNIX)
     #-Wno-deprecated-declarations hides warning in yaml-cpp (using std::auto_ptr)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wno-deprecated-declarations")
+elseif(MSVC)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
 endif()
 
 # The worker executable
