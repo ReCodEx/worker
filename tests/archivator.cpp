@@ -65,8 +65,7 @@ TEST(Archivator, DecompressDotPathZip)
 
 TEST(Archivator, CompressZip)
 {
-	//EXPECT_NO_THROW(archivator::compress("../tests", (fs::temp_directory_path() / "archive.zip").string()));
-	archivator::compress("../tests", (fs::temp_directory_path() / "archive.zip").string());
+	EXPECT_NO_THROW(archivator::compress("../tests", (fs::temp_directory_path() / "archive.zip").string()));
 	EXPECT_TRUE(fs::is_regular_file(fs::temp_directory_path() / "archive.zip"));
 	EXPECT_TRUE(fs::file_size(fs::temp_directory_path() / "archive.zip") > 0);
 	fs::remove_all(fs::temp_directory_path() / "archive.zip");

@@ -67,10 +67,12 @@ void archivator::compress(const std::string &dir, const std::string &destination
 			// read data by small blocks to avoid memory overfill on possibly large files
 			char buff[4096];
 
-			while (!ifs.eof()) {
+			while (true) {
 				ifs.read(buff, sizeof(buff));
 
-				if (ifs.gcount() <= 0) {
+				if (ifs.eof()) {
+					break;
+				} else if (ifs.gcount() <= 0) {
 					throw archive_exception("Error reading input file.");
 				}
 
@@ -144,13 +146,15 @@ void archivator::decompress(const std::string &filename, const std::string &dest
 		}
 
 		r = archive_write_header(ext, entry);
+		if (r < ARCHIVE_OK) {
+			throw archive_exception(archive_error_string(ext));
+		}
 
 		if (archive_entry_size(entry) > 0) {
 			copy_data(a, ext);
 		}
 
 		r = archive_write_finish_entry(ext);
-
 		if (r < ARCHIVE_OK) {
 			throw archive_exception(archive_error_string(ext));
 		}
