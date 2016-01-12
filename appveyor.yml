@@ -7,7 +7,7 @@ install:
 - cmd: >-
     echo Installing NuGet packages...
 
-    IF EXISTS C:\deps GOTO NUGETDONE
+    IF EXISTS "C:\deps" GOTO NUGETDONE
 
     mkdir C:\deps
 
