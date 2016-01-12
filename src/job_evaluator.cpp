@@ -7,14 +7,20 @@ job_evaluator::job_evaluator(std::shared_ptr<spdlog::logger> logger,
 	: archive_url_(), archive_local_(), job_(nullptr),
 	  fileman_(fileman), submission_fileman_(submission_fileman),
 	  logger_(logger), config_(config)
-{}
+{
+	if (logger == nullptr) {
+		//Create logger manually to avoid global registration of logger
+		auto sink = std::make_shared<spdlog::sinks::null_sink_st>();
+		logger_ = std::make_shared<spdlog::logger>("job_evaluator_nolog", sink);
+	}
+}
 
 job_evaluator::~job_evaluator()
 {}
 
 void job_evaluator::download_submission()
 {
-	if (logger_ != nullptr) { logger_->info() << "Trying to download submission archive..."; }
+	logger_->info() << "Trying to download submission archive...";
 
 	// initialize all paths
 	fs::path archive_url = archive_url_;
@@ -27,13 +33,13 @@ void job_evaluator::download_submission()
 	submission_fileman_->get_file(archive_url.string(), archive_local_.string());
 	archive_local_ /= archive_url.filename();
 
-	if (logger_ != nullptr) { logger_->info() << "Submission archive donwloaded succesfully."; }
+	logger_->info() << "Submission archive donwloaded succesfully.";
 	return;
 }
 
 void job_evaluator::prepare_submission()
 {
-	if (logger_ != nullptr) { logger_->info() << "Preparing submission for usage..."; }
+	logger_->info() << "Preparing submission for usage...";
 
 	// initialize all paths
 	submission_path_ = fs::temp_directory_path() / "isoeval" / "tmp" / "submission" /
@@ -57,13 +63,13 @@ void job_evaluator::prepare_submission()
 		throw job_exception("Error copying source files to source code path: " + std::string(e.what()));
 	}
 
-	if (logger_ != nullptr) { logger_->info() << "Submission prepared."; }
+	logger_->info() << "Submission prepared.";
 	return;
 }
 
 void job_evaluator::build_job()
 {
-	if (logger_ != nullptr) { logger_->info() << "Building job..."; }
+	logger_->info() << "Building job...";
 	using namespace boost::filesystem;
 	path config_path(source_path_);
 	config_path /= "job-config.yml";
@@ -71,27 +77,27 @@ void job_evaluator::build_job()
 		throw job_exception("Job configuration not found");
 	}
 
-	if (logger_ != nullptr) { logger_->info() << "Loading job configuration from yaml..."; }
+	logger_->info() << "Loading job configuration from yaml...";
 	YAML::Node conf;
 	try {
 		conf = YAML::LoadFile(config_path.string());
 	} catch (YAML::Exception &e) {
 		throw job_exception("Job configuration not loaded correctly: " + std::string(e.what()));
 	}
-	if (logger_ != nullptr) { logger_->info() << "Yaml job configuration loaded properly."; }
+	logger_->info() << "Yaml job configuration loaded properly.";
 
 	job_ = std::make_shared<job>(conf, source_path_, config_, fileman_);
 
-	if (logger_ != nullptr) { logger_->info() << "Job building done."; }
+	logger_->info() << "Job building done.";
 	return;
 }
 
 void job_evaluator::run_job()
 {
 	try {
-		if (logger_ != nullptr) { logger_->info() << "Ready for evaluation..."; }
+		logger_->info() << "Ready for evaluation...";
 		job_->run();
-		if (logger_ != nullptr) { logger_->info() << "Job evaluated."; }
+		logger_->info() << "Job evaluated.";
 	} catch (std::exception) {
 		result_ = 1;
 	} catch (...) {
@@ -104,42 +110,42 @@ void job_evaluator::cleanup_submission()
 {
 	// if job did not delete working dir, do it
 	try {
-		if (logger_ != nullptr) { logger_->info() << "Cleaning up source code directory..."; }
+		logger_->info() << "Cleaning up source code directory...";
 		if (fs::exists(source_path_)) {
 			fs::remove_all(source_path_);
 		}
 	} catch (fs::filesystem_error &e) {
-		if (logger_ != nullptr) { logger_->warn() << "Source code directory not cleaned properly: " << e.what(); }
+		logger_->warn() << "Source code directory not cleaned properly: " << e.what();
 	}
 
 	// delete submission decompressed directory
 	try {
-		if (logger_ != nullptr) { logger_->info() << "Cleaning up decompressed submission directory..."; }
+		logger_->info() << "Cleaning up decompressed submission directory...";
 		if (fs::exists(submission_path_)) {
 			fs::remove_all(submission_path_);
 		}
 	} catch (fs::filesystem_error &e) {
-		if (logger_ != nullptr) { logger_->warn() << "Submission directory not cleaned properly: " << e.what(); }
+		logger_->warn() << "Submission directory not cleaned properly: " << e.what();
 	}
 
 	// delete downloaded archive directory
 	try {
-		if (logger_ != nullptr) { logger_->info() << "Cleaning up directory containing downloaded archive..."; }
+		logger_->info() << "Cleaning up directory containing downloaded archive...";
 		if (fs::exists(archive_local_)) {
 			fs::remove_all(archive_local_);
 		}
 	} catch (fs::filesystem_error &e) {
-		if (logger_ != nullptr) { logger_->warn() << "Archive directory not cleaned properly: " << e.what(); }
+		logger_->warn() << "Archive directory not cleaned properly: " << e.what();
 	}
 
 	// and finally delete created results directory
 	try {
-		if (logger_ != nullptr) { logger_->info() << "Cleaning up directory containing created results..."; }
+		logger_->info() << "Cleaning up directory containing created results...";
 		if (fs::exists(results_path_)) {
 			fs::remove_all(results_path_);
 		}
 	} catch (fs::filesystem_error &e) {
-		if (logger_ != nullptr) { logger_->warn() << "Results directory not cleaned properly: " << e.what(); }
+		logger_->warn() << "Results directory not cleaned properly: " << e.what();
 	}
 
 	return;
@@ -161,7 +167,7 @@ void job_evaluator::cleanup_evaluator()
 		job_ = nullptr;
 		result_ = 0;
 	} catch (std::exception &e) {
-		if (logger_ != nullptr) { logger_->warn() << "Error in deinicialization of evaluator: " << e.what(); }
+		logger_->warn() << "Error in deinicialization of evaluator: " << e.what();
 	}
 
 	return;
@@ -169,11 +175,11 @@ void job_evaluator::cleanup_evaluator()
 
 void job_evaluator::push_result()
 {
-	if (logger_ != nullptr) { logger_->info() << "Trying to upload results of job..."; }
+	logger_->info() << "Trying to upload results of job...";
 
 	// just checkout for errors
 	if (job_ == nullptr) {
-		if (logger_ != nullptr) { logger_->warn() << "Pointer to job is null."; }
+		logger_->warn() << "Pointer to job is null.";
 		return;
 	}
 
@@ -188,7 +194,7 @@ void job_evaluator::push_result()
 	fs::path result_path = results_path_ / "result.yml";
 	fs::path archive_path = results_path_ / "result.zip";
 
-	if (logger_ != nullptr) { logger_->info() << "Building yaml results file..."; }
+	logger_->info() << "Building yaml results file...";
 	// build yaml tree
 	YAML::Node res;
 	res["job-id"] = job_id_;
@@ -214,30 +220,30 @@ void job_evaluator::push_result()
 	std::ofstream out(result_path.string());
 	out << res;
 	out.close();
-	if (logger_ != nullptr) { logger_->info() << "Yaml result file written succesfully."; }
+	logger_->info() << "Yaml result file written succesfully.";
 
 	// compress given result.yml file
-	if (logger_ != nullptr) { logger_->info() << "Compression of results file..."; }
+	logger_->info() << "Compression of results file...";
 	try {
 		archivator::compress(results_path_.string(), archive_path.string());
 	} catch (archive_exception &e) {
-		if (logger_ != nullptr) { logger_->warn() << "Results file not archived properly."; }
+		logger_->warn() << "Results file not archived properly.";
 		return;
 	}
-	if (logger_ != nullptr) { logger_->info() << "Compression done."; }
+	logger_->info() << "Compression done.";
 
 	// send archived result to file server
 	submission_fileman_->set_params(result_url_, "", ""); // TODO resolve file manager problems
 	submission_fileman_->put_file(archive_path.string());
 
-	if (logger_ != nullptr) { logger_->info() << "Job results uploaded succesfully."; }
+	logger_->info() << "Job results uploaded succesfully.";
 	return;
 }
 
 eval_response job_evaluator::evaluate (eval_request request)
 {
-	if (logger_ != nullptr) { logger_->info() << "Request for job evaluation arrived to worker."; }
-	if (logger_ != nullptr) { logger_->info() << "Job ID of incoming job is: " + request.job_id; }
+	logger_->info() << "Request for job evaluation arrived to worker.";
+	logger_->info() << "Job ID of incoming job is: " + request.job_id;
 
 	// set all needed variables for evaluation
 	job_id_ = request.job_id;
@@ -254,10 +260,10 @@ eval_response job_evaluator::evaluate (eval_request request)
 		run_job();
 		push_result();
 	} catch (std::exception &e) {
-		if (logger_ != nullptr) { logger_->warn() << "Job evaluator encountered error: " << e.what(); }
+		logger_->warn() << "Job evaluator encountered error: " << e.what();
 	}
 	cleanup_evaluator();
 
 	return eval_response(request.job_id, "OK");
-	if (logger_ != nullptr) { logger_->info() << "Job (" + request.job_id + ") ended."; }
+	logger_->info() << "Job (" + request.job_id + ") ended.";
 }
