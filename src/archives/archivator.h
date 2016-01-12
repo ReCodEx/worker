@@ -37,8 +37,10 @@ public:
 	static void compress(const std::string &dir, const std::string &destination);
 	/**
 	 * This method will decompress archive @a filename into directory @a destination.
-	 * Supported formats are mainly zip, tar, tar.gz, tar.bz2, 7zip. For more info
-	 * see https://github.com/libarchive/libarchive/wiki.
+	 * Supported formats are mainly zip, tar, tar.gz, tar.bz2, 7zip. Archive could contain
+	 * only regular files or directories (ie. no symlinks, block and character devices,
+	 * sockets or pipes allowed).
+	 * For more info about supported formats see https://github.com/libarchive/libarchive/wiki.
 	 * @note In source archive, paths containing ".." are not allowed!
 	 * @param filename Archive to extract.
 	 * @param destination Directory, where will be extracted files stored.
