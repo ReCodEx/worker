@@ -1,6 +1,6 @@
 #include "job.h"
 
-job::job(const YAML::Node &job_config, boost::filesystem::path source_path,
+job::job(const YAML::Node &job_config, fs::path source_path,
 		 std::shared_ptr<worker_config> default_config,
 		 std::shared_ptr<file_manager_base> fileman)
 	: source_path_(source_path), fileman_(fileman),
@@ -38,7 +38,7 @@ void job::run()
 	for (auto &i : task_queue_) {
 		try {
 			i->run();
-		} catch (...) {
+		} catch (std::exception) {
 			if (i->get_fatal_failure()) {
 				break;
 			}
@@ -53,7 +53,9 @@ std::map<std::string, std::shared_ptr<task_results>> job::get_results()
 	std::map<std::string, std::shared_ptr<task_results>> res;
 
 	for (auto &i : task_queue_) {
-		res.emplace(i->get_task_id(), i->get_result());
+		if (i->get_result() != nullptr) {
+			res.emplace(i->get_task_id(), i->get_result());
+		}
 	}
 
 	return res;
@@ -299,6 +301,8 @@ void job::build_job(const YAML::Node &conf)
 					task = std::make_shared<extract_task>(id++, task_id, priority, fatal, cmd, args, log, task_depend);
 				} else if (cmd == "fetch") {
 					task = std::make_shared<fetch_task>(id++, task_id, priority, fatal, cmd, args, log, task_depend, fileman_);
+				} else {
+					throw job_exception("Unknown internal task: " + cmd);
 				}
 
 				unconnected_tasks.insert(std::make_pair(task_id, task));
@@ -327,7 +331,7 @@ void job::build_job(const YAML::Node &conf)
 					ptr->add_children(elem.second);
 					elem.second->add_parent(ptr);
 				} catch (std::out_of_range) {
-					throw job_exception("Non existing task-id in dependency list");
+					throw job_exception("Non existing task-id (" + depend.at(i) + ") in dependency list");
 				}
 			}
 		}

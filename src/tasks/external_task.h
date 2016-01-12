@@ -27,12 +27,13 @@ public:
 	 * @param arguments arguments for binary
 	 * @param sandbox name of sandbox which will be used
 	 * @param limits limits for sandbox
+	 * @throws task_exception if @a sandbox_id is unknown
 	 */
 	external_task(std::string worker_id, size_t id, const std::string &task_id, size_t priority,
 				  bool fatal, const std::string &log,
 				  const std::vector<std::string> &dependencies,
 				  const std::string &binary, const std::vector<std::string> &arguments,
-				  const std::string &sandbox, sandbox_limits limits);
+				  const std::string &sandbox_id, sandbox_limits limits);
 	/**
 	 * Empty right now.
 	 */
@@ -40,6 +41,7 @@ public:
 
 	/**
 	 * Runs given program and parameters in constructed sandbox.
+	 * @throws sandbox_exception if error occured in sandbox
 	 */
 	virtual void run();
 

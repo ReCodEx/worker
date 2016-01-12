@@ -4,9 +4,9 @@ external_task::external_task(std::string worker_id, size_t id, const std::string
 							 bool fatal, const std::string &log,
 							 const std::vector<std::string> &dependencies,
 							 const std::string &binary, const std::vector<std::string> &arguments,
-							 const std::string &sandbox, sandbox_limits limits)
+							 const std::string &sandbox_id, sandbox_limits limits)
 	: task_base(id, task_id, priority, fatal, dependencies, binary, arguments, log),
-	  cmd_(binary), sandbox_id_(sandbox), limits_(limits)
+	  cmd_(binary), sandbox_id_(sandbox_id), limits_(limits)
 {
 	sandbox_check();
 }
@@ -50,8 +50,8 @@ void external_task::run()
 
 	// TODO: only temporary solution, should be removed
 	if (sandbox_ == nullptr) { return; }
-
 	results_ = std::make_shared<task_results>(sandbox_->run(cmd_, arguments_));
+
 	sandbox_fini();
 
 	return;

@@ -27,26 +27,42 @@ namespace fs = boost::filesystem;
 
 
 /**
- *
+ * Job is unit which is received from broker and should be evaluated.
+ * Job is built from configuration in which all information should be provided.
+ * Job building results in task tree and task queue in which task should be evaluated.
  */
 class job {
 public:
 	job() = delete;
 
+	/**
+	 * Only way to construct a job. All variables are needed to proper function.
+	 * @param job_config configuration of newly created job
+	 * @param source_path path to source codes of submission
+	 * @param default_config default configuration of worker where defaults are loaded
+	 * @param fileman file manager which is provided to tasks
+	 */
 	job(const YAML::Node &job_config,
 		fs::path source_path,
 		std::shared_ptr<worker_config> default_config,
 		std::shared_ptr<file_manager_base> fileman);
 	~job();
 
+	/**
+	 * Runs all task which are sorted in task queue.
+	 */
 	void run();
 
+	/**
+	 * Get results from all tasks and return them.
+	 * @return associative array which indexes are task ids
+	 */
 	std::map<std::string, std::shared_ptr<task_results>> get_results();
 
 private:
 
 	/**
-	 * From given @a conf construct a evaluation tree,
+	 * From given @a conf construct an evaluation tree,
 	 * which includes parsing of configuration and constructing all tasks
 	 * @param conf input configuration which will be loaded
 	 */
@@ -81,11 +97,28 @@ private:
 	std::shared_ptr<worker_config> default_config_;
 };
 
+/**
+ * Job exception class.
+ */
 class job_exception : public std::exception {
 public:
+	/**
+	 * Generic job exception with no specification.
+	 */
 	job_exception() : what_("Generic job exception") {}
+	/**
+	 * Exception with some brief description.
+	 * @param what textual description of a problem
+	 */
 	job_exception(const std::string &what) : what_(what) {}
+	/**
+	 * Virtual destructor.
+	 */
 	virtual ~job_exception() {}
+	/**
+	 * Return description of this exception.
+	 * @return C string
+	 */
 	virtual const char* what() const noexcept
 	{
 		return what_.c_str();

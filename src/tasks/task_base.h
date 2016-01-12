@@ -121,11 +121,29 @@ protected:
 	std::vector<std::shared_ptr<task_base>> children_;
 };
 
+
+/**
+ * Task exception class.
+ */
 class task_exception : public std::exception {
 public:
+	/**
+	 * Generic task exception with no specification.
+	 */
 	task_exception() : what_("Generic task exception") {}
+	/**
+	 * Exception with some brief description.
+	 * @param what textual description of a problem
+	 */
 	task_exception(const std::string &what) : what_(what) {}
+	/**
+	 * Virtual destructor.
+	 */
 	virtual ~task_exception() {}
+	/**
+	 * Return description of this exception.
+	 * @return C string
+	 */
 	virtual const char* what() const noexcept
 	{
 		return what_.c_str();

@@ -4,8 +4,7 @@ job_evaluator::job_evaluator(std::shared_ptr<spdlog::logger> logger,
 							 std::shared_ptr<worker_config> config,
 							 std::shared_ptr<file_manager_base> fileman,
 							 std::shared_ptr<file_manager_base> submission_fileman)
-	: archive_url_(), archive_local_(), job_(nullptr),
-	  fileman_(fileman), submission_fileman_(submission_fileman),
+	: job_(nullptr), fileman_(fileman), submission_fileman_(submission_fileman),
 	  logger_(logger), config_(config)
 {
 	if (logger == nullptr) {
@@ -24,16 +23,16 @@ void job_evaluator::download_submission()
 
 	// initialize all paths
 	fs::path archive_url = archive_url_;
-	archive_local_ = fs::temp_directory_path() / "isoeval" / "tmp" / "download" /
+	archive_path_ = fs::temp_directory_path() / "isoeval" / "downloads" /
 			config_->get_worker_id() / job_id_;
-	fs::create_directories(archive_local_);
+	fs::create_directories(archive_path_);
 
 	// download a file
 	submission_fileman_->set_params("", "", ""); // TODO resolve filemanager problems
-	submission_fileman_->get_file(archive_url.string(), archive_local_.string());
-	archive_local_ /= archive_url.filename();
+	submission_fileman_->get_file(archive_url.string(), archive_path_.string());
+	archive_name_ = archive_url.filename();
 
-	logger_->info() << "Submission archive donwloaded succesfully.";
+	logger_->info() << "Submission archive downloaded succesfully.";
 	return;
 }
 
@@ -42,23 +41,23 @@ void job_evaluator::prepare_submission()
 	logger_->info() << "Preparing submission for usage...";
 
 	// initialize all paths
-	submission_path_ = fs::temp_directory_path() / "isoeval" / "tmp" / "submission" /
+	submission_path_ = fs::temp_directory_path() / "isoeval" / "submissions" /
 			config_->get_worker_id() / job_id_;
-	source_path_ = fs::temp_directory_path() / "isoeval" /
+	source_path_ = fs::temp_directory_path() / "isoeval" / "eval" /
 			config_->get_worker_id() / job_id_;
 
 	// decompress downloaded archive
 	try {
 		fs::create_directories(submission_path_);
-		archivator::decompress(archive_local_.string(), submission_path_.string());
-		submission_path_ /= archive_local_.stem().stem(); // twice for .tar.bz2 extension
-	} catch (archive_exception) {
-		throw job_exception("Downloaded submission cannot be decompressed.");
+		archivator::decompress((archive_path_ / archive_name_).string(), submission_path_.string());
+	} catch (archive_exception &e) {
+		throw job_exception("Downloaded submission cannot be decompressed: " + std::string(e.what()));
 	}
 
 	// copy source codes to source code folder
 	try {
-		helpers::copy_directory(submission_path_, source_path_);
+		fs::path tmp_path = submission_path_ / archive_name_.stem().stem();
+		helpers::copy_directory(tmp_path, source_path_);
 	} catch (helpers::filesystem_exception &e) {
 		throw job_exception("Error copying source files to source code path: " + std::string(e.what()));
 	}
@@ -108,7 +107,7 @@ void job_evaluator::run_job()
 
 void job_evaluator::cleanup_submission()
 {
-	// if job did not delete working dir, do it
+	// cleanup source code directory after job evaluation
 	try {
 		logger_->info() << "Cleaning up source code directory...";
 		if (fs::exists(source_path_)) {
@@ -131,8 +130,8 @@ void job_evaluator::cleanup_submission()
 	// delete downloaded archive directory
 	try {
 		logger_->info() << "Cleaning up directory containing downloaded archive...";
-		if (fs::exists(archive_local_)) {
-			fs::remove_all(archive_local_);
+		if (fs::exists(archive_path_)) {
+			fs::remove_all(archive_path_);
 		}
 	} catch (fs::filesystem_error &e) {
 		logger_->warn() << "Archive directory not cleaned properly: " << e.what();
@@ -157,7 +156,8 @@ void job_evaluator::cleanup_evaluator()
 
 	try {
 		archive_url_ = "";
-		archive_local_ = "";
+		archive_name_ = "";
+		archive_path_ = "";
 		submission_path_ = "";
 		source_path_ = "";
 		results_path_ = "";
@@ -187,7 +187,7 @@ void job_evaluator::push_result()
 	auto results = job_->get_results();
 
 	// create result directory for temporary files
-	results_path_ = fs::temp_directory_path() / "isoeval" / "tmp" / "results" /
+	results_path_ = fs::temp_directory_path() / "isoeval" / "results" /
 			config_->get_worker_id() / job_id_;
 	fs::create_directories(results_path_);
 	// define path to result yaml file and archived result
@@ -226,8 +226,8 @@ void job_evaluator::push_result()
 	logger_->info() << "Compression of results file...";
 	try {
 		archivator::compress(results_path_.string(), archive_path.string());
-	} catch (archive_exception) {
-		logger_->warn() << "Results file not archived properly.";
+	} catch (archive_exception &e) {
+		logger_->warn() << "Results file not archived properly: " << e.what();
 		return;
 	}
 	logger_->info() << "Compression done.";

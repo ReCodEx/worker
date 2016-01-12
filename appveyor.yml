@@ -1,6 +1,7 @@
 version: 1.0.{build}
 configuration: Release
 platform: x86
+clone_depth: 5
 clone_folder: c:\projects\codex_worker
 install:
 - cmd: >-
@@ -66,6 +67,7 @@ install:
     Start-FileDownload 'http://curl.haxx.se/ca/cacert.pem'
 
     mv cacert.pem curl-ca-bundle.crt
+cache: C:\deps
 before_build:
 - cmd: >-
     cd c:\projects\codex_worker
@@ -81,6 +83,7 @@ before_build:
     cmake -G "Visual Studio 14 2015" -DBOOST_ROOT=C:\deps\boost -DCURL_LIBRARY=C:\deps\curl\lib\libcurl.lib -DCURL_INCLUDE_DIR=C:\deps\curl\include
 build:
   project: ./ALL_BUILD.vcxproj
+  parallel: true
   verbosity: quiet
 test_script:
 - cmd: >-

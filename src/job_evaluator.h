@@ -98,8 +98,10 @@ private:
 	// PRIVATE DATA MEMBERS
 	/** URL of remote archive in which is job configuration and source codes */
 	std::string archive_url_;
+	/** Archive filename is just a name and not a path */
+	fs::path archive_name_;
 	/** Path in which downloaded archive is stored */
-	fs::path archive_local_;
+	fs::path archive_path_;
 	/** Path in which downloaded decompressed submission is stored */
 	fs::path submission_path_;
 	/** Path only with source codes and job configuration, no subfolders */

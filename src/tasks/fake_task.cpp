@@ -12,7 +12,7 @@ fake_task::~fake_task()
 
 void fake_task::run()
 {
-	// Nothing to do here, if evaluation will be recursive,
+	// Nothing to do here... if evaluation will be recursive,
 	// then there will be calling of run() methods on children.
 	return;
 }
