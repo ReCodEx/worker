@@ -52,7 +52,7 @@ void job_evaluator::prepare_submission()
 		fs::create_directories(submission_path_);
 		archivator::decompress(archive_local_.string(), submission_path_.string());
 		submission_path_ /= archive_local_.stem().stem(); // twice for .tar.bz2 extension
-	} catch (archive_exception &e) {
+	} catch (archive_exception) {
 		throw job_exception("Downloaded submission cannot be decompressed.");
 	}
 
@@ -226,7 +226,7 @@ void job_evaluator::push_result()
 	logger_->info() << "Compression of results file...";
 	try {
 		archivator::compress(results_path_.string(), archive_path.string());
-	} catch (archive_exception &e) {
+	} catch (archive_exception) {
 		logger_->warn() << "Results file not archived properly.";
 		return;
 	}
