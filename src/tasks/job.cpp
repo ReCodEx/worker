@@ -122,7 +122,6 @@ void job::build_job(const YAML::Node &conf)
 			bool fatal;
 			std::string cmd;
 			std::vector<std::string> args;
-			std::string log;
 			std::vector<std::string> task_depend;
 
 			if (ctask["task-id"] && ctask["task-id"].IsScalar()) {
@@ -145,9 +144,6 @@ void job::build_job(const YAML::Node &conf)
 					} // can be omitted... no throw
 				} else { throw job_exception("Command in task is not a map"); }
 			} else { throw job_exception("Configuration of one task has missing cmd"); }
-			if (ctask["log"] && ctask["log"].IsScalar()) {
-				log = ctask["log"].as<std::string>();
-			} // can be omitted... no throw
 
 			// load dependencies
 			if (ctask["dependencies"] && ctask["dependencies"].IsSequence()) {
@@ -272,7 +268,7 @@ void job::build_job(const YAML::Node &conf)
 				limits.std_error = std_error;
 				std::shared_ptr<task_base> task =
 						std::make_shared<external_task>(default_config_->get_worker_id(), id++, task_id,
-														priority, fatal, log, task_depend,
+														priority, fatal, task_depend,
 														cmd, args, sandbox_name, limits);
 				unconnected_tasks.insert(std::make_pair(task_id, task));
 				eff_indegree.insert(std::make_pair(task_id, 0));
@@ -286,19 +282,19 @@ void job::build_job(const YAML::Node &conf)
 				std::shared_ptr<task_base> task;
 
 				if (cmd == "cp") {
-					task = std::make_shared<cp_task>(id++, task_id, priority, fatal, cmd, args, log, task_depend);
+					task = std::make_shared<cp_task>(id++, task_id, priority, fatal, cmd, args, task_depend);
 				} else if (cmd == "mkdir") {
-					task = std::make_shared<mkdir_task>(id++, task_id, priority, fatal, cmd, args, log, task_depend);
+					task = std::make_shared<mkdir_task>(id++, task_id, priority, fatal, cmd, args, task_depend);
 				} else if (cmd == "rename") {
-					task = std::make_shared<rename_task>(id++, task_id, priority, fatal, cmd, args, log, task_depend);
+					task = std::make_shared<rename_task>(id++, task_id, priority, fatal, cmd, args, task_depend);
 				} else if (cmd == "rm") {
-					task = std::make_shared<rm_task>(id++, task_id, priority, fatal, cmd, args, log, task_depend);
+					task = std::make_shared<rm_task>(id++, task_id, priority, fatal, cmd, args, task_depend);
 				} else if (cmd == "archivate") {
-					task = std::make_shared<archivate_task>(id++, task_id, priority, fatal, cmd, args, log, task_depend);
+					task = std::make_shared<archivate_task>(id++, task_id, priority, fatal, cmd, args, task_depend);
 				} else if (cmd == "extract") {
-					task = std::make_shared<extract_task>(id++, task_id, priority, fatal, cmd, args, log, task_depend);
+					task = std::make_shared<extract_task>(id++, task_id, priority, fatal, cmd, args, task_depend);
 				} else if (cmd == "fetch") {
-					task = std::make_shared<fetch_task>(id++, task_id, priority, fatal, cmd, args, log, task_depend, fileman_);
+					task = std::make_shared<fetch_task>(id++, task_id, priority, fatal, cmd, args, task_depend, fileman_);
 				} else {
 					throw job_exception("Unknown internal task: " + cmd);
 				}

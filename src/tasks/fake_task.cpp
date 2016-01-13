@@ -2,9 +2,8 @@
 
 fake_task::fake_task(size_t id, std::string task_id, size_t priority, bool fatal,
 					 std::vector<std::string> deps,
-					 std::string cmd, std::vector<std::string> args,
-					 std::string log)
-	: task_base(id, task_id, priority, fatal, deps, cmd, args, log)
+					 std::string cmd, std::vector<std::string> args)
+	: task_base(id, task_id, priority, fatal, deps, cmd, args)
 {}
 
 fake_task::~fake_task()

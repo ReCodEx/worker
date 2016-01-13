@@ -21,7 +21,6 @@ public:
 	 * @param task_id unique identifier of task
 	 * @param priority priority of task
 	 * @param fatal if true than job will be killed immediatelly in case of error
-	 * @param log name of log
 	 * @param dependencies dependencies of this task
 	 * @param binary program which will be launched
 	 * @param arguments arguments for binary
@@ -30,8 +29,7 @@ public:
 	 * @throws task_exception if @a sandbox_id is unknown
 	 */
 	external_task(std::string worker_id, size_t id, const std::string &task_id, size_t priority,
-				  bool fatal, const std::string &log,
-				  const std::vector<std::string> &dependencies,
+				  bool fatal, const std::vector<std::string> &dependencies,
 				  const std::string &binary, const std::vector<std::string> &arguments,
 				  const std::string &sandbox_id, sandbox_limits limits);
 	/**

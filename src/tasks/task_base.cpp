@@ -2,10 +2,9 @@
 
 task_base::task_base(size_t id, std::string task_id, size_t priority, bool fatal,
 					 const std::vector<std::string> &dependencies,
-					 const std::string &cmd, const std::vector<std::string> &arguments,
-					 const std::string &log)
+					 const std::string &cmd, const std::vector<std::string> &arguments)
 	: id_(id), task_id_(task_id), priority_(priority), fatal_failure_(fatal),
-	  cmd_(cmd), log_(log), dependencies_(dependencies), arguments_(arguments)
+	  cmd_(cmd), dependencies_(dependencies), arguments_(arguments)
 {}
 
 task_base::~task_base()
@@ -56,11 +55,6 @@ const std::string &task_base::get_cmd()
 const std::vector<std::string> &task_base::get_args()
 {
 	return arguments_;
-}
-
-const std::string &task_base::get_log()
-{
-	return log_;
 }
 
 const std::vector<std::string> &task_base::get_dependencies()
