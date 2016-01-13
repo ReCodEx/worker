@@ -70,5 +70,5 @@ const std::vector<std::string> &task_base::get_dependencies()
 
 std::shared_ptr<task_results> task_base::get_result()
 {
-	return nullptr;
+	return std::make_shared<task_results>();
 }

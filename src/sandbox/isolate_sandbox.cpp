@@ -59,7 +59,7 @@ isolate_sandbox::~isolate_sandbox()
 	}
 }
 
-task_results isolate_sandbox::run(const std::string &binary, const std::vector<std::string> &arguments)
+sandbox_results isolate_sandbox::run(const std::string &binary, const std::vector<std::string> &arguments)
 {
 	isolate_run(binary, arguments);
 	return process_meta_file();
@@ -393,19 +393,9 @@ char **isolate_sandbox::isolate_run_args(const std::string &binary, const std::v
 	return c_args;
 }
 
-task_results isolate_sandbox::process_meta_file()
+sandbox_results isolate_sandbox::process_meta_file()
 {
-	task_results results;
-
-	//Set reasonable defaults
-	results.exitcode = 0;
-	results.exitsig = 0; //no signal
-	results.killed = false;
-	results.memory = 0;
-	results.message = "";
-	results.status = isolate_status::NOTSET;
-	results.time = 0;
-	results.wall_time = 0;
+	sandbox_results results;
 
 	std::ifstream meta_stream;
 	meta_stream.open(meta_file_);

@@ -29,7 +29,7 @@ public:
 	 * @param arguments Commandline arguments to the binary.
 	 * @return Sandbox results.
 	 */
-	virtual task_results run(const std::string &binary, const std::vector<std::string> &arguments) = 0;
+	virtual sandbox_results run(const std::string &binary, const std::vector<std::string> &arguments) = 0;
 protected:
 	std::string sandboxed_dir_;
 };

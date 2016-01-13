@@ -199,21 +199,48 @@ void job_evaluator::push_result()
 	YAML::Node res;
 	res["job-id"] = job_id_;
 	for (auto &i : results) {
-		if (i.second != nullptr) {
-			YAML::Node node;
-			node["task-id"] = i.first;
-			node["exitcode"] = i.second->exitcode;
-			node["time"] = i.second->time;
-			node["wall-time"] = i.second->wall_time;
-			node["memory"] = i.second->memory;
-			node["max-rss"] = i.second->max_rss;
-			//node["status"] = i.second->status; // TODO: omitted for now
-			node["exitsig"] = i.second->exitsig;
-			node["killed"] = i.second->killed;
-			node["message"] = i.second->message;
-
-			res["results"].push_back(node);
+		YAML::Node node;
+		node["task-id"] = i.first;
+		node["status"] = i.second->failed ? "FAILED" : "OK";
+		if (!i.second->error_message.empty()) {
+			node["error_message"] = i.second->error_message;
 		}
+
+		auto &sandbox = i.second->sandbox_status;
+		if (sandbox != nullptr) {
+			YAML::Node subnode;
+			subnode["exitcode"] = sandbox->exitcode;
+			subnode["time"] = sandbox->time;
+			subnode["wall-time"] = sandbox->wall_time;
+			subnode["memory"] = sandbox->memory;
+			subnode["max-rss"] = sandbox->max_rss;
+
+			switch (sandbox->status) {
+			case isolate_status::OK:
+				subnode["status"] = "OK";
+				break;
+			case isolate_status::RE:
+				subnode["status"] = "RE";
+				break;
+			case isolate_status::SG:
+				subnode["status"] = "SG";
+				break;
+			case isolate_status::TO:
+				subnode["status"] = "TO";
+				break;
+			case isolate_status::XX:
+				subnode["status"] = "XX";
+				break;
+			}
+
+			subnode["exitsig"] = sandbox->exitsig;
+			subnode["killed"] = sandbox->killed;
+			subnode["message"] = sandbox->message;
+
+			node["sandbox_results"] = subnode;
+		}
+
+		res["results"].push_back(node);
 	}
 
 	// open output stream and write constructed yaml
