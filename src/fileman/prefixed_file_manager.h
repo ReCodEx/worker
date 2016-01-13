@@ -4,12 +4,12 @@
 #include <memory>
 #include "file_manager_base.h"
 
-class prefixed_file_manager : file_manager_base {
+class prefixed_file_manager : public file_manager_base {
 private:
 	const std::string prefix_;
 	std::shared_ptr<file_manager_base> fm_;
 public:
-	prefixed_file_manager(std::shared_ptr<file_manager_base> fm_, const std::string &prefix);
+	prefixed_file_manager(std::shared_ptr<file_manager_base> fm, const std::string &prefix);
 	virtual void get_file(const std::string &src_name, const std::string &dst_path);
 	virtual void put_file(const std::string &src_name, const std::string &dst_path);
 };
