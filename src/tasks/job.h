@@ -42,8 +42,7 @@ public:
 	 * @param default_config default configuration of worker where defaults are loaded
 	 * @param fileman file manager which is provided to tasks
 	 */
-	job(const YAML::Node &job_config,
-		fs::path source_path,
+	job(const YAML::Node &job_config, fs::path source_path,
 		std::shared_ptr<worker_config> default_config,
 		std::shared_ptr<file_manager_base> fileman);
 	~job();
@@ -96,6 +95,7 @@ private:
 	std::vector<std::shared_ptr<task_base>> task_queue_;
 	std::shared_ptr<worker_config> default_config_;
 };
+
 
 /**
  * Job exception class.

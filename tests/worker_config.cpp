@@ -7,7 +7,7 @@ TEST(worker_config, load_yaml_basic)
 {
 	auto yaml = YAML::Load(
 		"---\n"
-		"worker-id: eval_1\n"
+		"worker-id: 8\n"
 		"broker-uri: tcp://localhost:1234\n"
 		"headers:\n"
 		"    env:\n"
@@ -84,13 +84,12 @@ TEST(worker_config, load_yaml_basic)
 
 	fileman_config expected_fileman;
 	expected_fileman.remote_url = "localhost";
-	expected_fileman.port = 80;
 	expected_fileman.username = "654321";
 	expected_fileman.password = "123456";
 	expected_fileman.cache_dir = "/tmp/cache";
 
 	ASSERT_STREQ("tcp://localhost:1234", config.get_broker_uri().c_str());
-	ASSERT_STREQ("eval_1", config.get_worker_id().c_str());
+	ASSERT_EQ(8, config.get_worker_id());
 	ASSERT_EQ(expected_headers, config.get_headers());
 	ASSERT_EQ(expected_sand_limits, config.get_sandboxes_limits());
 	ASSERT_EQ(expected_limits, config.get_limits());

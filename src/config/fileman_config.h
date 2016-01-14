@@ -8,13 +8,9 @@
 struct fileman_config {
 public:
 	/**
-	 * Remote address of file server.
+	 * Remote address of file server, port can be specified as well.
 	 */
 	std::string remote_url = "";
-	/**
-	 * Port which is used for connection to file server.
-	 */
-	size_t port = 0;
 	/**
 	 * Classical credentials.
 	 */
@@ -37,7 +33,6 @@ public:
 	bool operator==(const fileman_config &second) const
 	{
 		return (remote_url == second.remote_url &&
-				port == second.port &&
 				username == second.username &&
 				password == second.password &&
 				cache_dir == second.cache_dir);

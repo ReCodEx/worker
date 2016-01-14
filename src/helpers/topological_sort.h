@@ -13,14 +13,16 @@ namespace helpers
 	 * Topological sort of tasks starting from root.
 	 * Result order is saved in result variable, which is cleared before computation.
 	 * Priorities and configuration file order are taken into account.
-	 * Algorithm itself taken from: http://stackoverflow.com/a/11236027
+	 * @note Algorithm itself taken from: http://stackoverflow.com/a/11236027
 	 * @param root
 	 * @param effective_indegree
 	 * @param result
+	 * @throws top_sort_exception
 	 */
 	void topological_sort(std::shared_ptr<task_base> root,
 						  std::map<std::string, size_t> &effective_indegree,
 						  std::vector<std::shared_ptr<task_base>> &result);
+
 
 	/**
 	 * Special exception for topological sort

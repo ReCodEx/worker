@@ -10,11 +10,13 @@ namespace fs = boost::filesystem;
 namespace helpers
 {
 	/**
-	 * Recursively copy directory from source to destination
+	 * Recursively copy directory from source to destination.
 	 * @param src source directory which content will be copied into @a dest
-	 * @param dest
+	 * @param dest destination should not exist
+	 * @throws filesystem_exception with approprite description
 	 */
 	void copy_directory(const fs::path &src, const fs::path &dest);
+
 
 	/**
 	 * Special exception for filesystem helper functions/classes

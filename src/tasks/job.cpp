@@ -240,8 +240,8 @@ void job::build_job(const YAML::Node &conf)
 							sl.chdir = lim["chdir"].as<std::string>();
 						} // can be omitted... no throw
 
-						if (lim["bound-directories"] && lim["bound-directories"].IsMap()) { // TODO not defined yet
-							//sl.bound-directories = lim["bound-directories"].as<std::map<std::string, std::string>>();
+						if (lim["bound-directories"] && lim["bound-directories"].IsMap()) {
+							sl.bound_dirs = lim["bound-directories"].as<std::map<std::string, std::string>>();
 						} // can be omitted... no throw
 
 						if (lim["environ-variable"] && lim["environ-variable"].IsMap()) {
@@ -274,7 +274,7 @@ void job::build_job(const YAML::Node &conf)
 				limits.std_error = std_error;
 				std::shared_ptr<task_base> task =
 						std::make_shared<external_task>(default_config_->get_worker_id(), id++, task_id,
-														priority, fatal, log, task_depend,
+														priority, fatal, task_depend,
 														cmd, args, sandbox_name, limits);
 				unconnected_tasks.insert(std::make_pair(task_id, task));
 				eff_indegree.insert(std::make_pair(task_id, 0));

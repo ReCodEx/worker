@@ -24,7 +24,7 @@ void job_evaluator::download_submission()
 	// initialize all paths
 	fs::path archive_url = archive_url_;
 	archive_path_ = fs::temp_directory_path() / "isoeval" / "downloads" /
-			config_->get_worker_id() / job_id_;
+			std::to_string(config_->get_worker_id()) / job_id_;
 	fs::create_directories(archive_path_);
 
 	// download a file
@@ -42,9 +42,9 @@ void job_evaluator::prepare_submission()
 
 	// initialize all paths
 	submission_path_ = fs::temp_directory_path() / "isoeval" / "submissions" /
-			config_->get_worker_id() / job_id_;
+			std::to_string(config_->get_worker_id()) / job_id_;
 	source_path_ = fs::temp_directory_path() / "isoeval" / "eval" /
-			config_->get_worker_id() / job_id_;
+			std::to_string(config_->get_worker_id()) / job_id_;
 
 	// decompress downloaded archive
 	try {
@@ -188,7 +188,7 @@ void job_evaluator::push_result()
 
 	// create result directory for temporary files
 	results_path_ = fs::temp_directory_path() / "isoeval" / "results" /
-			config_->get_worker_id() / job_id_;
+			std::to_string(config_->get_worker_id()) / job_id_;
 	fs::create_directories(results_path_);
 	// define path to result yaml file and archived result
 	fs::path result_path = results_path_ / "result.yml";

@@ -6,15 +6,14 @@ headers:
         - c
         - python
     threads: 2
-hwgroup: "group1"
+    hwgroup: "group1"
 file-manager:
     file-collector:
         hostname: "http://localhost:9999"
-        port: 80  # can be ignored in specific modules
         username: ""  # can be ignored in specific modules
         password: ""  # can be ignored in specific modules
     cache:  # only in case that there is cache module
-        cache-dir: "/tmp/cache"
+        cache-dir: "/tmp/isoeval/cache"
 logger:
     file: "/tmp/worker"  # w/o suffix - actual names will be worker.log, worker.1.log, ...
     level: "debug"  # level of logging - one of "debug", "warn", "emerg"

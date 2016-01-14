@@ -43,7 +43,7 @@ worker_config::worker_config (const YAML::Node &config)
 
 		// load worker-id
 		if (config["worker-id"] && config["worker-id"].IsScalar()) {
-			worker_id_ = config["worker-id"].as<std::string>();
+			worker_id_ = config["worker-id"].as<size_t>();
 		} else { throw config_error("Item worker-id not defined properly"); }
 
 		// load file-manager
@@ -52,9 +52,6 @@ worker_config::worker_config (const YAML::Node &config)
 			if (fileman["file-collector"] && fileman["file-collector"].IsMap()) {
 				if (fileman["file-collector"]["hostname"] && fileman["file-collector"]["hostname"].IsScalar()) {
 					fileman_config_.remote_url = fileman["file-collector"]["hostname"].as<std::string>();
-				} // no throw... can be omitted
-				if (fileman["file-collector"]["port"] && fileman["file-collector"]["port"].IsScalar()) {
-					fileman_config_.port = fileman["file-collector"]["port"].as<size_t>();
 				} // no throw... can be omitted
 				if (fileman["file-collector"]["username"] && fileman["file-collector"]["username"].IsScalar()) {
 					fileman_config_.username = fileman["file-collector"]["username"].as<std::string>();
@@ -130,7 +127,7 @@ worker_config::worker_config (const YAML::Node &config)
 		} // no throw... can be omitted
 
 		if (config["bound-directories"] && config["bound-directories"].IsMap()) {
-			for (auto &dir: config["bound-directories"]) {
+			for (auto &dir : config["bound-directories"]) {
 				if (!dir.first.IsScalar()) {
 					throw config_error("A bound directory alias is not scalar");
 				}
@@ -151,7 +148,7 @@ worker_config::worker_config (const YAML::Node &config)
 	}
 }
 
-std::string worker_config::get_worker_id()
+size_t worker_config::get_worker_id()
 {
 	return worker_id_;
 }

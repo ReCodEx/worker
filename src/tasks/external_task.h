@@ -18,19 +18,20 @@ public:
 	/**
 	 * Only way to construct external task is through this constructor.
 	 * Choosing propriate sandbox and constructing it is also done here.
+	 * @param worker_id unique worker identification on this machine
+	 * @param id unique integer which means order in config file
 	 * @param task_id unique identifier of task
 	 * @param priority priority of task
 	 * @param fatal if true than job will be killed immediatelly in case of error
-	 * @param log name of log
 	 * @param dependencies dependencies of this task
 	 * @param binary program which will be launched
 	 * @param arguments arguments for binary
-	 * @param sandbox name of sandbox which will be used
+	 * @param sandbox_id name of sandbox which will be used
 	 * @param limits limits for sandbox
 	 * @throws task_exception if @a sandbox_id is unknown
 	 */
-	external_task(std::string worker_id, size_t id, const std::string &task_id, size_t priority,
-				  bool fatal, const std::string &log,
+	external_task(size_t worker_id, size_t id, const std::string &task_id,
+				  size_t priority, bool fatal,
 				  const std::vector<std::string> &dependencies,
 				  const std::string &binary, const std::vector<std::string> &arguments,
 				  const std::string &sandbox_id, sandbox_limits limits);
@@ -61,10 +62,13 @@ private:
 	 * Construct apropriate sandbox according his name give during construction.
 	 */
 	void sandbox_init();
+	/**
+	 * Destruction of internal sandbox.
+	 */
 	void sandbox_fini();
 
 	/** Id of this instance of worker loaded from default configuration */
-	std::string worker_id_;
+	size_t worker_id_;
 	/** Name of program which will be run in sandbox */
 	std::string cmd_;
 	/** Cmd line arguments to program */

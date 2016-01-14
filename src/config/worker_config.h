@@ -40,7 +40,7 @@ public:
 	 * Get worker ID which has to be unique at least in context of one machine.
 	 * @return not integer but textual description for better debuggin and human readibility
 	 */
-	std::string get_worker_id();
+	size_t get_worker_id();
 	/**
 	 * Defines address on which broker run.
 	 * @return
@@ -75,13 +75,19 @@ public:
 
 private:
 
-	std::string worker_id_;
-	/** Broker URI */
+	/** Unique worker number in context of one machine (0-100) */
+	size_t worker_id_;
+	/** Broker URI, address where broker is listening */
 	std::string broker_uri_;
+	/** Header which are sent to broker and should specify worker abilities */
 	header_map_t headers_;
+	/** Configuration of logger */
 	log_config log_config_;
+	/** Default configuration of file manager */
 	fileman_config fileman_config_;
+	/** Default sandbox limits */
 	sandbox_limits limits_;
+	/** Time limits which are applied on whole sandbox */
 	std::map<std::string, size_t> sandboxes_limits_;
 };
 

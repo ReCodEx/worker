@@ -14,44 +14,44 @@ enum class isolate_status { RE, SG, TO, XX, NOTSET };
 struct task_results {
 	/**
 	 * Return code of sandbox.
-	 * Defaul: 0
+	 * Default: 0
 	 */
-	int exitcode;
+	int exitcode = 0;
 	/**
 	 * Total run time of program inside the sandbox.
 	 * Default: 0 (s)
 	 */
-	float time;
+	float time = 0.0;
 	/**
 	 * Total run time (wall clock) of program inside the sandbox.
 	 * Default: 0 (s)
 	 */
-	float wall_time;
+	float wall_time = 0.0;
 	/**
 	 * Amount of memory used by program inside the sandbox.
 	 * Default: 0 (kB)
 	 */
-	size_t memory;
+	size_t memory = 0;
 	/**
 	 * Maximum resident set size of the process.
 	 * Default: 0 (kB)
 	 */
-	size_t max_rss;
+	size_t max_rss = 0;
 	/**
 	 * Error code returned by sandbox.
 	 * Default: NOTSET
 	 */
-	isolate_status status;
+	isolate_status status = isolate_status::NOTSET;
 	/**
 	 * Signal, which killed the process.
 	 * Default: 0
 	 */
-	int exitsig;
+	int exitsig = 0;
 	/**
 	 * Flag if program exited normaly or was killed.
 	 * Default: false
 	 */
-	bool killed;
+	bool killed = false;
 	/**
 	 * Error message of the sandbox.
 	 * Default: ""

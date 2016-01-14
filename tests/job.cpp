@@ -64,7 +64,7 @@ TEST(job_test, bad_paths)
 TEST(job_test, config_format)
 {
 	// prepare all things which need to be prepared
-	auto yaml_default = YAML::Load("worker-id: eval_1\n"
+	auto yaml_default = YAML::Load("worker-id: 8\n"
 								   "broker-uri: tcp://localhost:1234\n"
 								   "headers:\n"
 								   "    env:\n"
