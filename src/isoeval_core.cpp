@@ -193,8 +193,8 @@ void isoeval_core::fileman_init()
 	auto fileman_conf = config_->get_fileman_config();
 	submission_fileman_ = std::make_shared<http_manager>(fileman_conf.remote_url, fileman_conf.username,
 														 fileman_conf.password, logger_);
-	fileman_ = std::make_shared<file_manager>(fileman_conf.cache_dir, fileman_conf.remote_url,
-											  fileman_conf.username, fileman_conf.password, logger_);
+	fileman_ = std::make_shared<fallback_file_manager>(fileman_conf.cache_dir, fileman_conf.remote_url,
+							   fileman_conf.username, fileman_conf.password, logger_);
 	logger_->info() << "File managers initialized.";
 
 	return;

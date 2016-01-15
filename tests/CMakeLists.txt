@@ -22,8 +22,8 @@ add_executable(${TESTS_NAME}
 	${FILEMAN_DIR}/cache_manager.cpp
 	http_manager.cpp
 	${FILEMAN_DIR}/http_manager.cpp
-	file_manager.cpp
-	${FILEMAN_DIR}/file_manager.cpp
+	${FILEMAN_DIR}/fallback_file_manager.cpp
+	fallback_file_manager.cpp
 	isolate_sandbox.cpp
 	${SANDBOX_DIR}/isolate_sandbox.cpp
 	${SRC_DIR}/job_evaluator.cpp
