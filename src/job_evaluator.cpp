@@ -28,7 +28,6 @@ void job_evaluator::download_submission()
 	fs::create_directories(archive_path_);
 
 	// download a file
-	submission_fileman_->set_params("", "", ""); // TODO resolve filemanager problems
 	submission_fileman_->get_file(archive_url.string(), archive_path_.string());
 	archive_name_ = archive_url.filename();
 
@@ -233,8 +232,7 @@ void job_evaluator::push_result()
 	logger_->info() << "Compression done.";
 
 	// send archived result to file server
-	submission_fileman_->set_params(result_url_, "", ""); // TODO resolve file manager problems
-	submission_fileman_->put_file(archive_path.string());
+	submission_fileman_->put_file(archive_path.string(), "TODO"); // TODO !!!
 
 	logger_->info() << "Job results uploaded succesfully.";
 	return;

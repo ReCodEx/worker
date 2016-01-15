@@ -65,7 +65,7 @@ void http_manager::get_file(const std::string &src_name, const std::string &dst_
 	logger_->debug() << "Downloading file " << src_name << " to " << dst_path;
 
 	//Open file to download
-	fd = fopen(dst_path, "wb");
+	fd = fopen(dst_path.c_str(), "wb");
 	if(!fd) {
 		auto message = "Cannot open file " + dst_path + " for writing.";
 		logger_->warn() << message;

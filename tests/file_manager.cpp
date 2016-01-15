@@ -65,10 +65,10 @@ TEST(FileManager, PutFileToRemote)
 	auto cache = unique_ptr<mock_cache_manager>(new mock_cache_manager);
 	auto remote = unique_ptr<mock_http_manager>(new mock_http_manager);
 
-	EXPECT_CALL((*remote), put_file("file.txt")).Times(1);
+	EXPECT_CALL((*remote), put_file("file.txt", "file.txt")).Times(1);
 
 	file_manager m(move(cache), move(remote));
-	EXPECT_NO_THROW(m.put_file("file.txt"));
+	EXPECT_NO_THROW(m.put_file("file.txt", "file.txt"));
 }
 
 TEST(FileManager, GetOperationFailed)
@@ -90,20 +90,9 @@ TEST(FileManager, PutOperationFailed)
 	auto cache = unique_ptr<mock_cache_manager>(new mock_cache_manager);
 	auto remote = unique_ptr<mock_http_manager>(new mock_http_manager);
 
-	EXPECT_CALL((*remote), put_file("file.txt"))
+	EXPECT_CALL((*remote), put_file("file.txt", "file.txt"))
 			.WillOnce(Throw(fm_exception("")));
 
 	file_manager m(move(cache), move(remote));
-	EXPECT_THROW(m.put_file("file.txt"), fm_exception);
-}
-
-TEST(FileManager, SetGetParams)
-{
-	auto cache = unique_ptr<mock_cache_manager>(new mock_cache_manager);
-	auto remote = unique_ptr<mock_http_manager>(new mock_http_manager);
-
-	EXPECT_CALL((*remote), set_params("newURL", "user", "pass"));
-
-	file_manager m(move(cache), move(remote));
-	m.set_params("user", "pass");
+	EXPECT_THROW(m.put_file("file.txt", "file.txt"), fm_exception);
 }
