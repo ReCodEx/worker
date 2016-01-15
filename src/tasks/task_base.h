@@ -107,6 +107,10 @@ public:
 	 */
 	virtual std::shared_ptr<task_results> get_result();
 
+	bool is_executable();
+	void set_execution(bool set);
+	void set_children_execution(bool set);
+
 protected:
 	size_t id_;
 	std::string task_id_;
@@ -116,6 +120,7 @@ protected:
 	std::string log_;
 	std::vector<std::string> dependencies_;
 	std::vector<std::string> arguments_;
+	bool execute_;
 
 	std::vector<std::weak_ptr<task_base>> parents_;
 	std::vector<std::shared_ptr<task_base>> children_;

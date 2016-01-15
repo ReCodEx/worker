@@ -37,10 +37,19 @@ void job::run()
 	// simply run all tasks in given topological order
 	for (auto &i : task_queue_) {
 		try {
-			i->run();
+			if (i->is_executable()) {
+				i->run();
+			} else {
+				// we have to pass information about non-execution to children
+				i->set_children_execution(false);
+			}
 		} catch (std::exception) {
 			if (i->get_fatal_failure()) {
 				break;
+			} else {
+				// set executable bit in this task and in children
+				i->set_execution(false);
+				i->set_children_execution(false);
 			}
 		}
 	}

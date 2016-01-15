@@ -71,8 +71,8 @@ TEST(worker_config, load_yaml_basic)
 	expected_limits.disk_blocks = 50;
 	expected_limits.disk_inodes = 7;
 	expected_limits.bound_dirs = {
-		std::make_pair("localbin", "/usr/local/bin"),
-		std::make_pair("share", "/usr/share")
+		{ "localbin", "/usr/local/bin" },
+		{ "share", "/usr/share" }
 	};
 
 	log_config expected_log;

@@ -41,6 +41,7 @@ public:
 	 * @param source_path path to source codes of submission
 	 * @param default_config default configuration of worker where defaults are loaded
 	 * @param fileman file manager which is provided to tasks
+	 * @throws job_exception if there is problem during loading of configuration
 	 */
 	job(const YAML::Node &job_config, fs::path source_path,
 		std::shared_ptr<worker_config> default_config,
@@ -49,6 +50,7 @@ public:
 
 	/**
 	 * Runs all task which are sorted in task queue.
+	 * Should not throw an exception.
 	 */
 	void run();
 
@@ -64,6 +66,7 @@ private:
 	 * From given @a conf construct an evaluation tree,
 	 * which includes parsing of configuration and constructing all tasks
 	 * @param conf input configuration which will be loaded
+	 * @throws job_exception if configuration is in bad form
 	 */
 	void build_job(const YAML::Node &conf);
 	/**

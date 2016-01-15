@@ -14,7 +14,6 @@
 #define BOOST_NO_CXX11_SCOPED_ENUMS
 #include <boost/filesystem.hpp>
 #include <boost/program_options.hpp>
-
 namespace fs = boost::filesystem;
 
 
