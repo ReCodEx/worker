@@ -2,11 +2,7 @@
 submission:
     job-id: hello_evaluation
     language: cpp
-    file-collector:
-        hostname: http://localhost:9999
-        port: 80
-        username: ""
-        password: ""
+    file-collector: http://localhost:9999/tasks
 tasks:
     - task-id: "mkdir"
       priority: 1

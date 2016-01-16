@@ -88,9 +88,6 @@ private:
 	std::string job_id_;
 	std::string language_;
 	std::string fileman_hostname_;
-	std::string fileman_port_;
-	std::string fileman_username_;
-	std::string fileman_passwd_;
 
 	/** Logical start of every job evaluation */
 	std::shared_ptr<task_base> root_task_;

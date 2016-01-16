@@ -91,7 +91,7 @@ void job_evaluator::build_job()
 		cache_fm_,
 		std::make_shared<prefixed_file_manager>(
 			remote_fm_,
-			config_->get_fileman_config().remote_url + "/"
+			config_->get_fileman_config().remote_url + "/" // TODO: multiple setups in worker config
 		)
 	);
 
