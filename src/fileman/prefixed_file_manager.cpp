@@ -1,7 +1,7 @@
 #include "prefixed_file_manager.h"
 
 prefixed_file_manager::prefixed_file_manager (std::shared_ptr<file_manager_base> fm, const std::string &prefix) :
-	fm_(fm), prefix_(prefix)
+	prefix_(prefix), fm_(fm)
 {
 }
 
