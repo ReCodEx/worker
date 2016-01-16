@@ -130,9 +130,9 @@ private:
 	std::shared_ptr<spdlog::logger> logger_;
 
 	/** File manager for submission archives which need no caching */
-	std::shared_ptr<file_manager_base> submission_fileman_;
+	std::shared_ptr<file_manager_base> remote_fm_;
 	/** File manager which is used to download and upload needed files */
-	std::shared_ptr<file_manager_base> fileman_;
+	std::shared_ptr<file_manager_base> cache_fm_;
 
 	/** Handles evaluation and all things around */
 	std::shared_ptr<job_receiver> job_receiver_;

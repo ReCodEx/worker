@@ -9,7 +9,7 @@ headers:
     hwgroup: "group1"
 file-manager:
     file-collector:
-        hostname: "http://localhost:9999"
+        hostname: "http://localhost:9999/tasks"
         username: ""  # can be ignored in specific modules
         password: ""  # can be ignored in specific modules
     cache:  # only in case that there is cache module
