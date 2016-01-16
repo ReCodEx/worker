@@ -131,25 +131,9 @@ void job::build_job(const YAML::Node &conf)
 		if (submiss["language"] && submiss["language"].IsScalar()) {
 			language_ = submiss["language"].as<std::string>();
 		} else { throw job_exception("Submission.language item not loaded properly"); }
-		if (submiss["file-collector"]) {
-			auto filecol = submiss["file-collector"];
-			if (filecol.IsMap()) {
-				if (filecol["hostname"] && filecol["hostname"].IsScalar()) {
-					fileman_hostname_ = filecol["hostname"].as<std::string>();
-				} else { throw job_exception("Submission.file-collector.hostname item not loaded properly"); }
-				if (filecol["port"] && filecol["port"].IsScalar()) {
-					fileman_port_ = filecol["port"].as<std::string>();
-				} else { throw job_exception("Submission.file-collector.port item not loaded properly"); }
-				if (filecol["username"] && filecol["username"].IsScalar()) {
-					fileman_username_ = filecol["username"].as<std::string>();
-				} else { throw job_exception("Submission.file-collector.username item not loaded properly"); }
-				if (filecol["password"] && filecol["password"].IsScalar()) {
-					fileman_passwd_ = filecol["password"].as<std::string>();
-				} else { throw job_exception("Submission.file-collector.password item not loaded properly"); }
-			} else {
-				throw job_exception("Item submission.file-collector is not map");
-			}
-		} else { throw job_exception("Submission item not loaded properly"); }
+		if (submiss["file-collector"] && submiss["file-collector"].IsScalar()) {
+			fileman_hostname_ = submiss["file-collector"].as<std::string>();
+		} else { throw job_exception("Submission.file-collector item not loaded properly"); }
 
 
 		// create fake task, which is logical root of evaluation
@@ -392,6 +376,7 @@ void job::build_job(const YAML::Node &conf)
 
 void job::prepare_job()
 {
+	setup // TODO: set fileman_hostname_ to internal fileman_
 	return;
 }
 

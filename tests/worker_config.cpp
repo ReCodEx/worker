@@ -15,14 +15,17 @@ TEST(worker_config, load_yaml_basic)
 		"        - python\n"
 		"    threads: 10\n"
 		"    hwgroup: group_1\n"
-		"file-manager:\n"
-		"    file-collector:\n"
-		"        hostname: localhost\n"
-		"        port: 80\n"
-		"        username: 654321\n"
-		"        password: 123456\n"
-		"    cache:\n"
-		"        cache-dir: /tmp/cache\n"
+		"file-managers:\n"
+		"    - hostname: http://localhost:80\n"
+		"      username: 654321\n"
+		"      password: 123456\n"
+		"      cache:\n"
+		"          cache-dir: /tmp/isoeval/cache\n"
+		"    - hostname: http://localhost:4242\n"
+		"      username: 123456\n"
+		"      password: 654321\n"
+		"      cache:\n"
+		"          cache-dir: /tmp/isoeval/cache\n"
 		"logger:\n"
 		"    file: /var/log/isoeval\n"
 		"    level: emerg\n"
@@ -82,11 +85,18 @@ TEST(worker_config, load_yaml_basic)
 	expected_log.log_file_size = 2048576;
 	expected_log.log_files_count = 5;
 
+	std::vector<fileman_config> expected_filemans;
 	fileman_config expected_fileman;
-	expected_fileman.remote_url = "localhost";
+	expected_fileman.remote_url = "http://localhost:80";
 	expected_fileman.username = "654321";
 	expected_fileman.password = "123456";
-	expected_fileman.cache_dir = "/tmp/cache";
+	expected_fileman.cache_dir = "/tmp/isoeval/cache";
+	expected_filemans.push_back(expected_fileman);
+	expected_fileman.remote_url = "http://localhost:4242";
+	expected_fileman.username = "123456";
+	expected_fileman.password = "654321";
+	expected_fileman.cache_dir = "/tmp/isoeval/cache";
+	expected_filemans.push_back(expected_fileman);
 
 	ASSERT_STREQ("tcp://localhost:1234", config.get_broker_uri().c_str());
 	ASSERT_EQ((size_t) 8, config.get_worker_id());
@@ -94,7 +104,7 @@ TEST(worker_config, load_yaml_basic)
 	ASSERT_EQ(expected_sand_limits, config.get_sandboxes_limits());
 	ASSERT_EQ(expected_limits, config.get_limits());
 	ASSERT_EQ(expected_log, config.get_log_config());
-	ASSERT_EQ(expected_fileman, config.get_fileman_config());
+	ASSERT_EQ(expected_filemans, config.get_filemans_configs());
 }
 
 /**

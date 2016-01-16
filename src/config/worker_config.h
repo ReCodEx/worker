@@ -60,7 +60,7 @@ public:
 	 * Get wrapper for file manager configuration.
 	 * @return constant reference to fileman_config structure
 	 */
-	const fileman_config &get_fileman_config();
+	const std::vector<fileman_config> &get_filemans_configs();
 	/**
 	 * Get default worker sandbox limits. Which will be used as defaults if not defined in job configuration.
 	 * @return non editable reference to sandbox_limits structure
@@ -83,8 +83,8 @@ private:
 	header_map_t headers_;
 	/** Configuration of logger */
 	log_config log_config_;
-	/** Default configuration of file manager */
-	fileman_config fileman_config_;
+	/** Default configuration of file managers */
+	std::vector<fileman_config> filemans_configs_;
 	/** Default sandbox limits */
 	sandbox_limits limits_;
 	/** Time limits which are applied on whole sandbox */
