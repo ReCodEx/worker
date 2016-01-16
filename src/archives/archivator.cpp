@@ -46,7 +46,7 @@ void archivator::compress(const std::string &dir, const std::string &destination
 	if (a == NULL) {
 		throw archive_exception("Cannot create destination archive.");
 	}
-	if (archive_write_set_format_zip(a) < ARCHIVE_OK) {
+	if (archive_write_set_format_zip(a) != ARCHIVE_OK) {
 		throw archive_exception("Cannot set ZIP format on destination archive.");
 	}
 	if (archive_write_open_filename(a, destination.c_str()) != ARCHIVE_OK) {
@@ -120,11 +120,25 @@ void archivator::decompress(const std::string &filename, const std::string &dest
 	flags |= ARCHIVE_EXTRACT_SECURE_NODOTDOT;
 
 	a = archive_read_new();
-	archive_read_support_format_all(a);
-	archive_read_support_compression_all(a);
+	if (a == NULL) {
+		throw archive_exception("Cannot create source archive.");
+	}
+	if (archive_read_support_format_all(a) != ARCHIVE_OK) {
+		throw archive_exception("Cannot set formats for source archive.");
+	}
+	if (archive_read_support_compression_all(a) != ARCHIVE_OK) {
+		throw archive_exception("Cannot set compression methods for source archive.");
+	}
 	ext = archive_write_disk_new();
-	archive_write_disk_set_options(ext, flags);
-	archive_write_disk_set_standard_lookup(ext);
+	if (ext == NULL) {
+		throw archive_exception("Cannot allocate archive entry.");
+	}
+	if (archive_write_disk_set_options(ext, flags) != ARCHIVE_OK) {
+		throw archive_exception("Cannot set options for writing to disk.");
+	}
+	if (archive_write_disk_set_standard_lookup(ext) != ARCHIVE_OK) {
+		throw archive_exception("Cannot set lookup for writing to disk.");
+	}
 
 	r = archive_read_open_filename(a, filename.c_str(), 10240);
 	if (r < ARCHIVE_OK) {
