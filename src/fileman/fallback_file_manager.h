@@ -17,7 +17,7 @@
  */
 class fallback_file_manager : public file_manager_base {
 public:
-	typedef std::unique_ptr<file_manager_base> file_manager_ptr;
+	typedef std::shared_ptr<file_manager_base> file_manager_ptr;
 public:
 	/**
 	 * Constructor for creating this class with instances of @a cache_manager and @a http_manager.
