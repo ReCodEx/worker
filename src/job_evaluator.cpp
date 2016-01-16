@@ -31,8 +31,8 @@ void job_evaluator::download_submission()
 	fs::create_directories(archive_path_);
 
 	// download a file
-	remote_fm_->get_file(archive_url.string(), archive_path_.string());
 	archive_name_ = archive_url.filename();
+	remote_fm_->get_file(archive_url.string(), (archive_path_ / archive_name_).string());
 
 	logger_->info() << "Submission archive downloaded succesfully.";
 	return;
