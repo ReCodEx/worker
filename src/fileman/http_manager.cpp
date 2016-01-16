@@ -38,14 +38,14 @@ static size_t fwrite_wrapper(void *ptr, size_t size, size_t nmemb, FILE *stream)
 
 
 http_manager::http_manager(std::shared_ptr<spdlog::logger> logger) :
-	http_manager("", "", logger)
+	logger_(logger)
 {
 }
 
 http_manager::http_manager(
-	const std::string &username, const std::string &password,
+	const fileman_config &config,
 	std::shared_ptr<spdlog::logger> logger) :
-	username_(username), password_(password)
+	config_(config)
 {
 	if (logger != nullptr) {
 		logger_ = logger;
@@ -97,7 +97,7 @@ void http_manager::get_file(const std::string &src_name, const std::string &dst_
 		curl_easy_setopt(curl, CURLOPT_FAILONERROR, 1L);
 		//Set HTTP authentication
 		curl_easy_setopt(curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-		curl_easy_setopt(curl, CURLOPT_USERPWD, (username_ + ":" + password_).c_str());
+		curl_easy_setopt(curl, CURLOPT_USERPWD, (config_.username + ":" + config_.password).c_str());
 
 		//Enable verbose for easier tracing
 		//curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
@@ -175,7 +175,7 @@ void http_manager::put_file(const std::string &src, const std::string &dst)
 		curl_easy_setopt(curl, CURLOPT_FAILONERROR, 1L);
 		//Set HTTP authentication
 		curl_easy_setopt(curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-		curl_easy_setopt(curl, CURLOPT_USERPWD, (username_ + ":" + password_).c_str());
+		curl_easy_setopt(curl, CURLOPT_USERPWD, (config_.username + ":" + config_.password).c_str());
 
 		//Enable verbose for easier tracing
 		//curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
@@ -196,10 +196,4 @@ void http_manager::put_file(const std::string &src, const std::string &dst)
 		//Always cleanup
 		curl_easy_cleanup(curl);
 	}
-}
-
-void http_manager::set_params(const std::string &username, const std::string &password)
-{
-	username_ = username;
-	password_ = password;
 }

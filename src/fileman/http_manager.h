@@ -6,7 +6,7 @@
 #include "file_manager_base.h"
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/null_sink.h"
-
+#include "../config/fileman_config.h"
 
 
 /**
@@ -26,7 +26,7 @@ public:
 	 * @param password Password for HTTP Basic Authentication
 	 * @param logger Shared pointer to system logger (optional).
 	 */
-	http_manager(const std::string &username, const std::string &password,
+	http_manager(const fileman_config &config,
 				 std::shared_ptr<spdlog::logger> logger = nullptr);
 	/**
 	 * Destructor.
@@ -43,16 +43,9 @@ public:
 	 * @param name Name with path to a file to upload.
 	 */
 	virtual void put_file(const std::string &src_name, const std::string &dst_path);
-	/**
-	 * Change parameters in runtime.
-	 * @param username Username for HTTP Basic Authentication
-	 * @param password Password for HTTP Basic Authentication
-	 */
-	virtual void set_params(const std::string &username, const std::string &password);
 
 private:
-	std::string username_;
-	std::string password_;
+	fileman_config config_;
 	std::shared_ptr<spdlog::logger> logger_;
 };
 

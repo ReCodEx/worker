@@ -18,7 +18,10 @@ namespace fs = boost::filesystem;
 TEST(HttpManager, GetExistingFile)
 {
 	auto tmp = fs::temp_directory_path();
-	http_manager m("re", "codex");
+	fileman_config config;
+	config.username = "re";
+	config.password = "codex";
+	http_manager m(config);
 	EXPECT_NO_THROW(m.get_file("https://recodex.projekty.ms.mff.cuni.cz/fm_test/test1.txt", (tmp / "test1.txt").string()));
 	EXPECT_TRUE(fs::is_regular_file((tmp / "test1.txt").string()));
 	fs::remove(tmp / "test1.txt");
@@ -27,7 +30,10 @@ TEST(HttpManager, GetExistingFile)
 TEST(HttpManager, GetExistingFileRedirect)
 {
 	auto tmp = fs::temp_directory_path();
-	http_manager m("re", "codex");
+	fileman_config config;
+	config.username = "re";
+	config.password = "codex";
+	http_manager m(config);
 	EXPECT_NO_THROW(m.get_file("https://recodex.projekty.ms.mff.cuni.cz/fm_test/test2.txt", (tmp / "test2.txt").string()));
 	EXPECT_TRUE(fs::is_regular_file((tmp / "test2.txt").string()));
 	fs::remove(tmp / "test2.txt");
@@ -36,7 +42,10 @@ TEST(HttpManager, GetExistingFileRedirect)
 TEST(HttpManager, GetExistingHttp)
 {
 	auto tmp = fs::temp_directory_path();
-	http_manager m("", "");
+	fileman_config config;
+	config.username = "";
+	config.password = "";
+	http_manager m(config);
 	EXPECT_NO_THROW(m.get_file("http://curl.haxx.se/rfc/rfc7234.txt", (tmp / "rfc7234.txt").string()));
 	EXPECT_TRUE(fs::is_regular_file((tmp / "rfc7234.txt").string()));
 	fs::remove(tmp / "rfc7234.txt");
@@ -45,7 +54,10 @@ TEST(HttpManager, GetExistingHttp)
 TEST(HttpManager, GetNonexistingFile)
 {
 	auto tmp = fs::temp_directory_path();
-	http_manager m("re", "codex");
+	fileman_config config;
+	config.username = "re";
+	config.password = "codex";
+	http_manager m(config);
 	EXPECT_THROW(m.get_file("https://recodex.projekty.ms.mff.cuni.cz/fm_test_nonexist/test3.txt", (tmp / "test3.txt").string()), fm_exception);
 	EXPECT_FALSE(fs::is_regular_file((tmp / "test3.txt").string()));
 	//*
@@ -58,7 +70,10 @@ TEST(HttpManager, GetNonexistingFile)
 TEST(HttpManager, WrongAuthentication)
 {
 	auto tmp = fs::temp_directory_path();
-	http_manager m("codex", "re");
+	fileman_config config;
+	config.username = "codex";
+	config.password = "re";
+	http_manager m(config);
 	EXPECT_THROW(m.get_file("https://recodex.projekty.ms.mff.cuni.cz/fm_test/test1.txt", (tmp / "test1.txt").string()), fm_exception);
 	EXPECT_FALSE(fs::is_regular_file((tmp / "test1.txt").string()));
 	fs::remove(tmp / "test1.txt");
@@ -67,7 +82,10 @@ TEST(HttpManager, WrongAuthentication)
 TEST(HttpManager, NonexistingServer)
 {
 	auto tmp = fs::temp_directory_path();
-	http_manager m("a", "a");
+	fileman_config config;
+	config.username = "a";
+	config.password = "a";
+	http_manager m(config);
 	EXPECT_THROW(m.get_file("http://abcd.example.com/test1.txt", (tmp / "test1.txt").string()), fm_exception);
 	EXPECT_FALSE(fs::is_regular_file((tmp / "test1.txt").string()));
 	fs::remove(tmp / "test1.txt");
@@ -123,7 +141,10 @@ std::vector<std::string> codes {
 };
 TEST(HttpManager, DISABLED_AllWrongErrorCodes) {
 	auto tmp = fs::temp_directory_path();
-	http_manager m("", "");
+	fileman_config config;
+	config.username = "";
+	config.password = "";
+	http_manager m(config);
 	for(auto& i : codes) {
 		//std::cout << i << std::endl;
 		EXPECT_THROW(m.get_file(std::string("http://httpstat.us/") + i, (tmp / "test.txt").string()), fm_exception);
@@ -139,12 +160,19 @@ TEST(HttpManager, SimplePutFile)
 		o << "testing string" << endl;
 	}
 
-	http_manager m("re", "codex");
-	EXPECT_NO_THROW(m.put_file((tmp / "a.txt").string(), "https://recodex.projekty.ms.mff.cuni.cz/fm_test/a.txt"));
+	fileman_config config1;
+	config1.username = "re";
+	config1.password = "codex";
+
+	http_manager m1(config1);
+	EXPECT_NO_THROW(m1.put_file((tmp / "a.txt").string(), "https://recodex.projekty.ms.mff.cuni.cz/fm_test/a.txt"));
 
 	//Invalid credentials
-	m.set_params("codex", "re");
-	EXPECT_THROW(m.put_file((tmp / "a.txt").string(), "https://recodex.projekty.ms.mff.cuni.cz/fm_test/a.txt"), fm_exception);
+	fileman_config config2;
+	config2.username = "codex";
+	config2.password = "re";
+	http_manager m2(config2);
+	EXPECT_THROW(m2.put_file((tmp / "a.txt").string(), "https://recodex.projekty.ms.mff.cuni.cz/fm_test/a.txt"), fm_exception);
 
 	fs::remove(tmp / "a.txt");
 }
@@ -157,10 +185,12 @@ TEST(HttpManager, PutFileWrongURL)
 		o << "testing string" << endl;
 	}
 
-	http_manager m("re", "codex");
+	fileman_config config;
+	config.username = "re";
+	config.password = "codex";
+	http_manager m(config);
 	EXPECT_THROW(m.put_file((tmp / "b.txt").string(), "https://recodex.projekty.ms.mff.cuni.cz/fm_test_nonexist/b.txt"), fm_exception);
 
-	m.set_params("", "");
 	EXPECT_THROW(m.put_file((tmp / "b.txt").string(), "http://ps.stdin.cz/b.txt"), fm_exception);
 
 	fs::remove(tmp / "b.txt");
@@ -169,6 +199,9 @@ TEST(HttpManager, PutFileWrongURL)
 TEST(HttpManager, PutWrongFile)
 {
 	auto tmp = fs::temp_directory_path();
-	http_manager m("re", "codex");
+	fileman_config config;
+	config.username = "re";
+	config.password = "codex";
+	http_manager m(config);
 	EXPECT_THROW(m.put_file((tmp / "abc5xyz.txt").string(), "https://recodex.projekty.ms.mff.cuni.cz/fm_test/abc5xyz.txt"), fm_exception);
 }
