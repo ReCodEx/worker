@@ -24,7 +24,7 @@ namespace fs = boost::filesystem;
 #include "connection_proxy.h"
 #include "job_receiver.h"
 #include "fileman/file_manager_base.h"
-#include "fallback_file_manager.h"
+#include "fileman/fallback_file_manager.h"
 
 
 /**
