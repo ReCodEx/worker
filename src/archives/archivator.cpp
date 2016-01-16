@@ -1,7 +1,8 @@
 #include "archivator.h"
-#include <vector>
+#include <map>
 #include <algorithm>
 #include <fstream>
+#include <iostream>
 
 
 void archivator::compress(const std::string &dir, const std::string &destination)
@@ -10,7 +11,7 @@ void archivator::compress(const std::string &dir, const std::string &destination
 	archive_entry *entry;
 	int r;
 
-	std::vector<fs::path> files;
+	std::map<fs::path, fs::path> files;
 	fs::path dir_path;
 	try {
 		dir_path = fs::canonical(fs::path(dir));
@@ -31,7 +32,7 @@ void archivator::compress(const std::string &dir, const std::string &destination
 						result /= *itr_file;
 						itr_file++;
 					}
-					files.push_back(result);
+					files.insert({file, result});
 				}
 			}
 		} else {
@@ -42,18 +43,22 @@ void archivator::compress(const std::string &dir, const std::string &destination
 	}
 
 	a = archive_write_new();
-	archive_write_set_format_zip(a);
-	r = archive_write_open_filename(a, destination.c_str());
-	if (r != ARCHIVE_OK) {
+	if (a == NULL) {
+		throw archive_exception("Cannot create destination archive.");
+	}
+	if (archive_write_set_format_zip(a) < ARCHIVE_OK) {
+		throw archive_exception("Cannot set ZIP format on destination archive.");
+	}
+	if (archive_write_open_filename(a, destination.c_str()) != ARCHIVE_OK) {
 		throw archive_exception("Cannot open destination archive.");
 	}
 
 	for (auto &file : files) {
 		entry = archive_entry_new();
 
-		archive_entry_set_pathname(entry, (fs::path(destination).stem() / file).string().c_str());
-		archive_entry_set_size(entry, fs::file_size(dir_path / file));
-		archive_entry_set_mtime(entry, fs::last_write_time(dir_path / file), 0); //0 nanoseconds
+		archive_entry_set_pathname(entry, (fs::path(destination).stem() / file.second).string().c_str());
+		archive_entry_set_size(entry, fs::file_size(file.first));
+		archive_entry_set_mtime(entry, fs::last_write_time(file.first), 0); //0 nanoseconds
 		archive_entry_set_filetype(entry, AE_IFREG);
 		archive_entry_set_perm(entry, 0644);
 
@@ -62,7 +67,7 @@ void archivator::compress(const std::string &dir, const std::string &destination
 			throw archive_exception(archive_error_string(a));
 		}
 
-		std::ifstream ifs((dir_path / file).string(), std::ios::in | std::ios::binary);
+		std::ifstream ifs((file.first).string(), std::ios::in | std::ios::binary);
 		if (ifs.is_open()) {
 			// read data by small blocks to avoid memory overfill on possibly large files
 			char buff[4096];
@@ -70,9 +75,11 @@ void archivator::compress(const std::string &dir, const std::string &destination
 			while (true) {
 				ifs.read(buff, sizeof(buff));
 
-				if (ifs.eof()) {
+				auto read_len = ifs.gcount();
+				if (ifs.eof() && read_len == 0) {
 					break;
-				} else if (ifs.gcount() <= 0) {
+				}
+				else if (read_len <= 0) {
 					throw archive_exception("Error reading input file.");
 				}
 
@@ -82,7 +89,7 @@ void archivator::compress(const std::string &dir, const std::string &destination
 				}
 			}
 		} else {
-			throw archive_exception("Cannot open file " + (dir_path / file).string() + " for reading.");
+			throw archive_exception("Cannot open file " + (file.first).string() + " for reading.");
 		}
 		archive_entry_free(entry);
 	}
