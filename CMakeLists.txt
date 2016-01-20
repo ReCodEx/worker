@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 2.8.11)
 project(codex_worker)
 
 
+# If APPVEYOR_COMPILE is defined and set to ON then boost, curl and zeromq will be searched with find_package on windows machine too
+
 set(EXEC_NAME ${PROJECT_NAME})
 set(gtest_force_shared_crt ON CACHE BOOL "Use shared (DLL) run-time lib even when Google Test is built as static lib.")
 
