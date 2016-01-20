@@ -3,7 +3,6 @@ project(codex_worker)
 
 
 set(EXEC_NAME ${PROJECT_NAME})
-set(YAML_CPP_BUILD_TOOLS OFF CACHE BOOL "Enable yaml-cpp testing and parse tools")
 set(gtest_force_shared_crt ON CACHE BOOL "Use shared (DLL) run-time lib even when Google Test is built as static lib.")
 
 # Find installed packages on system
@@ -16,13 +15,18 @@ if(WIN32)
 else()
 	set(Boost_USE_STATIC_LIBS OFF)
 endif()
+# -- load Boost
 set (Boost_USE_MULTITHREADED ON)
-find_package(Boost 1.53.0 REQUIRED COMPONENTS filesystem system program_options)
-include_directories(${Boost_INCLUDE_DIRS})
-
+if(UNIX OR APPVEYOR_COMPILE)
+	find_package(Boost 1.53.0 REQUIRED COMPONENTS filesystem system program_options)
+	include_directories(${Boost_INCLUDE_DIRS})
+endif()
+	
 # -- cURL
-find_package(CURL REQUIRED)
-include_directories(${CURL_INCLUDE_DIRS})
+if(UNIX OR APPVEYOR_COMPILE)
+	find_package(CURL REQUIRED)
+	include_directories(${CURL_INCLUDE_DIRS})
+endif()
 
 # -- Yaml-cpp
 # find the yaml-cpp include directory
@@ -58,9 +62,9 @@ if(YAMLCPP_INCLUDE_DIR AND YAMLCPP_LIBRARY)
 endif()
 
 
-# MS Visual C++ specific bindings
-if(MSVC)	
-	# ZeroMQ on Windows...
+# -- ZeroMQ on Appveyor
+if(APPVEYOR_COMPILE)	
+	# ZeroMQ on Appveyor...
 	find_path(ZEROMQ_INCLUDE NAMES zmq.h PATHS "C:\\deps\\libzmq\\include")
 	find_library(ZEROMQ_LIB NAMES libzmq PATHS "C:\\deps\\libzmq\\lib")
 	
@@ -176,13 +180,15 @@ else()
 	target_link_libraries(${EXEC_NAME} archive)
 endif()
 
-target_link_libraries(${EXEC_NAME} ${CURL_LIBRARIES})
-target_link_libraries(${EXEC_NAME} ${Boost_LIBRARIES})
+if(UNIX OR APPVEYOR_COMPILE)
+	target_link_libraries(${EXEC_NAME} ${CURL_LIBRARIES})
+	target_link_libraries(${EXEC_NAME} ${Boost_LIBRARIES})
+endif()
 
 if(UNIX)
 	target_link_libraries(${EXEC_NAME} -lzmq)
 	target_link_libraries(${EXEC_NAME} pthread)
-elseif(MSVC)
+elseif(APPVEYOR_COMPILE)
 	target_link_libraries(${EXEC_NAME} ${ZEROMQ_LIB})	
 endif()
 
@@ -197,6 +203,7 @@ endif()
 
 if(NOT YAMLCPP_FOUND)
 	# Include Yaml-cpp
+	option(YAML_CPP_BUILD_TOOLS OFF)
 	add_subdirectory(vendor/yaml-cpp)
 endif()
 
