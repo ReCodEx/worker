@@ -376,7 +376,6 @@ void job::build_job(const YAML::Node &conf)
 
 void job::prepare_job()
 {
-	setup // TODO: set fileman_hostname_ to internal fileman_
 	return;
 }
 

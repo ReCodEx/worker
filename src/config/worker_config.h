@@ -51,6 +51,12 @@ public:
 	 * @return
 	 */
 	virtual const header_map_t &get_headers() const;
+
+	/**
+	 * Get path to the caching directory
+	 */
+	std::string get_cache_dir() const;
+
 	/**
 	 * Get wrapper for logger configuration.
 	 * @return constant reference to log_config structure
@@ -81,6 +87,8 @@ private:
 	std::string broker_uri_;
 	/** Header which are sent to broker and should specify worker abilities */
 	header_map_t headers_;
+	/** The caching directory path */
+	std::string cache_dir_;
 	/** Configuration of logger */
 	log_config log_config_;
 	/** Default configuration of file managers */

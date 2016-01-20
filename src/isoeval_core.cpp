@@ -192,9 +192,9 @@ void isoeval_core::broker_init()
 void isoeval_core::fileman_init()
 {	
 	logger_->info() << "Initializing file managers...";
-	auto fileman_conf = config_->get_fileman_config(); // TODO: resolve pushing fileman configurations
+	auto fileman_conf = config_->get_filemans_configs();
 	remote_fm_ = std::make_shared<http_manager>(fileman_conf, logger_);
-	cache_fm_ = std::make_shared<cache_manager>(fileman_conf.cache_dir, logger_);
+	cache_fm_ = std::make_shared<cache_manager>(config_->get_cache_dir(), logger_);
 	logger_->info() << "File managers initialized.";
 
 	return;
