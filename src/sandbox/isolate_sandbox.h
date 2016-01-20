@@ -30,7 +30,7 @@ public:
 	 * Destructor.
 	 */
 	virtual ~isolate_sandbox();
-	virtual task_results run(const std::string &binary, const std::vector<std::string> &arguments);
+	virtual sandbox_results run(const std::string &binary, const std::vector<std::string> &arguments);
 private:
 	sandbox_limits limits_;
 	std::shared_ptr<spdlog::logger> logger_;
@@ -43,7 +43,7 @@ private:
 	void isolate_cleanup();
 	void isolate_run(const std::string &binary, const std::vector<std::string> &arguments);
 	char **isolate_run_args(const std::string &binary, const std::vector<std::string> &arguments);
-	task_results process_meta_file();
+	sandbox_results process_meta_file();
 };
 
 

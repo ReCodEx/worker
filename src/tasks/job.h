@@ -49,16 +49,11 @@ public:
 	~job();
 
 	/**
-	 * Runs all task which are sorted in task queue.
+	 * Runs all task which are sorted in task queue and get results from all of them.
 	 * Should not throw an exception.
+	 * @return Associative array which indexes are task ids. Values in map are not @a nullptr.
 	 */
-	void run();
-
-	/**
-	 * Get results from all tasks and return them.
-	 * @return associative array which indexes are task ids
-	 */
-	std::map<std::string, std::shared_ptr<task_results>> get_results();
+	std::map<std::string, std::shared_ptr<task_results>> run();
 
 private:
 

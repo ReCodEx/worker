@@ -7,7 +7,7 @@ job_evaluator::job_evaluator(
 	std::shared_ptr<worker_config> config,
 	std::shared_ptr<file_manager_base> remote_fm,
 	std::shared_ptr<file_manager_base> cache_fm)
-	: job_(nullptr), remote_fm_(remote_fm), cache_fm_(cache_fm),
+	: job_(nullptr), job_results_(), remote_fm_(remote_fm), cache_fm_(cache_fm),
 	  logger_(logger), config_(config)
 {
 	if (logger == nullptr) {
@@ -193,9 +193,6 @@ void job_evaluator::push_result()
 		return;
 	}
 
-	// get results which will be processed from job
-	auto results = job_->get_results();
-
 	// create result directory for temporary files
 	results_path_ = fs::temp_directory_path() / "isoeval" / "results" /
 			std::to_string(config_->get_worker_id()) / job_id_;
@@ -208,22 +205,49 @@ void job_evaluator::push_result()
 	// build yaml tree
 	YAML::Node res;
 	res["job-id"] = job_id_;
-	for (auto &i : results) {
-		if (i.second != nullptr) {
-			YAML::Node node;
-			node["task-id"] = i.first;
-			node["exitcode"] = i.second->exitcode;
-			node["time"] = i.second->time;
-			node["wall-time"] = i.second->wall_time;
-			node["memory"] = i.second->memory;
-			node["max-rss"] = i.second->max_rss;
-			//node["status"] = i.second->status; // TODO: omitted for now
-			node["exitsig"] = i.second->exitsig;
-			node["killed"] = i.second->killed;
-			node["message"] = i.second->message;
-
-			res["results"].push_back(node);
+	for (auto &i : job_results_) {
+		YAML::Node node;
+		node["task-id"] = i.first;
+		node["status"] = i.second->failed ? "FAILED" : "OK";
+		if (!i.second->error_message.empty()) {
+			node["error_message"] = i.second->error_message;
 		}
+
+		auto &sandbox = i.second->sandbox_status;
+		if (sandbox != nullptr) {
+			YAML::Node subnode;
+			subnode["exitcode"] = sandbox->exitcode;
+			subnode["time"] = sandbox->time;
+			subnode["wall-time"] = sandbox->wall_time;
+			subnode["memory"] = sandbox->memory;
+			subnode["max-rss"] = sandbox->max_rss;
+
+			switch (sandbox->status) {
+			case isolate_status::OK:
+				subnode["status"] = "OK";
+				break;
+			case isolate_status::RE:
+				subnode["status"] = "RE";
+				break;
+			case isolate_status::SG:
+				subnode["status"] = "SG";
+				break;
+			case isolate_status::TO:
+				subnode["status"] = "TO";
+				break;
+			case isolate_status::XX:
+				subnode["status"] = "XX";
+				break;
+			}
+
+			subnode["exitsig"] = sandbox->exitsig;
+			subnode["killed"] = sandbox->killed;
+			subnode["message"] = sandbox->message;
+
+			node["sandbox_results"] = subnode;
+		}
+
+		res["results"].push_back(node);
 	}
 
 	// open output stream and write constructed yaml

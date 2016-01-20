@@ -28,12 +28,10 @@ public:
 	 * @param dependencies array of names of task which has to be evaluated before this task
 	 * @param cmd command which will be executed in this task
 	 * @param arguments just command line arguments to executed command
-	 * @param log name of log to which errors will be reported
 	 */
 	task_base(size_t id, std::string task_id, size_t priority, bool fatal,
 			  const std::vector<std::string> &dependencies,
-			  const std::string &cmd, const std::vector<std::string> &arguments,
-			  const std::string &log);
+			  const std::string &cmd, const std::vector<std::string> &arguments);
 	/**
 	 * Virtual destructor.
 	 */
@@ -41,8 +39,9 @@ public:
 
 	/**
 	 * This method runs operation which this task is supposed to do.
+	 * @return results to be pushed back
 	 */
-	virtual void run() = 0;
+	virtual std::shared_ptr<task_results> run() = 0;
 	/**
 	 * Add child to this task. Once given child cannot be deleted.
 	 * @param add
@@ -92,20 +91,10 @@ public:
 	 */
 	const std::vector<std::string> &get_args();
 	/**
-	 * Get name of the log.
-	 * @return text
-	 */
-	const std::string &get_log();
-	/**
 	 * Return dependencies of this particular task.
 	 * @return textual vector array of dependencies
 	 */
 	const std::vector<std::string> &get_dependencies();
-	/**
-	 * Return results of task. Should be only used in external tasks.
-	 * @return nullptr if there are no results to be pushed back
-	 */
-	virtual std::shared_ptr<task_results> get_result();
 
 	bool is_executable();
 	void set_execution(bool set);
