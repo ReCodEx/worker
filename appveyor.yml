@@ -81,7 +81,7 @@ before_build:
 
     echo Running cmake...
 
-    cmake -G "Visual Studio 14 2015" -DAPPVEYOR_COMPILE -DBOOST_ROOT=C:\deps\boost -DCURL_LIBRARY=C:\deps\curl\lib\libcurl.lib -DCURL_INCLUDE_DIR=C:\deps\curl\include
+    cmake -G "Visual Studio 14 2015" -DAPPVEYOR_COMPILE=ON -DBOOST_ROOT=C:\deps\boost -DCURL_LIBRARY=C:\deps\curl\lib\libcurl.lib -DCURL_INCLUDE_DIR=C:\deps\curl\include
 build:
   project: ./ALL_BUILD.vcxproj
   parallel: true
