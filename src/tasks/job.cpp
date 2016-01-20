@@ -4,7 +4,7 @@ job::job(const YAML::Node &job_config, fs::path source_path,
 		 std::shared_ptr<worker_config> default_config,
 		 std::shared_ptr<file_manager_base> fileman)
 	: source_path_(source_path), fileman_(fileman), root_task_(nullptr),
-	  default_config_(default_config), results_()
+	  default_config_(default_config)
 {
 	// check construction parameters if they are in right format
 	if (default_config_ == nullptr) {
@@ -32,8 +32,10 @@ job::~job()
 	cleanup_job();
 }
 
-void job::run()
+std::map<std::string, std::shared_ptr<task_results>> job::run()
 {
+	std::map<std::string, std::shared_ptr<task_results>> results;
+
 	// simply run all tasks in given topological order
 	for (auto &i : task_queue_) {
 		auto task_id = i->get_task_id();
@@ -44,24 +46,19 @@ void job::run()
 				res->failed = true;
 				res->error_message = "Nullptr result returned.";
 			}
-			results_.emplace(task_id, res);
+			results.emplace(task_id, res);
 		} catch (std::exception &e) {
 			std::shared_ptr<task_results> result(new task_results());
 			result->failed = true;
 			result->error_message = e.what();
-			results_.emplace(task_id, result);
+			results.emplace(task_id, result);
 			if (i->get_fatal_failure()) {
 				break;
 			}
 		}
 	}
 
-	return;
-}
-
-std::map<std::string, std::shared_ptr<task_results>> job::get_results()
-{
-	return results_;
+	return results;
 }
 
 void job::build_job(const YAML::Node &conf)

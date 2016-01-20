@@ -49,15 +49,10 @@ public:
 	~job();
 
 	/**
-	 * Runs all task which are sorted in task queue.
+	 * Runs all task which are sorted in task queue and get results from all of them.
+	 * @return Associative array which indexes are task ids. Values in map are not @a nullptr.
 	 */
-	void run();
-
-	/**
-	 * Get results from all tasks and return them.
-	 * @return associative array which indexes are task ids
-	 */
-	std::map<std::string, std::shared_ptr<task_results>> get_results();
+	std::map<std::string, std::shared_ptr<task_results>> run();
 
 private:
 
@@ -95,8 +90,6 @@ private:
 	/** Tasks in linear ordering prepared for evaluation */
 	std::vector<std::shared_ptr<task_base>> task_queue_;
 	std::shared_ptr<worker_config> default_config_;
-	/** Results of all tasks - task_id and task_results struct (no nullptr allowed) */
-	std::map<std::string, std::shared_ptr<task_results>> results_;
 };
 
 /**

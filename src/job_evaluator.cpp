@@ -4,7 +4,7 @@ job_evaluator::job_evaluator(std::shared_ptr<spdlog::logger> logger,
 							 std::shared_ptr<worker_config> config,
 							 std::shared_ptr<file_manager_base> fileman,
 							 std::shared_ptr<file_manager_base> submission_fileman)
-	: job_(nullptr), fileman_(fileman), submission_fileman_(submission_fileman),
+	: job_(nullptr), job_results_(), fileman_(fileman), submission_fileman_(submission_fileman),
 	  logger_(logger), config_(config)
 {
 	if (logger == nullptr) {
@@ -183,9 +183,6 @@ void job_evaluator::push_result()
 		return;
 	}
 
-	// get results which will be processed from job
-	auto results = job_->get_results();
-
 	// create result directory for temporary files
 	results_path_ = fs::temp_directory_path() / "isoeval" / "results" /
 			config_->get_worker_id() / job_id_;
@@ -198,7 +195,7 @@ void job_evaluator::push_result()
 	// build yaml tree
 	YAML::Node res;
 	res["job-id"] = job_id_;
-	for (auto &i : results) {
+	for (auto &i : job_results_) {
 		YAML::Node node;
 		node["task-id"] = i.first;
 		node["status"] = i.second->failed ? "FAILED" : "OK";
