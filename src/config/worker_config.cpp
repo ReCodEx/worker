@@ -41,6 +41,10 @@ worker_config::worker_config (const YAML::Node &config)
 			}
 		}
 
+		if (config["file-cache"]["cache-dir"].IsScalar()) {
+			cache_dir_ = config["file-cache"]["cache-dir"].as<std::string>();
+		}
+
 		// load worker-id
 		if (config["worker-id"] && config["worker-id"].IsScalar()) {
 			worker_id_ = config["worker-id"].as<size_t>();
@@ -184,4 +188,9 @@ const sandbox_limits &worker_config::get_limits()
 const std::map<std::string, size_t> &worker_config::get_sandboxes_limits()
 {
 	return sandboxes_limits_;
+}
+
+std::string worker_config::get_cache_dir () const
+{
+	return cache_dir_;
 }

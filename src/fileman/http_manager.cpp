@@ -43,9 +43,9 @@ http_manager::http_manager(std::shared_ptr<spdlog::logger> logger) :
 }
 
 http_manager::http_manager(
-	const fileman_config &config,
+	const std::vector<fileman_config> &configs,
 	std::shared_ptr<spdlog::logger> logger) :
-	config_(config)
+	configs_(configs)
 {
 	if (logger != nullptr) {
 		logger_ = logger;
@@ -95,9 +95,14 @@ void http_manager::get_file(const std::string &src_name, const std::string &dst_
 		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 2L);
 		//Throw exception on HTTP responses >= 400
 		curl_easy_setopt(curl, CURLOPT_FAILONERROR, 1L);
+
 		//Set HTTP authentication
-		curl_easy_setopt(curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-		curl_easy_setopt(curl, CURLOPT_USERPWD, (config_.username + ":" + config_.password).c_str());
+		auto config = find_config(src_name);
+
+		if (config != nullptr) {
+			curl_easy_setopt(curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+			curl_easy_setopt(curl, CURLOPT_USERPWD, (config->username + ":" + config->password).c_str());
+		}
 
 		//Enable verbose for easier tracing
 		//curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
@@ -173,9 +178,14 @@ void http_manager::put_file(const std::string &src, const std::string &dst)
 		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 2L);
 		//Throw exception on HTTP responses >= 400
 		curl_easy_setopt(curl, CURLOPT_FAILONERROR, 1L);
+
 		//Set HTTP authentication
-		curl_easy_setopt(curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-		curl_easy_setopt(curl, CURLOPT_USERPWD, (config_.username + ":" + config_.password).c_str());
+		auto config = find_config(dst);
+
+		if (config != nullptr) {
+			curl_easy_setopt(curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+			curl_easy_setopt(curl, CURLOPT_USERPWD, (config->username + ":" + config->password).c_str());
+		}
 
 		//Enable verbose for easier tracing
 		//curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
@@ -196,4 +206,15 @@ void http_manager::put_file(const std::string &src, const std::string &dst)
 		//Always cleanup
 		curl_easy_cleanup(curl);
 	}
+}
+
+const fileman_config *http_manager::find_config(const std::string &url) const
+{
+	for (auto it = std::begin(configs_); it != std::end(configs_); ++it) {
+		if (url.compare(0, it->remote_url.size(), it->remote_url) == 0) {
+			return &(*it);
+		}
+	}
+
+	return nullptr;
 }

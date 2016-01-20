@@ -87,11 +87,13 @@ void job_evaluator::build_job()
 	}
 	logger_->info() << "Yaml job configuration loaded properly.";
 
+	auto file_server_url = conf["submission"]["file-collector"].as<std::string>(); // TODO separate job config from execution logic
+
 	auto job_fm = std::make_shared<fallback_file_manager>(
 		cache_fm_,
 		std::make_shared<prefixed_file_manager>(
 			remote_fm_,
-			config_->get_fileman_config().remote_url + "/" // TODO: multiple setups in worker config
+			file_server_url + "/"
 		)
 	);
 
