@@ -114,10 +114,12 @@ set(SOURCE_FILES
 	src/fileman/file_manager_base.h
 	src/fileman/cache_manager.h
 	src/fileman/http_manager.h
-	src/fileman/file_manager.h
+		src/fileman/fallback_file_manager.h
 	src/fileman/cache_manager.cpp
 	src/fileman/http_manager.cpp
-	src/fileman/file_manager.cpp
+		src/fileman/fallback_file_manager.cpp
+    src/fileman/prefixed_file_manager.cpp
+    src/fileman/prefixed_file_manager.h
 	src/sandbox/sandbox_base.h
 	src/isoeval_core.h
 	src/isoeval_core.cpp

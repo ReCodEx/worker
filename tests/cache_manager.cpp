@@ -69,7 +69,7 @@ TEST(CacheManager, PutExistingFile)
 		file << "testing input" << endl;
 	}
 	cache_manager m((tmp / "recodex").string());
-	EXPECT_NO_THROW(m.put_file((tmp / "test.txt").string()));
+	EXPECT_NO_THROW(m.put_file((tmp / "test.txt").string(), "test.txt"));
 	EXPECT_TRUE(fs::is_regular_file((tmp / "recodex" / "test.txt").string()));
 	fs::remove((tmp / "test.txt").string());
 	fs::remove_all((tmp / "recodex").string());
@@ -79,19 +79,6 @@ TEST(CacheManager, PutNonexistingFile)
 {
 	auto tmp = fs::temp_directory_path();
 	cache_manager m((tmp / "recodex").string());
-	EXPECT_THROW(m.put_file((tmp / "as4df.txt").string()), fm_exception);
+	EXPECT_THROW(m.put_file((tmp / "as4df.txt").string(), "as4df.txt"), fm_exception);
 	fs::remove_all((tmp / "recodex").string());
-}
-
-TEST(CacheManager, GetSetParams)
-{
-	auto tmp = fs::temp_directory_path();
-	cache_manager m((tmp / "recodex").string());
-	EXPECT_EQ(m.get_destination(), (tmp / "recodex").string());
-	EXPECT_TRUE(fs::is_directory((tmp / "recodex")));
-	fs::remove_all((tmp / "recodex").string());
-	m.set_params((tmp / "testing").string());
-	EXPECT_EQ(m.get_destination(), (tmp / "testing").string());
-	EXPECT_TRUE(fs::is_directory((tmp / "testing")));
-	fs::remove_all((tmp / "testing").string());
 }

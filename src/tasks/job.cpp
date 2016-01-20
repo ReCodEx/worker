@@ -362,9 +362,6 @@ void job::build_job(const YAML::Node &conf)
 
 void job::prepare_job()
 {
-	// prepare file manager
-	fileman_->set_params(fileman_hostname_, fileman_username_, fileman_passwd_);
-
 	return;
 }
 

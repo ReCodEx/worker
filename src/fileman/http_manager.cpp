@@ -38,13 +38,14 @@ static size_t fwrite_wrapper(void *ptr, size_t size, size_t nmemb, FILE *stream)
 
 
 http_manager::http_manager(std::shared_ptr<spdlog::logger> logger) :
-	http_manager("", "", "", logger)
+	logger_(logger)
 {
 }
 
-http_manager::http_manager(const std::string &remote_url, const std::string &username, const std::string &password,
-							std::shared_ptr<spdlog::logger> logger) :
-	remote_url_(remote_url), username_(username), password_(password)
+http_manager::http_manager(
+	const fileman_config &config,
+	std::shared_ptr<spdlog::logger> logger) :
+	config_(config)
 {
 	if (logger != nullptr) {
 		logger_ = logger;
@@ -53,24 +54,20 @@ http_manager::http_manager(const std::string &remote_url, const std::string &use
 		auto sink = std::make_shared<spdlog::sinks::null_sink_st>();
 		logger_ = std::make_shared<spdlog::logger>("cache_manager_nolog", sink);
 	}
-
-	validate_url();
 }
 
 void http_manager::get_file(const std::string &src_name, const std::string &dst_path)
 {
-	fs::path dest_file_path = fs::path(dst_path) / fs::path(src_name).filename();
-
 	CURL *curl;
 	CURLcode res;
 	FILE *fd;
 
-	logger_->debug() << "Downloading file " << remote_url_ + src_name << " to " << dest_file_path.string();
+	logger_->debug() << "Downloading file " << src_name << " to " << dst_path;
 
 	//Open file to download
-	fd = fopen(dest_file_path.string().c_str(), "wb");
+	fd = fopen(dst_path.c_str(), "wb");
 	if(!fd) {
-		auto message = "Cannot open file " + dest_file_path.string() + " for writing.";
+		auto message = "Cannot open file " + dst_path + " for writing.";
 		logger_->warn() << message;
 		throw fm_exception(message);
 	}
@@ -78,7 +75,7 @@ void http_manager::get_file(const std::string &src_name, const std::string &dst_
 	curl = curl_easy_init();
 	if (curl) {
 		//Destination URL
-		curl_easy_setopt(curl, CURLOPT_URL, (remote_url_ + src_name).c_str());
+		curl_easy_setopt(curl, CURLOPT_URL, (src_name).c_str());
 
 		//Set where to write data to
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, fd);
@@ -100,7 +97,7 @@ void http_manager::get_file(const std::string &src_name, const std::string &dst_
 		curl_easy_setopt(curl, CURLOPT_FAILONERROR, 1L);
 		//Set HTTP authentication
 		curl_easy_setopt(curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-		curl_easy_setopt(curl, CURLOPT_USERPWD, (username_ + ":" + password_).c_str());
+		curl_easy_setopt(curl, CURLOPT_USERPWD, (config_.username + ":" + config_.password).c_str());
 
 		//Enable verbose for easier tracing
 		//curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
@@ -113,9 +110,9 @@ void http_manager::get_file(const std::string &src_name, const std::string &dst_
 		//Check for errors
 		if (res != CURLE_OK) {
 			try {
-				fs::remove(dest_file_path);
+				fs::remove(dst_path);
 			} catch (...) {}
-			auto error_message = "Failed to download " + remote_url_ + src_name + " to " + dest_file_path.string() +
+			auto error_message = "Failed to download " + src_name + " to " + dst_path +
 					". Error: " + curl_easy_strerror(res);
 			logger_->warn() << error_message;
 			curl_easy_cleanup(curl);
@@ -127,20 +124,19 @@ void http_manager::get_file(const std::string &src_name, const std::string &dst_
 	}
 }
 
-void http_manager::put_file(const std::string &name)
+void http_manager::put_file(const std::string &src, const std::string &dst)
 {
-	fs::path source_file(name);
-	std::string destination_url = remote_url_ + source_file.filename().string();
+	fs::path source_file(src);
 	CURL *curl;
 	CURLcode res;
 	FILE *fd;
 
-	logger_->debug() << "Uploading file " << name << " to " << destination_url;
+	logger_->debug() << "Uploading file " << src << " to " << dst;
 
 	//Open file to upload
-	fd = fopen(name.c_str(), "rb");
+	fd = fopen(src.c_str(), "rb");
 	if (!fd) {
-		auto message = "Cannot open file " + name + " for reading.";
+		auto message = "Cannot open file " + src + " for reading.";
 		logger_->warn() << message;
 		throw fm_exception(message);
 	}
@@ -151,7 +147,7 @@ void http_manager::put_file(const std::string &name)
 	curl = curl_easy_init();
 	if (curl) {
 		//Destination URL
-		curl_easy_setopt(curl, CURLOPT_URL, destination_url.c_str());
+		curl_easy_setopt(curl, CURLOPT_URL, dst.c_str());
 
 		//Upload mode
 		curl_easy_setopt(curl, CURLOPT_UPLOAD, 1L);
@@ -179,7 +175,7 @@ void http_manager::put_file(const std::string &name)
 		curl_easy_setopt(curl, CURLOPT_FAILONERROR, 1L);
 		//Set HTTP authentication
 		curl_easy_setopt(curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-		curl_easy_setopt(curl, CURLOPT_USERPWD, (username_ + ":" + password_).c_str());
+		curl_easy_setopt(curl, CURLOPT_USERPWD, (config_.username + ":" + config_.password).c_str());
 
 		//Enable verbose for easier tracing
 		//curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
@@ -191,7 +187,7 @@ void http_manager::put_file(const std::string &name)
 
 		//Check for errors
 		if (res != CURLE_OK) {
-			auto message = "Failed to upload " + name + " to " + destination_url +
+			auto message = "Failed to upload " + src + " to " + dst +
 					". Error: " + curl_easy_strerror(res);
 			logger_->warn() << message;
 			throw fm_exception(message);
@@ -201,31 +197,3 @@ void http_manager::put_file(const std::string &name)
 		curl_easy_cleanup(curl);
 	}
 }
-
-void http_manager::set_params(const std::string &destination, const std::string &username, const std::string &password)
-{
-	remote_url_ = destination;
-	username_ = username;
-	password_ = password;
-	validate_url();
-}
-
-std::string http_manager::get_destination() const
-{
-	return remote_url_;
-}
-
-void http_manager::validate_url()
-{
-	//'localhost' is also valid url, so now we don't check against regular expression
-	//just make sure, that URL has trailing '/'
-	if (remote_url_.size() > 0 && remote_url_[remote_url_.size() - 1] != '/') {
-		remote_url_.push_back('/');
-	}
-
-	//Simple regular expression to validate inserted URL. Note use of raw string. \w <=> [_[:alnum:]]
-	/*if(!std::regex_match(remote_url_, std::regex(R"(^https?://\w+(\.\w+)+(/\w+)*(:\d+)?/$)"))) {
-		throw fm_exception("URL '" + remote_url_ + "' is not valid.");
-	}*/
-}
-

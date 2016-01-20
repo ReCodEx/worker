@@ -47,39 +47,22 @@ void cache_manager::get_file(const std::string &src_name, const std::string &dst
 	}
 }
 
-void cache_manager::put_file(const std::string &name)
+void cache_manager::put_file(const std::string &src_name, const std::string &dst_name)
 {
-	fs::path source_file(name);
-	fs::path destination_file = caching_dir_ / source_file.filename();
-	logger_->debug() << "Copying file " << name + " to cache";
+	fs::path source_file(src_name);
+	fs::path destination_file = caching_dir_ / dst_name;
+	logger_->debug() << "Copying file " << src_name + " to cache";
 
 	try {
 		fs::copy_file(source_file, destination_file, fs::copy_option::overwrite_if_exists);
 	} catch (fs::filesystem_error &e) {
-		auto message = "Failed to copy file " + name + " to cache. Error: " + e.what();
+		auto message = "Failed to copy file " + src_name + " to cache. Error: " + e.what();
 		logger_->warn() << message;
 		throw fm_exception(message);
 	}
 }
 
-void cache_manager::set_params(const std::string &destination, const std::string &, const std::string &)
-{
-	fs::path cache_path(destination);
-
-	try {
-		if (!fs::is_directory(cache_path)) {
-			fs::create_directories(cache_path);
-		}
-	} catch (fs::filesystem_error &e) {
-		auto message = "Cannot create directory " + cache_path.string() + ". Error: " + e.what();
-		logger_->warn() << message;
-		throw fm_exception(message);
-	}
-
-	caching_dir_ = cache_path;
-}
-
-std::string cache_manager::get_destination() const
+std::string cache_manager::get_caching_dir() const
 {
 	return caching_dir_.string();
 }

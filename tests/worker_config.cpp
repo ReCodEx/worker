@@ -89,7 +89,7 @@ TEST(worker_config, load_yaml_basic)
 	expected_fileman.cache_dir = "/tmp/cache";
 
 	ASSERT_STREQ("tcp://localhost:1234", config.get_broker_uri().c_str());
-	ASSERT_EQ(8, config.get_worker_id());
+	ASSERT_EQ((size_t) 8, config.get_worker_id());
 	ASSERT_EQ(expected_headers, config.get_headers());
 	ASSERT_EQ(expected_sand_limits, config.get_sandboxes_limits());
 	ASSERT_EQ(expected_limits, config.get_limits());

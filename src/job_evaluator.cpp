@@ -1,10 +1,13 @@
 #include "job_evaluator.h"
+#include "fileman/fallback_file_manager.h"
+#include "fileman/prefixed_file_manager.h"
 
-job_evaluator::job_evaluator(std::shared_ptr<spdlog::logger> logger,
-							 std::shared_ptr<worker_config> config,
-							 std::shared_ptr<file_manager_base> fileman,
-							 std::shared_ptr<file_manager_base> submission_fileman)
-	: job_(nullptr), fileman_(fileman), submission_fileman_(submission_fileman),
+job_evaluator::job_evaluator(
+	std::shared_ptr<spdlog::logger> logger,
+	std::shared_ptr<worker_config> config,
+	std::shared_ptr<file_manager_base> remote_fm,
+	std::shared_ptr<file_manager_base> cache_fm)
+	: job_(nullptr), remote_fm_(remote_fm), cache_fm_(cache_fm),
 	  logger_(logger), config_(config)
 {
 	if (logger == nullptr) {
@@ -28,9 +31,8 @@ void job_evaluator::download_submission()
 	fs::create_directories(archive_path_);
 
 	// download a file
-	submission_fileman_->set_params("", "", ""); // TODO resolve filemanager problems
-	submission_fileman_->get_file(archive_url.string(), archive_path_.string());
 	archive_name_ = archive_url.filename();
+	remote_fm_->get_file(archive_url.string(), (archive_path_ / archive_name_).string());
 
 	logger_->info() << "Submission archive downloaded succesfully.";
 	return;
@@ -85,7 +87,15 @@ void job_evaluator::build_job()
 	}
 	logger_->info() << "Yaml job configuration loaded properly.";
 
-	job_ = std::make_shared<job>(conf, source_path_, config_, fileman_);
+	auto job_fm = std::make_shared<fallback_file_manager>(
+		cache_fm_,
+		std::make_shared<prefixed_file_manager>(
+			remote_fm_,
+			config_->get_fileman_config().remote_url + "/"
+		)
+	);
+
+	job_ = std::make_shared<job>(conf, source_path_, config_, job_fm);
 
 	logger_->info() << "Job building done.";
 	return;
@@ -233,8 +243,7 @@ void job_evaluator::push_result()
 	logger_->info() << "Compression done.";
 
 	// send archived result to file server
-	submission_fileman_->set_params(result_url_, "", ""); // TODO resolve file manager problems
-	submission_fileman_->put_file(archive_path.string());
+	remote_fm_->put_file(archive_path.string(), result_url_);
 
 	logger_->info() << "Job results uploaded succesfully.";
 	return;

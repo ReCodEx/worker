@@ -39,8 +39,8 @@ public:
 	 */
 	job_evaluator(std::shared_ptr<spdlog::logger> logger,
 				  std::shared_ptr<worker_config> config,
-				  std::shared_ptr<file_manager_base> fileman,
-				  std::shared_ptr<file_manager_base> submission_fileman);
+				  std::shared_ptr<file_manager_base> remote_fm,
+				  std::shared_ptr<file_manager_base> cache_fm);
 	/**
 	 * Theoretically not needed, but stated for completion.
 	 */
@@ -119,9 +119,9 @@ private:
 	size_t result_;
 
 	/** File manager which is used to download and upload submission related files */
-	std::shared_ptr<file_manager_base> fileman_;
+	std::shared_ptr<file_manager_base> remote_fm_;
 	/** File manager used to download submission archives without caching */
-	std::shared_ptr<file_manager_base> submission_fileman_;
+	std::shared_ptr<file_manager_base> cache_fm_;
 	/** Logger given during construction */
 	std::shared_ptr<spdlog::logger> logger_;
 	/** Default configuration of worker */

@@ -4,11 +4,13 @@
 
 #include "isoeval_core.h"
 #include "job_receiver.h"
+#include "fileman/http_manager.h"
+#include "fileman/cache_manager.h"
 
 
 isoeval_core::isoeval_core(std::vector<std::string> args)
 	: args_(args), config_filename_("config.yml"), logger_(nullptr),
-	  submission_fileman_(nullptr), fileman_(nullptr),
+	  remote_fm_(nullptr), cache_fm_(nullptr),
 	  job_receiver_(nullptr), broker_(nullptr)
 {
 	// parse cmd parameters
@@ -191,10 +193,8 @@ void isoeval_core::fileman_init()
 {	
 	logger_->info() << "Initializing file managers...";
 	auto fileman_conf = config_->get_fileman_config();
-	submission_fileman_ = std::make_shared<http_manager>(fileman_conf.remote_url, fileman_conf.username,
-														 fileman_conf.password, logger_);
-	fileman_ = std::make_shared<file_manager>(fileman_conf.cache_dir, fileman_conf.remote_url,
-											  fileman_conf.username, fileman_conf.password, logger_);
+	remote_fm_ = std::make_shared<http_manager>(fileman_conf, logger_);
+	cache_fm_ = std::make_shared<cache_manager>(fileman_conf.cache_dir, logger_);
 	logger_->info() << "File managers initialized.";
 
 	return;
@@ -203,7 +203,7 @@ void isoeval_core::fileman_init()
 void isoeval_core::receiver_init()
 {
 	logger_->info() << "Initializing job receiver and evaluator...";
-	auto evaluator = std::make_shared<job_evaluator>(logger_, config_, fileman_, submission_fileman_);
+	auto evaluator = std::make_shared<job_evaluator>(logger_, config_, remote_fm_, cache_fm_);
 	job_receiver_ = std::make_shared<job_receiver>(zmq_context_, evaluator, logger_);
 	logger_->info() << "Job receiver and evaluator initialized.";
 	return;

@@ -21,9 +21,9 @@ namespace fs = boost::filesystem;
 class cache_manager : public file_manager_base {
 public:
 	/**
-	  * Constructor with optional logger.
-	  * @param logger Shared pointer to system logger (optional).
-	  */
+	 * Constructor with optional logger.
+	 * @param logger Shared pointer to system logger (optional).
+	 */
 	cache_manager(std::shared_ptr<spdlog::logger> logger = nullptr);
 	/**
 	 * Set up cache manager with working directory.
@@ -34,7 +34,7 @@ public:
 	/**
 	 * Destructor.
 	 */
-    virtual ~cache_manager() {}
+	virtual ~cache_manager() {}
 	/**
 	 * Copy a file from cache to destination.
 	 * @param src_name Name of the file without path.
@@ -45,22 +45,15 @@ public:
 	 * Copy file from path to cache.
 	 * @param name Path and name of the file to be copied.
 	 */
-	virtual void put_file(const std::string &name);
+	virtual void put_file(const std::string &src_name, const std::string &dst_path);
+
 	/**
-	 * Set caching directory in runtime.
-	 * @param destination New directory where will cached files be stored.
-	 * @param username Not used.
-	 * @param password Not used.
+	 * Get the directory where files are stored
 	 */
-	virtual void set_params(const std::string &destination, const std::string &username = "",
-							const std::string &password = "");
-	/**
-	 * Get actual path to caching directory.
-	 * @return path to cachin directory
-	 */
-	virtual std::string get_destination() const;
+	std::string get_caching_dir() const;
+
 private:
-    fs::path caching_dir_;
+	fs::path caching_dir_;
 	std::shared_ptr<spdlog::logger> logger_;
 };
 

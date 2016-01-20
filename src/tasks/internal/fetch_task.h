@@ -2,7 +2,7 @@
 #define CODEX_WORKER_INTERNAL_FETCH_TASK_H
 
 #include "../task_base.h"
-#include "../../fileman/file_manager.h"
+#include "../../fileman/file_manager_base.h"
 #include <memory>
 
 
