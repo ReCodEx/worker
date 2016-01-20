@@ -17,10 +17,11 @@ fetch_task::~fetch_task()
 }
 
 
-void fetch_task::run()
+std::shared_ptr<task_results> fetch_task::run()
 {
 	try {
 		filemanager_->get_file(arguments_[0], arguments_[1]);
+		return std::shared_ptr<task_results>(new task_results());
 	} catch (fm_exception &e) {
 		throw task_exception(std::string("Cannot fetch files. Error: ") + e.what());
 	}

@@ -27,7 +27,7 @@ public:
 	/**
 	 * Empty function. Has to be stated for completion.
 	 */
-	virtual void run();
+	virtual std::shared_ptr<task_results> run();
 };
 
 #endif //CODEX_WORKER_FAKE_TASK_HPP

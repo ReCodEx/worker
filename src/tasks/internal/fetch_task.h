@@ -15,7 +15,7 @@ public:
 			const std::vector<std::string> &arguments, const std::vector<std::string> &dependencies,
 			   std::shared_ptr<file_manager_base> filemanager);
 	virtual ~fetch_task();
-	virtual void run();
+	virtual std::shared_ptr<task_results> run();
 private:
 	std::shared_ptr<file_manager_base> filemanager_;
 };

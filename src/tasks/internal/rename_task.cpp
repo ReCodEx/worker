@@ -22,10 +22,11 @@ rename_task::~rename_task()
 }
 
 
-void rename_task::run()
+std::shared_ptr<task_results> rename_task::run()
 {
 	try {
 		fs::rename(arguments_[0], arguments_[1]);
+		return std::shared_ptr<task_results>(new task_results());
 	} catch (fs::filesystem_error &e) {
 		throw task_exception(std::string("Cannot rename files. Error: ") + e.what());
 	}

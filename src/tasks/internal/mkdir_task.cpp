@@ -22,12 +22,13 @@ mkdir_task::~mkdir_task()
 }
 
 
-void mkdir_task::run()
+std::shared_ptr<task_results> mkdir_task::run()
 {
 	try {
 		for (auto &i : arguments_) {
 			fs::create_directories(i);
 		}
+		return std::shared_ptr<task_results>(new task_results());
 	} catch (fs::filesystem_error &e) {
 		//Remove already created directories
 		for (auto &i : arguments_) {

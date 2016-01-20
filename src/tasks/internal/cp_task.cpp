@@ -22,10 +22,11 @@ cp_task::~cp_task()
 }
 
 
-void cp_task::run()
+std::shared_ptr<task_results> cp_task::run()
 {
 	try {
 		fs::copy(arguments_[0], arguments_[1]);
+		return std::shared_ptr<task_results>(new task_results());
 	} catch (fs::filesystem_error &e) {
 		throw task_exception(std::string("Cannot copy files. Error: ") + e.what());
 	}

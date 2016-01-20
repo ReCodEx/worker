@@ -95,7 +95,7 @@ private:
 	/** Tasks in linear ordering prepared for evaluation */
 	std::vector<std::shared_ptr<task_base>> task_queue_;
 	std::shared_ptr<worker_config> default_config_;
-	/** Results of all tasks - task_id and task_results struct */
+	/** Results of all tasks - task_id and task_results struct (no nullptr allowed) */
 	std::map<std::string, std::shared_ptr<task_results>> results_;
 };
 

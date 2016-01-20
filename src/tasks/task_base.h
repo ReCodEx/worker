@@ -39,8 +39,9 @@ public:
 
 	/**
 	 * This method runs operation which this task is supposed to do.
+	 * @return results to be pushed back
 	 */
-	virtual void run() = 0;
+	virtual std::shared_ptr<task_results> run() = 0;
 	/**
 	 * Add child to this task. Once given child cannot be deleted.
 	 * @param add
@@ -94,11 +95,6 @@ public:
 	 * @return textual vector array of dependencies
 	 */
 	const std::vector<std::string> &get_dependencies();
-	/**
-	 * Return results of task. Should be only used in external tasks.
-	 * @return nullptr if there are no results to be pushed back
-	 */
-	virtual std::shared_ptr<task_results> get_result();
 
 protected:
 	size_t id_;

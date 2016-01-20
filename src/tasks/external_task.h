@@ -39,16 +39,11 @@ public:
 
 	/**
 	 * Runs given program and parameters in constructed sandbox.
-	 * @throws sandbox_exception if error occured in sandbox
+	 * @return @ref task_results with @a sandbox_status item properly set
+	 * @throws @ref sandbox_exception if error occured in sandbox
 	 */
-	virtual void run();
+	virtual std::shared_ptr<task_results> run();
 
-	/**
-	 * Get results from this particular task.
-	 * It overwrite virtual function from task_base.
-	 * @return
-	 */
-	virtual std::shared_ptr<task_results> get_result();
 private:
 
 	/**
@@ -73,8 +68,6 @@ private:
 	std::shared_ptr<sandbox_base> sandbox_;
 	/** Limits for sandbox in which program will be started */
 	sandbox_limits limits_;
-	/** Results from executed program */
-	std::shared_ptr<task_results> results_;
 };
 
 #endif //CODEX_WORKER_EXTERNAL_TASK_HPP

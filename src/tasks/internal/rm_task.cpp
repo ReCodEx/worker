@@ -22,7 +22,7 @@ rm_task::~rm_task()
 }
 
 
-void rm_task::run()
+std::shared_ptr<task_results> rm_task::run()
 {
 	//Try to delete all items
 	bool result = true;
@@ -38,4 +38,5 @@ void rm_task::run()
 	if (!result) {
 		throw task_exception("Cannot delete all directories.");
 	}
+	return std::shared_ptr<task_results>(new task_results());
 }

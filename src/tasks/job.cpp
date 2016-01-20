@@ -38,8 +38,13 @@ void job::run()
 	for (auto &i : task_queue_) {
 		auto task_id = i->get_task_id();
 		try {
-			i->run();
-			results_.emplace(task_id, i->get_result());
+			auto res = i->run();
+			if (res == nullptr) {
+				res = std::shared_ptr<task_results>(new task_results());
+				res->failed = true;
+				res->error_message = "Nullptr result returned.";
+			}
+			results_.emplace(task_id, res);
 		} catch (std::exception &e) {
 			std::shared_ptr<task_results> result(new task_results());
 			result->failed = true;

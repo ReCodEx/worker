@@ -74,7 +74,7 @@ public:
 				   const std::string &cmd, const std::vector<std::string> &arguments) :
 		task_base(id, task_id, priority, fatal, dependencies, cmd, arguments) {}
 	virtual ~test_task_base() {}
-	void run() {}
+	std::shared_ptr<task_results> run() { return nullptr; }
 };
 
 TEST(Tasks, TaskBase)

@@ -5,7 +5,7 @@ external_task::external_task(std::string worker_id, size_t id, const std::string
 							 const std::string &binary, const std::vector<std::string> &arguments,
 							 const std::string &sandbox_id, sandbox_limits limits)
 	: task_base(id, task_id, priority, fatal, dependencies, binary, arguments),
-	  cmd_(binary), sandbox_id_(sandbox_id), limits_(limits), results_(new task_results())
+	  cmd_(binary), sandbox_id_(sandbox_id), limits_(limits)
 {
 	sandbox_check();
 }
@@ -43,21 +43,17 @@ void external_task::sandbox_fini()
 	sandbox_ = nullptr;
 }
 
-void external_task::run()
+std::shared_ptr<task_results> external_task::run()
 {
 	sandbox_init();
 
 	// TODO: only temporary solution, should be removed
-	if (sandbox_ == nullptr) { return; }
+	if (sandbox_ == nullptr) { return nullptr; }
 
-	results_->sandbox_status = std::unique_ptr<sandbox_results>(new sandbox_results(sandbox_->run(cmd_, arguments_)));
+	auto res = std::shared_ptr<task_results>(new task_results());
+	res->sandbox_status = std::unique_ptr<sandbox_results>(new sandbox_results(sandbox_->run(cmd_, arguments_)));
 
 	sandbox_fini();
 
-	return;
-}
-
-std::shared_ptr<task_results> external_task::get_result()
-{
-	return results_;
+	return res;
 }
