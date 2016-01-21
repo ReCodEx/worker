@@ -178,8 +178,11 @@ endif()
 
 if(LibArchive_FOUND)
 	target_link_libraries(${EXEC_NAME} ${LibArchive_LIBRARIES})
-else()
+elseif(UNIX)
 	target_link_libraries(${EXEC_NAME} archive)
+else()
+	target_link_libraries(${EXEC_NAME} archive_static)
+	target_compile_definitions(${EXEC_NAME} PRIVATE LIBARCHIVE_STATIC)
 endif()
 
 if(UNIX OR APPVEYOR_COMPILE)

@@ -101,11 +101,6 @@ test_script:
     mv -f curl-ca-bundle.crt C:\projects\codex_worker\tests\
 
 
-    cd C:\projects\codex_worker
-
-    mv -f vendor/libarchive/bin/Release/* tests/Release
-
-
     cd C:\projects\codex_worker\tests
 
     .\Release\run_tests.exe
