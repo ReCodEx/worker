@@ -41,8 +41,12 @@ worker_config::worker_config (const YAML::Node &config)
 			}
 		}
 
-		if (config["file-cache"]["cache-dir"].IsScalar()) {
-			cache_dir_ = config["file-cache"]["cache-dir"].as<std::string>();
+		if (config["file-cache"] && config["file-cache"].IsMap()) {
+			auto &cache = config["file-cache"];
+
+			if (cache["cache-dir"] && cache["cache-dir"].IsScalar()) {
+				cache_dir_ = config["file-cache"]["cache-dir"].as<std::string>();
+			}
 		}
 
 		// load worker-id
@@ -63,11 +67,6 @@ worker_config::worker_config (const YAML::Node &config)
 					} // no throw... can be omitted
 					if (fileman["password"] && fileman["password"].IsScalar()) {
 						fileman_conf.password = fileman["password"].as<std::string>();
-					} // no throw... can be omitted
-					if (fileman["cache"] && fileman["cache"].IsMap()) {
-						if (fileman["cache"]["cache-dir"] && fileman["cache"]["cache-dir"].IsScalar()) {
-							fileman_conf.cache_dir = fileman["cache"]["cache-dir"].as<std::string>();
-						} // no throw... can be omitted
 					} // no throw... can be omitted
 				} // no throw... can be omitted
 
