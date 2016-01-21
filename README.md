@@ -9,7 +9,11 @@ and then sends results back.
 
 ## How to run it
 
+### Linux
 - Install dependencies according to [common](https://github.com/ReCodEx/GlobalWiki/wiki/System-configuration#common) and [worker-specific](https://github.com/ReCodEx/GlobalWiki/wiki/System-configuration#worker) configuration
 - Download dependencies using `git submodule update --init`
 - Build with cmake: `mkdir build && cd build && cmake .. && make`
 - Run `./basic-worker` (or unit tests `./tests/run_tests`)
+
+### Windows
+- Look at description in our wiki over [here](https://github.com/ReCodEx/GlobalWiki/wiki/System-configuration#windows-worker).
