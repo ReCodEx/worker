@@ -120,10 +120,10 @@ set(SOURCE_FILES
 	src/fileman/file_manager_base.h
 	src/fileman/cache_manager.h
 	src/fileman/http_manager.h
-		src/fileman/fallback_file_manager.h
+	src/fileman/fallback_file_manager.h
 	src/fileman/cache_manager.cpp
 	src/fileman/http_manager.cpp
-		src/fileman/fallback_file_manager.cpp
+	src/fileman/fallback_file_manager.cpp
     src/fileman/prefixed_file_manager.cpp
     src/fileman/prefixed_file_manager.h
 	src/sandbox/sandbox_base.h
@@ -165,6 +165,10 @@ set(SOURCE_FILES
 	src/helpers/filesystem.cpp
 	src/helpers/topological_sort.h
 	src/helpers/topological_sort.cpp
+	src/tasks/job_metadata.cpp
+	src/tasks/job_metadata.h
+	src/tasks/job_tasks.cpp
+	src/tasks/job_tasks.h
 )
 
 
