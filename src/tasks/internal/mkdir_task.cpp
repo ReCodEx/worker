@@ -27,6 +27,7 @@ std::shared_ptr<task_results> mkdir_task::run()
 	try {
 		for (auto &i : arguments_) {
 			fs::create_directories(i);
+			fs::permissions(i, fs::add_perms|fs::group_write|fs::others_write);
 		}
 		return std::shared_ptr<task_results>(new task_results());
 	} catch (fs::filesystem_error &e) {

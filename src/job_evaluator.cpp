@@ -105,7 +105,7 @@ void job_evaluator::run_job()
 {
 	try {
 		logger_->info() << "Ready for evaluation...";
-		job_->run();
+		job_results_ = job_->run();
 		logger_->info() << "Job evaluated.";
 	} catch (std::exception) {
 		result_ = 1;

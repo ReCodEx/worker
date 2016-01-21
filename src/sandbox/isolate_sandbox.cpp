@@ -143,23 +143,14 @@ void isolate_sandbox::isolate_init_child(int fd_0, int fd_1)
 	dup2(devnull, 2);
 
 	//Exec isolate init command
-	size_t arg_count = 5 + limits_.bound_dirs.size();
+	const size_t arg_count = 5;
 	const char *args[arg_count];
 
 	args[0] = isolate_binary_.c_str();
 	args[1] = "--cg";
 	args[2] = ("--box-id=" + std::to_string(id_)).c_str();
 	args[3] = "--init";
-
-	size_t i = 3;
-	for (auto it: limits_.bound_dirs) {
-		std::string arg = std::string("--dir=")
-				  + it.first + "="
-				  + it.second + ":rw";
-		args[++i] = arg.c_str();
-	}
-
-	args[arg_count - 1] = NULL;
+	args[4] = NULL;
 
 	//const_cast is ugly, but this is working with C code - execv does not modify its arguments
 	execvp(isolate_binary_.c_str(), const_cast<char **>(args));
@@ -372,6 +363,11 @@ char **isolate_sandbox::isolate_run_args(const std::string &binary, const std::v
 	}
 	for (auto &i : limits_.environ_vars) {
 		vargs.push_back("--env=" + i.first + "=" + i.second);
+	}
+	for (auto &i : limits_.bound_dirs) {
+		vargs.push_back(std::string("--dir=")
+				  + i.second + "="
+				  + i.first + ":rw");
 	}
 	vargs.push_back("--meta=" + meta_file_);
 

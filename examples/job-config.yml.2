@@ -1,0 +1,59 @@
+# prerequisited:    valid C file /tmp/main.c
+#                   NO (or EMPTY) directory /tmp/hello_from_codex_worker
+# result:           compiled binary /tmp/hello_from_codex_worker/test
+---
+submission:
+    job-id: hello_evaluation
+    language: cpp
+    file-collector:
+        hostname: http://localhost:9999
+        port: 80
+        username: ""
+        password: ""
+tasks:
+    - task-id: "new_mkdir"
+      priority: 1
+      fatal-failure: true
+      cmd:
+          bin: "mkdir"
+          args:
+              - "/tmp/hello_from_codex_worker"
+    - task-id: "copy_to_dir"
+      priority: 2
+      fatal-failure: true
+      dependencies:  # can be omitted if there is no dependencies
+        - "new_mkdir"
+      cmd:
+        bin: "cp"
+        args:
+            - "/tmp/main.c"
+            - "/tmp/hello_from_codex_worker/main.c"
+    - task-id: "eval_test01"
+      priority: 3
+      fatal-failure: false
+      dependencies:
+        - "copy_to_dir"
+      cmd:
+        bin: "/usr/bin/gcc"
+        args:
+            - "-Wall"
+            - "-o"
+            - "test"
+            - "main.c"
+      sandbox:  # if defined task is external and will be run in sandbox
+        name: "isolate"  # mandatory information
+        limits:  # if not defined, then worker default configuration of limits is loaded
+             # anything of the specified limits can be omitted and will be loaded from worker defaults
+            - hw-group-id: "group1"  # determines specific limits for specific machines
+              time: 10  # seconds
+              wall-time: 10  # seconds
+              extra-time: 2  # seconds
+              parallel: true  # time and memory limits are merged from all potential processes/threads
+              environ-variable:
+                ISOLATE_BOX: "/box"
+                PATH: "/usr/bin"
+              chdir: "../evaluate"
+              bound-directories:
+                /tmp/hello_from_codex_worker: "evaluate"
+                /etc/alternatives: "etc/alternatives"
+...

@@ -43,9 +43,7 @@ std::map<std::string, std::shared_ptr<task_results>> job::run()
 			if (i->is_executable()) {
 				auto res = i->run();
 				if (res == nullptr) {
-					res = std::shared_ptr<task_results>(new task_results());
-					res->failed = true;
-					res->error_message = "Nullptr result returned.";
+					continue;
 				}
 				results.emplace(task_id, res);
 			} else {
