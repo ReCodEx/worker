@@ -24,6 +24,8 @@ namespace fs = boost::filesystem;
 #include "internal/extract_task.h"
 #include "internal/fetch_task.h"
 #include "../helpers/topological_sort.h"
+#include "job_metadata.h"
+#include "job_tasks.h"
 
 
 /**
@@ -37,15 +39,15 @@ public:
 
 	/**
 	 * Only way to construct a job. All variables are needed to proper function.
-	 * @param job_config configuration of newly created job
+	 * @param tasks A collection of tasks in execution order
 	 * @param source_path path to source codes of submission
-	 * @param default_config default configuration of worker where defaults are loaded
-	 * @param fileman file manager which is provided to tasks
 	 * @throws job_exception if there is problem during loading of configuration
 	 */
-	job(const YAML::Node &job_config, fs::path source_path,
-		std::shared_ptr<worker_config> default_config,
-		std::shared_ptr<file_manager_base> fileman);
+	job(
+		std::shared_ptr<job_tasks> tasks,
+		fs::path source_path
+	);
+
 	~job();
 
 	/**
@@ -61,70 +63,17 @@ public:
 	std::map<std::string, std::shared_ptr<task_results>> get_results();
 
 private:
-
-	/**
-	 * From given @a conf construct an evaluation tree,
-	 * which includes parsing of configuration and constructing all tasks
-	 * @param conf input configuration which will be loaded
-	 * @throws job_exception if configuration is in bad form
-	 */
-	void build_job(const YAML::Node &conf);
 	/**
 	 * Cleanup after job evaluation, should be enough to delete all created files
 	 */
 	void cleanup_job();
-	/**
-	 * Prepare file manager for hostname from config file
-	 */
-	void prepare_job();
-
 
 	// PRIVATE DATA MEMBERS
 	fs::path source_path_;
 
-	std::shared_ptr<file_manager_base> fileman_;
-
-	//* Information about submission  *//
-	std::string job_id_;
-	std::string language_;
-	std::string fileman_hostname_;
-
-	/** Logical start of every job evaluation */
-	std::shared_ptr<task_base> root_task_;
 	/** Tasks in linear ordering prepared for evaluation */
 	std::vector<std::shared_ptr<task_base>> task_queue_;
-	std::shared_ptr<worker_config> default_config_;
 };
 
-
-/**
- * Job exception class.
- */
-class job_exception : public std::exception {
-public:
-	/**
-	 * Generic job exception with no specification.
-	 */
-	job_exception() : what_("Generic job exception") {}
-	/**
-	 * Exception with some brief description.
-	 * @param what textual description of a problem
-	 */
-	job_exception(const std::string &what) : what_(what) {}
-	/**
-	 * Virtual destructor.
-	 */
-	virtual ~job_exception() {}
-	/**
-	 * Return description of this exception.
-	 * @return C string
-	 */
-	virtual const char* what() const noexcept
-	{
-		return what_.c_str();
-	}
-protected:
-	std::string what_;
-};
 
 #endif //CODEX_WORKER_JOB_HPP

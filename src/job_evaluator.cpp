@@ -1,4 +1,6 @@
 #include "job_evaluator.h"
+#include "tasks/job_exception.h"
+#include "tasks/job_metadata.h"
 #include "fileman/fallback_file_manager.h"
 #include "fileman/prefixed_file_manager.h"
 
@@ -87,17 +89,19 @@ void job_evaluator::build_job()
 	}
 	logger_->info() << "Yaml job configuration loaded properly.";
 
-	auto file_server_url = conf["submission"]["file-collector"].as<std::string>(); // TODO separate job config from execution logic
+	auto job_meta = std::make_shared<job_metadata>(conf, config_);
 
-	auto job_fm = std::make_shared<fallback_file_manager>(
+	auto task_fileman = std::make_shared<fallback_file_manager>(
 		cache_fm_,
 		std::make_shared<prefixed_file_manager>(
 			remote_fm_,
-			file_server_url + "/"
+			job_meta->get_file_server_url() + "/"
 		)
 	);
 
-	job_ = std::make_shared<job>(conf, source_path_, config_, job_fm);
+	auto tasks = std::make_shared<job_tasks>(conf, config_, task_fileman);
+
+	job_ = std::make_shared<job>(tasks, source_path_);
 
 	logger_->info() << "Job building done.";
 	return;
@@ -275,6 +279,7 @@ eval_response job_evaluator::evaluate (eval_request request)
 	}
 	cleanup_evaluator();
 
-	return eval_response(request.job_id, "OK");
 	logger_->info() << "Job (" + request.job_id + ") ended.";
+
+	return eval_response(request.job_id, "OK");
 }

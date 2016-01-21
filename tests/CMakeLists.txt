@@ -34,6 +34,8 @@ add_executable(${TESTS_NAME}
 	${TASKS_DIR}/task_base.cpp
 	${TASKS_DIR}/external_task.cpp
 	${TASKS_DIR}/fake_task.cpp
+	${TASKS_DIR}/job_metadata.cpp
+	${TASKS_DIR}/job_tasks.cpp
 	${SRC_DIR}/job_receiver.cpp
 	job_receiver.cpp
 	${TASKS_DIR}/internal/cp_task.cpp
