@@ -3,6 +3,8 @@
 
 #include <memory>
 #include <fstream>
+#include <vector>
+#include <utility>
 #include "spdlog/spdlog.h"
 
 #define BOOST_FILESYSTEM_NO_DEPRECATED
@@ -118,7 +120,7 @@ private:
 	/** Indicates result of given job */
 	size_t result_;
 	/** Results of all evaluated tasks included in job. */
-	std::map<std::string, std::shared_ptr<task_results>> job_results_;
+	std::vector<std::pair<std::string, std::shared_ptr<task_results>>> job_results_;
 
 	/** File manager which is used to download and upload submission related files */
 	std::shared_ptr<file_manager_base> remote_fm_;

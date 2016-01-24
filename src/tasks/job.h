@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <queue>
+#include <utility>
 
 #define BOOST_FILESYSTEM_NO_DEPRECATED
 #define BOOST_NO_CXX11_SCOPED_ENUMS
@@ -51,9 +52,9 @@ public:
 	/**
 	 * Runs all task which are sorted in task queue and get results from all of them.
 	 * Should not throw an exception.
-	 * @return Associative array which indexes are task ids. Values in map are not @a nullptr.
+	 * @return Vector with pairs task id - task_results. Values are not @a nullptr.
 	 */
-	std::map<std::string, std::shared_ptr<task_results>> run();
+	std::vector<std::pair<std::string, std::shared_ptr<task_results>>> run();
 
 private:
 

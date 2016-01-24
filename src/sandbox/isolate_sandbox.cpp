@@ -46,7 +46,12 @@ isolate_sandbox::isolate_sandbox(sandbox_limits limits, size_t id, int max_timeo
 
 	meta_file_ = (meta_dir / "meta.log").string();
 
-	isolate_init();
+	try {
+		isolate_init();
+	} catch (...) {
+		fs::remove_all(fs::temp_directory_path() / ("recodex_isolate_" + std::to_string(id_)));
+		throw;
+	}
 }
 
 isolate_sandbox::~isolate_sandbox()

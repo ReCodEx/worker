@@ -32,9 +32,9 @@ job::~job()
 	cleanup_job();
 }
 
-std::map<std::string, std::shared_ptr<task_results>> job::run()
+std::vector<std::pair<std::string, std::shared_ptr<task_results>>> job::run()
 {
-	std::map<std::string, std::shared_ptr<task_results>> results;
+	std::vector<std::pair<std::string, std::shared_ptr<task_results>>> results;
 
 	// simply run all tasks in given topological order
 	for (auto &i : task_queue_) {
@@ -45,7 +45,7 @@ std::map<std::string, std::shared_ptr<task_results>> job::run()
 				if (res == nullptr) {
 					continue;
 				}
-				results.emplace(task_id, res);
+				results.push_back({task_id, res});
 			} else {
 				// we have to pass information about non-execution to children
 				i->set_children_execution(false);
@@ -54,7 +54,7 @@ std::map<std::string, std::shared_ptr<task_results>> job::run()
 			std::shared_ptr<task_results> result(new task_results());
 			result->failed = true;
 			result->error_message = e.what();
-			results.emplace(task_id, result);
+			results.push_back({task_id, result});
 			if (i->get_fatal_failure()) {
 				break;
 			} else {

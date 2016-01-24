@@ -101,4 +101,5 @@ TEST(Archivator, CompressAbsolutePath)
 
 	fs::remove_all(archive_path);
 	fs::remove_all(extracted_path);
+	fs::remove(result_path);
 }
