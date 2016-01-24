@@ -17,7 +17,7 @@ TEST(IsolateSandbox, BasicCreation)
 	sandbox_limits limits;
 	EXPECT_NO_THROW(isolate_sandbox s(limits, 34));
 	isolate_sandbox is(limits, 34, 500);
-	EXPECT_EQ(is.get_dir(), "/tmp/box/34");
+	EXPECT_EQ(is.get_dir(), "/var/local/lib/isolate/34");
 	EXPECT_THROW(isolate_sandbox s(limits, 2365), sandbox_exception);
 }
 
@@ -39,11 +39,11 @@ TEST(IsolateSandbox, NormalCommand)
 	limits.share_net = false;
 	isolate_sandbox *is = nullptr;
 	EXPECT_NO_THROW(is = new isolate_sandbox(limits, 34));
-	EXPECT_EQ(is->get_dir(), "/tmp/box/34");
+	EXPECT_EQ(is->get_dir(), "/var/local/lib/isolate/34");
 	sandbox_results results;
 	EXPECT_NO_THROW(results = is->run("/bin/ls", std::vector<std::string>{"-a", "-l", "-i"}));
-	EXPECT_TRUE(fs::is_regular_file("/tmp/box/34/box/output.txt"));
-	EXPECT_TRUE(fs::file_size("/tmp/box/34/box/output.txt") > 0);
+	EXPECT_TRUE(fs::is_regular_file("/var/local/lib/isolate/34/box/output.txt"));
+	EXPECT_TRUE(fs::file_size("/var/local/lib/isolate/34/box/output.txt") > 0);
 	EXPECT_TRUE(fs::is_regular_file("/tmp/recodex_isolate_34/meta.log"));
 	EXPECT_TRUE(fs::file_size("/tmp/recodex_isolate_34/meta.log") > 0);
 	EXPECT_TRUE(!results.killed);
@@ -71,14 +71,14 @@ TEST(IsolateSandbox, TimeoutCommand)
 	limits.share_net = false;
 	isolate_sandbox *is = nullptr;
 	EXPECT_NO_THROW(is = new isolate_sandbox(limits, 34));
-	EXPECT_EQ(is->get_dir(), "/tmp/box/34");
+	EXPECT_EQ(is->get_dir(), "/var/local/lib/isolate/34");
 	sandbox_results results;
 	EXPECT_NO_THROW(results = is->run("/bin/sleep", std::vector<std::string>{"5"}));
 	EXPECT_TRUE(fs::is_regular_file("/tmp/recodex_isolate_34/meta.log"));
 	EXPECT_TRUE(fs::file_size("/tmp/recodex_isolate_34/meta.log") > 0);
 	EXPECT_TRUE(results.killed);
 	EXPECT_TRUE(results.message == "Time limit exceeded (wall clock)");
-	EXPECT_TRUE(results.wall_time > 1);
+	EXPECT_TRUE(results.wall_time >= 0.5);
 	EXPECT_TRUE(results.status == isolate_status::TO);
 	delete is;
 }
@@ -101,7 +101,7 @@ TEST(IsolateSandbox, NonzeroReturnCommand)
 	limits.share_net = false;
 	isolate_sandbox *is = nullptr;
 	EXPECT_NO_THROW(is = new isolate_sandbox(limits, 34));
-	EXPECT_EQ(is->get_dir(), "/tmp/box/34");
+	EXPECT_EQ(is->get_dir(), "/var/local/lib/isolate/34");
 	sandbox_results results;
 	EXPECT_NO_THROW(results = is->run("/bin/false", std::vector<std::string>{}));
 	EXPECT_TRUE(fs::is_regular_file("/tmp/recodex_isolate_34/meta.log"));
@@ -132,7 +132,7 @@ TEST(IsolateSandbox, TimeoutIsolate)
 	limits.share_net = false;
 	isolate_sandbox *is = nullptr;
 	EXPECT_NO_THROW(is = new isolate_sandbox(limits, 34, 2));
-	EXPECT_EQ(is->get_dir(), "/tmp/box/34");
+	EXPECT_EQ(is->get_dir(), "/var/local/lib/isolate/34");
 	sandbox_results results;
 	EXPECT_THROW(results = is->run("/bin/sleep", std::vector<std::string>{"5"}), sandbox_exception);
 	delete is;
@@ -160,7 +160,6 @@ TEST(IsolateSandbox, BindDirsExecuteGCC)
 
 	isolate_sandbox *is = nullptr;
 	EXPECT_NO_THROW(is = new isolate_sandbox(limits, 34));
-	EXPECT_EQ(is->get_dir(), "/tmp/box/34");
 	sandbox_results results;
 	EXPECT_NO_THROW(results = is->run("/usr/bin/gcc", std::vector<std::string>{"-Wall", "-o", "test", "main.c"}));
 

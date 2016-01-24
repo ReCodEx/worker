@@ -148,8 +148,7 @@ void isolate_sandbox::isolate_init_child(int fd_0, int fd_1)
 	dup2(devnull, 2);
 
 	//Exec isolate init command
-	const size_t arg_count = 5;
-	const char *args[arg_count];
+	const char *args[5];
 
 	args[0] = isolate_binary_.c_str();
 	args[1] = "--cg";
@@ -254,6 +253,7 @@ void isolate_sandbox::isolate_run(const std::string &binary, const std::vector<s
 				logger_->warn() << message;
 				throw sandbox_exception(message);
 			}
+			dup2(devnull, 0); // Don't allow process inside isolate to read from current standart input
 			dup2(devnull, 1);
 			dup2(devnull, 2);
 
