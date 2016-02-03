@@ -14,7 +14,7 @@ namespace helpers
 	 * @param config
 	 * @return
 	 */
-	std::unique_ptr<job_metadata> build_job_metadata(const YAML::Node &conf);
+	std::shared_ptr<job_metadata> build_job_metadata(const YAML::Node &conf);
 
 	/**
 	 * Special exception for config helper functions/classes

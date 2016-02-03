@@ -43,7 +43,8 @@ public:
 	 * @param source_path path to source codes of submission
 	 * @throws job_exception if there is problem during loading of configuration
 	 */
-	job(std::unique_ptr<job_metadata> job_conf, fs::path source_path);
+	job(std::shared_ptr<job_metadata> job_meta, std::shared_ptr<worker_config> worker_conf,
+		fs::path source_path, std::shared_ptr<file_manager_base> fileman);
 
 	~job();
 
@@ -66,7 +67,10 @@ private:
 	void cleanup_job();
 
 	// PRIVATE DATA MEMBERS
+	std::shared_ptr<job_metadata> job_meta_;
+	std::shared_ptr<worker_config> worker_config_;
 	fs::path source_path_;
+	std::shared_ptr<file_manager_base> fileman_;
 
 	/** Tasks in linear ordering prepared for evaluation */
 	std::vector<std::shared_ptr<task_base>> task_queue_;

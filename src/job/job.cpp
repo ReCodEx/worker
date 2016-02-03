@@ -1,10 +1,12 @@
 #include "job.h"
 #include "job_exception.h"
 
-job::job(std::unique_ptr<job_metadata> job_conf, fs::path source_path): source_path_(source_path)
+job::job(std::shared_ptr<job_metadata> job_meta, std::shared_ptr<worker_config> worker_conf,
+		 fs::path source_path, std::shared_ptr<file_manager_base> fileman)
+	: job_meta_(job_meta), worker_config_(worker_conf), source_path_(source_path), fileman_(fileman)
 {
 	// check construction parameters if they are in right format
-	if (job_conf == nullptr) {
+	if (job_meta == nullptr) {
 		throw job_exception("Job configuration cannot be null");
 	}
 
@@ -18,149 +20,36 @@ job::job(std::unique_ptr<job_metadata> job_conf, fs::path source_path): source_p
 
 	// construct all tasks with their ids and check if they have all datas, but do not connect them
 	std::map<std::string, std::shared_ptr<task_base>> unconnected_tasks;
-	for (auto &ctask : job_conf->tasks) {
-		std::string task_id;
-		size_t priority;
-		bool fatal;
-		std::string cmd;
-		std::vector<std::string> args;
-		std::string log;
-		std::vector<std::string> task_depend;
-
-		if (ctask["task-id"] && ctask["task-id"].IsScalar()) {
-			task_id = ctask["task-id"].as<std::string>();
-		} else { throw job_exception("Configuration task has missing task-id"); }
-		if (ctask["priority"] && ctask["priority"].IsScalar()) {
-			priority = ctask["priority"].as<size_t>();
-		} else { throw job_exception("Configuration task has missing priority"); }
-		if (ctask["fatal-failure"] && ctask["fatal-failure"].IsScalar()) {
-			fatal = ctask["fatal-failure"].as<bool>();
-		} else { throw job_exception("Configuration task has missing fatal-failure"); }
-		if (ctask["cmd"]) {
-			if (ctask["cmd"].IsMap()) {
-				if (ctask["cmd"]["bin"] && ctask["cmd"]["bin"].IsScalar()) {
-					cmd = ctask["cmd"]["bin"].as<std::string>();
-				} else { throw job_exception("Runnable binary for task not given"); }
-
-				if (ctask["cmd"]["args"] && ctask["cmd"]["args"].IsSequence()) {
-					args = ctask["cmd"]["args"].as<std::vector<std::string>>();
-				} // can be omitted... no throw
-			} else { throw job_exception("Command in task is not a map"); }
-		} else { throw job_exception("Configuration of one task has missing cmd"); }
-		if (ctask["log"] && ctask["log"].IsScalar()) {
-			log = ctask["log"].as<std::string>();
-		} // can be omitted... no throw
-
-		// load dependencies
-		if (ctask["dependencies"] && ctask["dependencies"].IsSequence()) {
-			task_depend = ctask["dependencies"].as<std::vector<std::string>>();
+	for (auto &task_meta : job_meta->tasks) {
+		if (task_meta->task_id == "") {
+			throw job_exception("Task ID cannot be empty");
+		}
+		if (task_meta->priority == 0) {
+			throw job_exception("Priority cannot be zero");
+		}
+		if (task_meta->binary == "") {
+			throw job_exception("Command cannot be empty");
 		}
 
 		// distinguish internal/external command and construct suitable object
-		if (ctask["sandbox"]) {
+		if (task_meta->sandbox != nullptr) {
+			auto sandbox = task_meta->sandbox;
 
 			// //////////////// //
 			// external command //
 			// //////////////// //
+			std::shared_ptr<sandbox_limits> limits;
 
-			std::string std_input;
-			std::string std_output;
-			std::string std_error;
-			std::string sandbox_name;
-			std::map<std::string, sandbox_limits> hwgroups;
-			sandbox_limits limits;
-
-			if (ctask["sandbox"]["name"] && ctask["sandbox"]["name"].IsScalar()) {
-				sandbox_name = ctask["sandbox"]["name"].as<std::string>();
-			} else { throw job_exception("Name of sandbox not given"); }
-
-			if (ctask["stdin"] && ctask["stdin"].IsScalar()) {
-				std_input = ctask["stdin"].as<std::string>();
-			} // can be ommited... no throw
-			if (ctask["stdout"] && ctask["stdout"].IsScalar()) {
-				std_output = ctask["stdout"].as<std::string>();
-			} // can be ommited... no throw
-			if (ctask["stderr"] && ctask["stderr"].IsScalar()) {
-				std_error = ctask["stderr"].as<std::string>();
-			} // can be ommited... no throw
-
-			// load limits... if they are supplied
-			if (ctask["sandbox"]["limits"]) {
-				if (!ctask["sandbox"]["limits"].IsSequence()) {
-					throw job_exception("Sandbox limits are not sequence");
-				}
-
-				for (auto &lim : ctask["sandbox"]["limits"]) {
-					sandbox_limits sl;
-					std::string hwgroup;
-
-					if (lim["hw-group-id"] && lim["hw-group-id"].IsScalar()) {
-						hwgroup = lim["hw-group-id"].as<std::string>();
-					} else { throw job_exception("Hwgroup ID not defined in sandbox limits"); }
-
-					if (lim["time"] && lim["time"].IsScalar()) {
-						sl.cpu_time = lim["time"].as<float>();
-					} else { // if not defined, load from default config
-						sl.cpu_time = worker_config->get_limits().cpu_time;
-					}
-					if (lim["wall-time"] && lim["wall-time"].IsScalar()) {
-						sl.wall_time = lim["wall-time"].as<float>();
-					} else { // if not defined, load from default config
-						sl.wall_time = worker_config->get_limits().wall_time;
-					}
-					if (lim["extra-time"] && lim["extra-time"].IsScalar()) {
-						sl.extra_time = lim["extra-time"].as<float>();
-					} else { // if not defined, load from default config
-						sl.extra_time = worker_config->get_limits().extra_time;
-					}
-					if (lim["stack-size"] && lim["stack-size"].IsScalar()) {
-						sl.stack_size = lim["stack-size"].as<size_t>();
-					} else { // if not defined, load from default config
-						sl.stack_size = worker_config->get_limits().stack_size;
-					}
-					if (lim["memory"] && lim["memory"].IsScalar()) {
-						sl.memory_usage = lim["memory"].as<size_t>();
-					} else { // if not defined, load from default config
-						sl.memory_usage = worker_config->get_limits().memory_usage;
-					}
-					if (lim["parallel"] && lim["parallel"].IsScalar()) { // TODO not defined properly
-						lim["parallel"].as<bool>();
-					} // can be omitted... no throw
-					if (lim["disk-blocks"] && lim["disk-blocks"].IsScalar()) {
-						sl.disk_blocks = lim["disk-blocks"].as<size_t>();
-					} else { // if not defined, load from default config
-						sl.disk_blocks = worker_config->get_limits().disk_blocks;
-					}
-					if (lim["disk-inodes"] && lim["disk-inodes"].IsScalar()) {
-						sl.disk_inodes = lim["disk-inodes"].as<size_t>();
-					} else { // if not defined, load from default config
-						sl.disk_inodes = worker_config->get_limits().disk_inodes;
-					}
-					if (lim["chdir"] && lim["chdir"].IsScalar()) {
-						sl.chdir = lim["chdir"].as<std::string>();
-					} // can be omitted... no throw
-
-					if (lim["bound-directories"] && lim["bound-directories"].IsMap()) {
-						sl.bound_dirs = lim["bound-directories"].as<std::map<std::string, std::string>>();
-					} // can be omitted... no throw
-
-					if (lim["environ-variable"] && lim["environ-variable"].IsMap()) {
-						for (auto &var : lim["environ-variable"]) {
-							sl.environ_vars.insert(std::make_pair(var.first.as<std::string>(), var.second.as<std::string>()));
-						}
-					}
-
-					hwgroups.insert(std::make_pair(hwgroup, sl));
-				}
+			if (sandbox->name == "") {
+				throw job_exception("Sandbox name cannot be empty");
 			}
 
-			// and finally construct external task from given information
 			// first we have to get propriate hwgroup limits
 			bool hw_found = false;
-			auto its = worker_config->get_headers().equal_range("hwgroup");
+			auto its = worker_conf->get_headers().equal_range("hwgroup");
 			for (auto it = its.first; it != its.second; ++it) {
-				auto hwit = hwgroups.find(it->second);
-				if (hwit != hwgroups.end()) {
+				auto hwit = sandbox->limits.find(it->second);
+				if (hwit != sandbox->limits.end()) {
 					limits = hwit->second;
 					hw_found = true;
 				}
@@ -169,15 +58,18 @@ job::job(std::unique_ptr<job_metadata> job_conf, fs::path source_path): source_p
 				throw job_exception("Hwgroup with specified name not defined");
 			}
 
-			limits.std_input = std_input;
-			limits.std_output = std_output;
-			limits.std_error = std_error;
+			// TODO: we have to load defaults from worker_config if necessary
+
+			// ... and finally construct external task from given information
+			limits->std_input = sandbox->std_input;
+			limits->std_output = sandbox->std_output;
+			limits->std_error = sandbox->std_error;
 			std::shared_ptr<task_base> task = std::make_shared<external_task>(
-				worker_config->get_worker_id(), id++, task_id, priority, fatal,
-				task_depend, cmd, args, sandbox_name, limits
-			);
-			unconnected_tasks.insert(std::make_pair(task_id, task));
-			eff_indegree.insert(std::make_pair(task_id, 0));
+						worker_conf->get_worker_id(), id++, task_meta->task_id, task_meta->priority,
+						task_meta->fatal_failure, task_meta->dependencies, task_meta->binary,
+						task_meta->cmd_args, sandbox->name, *limits);
+			unconnected_tasks.insert(std::make_pair(task_meta->task_id, task));
+			eff_indegree.insert(std::make_pair(task_meta->task_id, 0));
 
 		} else {
 
@@ -187,26 +79,41 @@ job::job(std::unique_ptr<job_metadata> job_conf, fs::path source_path): source_p
 
 			std::shared_ptr<task_base> task;
 
-			if (cmd == "cp") {
-				task = std::make_shared<cp_task>(id++, task_id, priority, fatal, cmd, args, log, task_depend);
-			} else if (cmd == "mkdir") {
-				task = std::make_shared<mkdir_task>(id++, task_id, priority, fatal, cmd, args, log, task_depend);
-			} else if (cmd == "rename") {
-				task = std::make_shared<rename_task>(id++, task_id, priority, fatal, cmd, args, log, task_depend);
-			} else if (cmd == "rm") {
-				task = std::make_shared<rm_task>(id++, task_id, priority, fatal, cmd, args, log, task_depend);
-			} else if (cmd == "archivate") {
-				task = std::make_shared<archivate_task>(id++, task_id, priority, fatal, cmd, args, log, task_depend);
-			} else if (cmd == "extract") {
-				task = std::make_shared<extract_task>(id++, task_id, priority, fatal, cmd, args, log, task_depend);
-			} else if (cmd == "fetch") {
-				task = std::make_shared<fetch_task>(id++, task_id, priority, fatal, cmd, args, log, task_depend, fileman);
+			if (task_meta->binary == "cp") {
+				task = std::make_shared<cp_task>(id++, task_meta->task_id, task_meta->priority,
+												 task_meta->fatal_failure, task_meta->binary,
+												 task_meta->cmd_args, "", task_meta->dependencies);
+			} else if (task_meta->binary == "mkdir") {
+				task = std::make_shared<mkdir_task>(id++, task_meta->task_id, task_meta->priority,
+													task_meta->fatal_failure, task_meta->binary,
+													task_meta->cmd_args, "", task_meta->dependencies);
+			} else if (task_meta->binary == "rename") {
+				task = std::make_shared<rename_task>(id++, task_meta->task_id, task_meta->priority,
+													 task_meta->fatal_failure, task_meta->binary,
+													 task_meta->cmd_args, "", task_meta->dependencies);
+			} else if (task_meta->binary == "rm") {
+				task = std::make_shared<rm_task>(id++, task_meta->task_id, task_meta->priority,
+												 task_meta->fatal_failure, task_meta->binary,
+												 task_meta->cmd_args, "", task_meta->dependencies);
+			} else if (task_meta->binary == "archivate") {
+				task = std::make_shared<archivate_task>(id++, task_meta->task_id, task_meta->priority,
+														task_meta->fatal_failure, task_meta->binary,
+														task_meta->cmd_args, "", task_meta->dependencies);
+			} else if (task_meta->binary == "extract") {
+				task = std::make_shared<extract_task>(id++, task_meta->task_id, task_meta->priority,
+													  task_meta->fatal_failure, task_meta->binary,
+													  task_meta->cmd_args, "", task_meta->dependencies);
+			} else if (task_meta->binary == "fetch") {
+				task = std::make_shared<fetch_task>(id++, task_meta->task_id, task_meta->priority,
+													task_meta->fatal_failure, task_meta->binary,
+													task_meta->cmd_args, "", task_meta->dependencies,
+													fileman);
 			} else {
-				throw job_exception("Unknown internal task: " + cmd);
+				throw job_exception("Unknown internal task: " + task_meta->binary);
 			}
 
-			unconnected_tasks.insert(std::make_pair(task_id, task));
-			eff_indegree.insert(std::make_pair(task_id, 0));
+			unconnected_tasks.insert(std::make_pair(task_meta->task_id, task));
+			eff_indegree.insert(std::make_pair(task_meta->task_id, 0));
 		}
 	}
 
@@ -239,7 +146,7 @@ job::job(std::unique_ptr<job_metadata> job_conf, fs::path source_path): source_p
 
 	// all should be done now... just linear ordering is missing...
 	try {
-		helpers::topological_sort(root_task, eff_indegree, tasks_);
+		helpers::topological_sort(root_task, eff_indegree, task_queue_);
 	} catch (helpers::top_sort_exception &e) {
 		throw job_exception(e.what());
 	}

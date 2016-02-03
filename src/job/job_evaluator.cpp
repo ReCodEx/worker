@@ -103,7 +103,7 @@ void job_evaluator::build_job()
 	);
 
 	// ... and construct job itself
-	job_ = std::make_shared<job>(job_meta, source_path_);
+	job_ = std::make_shared<job>(job_meta, config_, source_path_, task_fileman);
 
 	logger_->info() << "Job building done.";
 	return;

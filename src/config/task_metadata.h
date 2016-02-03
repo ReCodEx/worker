@@ -23,7 +23,7 @@ public:
 	std::string std_output = "";
 	std::string std_error = "";
 
-	std::unique_ptr<sandbox_config> sandbox = nullptr;
+	std::shared_ptr<sandbox_config> sandbox = nullptr;
 };
 
 
