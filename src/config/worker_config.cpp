@@ -107,11 +107,11 @@ worker_config::worker_config (const YAML::Node &config)
 			if (limits["parallel"] && limits["parallel"].IsScalar()) {
 				// = limits["parallel"].as<bool>(); // TODO
 			} // no throw... can be omitted
-			if (limits["disk-blocks"] && limits["disk-blocks"].IsScalar()) {
-				limits_.disk_blocks = limits["disk-blocks"].as<size_t>();
+			if (limits["disk-size"] && limits["disk-size"].IsScalar()) {
+				limits_.disk_size = limits["disk-size"].as<size_t>();
 			} // no throw... can be omitted
-			if (limits["disk-inodes"] && limits["disk-inodes"].IsScalar()) {
-				limits_.disk_inodes = limits["disk-inodes"].as<size_t>();
+			if (limits["disk-files"] && limits["disk-files"].IsScalar()) {
+				limits_.disk_files = limits["disk-files"].as<size_t>();
 			} // no throw... can be omitted
 		} // no throw... can be omitted
 

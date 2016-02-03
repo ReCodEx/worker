@@ -37,19 +37,21 @@ public:
 	size_t stack_size = 0;
 	/**
 	* Limit size of created files. This could be useful, if your filesystem doesn't support
-	* quotas. Otherwise, see items @a disk_blocks and @a disk_inodes. 0 means not set.
+	* quotas. 0 means not set.
+	* @warning This option is deprecated! Use @ref disk_size and @ref disk_files instead.
 	*/
 	size_t files_size = 0;
 	/**
-	* Set disk quota to given number of blocks.
+	* Set disk quota to given number of kilobytes.
 	* @warning Underlying filesystem must support quotas.
 	*/
-	size_t disk_blocks = 0;
+	size_t disk_size = 0;
 	/**
-	* Set disk quota to given number of inodes.
+	* Set disk quota to given number of files. Actual implementation may vary, for example
+	* on Linux with ext4 filesystem this should be maximum number of used inodes.
 	* @warning Underlying filesystem must support quotas.
 	*/
-	size_t disk_inodes = 0;
+	size_t disk_files = 0;
 	/**
 	* Redirect standard input from given file.
 	* @note Path must be accessible from inside of sandbox.
@@ -104,8 +106,8 @@ public:
 			extra_time == second.extra_time &&
 			stack_size == second.stack_size &&
 			files_size == second.files_size &&
-			disk_blocks == second.disk_blocks &&
-			disk_inodes == second.disk_inodes &&
+			disk_size == second.disk_size &&
+			disk_files == second.disk_files &&
 			std_input == second.std_input &&
 			std_output == second.std_output &&
 			std_error == second.std_error &&

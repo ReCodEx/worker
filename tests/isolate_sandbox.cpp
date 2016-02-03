@@ -27,8 +27,8 @@ TEST(IsolateSandbox, NormalCommand)
 	limits.wall_time = 5.1;
 	limits.cpu_time = 5.1;
 	limits.extra_time = 1;
-	limits.disk_blocks = 500;
-	limits.disk_inodes = 500;
+	limits.disk_size = 500;
+	limits.disk_files = 500;
 	limits.memory_usage = 100000;
 	limits.std_input = "";
 	limits.std_output = "output.txt";
@@ -59,8 +59,8 @@ TEST(IsolateSandbox, TimeoutCommand)
 	limits.wall_time = 0.5;
 	limits.cpu_time = 0.5;
 	limits.extra_time = 1;
-	limits.disk_blocks = 500;
-	limits.disk_inodes = 500;
+	limits.disk_size = 500;
+	limits.disk_files = 500;
 	limits.memory_usage = 100000;
 	limits.std_input = "";
 	limits.std_output = "";
@@ -89,8 +89,8 @@ TEST(IsolateSandbox, NonzeroReturnCommand)
 	limits.wall_time = 0.5;
 	limits.cpu_time = 0.5;
 	limits.extra_time = 1;
-	limits.disk_blocks = 500;
-	limits.disk_inodes = 500;
+	limits.disk_size = 500;
+	limits.disk_files = 500;
 	limits.memory_usage = 100000;
 	limits.std_input = "";
 	limits.std_output = "";
@@ -120,8 +120,8 @@ TEST(IsolateSandbox, TimeoutIsolate)
 	limits.wall_time = 10;
 	limits.cpu_time = 10;
 	limits.extra_time = 1;
-	limits.disk_blocks = 500;
-	limits.disk_inodes = 500;
+	limits.disk_size = 500;
+	limits.disk_files = 500;
 	limits.memory_usage = 100000;
 	limits.std_input = "";
 	limits.std_output = "";

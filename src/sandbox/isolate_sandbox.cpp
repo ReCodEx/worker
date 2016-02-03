@@ -3,6 +3,7 @@
 #include "isolate_sandbox.h"
 #include <unistd.h>
 #include <sys/types.h>
+#include <sys/mount.h>
 #include <sys/wait.h>
 #include <string.h>
 #include <errno.h>
@@ -345,7 +346,9 @@ char **isolate_sandbox::isolate_run_args(const std::string &binary, const std::v
 	if (limits_.files_size != 0) {
 		vargs.push_back("--fsize=" + std::to_string(limits_.files_size));
 	}
-	vargs.push_back("--quota=" + std::to_string(limits_.disk_blocks) + "," + std::to_string(limits_.disk_inodes));
+	// Calculate number of required blocks - total number of bytes divided by block size (defined in sys/mount.h)
+	auto disk_size_blocks = (limits_.disk_size * 1024) / BLOCK_SIZE;
+	vargs.push_back("--quota=" + std::to_string(disk_size_blocks) + "," + std::to_string(limits_.disk_files));
 	if (!limits_.std_input.empty()) {
 		vargs.push_back("--stdin=" + limits_.std_input);
 	}

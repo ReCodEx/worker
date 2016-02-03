@@ -230,14 +230,14 @@ void job::build_job(const YAML::Node &conf)
 							lim["parallel"].as<bool>();
 						} // can be omitted... no throw
 						if (lim["disk-blocks"] && lim["disk-blocks"].IsScalar()) {
-							sl.disk_blocks = lim["disk-blocks"].as<size_t>();
+							sl.disk_size = lim["disk-size"].as<size_t>();
 						} else { // if not defined, load from default config
-							sl.disk_blocks = default_config_->get_limits().disk_blocks;
+							sl.disk_size = default_config_->get_limits().disk_size;
 						}
-						if (lim["disk-inodes"] && lim["disk-inodes"].IsScalar()) {
-							sl.disk_inodes = lim["disk-inodes"].as<size_t>();
+						if (lim["disk-files"] && lim["disk-files"].IsScalar()) {
+							sl.disk_files = lim["disk-files"].as<size_t>();
 						} else { // if not defined, load from default config
-							sl.disk_inodes = default_config_->get_limits().disk_inodes;
+							sl.disk_files = default_config_->get_limits().disk_files;
 						}
 						if (lim["chdir"] && lim["chdir"].IsScalar()) {
 							sl.chdir = lim["chdir"].as<std::string>();

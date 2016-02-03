@@ -35,8 +35,8 @@ TEST(worker_config, load_yaml_basic)
 		"    stack-size: 50000\n"
 		"    memory: 60000\n"
 		"    parallel: false\n"
-		"    disk-blocks: 50\n"
-		"    disk-inodes: 7\n"
+		"    disk-size: 50\n"
+		"    disk-files: 7\n"
 		"sandboxes-wrap-limits:\n"
 		"    - name: isolate\n"
 		"      time: 10\n"
@@ -68,8 +68,8 @@ TEST(worker_config, load_yaml_basic)
 	expected_limits.wall_time = 6;
 	expected_limits.extra_time = 2;
 	expected_limits.stack_size = 50000;
-	expected_limits.disk_blocks = 50;
-	expected_limits.disk_inodes = 7;
+	expected_limits.disk_size = 50;
+	expected_limits.disk_files = 7;
 	expected_limits.bound_dirs = {
 		{ "localbin", "/usr/local/bin" },
 		{ "share", "/usr/share" }
