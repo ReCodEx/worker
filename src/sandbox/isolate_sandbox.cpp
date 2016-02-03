@@ -59,7 +59,7 @@ isolate_sandbox::~isolate_sandbox()
 {
 	try {
 		isolate_cleanup();
-		fs::remove_all(fs::temp_directory_path() / ("recodex_isolate_" + std::to_string(id_)));
+		//fs::remove_all(fs::temp_directory_path() / ("recodex_isolate_" + std::to_string(id_)));
 	} catch (...) {
 		//We don't care if this failed. We can't fix it either. Just don't throw an exception in destructor.
 	}
@@ -319,7 +319,7 @@ void isolate_sandbox::isolate_run(const std::string &binary, const std::vector<s
 					logger_->warn() << message;
 					throw sandbox_exception(message);
 				}
-				logger_->debug() << "Isolate box " << id_ << " ran successfuly.";
+				logger_->debug() << "Isolate box " << id_ << " ran successfully.";
 				break;
 			}
 		}

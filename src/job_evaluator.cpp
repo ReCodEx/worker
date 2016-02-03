@@ -71,6 +71,12 @@ void job_evaluator::prepare_submission()
 void job_evaluator::build_job()
 {
 	logger_->info() << "Building job...";
+
+	// create result directory for temporary files
+	results_path_ = fs::temp_directory_path() / "isoeval" / "results" /
+			std::to_string(config_->get_worker_id()) / job_id_;
+	fs::create_directories(results_path_);
+
 	using namespace boost::filesystem;
 	path config_path(source_path_);
 	config_path /= "job-config.yml";
@@ -95,7 +101,7 @@ void job_evaluator::build_job()
 		)
 	);
 
-	job_ = std::make_shared<job>(conf, source_path_, config_, job_fm);
+	job_ = std::make_shared<job>(conf, source_path_, results_path_, config_, job_fm);
 
 	logger_->info() << "Job building done.";
 	return;
@@ -193,10 +199,6 @@ void job_evaluator::push_result()
 		return;
 	}
 
-	// create result directory for temporary files
-	results_path_ = fs::temp_directory_path() / "isoeval" / "results" /
-			std::to_string(config_->get_worker_id()) / job_id_;
-	fs::create_directories(results_path_);
 	// define path to result yaml file and archived result
 	fs::path result_path = results_path_ / "result.yml";
 	fs::path archive_path = results_path_ / "result.zip";
@@ -275,7 +277,7 @@ void job_evaluator::push_result()
 
 eval_response job_evaluator::evaluate (eval_request request)
 {
-	logger_->info() << "Request for job evaluation arrived to worker.";
+	logger_->info() << "Request for job evaluation arrived to worker";
 	logger_->info() << "Job ID of incoming job is: " + request.job_id;
 
 	// set all needed variables for evaluation
@@ -297,6 +299,6 @@ eval_response job_evaluator::evaluate (eval_request request)
 	}
 	cleanup_evaluator();
 
+	logger_->info() << "Job " + request.job_id + " ended";
 	return eval_response(request.job_id, "OK");
-	logger_->info() << "Job (" + request.job_id + ") ended.";
 }

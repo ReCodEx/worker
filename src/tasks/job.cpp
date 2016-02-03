@@ -1,10 +1,9 @@
 #include "job.h"
 
-job::job(const YAML::Node &job_config, fs::path source_path,
-		 std::shared_ptr<worker_config> default_config,
-		 std::shared_ptr<file_manager_base> fileman)
-	: source_path_(source_path), fileman_(fileman), root_task_(nullptr),
-	  default_config_(default_config)
+job::job(const YAML::Node &job_config, fs::path source_path, fs::path result_path,
+		 std::shared_ptr<worker_config> default_config, std::shared_ptr<file_manager_base> fileman)
+	: source_path_(source_path), result_path_(result_path), fileman_(fileman), root_task_(nullptr),
+	  default_config_(default_config), logger_(nullptr)
 {
 	// check construction parameters if they are in right format
 	if (default_config_ == nullptr) {
@@ -22,8 +21,13 @@ job::job(const YAML::Node &job_config, fs::path source_path,
 		throw job_exception("Source code directory is empty");
 	}
 
-	// and... build and prepare job for evaluation
+	// construct system logger for this job
+	init_logger();
+
+	// build job
 	build_job(job_config);
+
+	// prepare job for evaluation
 	prepare_job();
 }
 
@@ -39,6 +43,7 @@ std::vector<std::pair<std::string, std::shared_ptr<task_results>>> job::run()
 	// simply run all tasks in given topological order
 	for (auto &i : task_queue_) {
 		auto task_id = i->get_task_id();
+		logger_->info() << "Running task " << task_id;
 		try {
 			if (i->is_executable()) {
 				auto res = i->run();
@@ -48,6 +53,7 @@ std::vector<std::pair<std::string, std::shared_ptr<task_results>>> job::run()
 				results.push_back({task_id, res});
 			} else {
 				// we have to pass information about non-execution to children
+				logger_->info() << "Task not executable";
 				i->set_children_execution(false);
 			}
 		} catch (std::exception &e) {
@@ -56,16 +62,46 @@ std::vector<std::pair<std::string, std::shared_ptr<task_results>>> job::run()
 			result->error_message = e.what();
 			results.push_back({task_id, result});
 			if (i->get_fatal_failure()) {
+				logger_->info() << "Task failed - fatal failure";
 				break;
 			} else {
 				// set executable bit in this task and in children
+				logger_->info() << "Task failed - childs will not be executed";
 				i->set_execution(false);
 				i->set_children_execution(false);
 			}
 		}
+		logger_->info() << "Task " << task_id << " finished";
 	}
 
 	return results;
+}
+
+void job::init_logger()
+{
+	std::string log_name = "job_system_log.log";
+	spdlog::level::level_enum log_level = spdlog::level::debug;
+
+	//Create and register logger
+	try {
+		//Create multithreaded rotating file sink. Max filesize is 1024 * 1024 and we save 5 newest files.
+		auto file_sink = std::make_shared<spdlog::sinks::simple_file_sink_mt>((result_path_ / log_name).string(), true);
+		//Set queue size for asynchronous logging. It must be a power of 2.
+		spdlog::set_async_mode(1048576);
+		//Make log with name "logger"
+		auto file_logger = std::make_shared<spdlog::logger>("logger", file_sink);
+		//Set logging level to debug
+		file_logger->set_level(log_level);
+		//Print header to log
+		file_logger->info() << "------------------------------";
+		file_logger->info() << "       Job system log";
+		file_logger->info() << "------------------------------";
+		logger_ = file_logger;
+	} catch(spdlog::spdlog_ex &e) {
+		//Suppose not happen. But in case, create only empty logger.
+		auto sink = std::make_shared<spdlog::sinks::null_sink_st>();
+		logger_ = std::make_shared<spdlog::logger>("job_manager_nolog", sink);
+	}
 }
 
 void job::build_job(const YAML::Node &conf)
@@ -277,8 +313,8 @@ void job::build_job(const YAML::Node &conf)
 				limits.std_error = std_error;
 				std::shared_ptr<task_base> task =
 						std::make_shared<external_task>(default_config_->get_worker_id(), id++, task_id,
-														priority, fatal, task_depend,
-														cmd, args, sandbox_name, limits);
+														priority, fatal, task_depend, cmd, args,
+														sandbox_name, limits, logger_);
 				unconnected_tasks.insert(std::make_pair(task_id, task));
 				eff_indegree.insert(std::make_pair(task_id, 0));
 
@@ -334,7 +370,7 @@ void job::build_job(const YAML::Node &conf)
 					ptr->add_children(elem.second);
 					elem.second->add_parent(ptr);
 				} catch (std::out_of_range) {
-					throw job_exception("Non existing task-id (" + depend.at(i) + ") in dependency list");
+					throw job_exception("Non existing task-id " + depend.at(i) + " in dependency list");
 				}
 			}
 		}

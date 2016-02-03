@@ -1,6 +1,8 @@
 #ifndef CODEX_WORKER_EXTERNAL_TASK_HPP
 #define CODEX_WORKER_EXTERNAL_TASK_HPP
 
+#include "spdlog/spdlog.h"
+#include <memory>
 #include "task_base.h"
 #include "../sandbox/sandbox_base.h"
 #include "../sandbox/isolate_sandbox.h"
@@ -28,13 +30,14 @@ public:
 	 * @param arguments arguments for binary
 	 * @param sandbox_id name of sandbox which will be used
 	 * @param limits limits for sandbox
+	 * @param logger job system logger
 	 * @throws task_exception if @a sandbox_id is unknown
 	 */
 	external_task(size_t worker_id, size_t id, const std::string &task_id,
 				  size_t priority, bool fatal,
 				  const std::vector<std::string> &dependencies,
 				  const std::string &binary, const std::vector<std::string> &arguments,
-				  const std::string &sandbox_id, sandbox_limits limits);
+				  const std::string &sandbox_id, sandbox_limits limits, std::shared_ptr<spdlog::logger> logger);
 	/**
 	 * Empty right now.
 	 */
@@ -74,6 +77,8 @@ private:
 	std::shared_ptr<sandbox_base> sandbox_;
 	/** Limits for sandbox in which program will be started */
 	sandbox_limits limits_;
+	/** Job system logger */
+	std::shared_ptr<spdlog::logger> logger_;
 };
 
 #endif //CODEX_WORKER_EXTERNAL_TASK_HPP
