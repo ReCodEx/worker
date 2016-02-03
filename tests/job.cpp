@@ -8,9 +8,9 @@
 #include <boost/filesystem.hpp>
 using namespace boost::filesystem;
 
-#include "../src/tasks/job.h"
+#include "../src/job/job.h"
 #include "../src/fileman/cache_manager.h"
-#include "../src/tasks/job_exception.h"
+#include "../src/job/job_exception.h"
 
 
 TEST(job_test, bad_parameters)

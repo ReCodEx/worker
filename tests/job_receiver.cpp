@@ -4,7 +4,7 @@
 #include <thread>
 #include <chrono>
 
-#include "../src/job_receiver.h"
+#include "../src/job/job_receiver.h"
 #include "../src/eval_request.h"
 #include "../src/connection_proxy.h"
 

@@ -124,13 +124,14 @@ set(SOURCE_FILES
 	src/fileman/cache_manager.cpp
 	src/fileman/http_manager.cpp
 	src/fileman/fallback_file_manager.cpp
-    src/fileman/prefixed_file_manager.cpp
-    src/fileman/prefixed_file_manager.h
+	src/fileman/prefixed_file_manager.cpp
+	src/fileman/prefixed_file_manager.h
 	src/sandbox/sandbox_base.h
 	src/isoeval_core.h
 	src/isoeval_core.cpp
-	src/tasks/job.h
-	src/tasks/job.cpp
+	src/job/job.h
+	src/job/job_exception.h
+	src/job/job.cpp
 	src/tasks/fake_task.h
 	src/tasks/fake_task.cpp
 	src/tasks/task_base.h
@@ -153,10 +154,10 @@ set(SOURCE_FILES
 	src/tasks/internal/fetch_task.cpp
 	src/sandbox/isolate_sandbox.h
 	src/sandbox/isolate_sandbox.cpp
-	src/job_evaluator.h
-	src/job_evaluator.cpp
-	src/job_receiver.cpp
-	src/job_receiver.h
+	src/job/job_evaluator.h
+	src/job/job_evaluator.cpp
+	src/job/job_receiver.cpp
+	src/job/job_receiver.h
 	src/eval_request.h
 	src/archives/archivator.h
 	src/archives/archivator.cpp
@@ -165,10 +166,11 @@ set(SOURCE_FILES
 	src/helpers/filesystem.cpp
 	src/helpers/topological_sort.h
 	src/helpers/topological_sort.cpp
-	src/tasks/job_metadata.cpp
-	src/tasks/job_metadata.h
-	src/tasks/job_tasks.cpp
-	src/tasks/job_tasks.h
+	src/config/job_metadata.h
+	src/config/task_metadata.h
+	src/helpers/config.h
+	src/helpers/config.cpp
+	src/config/sandbox_config.h
 )
 
 

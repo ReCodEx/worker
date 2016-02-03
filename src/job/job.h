@@ -14,21 +14,21 @@ namespace fs = boost::filesystem;
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/null_sink.h"
 #include "../config/worker_config.h"
-#include "task_base.h"
-#include "fake_task.h"
-#include "external_task.h"
+#include "../tasks/task_base.h"
+#include "../tasks/fake_task.h"
+#include "../tasks/external_task.h"
 #include "../fileman/file_manager_base.h"
 #include "../sandbox/sandbox_base.h"
-#include "internal/cp_task.h"
-#include "internal/mkdir_task.h"
-#include "internal/rename_task.h"
-#include "internal/rm_task.h"
-#include "internal/archivate_task.h"
-#include "internal/extract_task.h"
-#include "internal/fetch_task.h"
+#include "../tasks/internal/cp_task.h"
+#include "../tasks/internal/mkdir_task.h"
+#include "../tasks/internal/rename_task.h"
+#include "../tasks/internal/rm_task.h"
+#include "../tasks/internal/archivate_task.h"
+#include "../tasks/internal/extract_task.h"
+#include "../tasks/internal/fetch_task.h"
 #include "../helpers/topological_sort.h"
-#include "job_metadata.h"
-#include "job_tasks.h"
+#include "../config/job_metadata.h"
+#include "../config/task_metadata.h"
 
 
 /**
@@ -46,10 +46,7 @@ public:
 	 * @param source_path path to source codes of submission
 	 * @throws job_exception if there is problem during loading of configuration
 	 */
-	job(
-		std::shared_ptr<job_tasks> tasks,
-		fs::path source_path
-	);
+	job(std::unique_ptr<job_metadata> job_conf, fs::path source_path);
 
 	~job();
 
