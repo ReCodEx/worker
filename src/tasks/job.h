@@ -4,6 +4,7 @@
 #include <vector>
 #include <queue>
 #include <utility>
+#include <memory>
 
 #define BOOST_FILESYSTEM_NO_DEPRECATED
 #define BOOST_NO_CXX11_SCOPED_ENUMS
@@ -11,6 +12,7 @@
 namespace fs = boost::filesystem;
 
 #include "spdlog/spdlog.h"
+#include "spdlog/sinks/null_sink.h"
 #include "../config/worker_config.h"
 #include "task_base.h"
 #include "fake_task.h"
