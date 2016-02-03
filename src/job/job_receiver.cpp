@@ -1,7 +1,7 @@
 #include "job_receiver.h"
-#include "connection_proxy.h"
-#include "eval_request.h"
-#include "eval_response.h"
+#include "../connection_proxy.h"
+#include "../eval_request.h"
+#include "../eval_response.h"
 
 job_receiver::job_receiver (zmq::context_t &context, std::shared_ptr<job_evaluator> evaluator,
 							std::shared_ptr<spdlog::logger> logger) :

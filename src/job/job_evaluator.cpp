@@ -1,8 +1,9 @@
 #include "job_evaluator.h"
-#include "tasks/job_exception.h"
-#include "tasks/job_metadata.h"
-#include "fileman/fallback_file_manager.h"
-#include "fileman/prefixed_file_manager.h"
+#include "job_exception.h"
+#include "../config/job_metadata.h"
+#include "../fileman/fallback_file_manager.h"
+#include "../fileman/prefixed_file_manager.h"
+#include "../helpers/config.h"
 
 job_evaluator::job_evaluator(
 	std::shared_ptr<spdlog::logger> logger,
@@ -89,19 +90,20 @@ void job_evaluator::build_job()
 	}
 	logger_->info() << "Yaml job configuration loaded properly.";
 
-	auto job_meta = std::make_shared<job_metadata>(conf, config_);
+	// build job_metadata structure
+	auto job_meta = helpers::build_job_metadata(conf);
 
+	// construct manager which is used in job
 	auto task_fileman = std::make_shared<fallback_file_manager>(
 		cache_fm_,
 		std::make_shared<prefixed_file_manager>(
 			remote_fm_,
-			job_meta->get_file_server_url() + "/"
+			job_meta->file_server_url + "/"
 		)
 	);
 
-	auto tasks = std::make_shared<job_tasks>(conf, config_, task_fileman);
-
-	job_ = std::make_shared<job>(tasks, source_path_);
+	// ... and construct job itself
+	job_ = std::make_shared<job>(job_meta, source_path_);
 
 	logger_->info() << "Job building done.";
 	return;

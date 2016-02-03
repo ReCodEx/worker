@@ -1,22 +1,13 @@
-#include "job_tasks.h"
+#include "job.h"
 #include "job_exception.h"
-#include "external_task.h"
-#include "fake_task.h"
-#include "internal/cp_task.h"
-#include "internal/mkdir_task.h"
-#include "internal/rename_task.h"
-#include "internal/rm_task.h"
-#include "internal/archivate_task.h"
-#include "internal/extract_task.h"
-#include "internal/fetch_task.h"
-#include "../helpers/topological_sort.h"
 
-job_tasks::job_tasks(
-	const YAML::Node &config,
-	std::shared_ptr<worker_config> worker_config,
-	std::shared_ptr<file_manager_base> fileman
-) : worker_config_(worker_config)
+job::job(std::unique_ptr<job_metadata> job_conf, fs::path source_path): source_path_(source_path)
 {
+	// check construction parameters if they are in right format
+	if (job_conf == nullptr) {
+		throw job_exception("Job configuration cannot be null");
+	}
+
 
 	// create fake task, which is logical root of evaluation
 	size_t id = 0;
@@ -27,7 +18,7 @@ job_tasks::job_tasks(
 
 	// construct all tasks with their ids and check if they have all datas, but do not connect them
 	std::map<std::string, std::shared_ptr<task_base>> unconnected_tasks;
-	for (auto &ctask : config["tasks"]) {
+	for (auto &ctask : job_conf->tasks) {
 		std::string task_id;
 		size_t priority;
 		bool fatal;
@@ -254,7 +245,53 @@ job_tasks::job_tasks(
 	}
 }
 
-std::vector<std::shared_ptr<task_base>> job_tasks::get_tasks()
+job::~job()
 {
-	return tasks_;
+	cleanup_job();
+}
+
+void job::run()
+{
+	// simply run all tasks in given topological order
+	for (auto &i : task_queue_) {
+		try {
+			if (i->is_executable()) {
+				i->run();
+			} else {
+				// we have to pass information about non-execution to children
+				i->set_children_execution(false);
+			}
+		} catch (std::exception) {
+			if (i->get_fatal_failure()) {
+				break;
+			} else {
+				// set executable bit in this task and in children
+				i->set_execution(false);
+				i->set_children_execution(false);
+			}
+		}
+	}
+
+	return;
+}
+
+std::map<std::string, std::shared_ptr<task_results>> job::get_results()
+{
+	std::map<std::string, std::shared_ptr<task_results>> res;
+
+	for (auto &i : task_queue_) {
+		if (i->get_result() != nullptr) {
+			res.emplace(i->get_task_id(), i->get_result());
+		}
+	}
+
+	return res;
+}
+
+void job::cleanup_job()
+{
+	// destroy all files in working directory
+	// -> job_evaluator will handle this for us...
+
+	return;
 }

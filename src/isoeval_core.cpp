@@ -3,7 +3,7 @@
 #endif
 
 #include "isoeval_core.h"
-#include "job_receiver.h"
+#include "job/job_receiver.h"
 #include "fileman/http_manager.h"
 #include "fileman/cache_manager.h"
 
