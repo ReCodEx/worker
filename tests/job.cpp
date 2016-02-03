@@ -13,7 +13,7 @@ using namespace boost::filesystem;
 #include "../src/job/job_exception.h"
 
 
-TEST(job_test, bad_parameters)
+/*TEST(job_test, bad_parameters)
 {
 	auto yaml = YAML::Load("");
 
@@ -277,4 +277,4 @@ TEST(job_test, config_data) // TODO
 
 	// cleanup
 	remove_all(dir_root);
-}
+}*/

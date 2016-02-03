@@ -14,7 +14,7 @@ public:
 	std::string std_input = "";
 	std::string std_output = "";
 	std::string std_error = "";
-	std::map<std::string, std::unique_ptr<sandbox_limits>> limits;
+	std::map<std::string, std::shared_ptr<sandbox_limits>> limits;
 };
 
 #endif //CODEX_WORKER_SANDBOX_CONFIG_H

@@ -1,9 +1,9 @@
 #include "config.h"
 
 
-std::unique_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf)
+std::shared_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf)
 {
-	std::unique_ptr<job_metadata> job_meta;
+	std::shared_ptr<job_metadata> job_meta;
 
 	try {
 		// initial checkouts
@@ -25,44 +25,44 @@ std::unique_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 		// get information about this submission
 		auto submiss = conf["submission"];
 		if (submiss["job-id"] && submiss["job-id"].IsScalar()) {
-			job_id_ = submiss["job-id"].as<std::string>();
+			job_meta->job_id = submiss["job-id"].as<std::string>();
 		} else { throw config_exception("Submission.job-id item not loaded properly"); }
 		if (submiss["language"] && submiss["language"].IsScalar()) {
-			language_ = submiss["language"].as<std::string>();
+			job_meta->language = submiss["language"].as<std::string>();
 		} else { throw config_exception("Submission.language item not loaded properly"); }
 		if (submiss["file-collector"] && submiss["file-collector"].IsScalar()) {
-			file_server_url_ = submiss["file-collector"].as<std::string>();
+			job_meta->file_server_url = submiss["file-collector"].as<std::string>();
 		} else { throw config_exception("Submission.file-collector item not loaded properly"); }
 
 
 		// load datas for tasks and save them
-		for (auto &ctask : config["tasks"]) {
-			std::unique_ptr<task_metadata> task;
+		for (auto &ctask : conf["tasks"]) {
+			std::shared_ptr<task_metadata> task_meta;
 
 			if (ctask["task-id"] && ctask["task-id"].IsScalar()) {
-				task->task_id = ctask["task-id"].as<std::string>();
+				task_meta->task_id = ctask["task-id"].as<std::string>();
 			} else { throw config_exception("Configuration task has missing task-id"); }
 			if (ctask["priority"] && ctask["priority"].IsScalar()) {
-				task->priority = ctask["priority"].as<size_t>();
+				task_meta->priority = ctask["priority"].as<size_t>();
 			} else { throw config_exception("Configuration task has missing priority"); }
 			if (ctask["fatal-failure"] && ctask["fatal-failure"].IsScalar()) {
-				task->fatal_failure = ctask["fatal-failure"].as<bool>();
+				task_meta->fatal_failure = ctask["fatal-failure"].as<bool>();
 			} else { throw config_exception("Configuration task has missing fatal-failure"); }
 			if (ctask["cmd"]) {
 				if (ctask["cmd"].IsMap()) {
 					if (ctask["cmd"]["bin"] && ctask["cmd"]["bin"].IsScalar()) {
-						task->binary = ctask["cmd"]["bin"].as<std::string>();
+						task_meta->binary = ctask["cmd"]["bin"].as<std::string>();
 					} else { throw config_exception("Runnable binary for task not given"); }
 
 					if (ctask["cmd"]["args"] && ctask["cmd"]["args"].IsSequence()) {
-						task->cmd_args = ctask["cmd"]["args"].as<std::vector<std::string>>();
+						task_meta->cmd_args = ctask["cmd"]["args"].as<std::vector<std::string>>();
 					} // can be omitted... no throw
 				} else { throw config_exception("Command in task is not a map"); }
 			} else { throw config_exception("Configuration of one task has missing cmd"); }
 
 			// load dependencies
 			if (ctask["dependencies"] && ctask["dependencies"].IsSequence()) {
-				task->dependencies = ctask["dependencies"].as<std::vector<std::string>>();
+				task_meta->dependencies = ctask["dependencies"].as<std::vector<std::string>>();
 			}
 
 			// distinguish internal/external command and construct suitable object
@@ -72,7 +72,7 @@ std::unique_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 				// external command //
 				// //////////////// //
 
-				std::unique_ptr<sandbox_config> sandbox;
+				std::shared_ptr<sandbox_config> sandbox;
 
 				if (ctask["sandbox"]["name"] && ctask["sandbox"]["name"].IsScalar()) {
 					sandbox->name = ctask["sandbox"]["name"].as<std::string>();
@@ -95,7 +95,7 @@ std::unique_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 					}
 
 					for (auto &lim : ctask["sandbox"]["limits"]) {
-						std::unique_ptr<sandbox_limits> sl;
+						std::shared_ptr<sandbox_limits> sl;
 						std::string hwgroup;
 
 						if (lim["hw-group-id"] && lim["hw-group-id"].IsScalar()) {
@@ -104,45 +104,31 @@ std::unique_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 
 						if (lim["time"] && lim["time"].IsScalar()) {
 							sl->cpu_time = lim["time"].as<float>();
-						} else { // if not defined, load from default config
-							sl->cpu_time = worker_config->get_limits().cpu_time;
 						}
 						if (lim["wall-time"] && lim["wall-time"].IsScalar()) {
 							sl->wall_time = lim["wall-time"].as<float>();
-						} else { // if not defined, load from default config
-							sl->wall_time = worker_config->get_limits().wall_time;
 						}
 						if (lim["extra-time"] && lim["extra-time"].IsScalar()) {
 							sl->extra_time = lim["extra-time"].as<float>();
-						} else { // if not defined, load from default config
-							sl->extra_time = worker_config->get_limits().extra_time;
 						}
 						if (lim["stack-size"] && lim["stack-size"].IsScalar()) {
 							sl->stack_size = lim["stack-size"].as<size_t>();
-						} else { // if not defined, load from default config
-							sl->stack_size = worker_config->get_limits().stack_size;
 						}
 						if (lim["memory"] && lim["memory"].IsScalar()) {
 							sl->memory_usage = lim["memory"].as<size_t>();
-						} else { // if not defined, load from default config
-							sl->memory_usage = worker_config->get_limits().memory_usage;
 						}
 						if (lim["parallel"] && lim["parallel"].IsScalar()) { // TODO not defined properly
 							lim["parallel"].as<bool>();
-						} // can be omitted... no throw
+						}
 						if (lim["disk-blocks"] && lim["disk-blocks"].IsScalar()) {
 							sl->disk_blocks = lim["disk-blocks"].as<size_t>();
-						} else { // if not defined, load from default config
-							sl->disk_blocks = worker_config->get_limits().disk_blocks;
 						}
 						if (lim["disk-inodes"] && lim["disk-inodes"].IsScalar()) {
 							sl->disk_inodes = lim["disk-inodes"].as<size_t>();
-						} else { // if not defined, load from default config
-							sl->disk_inodes = worker_config->get_limits().disk_inodes;
 						}
 						if (lim["chdir"] && lim["chdir"].IsScalar()) {
 							sl->chdir = lim["chdir"].as<std::string>();
-						} // can be omitted... no throw
+						}
 
 						if (lim["bound-directories"] && lim["bound-directories"].IsMap()) {
 							sl->bound_dirs = lim["bound-directories"].as<std::map<std::string, std::string>>();
@@ -158,7 +144,7 @@ std::unique_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 					}
 				}
 
-				task->sandbox = sandbox;
+				task_meta->sandbox = sandbox;
 			} else {
 
 				// //////////////// //
@@ -169,7 +155,7 @@ std::unique_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 			}
 
 			// add task to job_meta
-			job_meta->tasks.push_back(task);
+			job_meta->tasks.push_back(task_meta);
 		}
 
 	}  catch (YAML::Exception &e) {

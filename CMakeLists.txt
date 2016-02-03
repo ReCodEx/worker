@@ -106,9 +106,20 @@ elseif(MSVC)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
 endif()
 
+
+# Bit of sets of handy folders
+set(SRC_DIR src)
+set(LIBS_DIR vendor)
+set(FILEMAN_DIR src/fileman)
+set(SANDBOX_DIR src/sandbox)
+set(TASKS_DIR src/tasks)
+set(HELPERS_DIR src/helpers)
+set(CONFIG_DIR src/config)
+set(JOB_DIR src/job)
+
 # The worker executable
 set(SOURCE_FILES
-	src/main.cpp
+	${SRC_DIR}/main.cpp
 	src/config/worker_config.cpp
 	src/config/worker_config.h
 	src/config/fileman_config.h

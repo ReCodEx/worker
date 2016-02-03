@@ -52,6 +52,8 @@ add_executable(${TESTS_NAME}
 	${HELPERS_DIR}/topological_sort.cpp
 	${HELPERS_DIR}/filesystem.h
 	${HELPERS_DIR}/filesystem.cpp
+	${HELPERS_DIR}/config.h
+	${HELPERS_DIR}/config.cpp
 )
 
 target_link_libraries(${TESTS_NAME} gtest gtest_main)
