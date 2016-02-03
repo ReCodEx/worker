@@ -391,7 +391,7 @@ char **isolate_sandbox::isolate_run_args(const std::string &binary, const std::v
 	int i = 0;
 	for (auto &it : vargs) {
 		c_args[i++] = strdup(it.c_str());
-		//std::cerr << it << " ";
+		logger_->debug() << it;
 	}
 	c_args[i] = NULL;
 	return c_args;

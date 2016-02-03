@@ -23,11 +23,11 @@ limits:
     time: 5  # in secs
     wall-time: 6  # seconds
     extra-time: 2  # seconds
-    stack-size: 50000  # KB
+    stack-size: 0  # normal in KB, but 0 means no special limit
     memory: 50000  # in KB
     parallel: false  # time and memory limits are merged
-    disk-blocks: 50
-    disk-inodes: 5
+    disk-size: 50
+    disk-files: 5
 sandboxes-wrap-limits:
     - name: "isolate"
       time: 10  # in seconds

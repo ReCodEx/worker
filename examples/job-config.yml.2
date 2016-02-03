@@ -56,4 +56,11 @@ tasks:
               bound-directories:
                 /tmp/hello_from_codex_worker: "evaluate"
                 /etc/alternatives: "etc/alternatives"
+    - task-id: "remove_created_dir"
+      priority: 4
+      fatal-failure: false
+      cmd:
+          bin: "rm"
+          args:
+              - "/tmp/hello_from_codex_worker/main.c"
 ...
