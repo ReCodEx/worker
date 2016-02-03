@@ -30,6 +30,12 @@ static size_t fwrite_wrapper(void *ptr, size_t size, size_t nmemb, FILE *stream)
 	return fwrite(ptr, size, nmemb, stream);
 }
 
+//Nothing write callback
+size_t write_callback(char *, size_t size, size_t nmemb, void *)
+{
+	return size * nmemb;
+}
+
 //Tweak for older libcurls
 #ifndef CURL_HTTP_VERSION_2_0
 	#define CURL_HTTP_VERSION_2_0 CURL_HTTP_VERSION_1_1
@@ -157,6 +163,9 @@ void http_manager::put_file(const std::string &src, const std::string &dst)
 		//Use custom read function (because of Windows DLL issue)
 		curl_easy_setopt(curl, CURLOPT_READFUNCTION, fread_wrapper);
 
+		//Drop output - the page after put request
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
+
 		//Better give size of uploaded file
 		curl_easy_setopt(curl, CURLOPT_INFILESIZE_LARGE, (curl_off_t)filesize);
 
@@ -168,7 +177,7 @@ void http_manager::put_file(const std::string &src, const std::string &dst)
 		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
 		//Ennable support for HTTP2
 		curl_easy_setopt(curl, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_2_0);
-		//We have trusted HTTPS certificate, so set validation on
+		//Trusted HTTPS certificate is not problem (see Let's Encrypt project), so set validation on
 		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1L);
 		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 2L);
 		//Throw exception on HTTP responses >= 400
