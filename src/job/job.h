@@ -70,6 +70,10 @@ private:
 	 * Cleanup after job evaluation, should be enough to delete all created files
 	 */
 	void cleanup_job();
+	/**
+	 * Build job from @a job_meta_. Should be called in constructor.
+	 */
+	void build_job();
 
 	// PRIVATE DATA MEMBERS
 	std::shared_ptr<job_metadata> job_meta_;
