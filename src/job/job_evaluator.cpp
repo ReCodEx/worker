@@ -97,7 +97,12 @@ void job_evaluator::build_job()
 	logger_->info() << "Yaml job configuration loaded properly.";
 
 	// build job_metadata structure
-	auto job_meta = helpers::build_job_metadata(conf);
+	std::shared_ptr<job_metadata> job_meta = nullptr;
+	try {
+		job_meta = helpers::build_job_metadata(conf);
+	} catch (helpers::config_exception &e) {
+		throw job_exception("Job configuration loading problem: " + std::string(e.what()));
+	}
 
 	// construct manager which is used in job
 	auto task_fileman = std::make_shared<fallback_file_manager>(
