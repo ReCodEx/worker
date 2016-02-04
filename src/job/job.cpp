@@ -9,6 +9,15 @@ job::job(std::shared_ptr<job_metadata> job_meta, std::shared_ptr<worker_config> 
 	if (job_meta == nullptr) {
 		throw job_exception("Job configuration cannot be null");
 	}
+	if (worker_conf == nullptr) {
+		throw job_exception("Worker configuration cannot be null");
+	}
+	if (fs::exists(source_path) && fs::is_directory(source_path)) {
+		throw job_exception("Source path does not exist or is not directory");
+	}
+	if (fileman == nullptr) {
+		throw job_exception("File manager cannot be null");
+	}
 
 
 	// create fake task, which is logical root of evaluation
@@ -33,12 +42,14 @@ job::job(std::shared_ptr<job_metadata> job_meta, std::shared_ptr<worker_config> 
 
 		// distinguish internal/external command and construct suitable object
 		if (task_meta->sandbox != nullptr) {
-			auto sandbox = task_meta->sandbox;
 
 			// //////////////// //
 			// external command //
 			// //////////////// //
+
+			auto sandbox = task_meta->sandbox;
 			std::shared_ptr<sandbox_limits> limits;
+			auto worker_limits = worker_conf->get_limits();
 
 			if (sandbox->name == "") {
 				throw job_exception("Sandbox name cannot be empty");
@@ -58,12 +69,36 @@ job::job(std::shared_ptr<job_metadata> job_meta, std::shared_ptr<worker_config> 
 				throw job_exception("Hwgroup with specified name not defined");
 			}
 
-			// TODO: we have to load defaults from worker_config if necessary
+			// we have to load defaults from worker_config if necessary
+			if (limits->cpu_time == FLT_MAX) {
+				limits->cpu_time = worker_limits.cpu_time;
+			}
+			if (limits->wall_time == FLT_MAX) {
+				limits->wall_time = worker_limits.wall_time;
+			}
+			if (limits->extra_time == FLT_MAX) {
+				limits->extra_time = worker_limits.extra_time;
+			}
+			if (limits->stack_size == SIZE_MAX) {
+				limits->stack_size = worker_limits.stack_size;
+			}
+			if (limits->memory_usage == SIZE_MAX) {
+				limits->memory_usage = worker_limits.memory_usage;
+			}
+			if (limits->processes == SIZE_MAX) {
+				limits->processes = worker_limits.processes;
+			}
+			if (limits->disk_blocks == SIZE_MAX) {
+				limits->disk_blocks = worker_limits.disk_blocks;
+			}
+			if (limits->disk_inodes == SIZE_MAX) {
+				limits->disk_inodes = worker_limits.disk_inodes;
+			}
 
 			// ... and finally construct external task from given information
-			limits->std_input = sandbox->std_input;
-			limits->std_output = sandbox->std_output;
-			limits->std_error = sandbox->std_error;
+			limits->std_input = task_meta->std_input;
+			limits->std_output = task_meta->std_output;
+			limits->std_error = task_meta->std_error;
 			std::shared_ptr<task_base> task = std::make_shared<external_task>(
 						worker_conf->get_worker_id(), id++, task_meta->task_id, task_meta->priority,
 						task_meta->fatal_failure, task_meta->dependencies, task_meta->binary,
@@ -81,33 +116,32 @@ job::job(std::shared_ptr<job_metadata> job_meta, std::shared_ptr<worker_config> 
 
 			if (task_meta->binary == "cp") {
 				task = std::make_shared<cp_task>(id++, task_meta->task_id, task_meta->priority,
-												 task_meta->fatal_failure, task_meta->binary,
-												 task_meta->cmd_args, "", task_meta->dependencies);
+					task_meta->fatal_failure, task_meta->binary,
+					task_meta->cmd_args, "", task_meta->dependencies);
 			} else if (task_meta->binary == "mkdir") {
 				task = std::make_shared<mkdir_task>(id++, task_meta->task_id, task_meta->priority,
-													task_meta->fatal_failure, task_meta->binary,
-													task_meta->cmd_args, "", task_meta->dependencies);
+					task_meta->fatal_failure, task_meta->binary,
+					task_meta->cmd_args, "", task_meta->dependencies);
 			} else if (task_meta->binary == "rename") {
 				task = std::make_shared<rename_task>(id++, task_meta->task_id, task_meta->priority,
-													 task_meta->fatal_failure, task_meta->binary,
-													 task_meta->cmd_args, "", task_meta->dependencies);
+					task_meta->fatal_failure, task_meta->binary,
+					task_meta->cmd_args, "", task_meta->dependencies);
 			} else if (task_meta->binary == "rm") {
 				task = std::make_shared<rm_task>(id++, task_meta->task_id, task_meta->priority,
-												 task_meta->fatal_failure, task_meta->binary,
-												 task_meta->cmd_args, "", task_meta->dependencies);
+					task_meta->fatal_failure, task_meta->binary,
+					task_meta->cmd_args, "", task_meta->dependencies);
 			} else if (task_meta->binary == "archivate") {
 				task = std::make_shared<archivate_task>(id++, task_meta->task_id, task_meta->priority,
-														task_meta->fatal_failure, task_meta->binary,
-														task_meta->cmd_args, "", task_meta->dependencies);
+					task_meta->fatal_failure, task_meta->binary,
+					task_meta->cmd_args, "", task_meta->dependencies);
 			} else if (task_meta->binary == "extract") {
 				task = std::make_shared<extract_task>(id++, task_meta->task_id, task_meta->priority,
-													  task_meta->fatal_failure, task_meta->binary,
-													  task_meta->cmd_args, "", task_meta->dependencies);
+					task_meta->fatal_failure, task_meta->binary,
+					task_meta->cmd_args, "", task_meta->dependencies);
 			} else if (task_meta->binary == "fetch") {
 				task = std::make_shared<fetch_task>(id++, task_meta->task_id, task_meta->priority,
-													task_meta->fatal_failure, task_meta->binary,
-													task_meta->cmd_args, "", task_meta->dependencies,
-													fileman);
+					task_meta->fatal_failure, task_meta->binary,
+					task_meta->cmd_args, "", task_meta->dependencies, fileman);
 			} else {
 				throw job_exception("Unknown internal task: " + task_meta->binary);
 			}

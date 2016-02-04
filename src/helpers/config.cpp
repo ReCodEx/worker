@@ -3,7 +3,7 @@
 
 std::shared_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf)
 {
-	std::shared_ptr<job_metadata> job_meta;
+	std::shared_ptr<job_metadata> job_meta = std::make_shared<job_metadata>();
 
 	try {
 		// initial checkouts
@@ -37,7 +37,7 @@ std::shared_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 
 		// load datas for tasks and save them
 		for (auto &ctask : conf["tasks"]) {
-			std::shared_ptr<task_metadata> task_meta;
+			std::shared_ptr<task_metadata> task_meta = std::make_shared<task_metadata>();
 
 			if (ctask["task-id"] && ctask["task-id"].IsScalar()) {
 				task_meta->task_id = ctask["task-id"].as<std::string>();
@@ -65,6 +65,16 @@ std::shared_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 				task_meta->dependencies = ctask["dependencies"].as<std::vector<std::string>>();
 			}
 
+			if (ctask["stdin"] && ctask["stdin"].IsScalar()) {
+				task_meta->std_input = ctask["stdin"].as<std::string>();
+			} // can be ommited... no throw
+			if (ctask["stdout"] && ctask["stdout"].IsScalar()) {
+				task_meta->std_output = ctask["stdout"].as<std::string>();
+			} // can be ommited... no throw
+			if (ctask["stderr"] && ctask["stderr"].IsScalar()) {
+				task_meta->std_error = ctask["stderr"].as<std::string>();
+			} // can be ommited... no throw
+
 			// distinguish internal/external command and construct suitable object
 			if (ctask["sandbox"]) {
 
@@ -72,21 +82,11 @@ std::shared_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 				// external command //
 				// //////////////// //
 
-				std::shared_ptr<sandbox_config> sandbox;
+				std::shared_ptr<sandbox_config> sandbox = std::make_shared<sandbox_config>();
 
 				if (ctask["sandbox"]["name"] && ctask["sandbox"]["name"].IsScalar()) {
 					sandbox->name = ctask["sandbox"]["name"].as<std::string>();
 				} else { throw config_exception("Name of sandbox not given"); }
-
-				if (ctask["stdin"] && ctask["stdin"].IsScalar()) {
-					sandbox->std_input = ctask["stdin"].as<std::string>();
-				} // can be ommited... no throw
-				if (ctask["stdout"] && ctask["stdout"].IsScalar()) {
-					sandbox->std_output = ctask["stdout"].as<std::string>();
-				} // can be ommited... no throw
-				if (ctask["stderr"] && ctask["stderr"].IsScalar()) {
-					sandbox->std_error = ctask["stderr"].as<std::string>();
-				} // can be ommited... no throw
 
 				// load limits... if they are supplied
 				if (ctask["sandbox"]["limits"]) {
@@ -95,7 +95,7 @@ std::shared_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 					}
 
 					for (auto &lim : ctask["sandbox"]["limits"]) {
-						std::shared_ptr<sandbox_limits> sl;
+						std::shared_ptr<sandbox_limits> sl = std::make_shared<sandbox_limits>();
 						std::string hwgroup;
 
 						if (lim["hw-group-id"] && lim["hw-group-id"].IsScalar()) {
@@ -104,27 +104,41 @@ std::shared_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 
 						if (lim["time"] && lim["time"].IsScalar()) {
 							sl->cpu_time = lim["time"].as<float>();
+						} else {
+							sl->cpu_time = FLT_MAX; // set undefined value (max float)
 						}
 						if (lim["wall-time"] && lim["wall-time"].IsScalar()) {
 							sl->wall_time = lim["wall-time"].as<float>();
+						} else {
+							sl->wall_time = FLT_MAX; // set undefined value (max float)
 						}
 						if (lim["extra-time"] && lim["extra-time"].IsScalar()) {
 							sl->extra_time = lim["extra-time"].as<float>();
+						} else {
+							sl->extra_time = FLT_MAX; // set undefined value (max float)
 						}
 						if (lim["stack-size"] && lim["stack-size"].IsScalar()) {
 							sl->stack_size = lim["stack-size"].as<size_t>();
+						} else {
+							sl->stack_size = SIZE_MAX; // set undefined value (max size_t)
 						}
 						if (lim["memory"] && lim["memory"].IsScalar()) {
 							sl->memory_usage = lim["memory"].as<size_t>();
+						} else {
+							sl->memory_usage = SIZE_MAX; // set undefined value (max size_t)
 						}
 						if (lim["parallel"] && lim["parallel"].IsScalar()) { // TODO not defined properly
-							lim["parallel"].as<bool>();
+							sl->processes = lim["parallel"].as<size_t>();
 						}
 						if (lim["disk-blocks"] && lim["disk-blocks"].IsScalar()) {
 							sl->disk_blocks = lim["disk-blocks"].as<size_t>();
+						} else {
+							sl->disk_blocks = SIZE_MAX; // set undefined value (max size_t)
 						}
 						if (lim["disk-inodes"] && lim["disk-inodes"].IsScalar()) {
 							sl->disk_inodes = lim["disk-inodes"].as<size_t>();
+						} else {
+							sl->disk_inodes = SIZE_MAX; // set undefined value (max size_t)
 						}
 						if (lim["chdir"] && lim["chdir"].IsScalar()) {
 							sl->chdir = lim["chdir"].as<std::string>();

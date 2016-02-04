@@ -11,9 +11,6 @@ class sandbox_config
 {
 public:
 	std::string name = "";
-	std::string std_input = "";
-	std::string std_output = "";
-	std::string std_error = "";
 	std::map<std::string, std::shared_ptr<sandbox_limits>> limits;
 };
 
