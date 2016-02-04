@@ -6,17 +6,38 @@ job::job(std::shared_ptr<job_metadata> job_meta, std::shared_ptr<worker_config> 
 	: job_meta_(job_meta), worker_config_(worker_conf), source_path_(source_path), fileman_(fileman)
 {
 	// check construction parameters if they are in right format
-	if (job_meta == nullptr) {
+	if (job_meta_ == nullptr) {
 		throw job_exception("Job configuration cannot be null");
-	}
-	if (worker_conf == nullptr) {
+	} else if (worker_config_ == nullptr) {
 		throw job_exception("Worker configuration cannot be null");
-	}
-	if (fs::exists(source_path) && fs::is_directory(source_path)) {
-		throw job_exception("Source path does not exist or is not directory");
-	}
-	if (fileman == nullptr) {
+	} else if (!fs::exists(source_path_)) {
+		throw job_exception("Source code directory not exists");
+	} else if (!fs::is_directory(source_path_)) {
+		throw job_exception("Source code directory is not directory");
+	} else if (fs::is_empty(source_path_)) {
+		throw job_exception("Source code directory is empty");
+	} else if (fileman_ == nullptr) {
 		throw job_exception("File manager cannot be null");
+	}
+
+	// build job from given job configuration
+	build_job();
+}
+
+job::~job()
+{
+	cleanup_job();
+}
+
+void job::build_job()
+{
+	// check job info
+	if (job_meta_->job_id == "") {
+		throw job_exception("Job ID cannot be empty");
+	} else if (job_meta_->language == "") {
+		throw job_exception("Language cannot be empty");
+	} else if (job_meta_->file_server_url == "") {
+		throw job_exception("File server URL cannot be empty");
 	}
 
 
@@ -29,14 +50,12 @@ job::job(std::shared_ptr<job_metadata> job_meta, std::shared_ptr<worker_config> 
 
 	// construct all tasks with their ids and check if they have all datas, but do not connect them
 	std::map<std::string, std::shared_ptr<task_base>> unconnected_tasks;
-	for (auto &task_meta : job_meta->tasks) {
+	for (auto &task_meta : job_meta_->tasks) {
 		if (task_meta->task_id == "") {
 			throw job_exception("Task ID cannot be empty");
-		}
-		if (task_meta->priority == 0) {
+		} else if (task_meta->priority == 0) {
 			throw job_exception("Priority cannot be zero");
-		}
-		if (task_meta->binary == "") {
+		} else if (task_meta->binary == "") {
 			throw job_exception("Command cannot be empty");
 		}
 
@@ -49,7 +68,7 @@ job::job(std::shared_ptr<job_metadata> job_meta, std::shared_ptr<worker_config> 
 
 			auto sandbox = task_meta->sandbox;
 			std::shared_ptr<sandbox_limits> limits;
-			auto worker_limits = worker_conf->get_limits();
+			auto worker_limits = worker_config_->get_limits();
 
 			if (sandbox->name == "") {
 				throw job_exception("Sandbox name cannot be empty");
@@ -57,7 +76,7 @@ job::job(std::shared_ptr<job_metadata> job_meta, std::shared_ptr<worker_config> 
 
 			// first we have to get propriate hwgroup limits
 			bool hw_found = false;
-			auto its = worker_conf->get_headers().equal_range("hwgroup");
+			auto its = worker_config_->get_headers().equal_range("hwgroup");
 			for (auto it = its.first; it != its.second; ++it) {
 				auto hwit = sandbox->limits.find(it->second);
 				if (hwit != sandbox->limits.end()) {
@@ -100,7 +119,7 @@ job::job(std::shared_ptr<job_metadata> job_meta, std::shared_ptr<worker_config> 
 			limits->std_output = task_meta->std_output;
 			limits->std_error = task_meta->std_error;
 			std::shared_ptr<task_base> task = std::make_shared<external_task>(
-						worker_conf->get_worker_id(), id++, task_meta->task_id, task_meta->priority,
+						worker_config_->get_worker_id(), id++, task_meta->task_id, task_meta->priority,
 						task_meta->fatal_failure, task_meta->dependencies, task_meta->binary,
 						task_meta->cmd_args, sandbox->name, *limits);
 			unconnected_tasks.insert(std::make_pair(task_meta->task_id, task));
@@ -141,7 +160,7 @@ job::job(std::shared_ptr<job_metadata> job_meta, std::shared_ptr<worker_config> 
 			} else if (task_meta->binary == "fetch") {
 				task = std::make_shared<fetch_task>(id++, task_meta->task_id, task_meta->priority,
 					task_meta->fatal_failure, task_meta->binary,
-					task_meta->cmd_args, "", task_meta->dependencies, fileman);
+					task_meta->cmd_args, "", task_meta->dependencies, fileman_);
 			} else {
 				throw job_exception("Unknown internal task: " + task_meta->binary);
 			}
@@ -184,11 +203,6 @@ job::job(std::shared_ptr<job_metadata> job_meta, std::shared_ptr<worker_config> 
 	} catch (helpers::top_sort_exception &e) {
 		throw job_exception(e.what());
 	}
-}
-
-job::~job()
-{
-	cleanup_job();
 }
 
 void job::run()
