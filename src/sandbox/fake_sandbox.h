@@ -24,6 +24,7 @@ public:
 	 * @return
 	 */
 	virtual sandbox_results run(const std::string &binary, const std::vector<std::string> &arguments);
+
 };
 
 
