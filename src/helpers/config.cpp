@@ -132,15 +132,15 @@ std::shared_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 						} else {
 							sl->processes = SIZE_MAX; // set undefined value (max size_t)
 						}
-						if (lim["disk-blocks"] && lim["disk-blocks"].IsScalar()) {
-							sl->disk_blocks = lim["disk-blocks"].as<size_t>();
+						if (lim["disk-size"] && lim["disk-size"].IsScalar()) {
+							sl->disk_size = lim["disk-size"].as<size_t>();
 						} else {
-							sl->disk_blocks = SIZE_MAX; // set undefined value (max size_t)
+							sl->disk_size = SIZE_MAX; // set undefined value (max size_t)
 						}
-						if (lim["disk-inodes"] && lim["disk-inodes"].IsScalar()) {
-							sl->disk_inodes = lim["disk-inodes"].as<size_t>();
+						if (lim["disk-files"] && lim["disk-files"].IsScalar()) {
+							sl->disk_files = lim["disk-files"].as<size_t>();
 						} else {
-							sl->disk_inodes = SIZE_MAX; // set undefined value (max size_t)
+							sl->disk_files = SIZE_MAX; // set undefined value (max size_t)
 						}
 						if (lim["chdir"] && lim["chdir"].IsScalar()) {
 							sl->chdir = lim["chdir"].as<std::string>();

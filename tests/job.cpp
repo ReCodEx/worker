@@ -21,16 +21,16 @@ TEST(job_test, bad_parameters)
 	std::shared_ptr<worker_config> worker_conf = std::make_shared<worker_config>();
 
 	// job_config not given
-	EXPECT_THROW(job(nullptr, nullptr, "", nullptr), job_exception);
+	EXPECT_THROW(job(nullptr, nullptr, "", temp_directory_path(), nullptr), job_exception);
 
 	// worker_config not given
-	EXPECT_THROW(job(job_meta, nullptr, "", nullptr), job_exception);
+	EXPECT_THROW(job(job_meta, nullptr, "", temp_directory_path(), nullptr), job_exception);
 
 	// source path not exists
-	EXPECT_THROW(job(job_meta, worker_conf, "", nullptr), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, "", temp_directory_path(), nullptr), job_exception);
 
 	// fileman not given
-	EXPECT_THROW(job(job_meta, worker_conf, temp_directory_path(), nullptr), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, temp_directory_path(), temp_directory_path(), nullptr), job_exception);
 }
 
 TEST(job_test, bad_paths)
@@ -43,18 +43,18 @@ TEST(job_test, bad_paths)
 	auto fileman = std::make_shared<cache_manager>();
 
 	// non-existing source code folder
-	EXPECT_THROW(job(job_meta, worker_conf, dir, fileman), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, dir, temp_directory_path(), fileman), job_exception);
 
 	// source code path with no source codes in it
 	create_directories(dir);
-	EXPECT_THROW(job(job_meta, worker_conf, dir, fileman), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, dir, temp_directory_path(), fileman), job_exception);
 
 	// source code directory is not a directory
 	dir = dir / "hello";
 	std::ofstream hello(dir.string());
 	hello << "hello" << std::endl;
 	hello.close();
-	EXPECT_THROW(job(job_meta, worker_conf, dir, fileman), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, dir, temp_directory_path(), fileman), job_exception);
 
 	// cleanup after yourself
 	remove_all(dir_root);
@@ -74,15 +74,15 @@ TEST(job_test, empty_submission_details)
 	hello.close();
 
 	// job-id is empty
-	EXPECT_THROW(job(job_meta, worker_conf, dir, fileman), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, dir, temp_directory_path(), fileman), job_exception);
 
 	// language is empty
 	job_meta->job_id = "hello-job";
-	EXPECT_THROW(job(job_meta, worker_conf, dir, fileman), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, dir, temp_directory_path(), fileman), job_exception);
 
 	// file-server-url is empty
 	job_meta->language = "cpp";
-	EXPECT_THROW(job(job_meta, worker_conf, dir, fileman), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, dir, temp_directory_path(), fileman), job_exception);
 
 	// cleanup after yourself
 	remove_all(dir_root);
@@ -107,25 +107,25 @@ TEST(job_test, empty_tasks_details)
 	job_meta->tasks.push_back(task);
 
 	// empty task-id
-	EXPECT_THROW(job(job_meta, worker_conf, dir, fileman), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, dir, temp_directory_path(), fileman), job_exception);
 
 	// empty task priority
 	task->task_id = "hello-task";
-	EXPECT_THROW(job(job_meta, worker_conf, dir, fileman), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, dir, temp_directory_path(), fileman), job_exception);
 
 	// empty task binary
 	task->priority = 1;
-	EXPECT_THROW(job(job_meta, worker_conf, dir, fileman), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, dir, temp_directory_path(), fileman), job_exception);
 
 	// empty sandbox name
 	task->binary = "hello";
 	auto sandbox = std::make_shared<sandbox_config>();
 	task->sandbox = sandbox;
-	EXPECT_THROW(job(job_meta, worker_conf, dir, fileman), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, dir, temp_directory_path(), fileman), job_exception);
 
 	// non-defined hwgroup name
 	sandbox->name = "fake";
-	EXPECT_THROW(job(job_meta, worker_conf, dir, fileman), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, dir, temp_directory_path(), fileman), job_exception);
 
 	// cleanup after yourself
 	remove_all(dir_root);
@@ -164,8 +164,8 @@ TEST(job_test, non_empty_details)
 				"                stack-size: 50000\n"
 				"                memory: 60000\n"
 				"                parallel: 1\n"
-				"                disk-blocks: 50\n"
-				"                disk-inodes: 10\n"
+				"                disk-size: 50\n"
+				"                disk-files: 10\n"
 				"                chdir: /eval\n"
 				"                environ-variable:\n"
 				"                    ISOLATE_BOX: /box\n"
@@ -194,7 +194,7 @@ TEST(job_test, non_empty_details)
 	hello.close();
 
 	// given correct (non empty) job/tasks details
-	EXPECT_NO_THROW(job(job_meta, worker_conf, dir, fileman));
+	EXPECT_NO_THROW(job(job_meta, worker_conf, dir, temp_directory_path(), fileman));
 
 	// cleanup after yourself
 	remove_all(dir_root);
@@ -240,8 +240,8 @@ TEST(job_test, load_of_worker_defaults)
 				"    stack-size: 50000\n"
 				"    memory: 60000\n"
 				"    parallel: 1\n"
-				"    disk-blocks: 50\n"
-				"    disk-inodes: 7\n"
+				"    disk-size: 50\n"
+				"    disk-files: 7\n"
 	);
 	auto worker_conf = std::make_shared<worker_config>(default_yaml);
 	auto fileman = std::make_shared<cache_manager>();
@@ -251,7 +251,7 @@ TEST(job_test, load_of_worker_defaults)
 	hello.close();
 
 	// construct and check
-	job result(job_meta, worker_conf, dir, fileman);
+	job result(job_meta, worker_conf, dir, temp_directory_path(), fileman);
 
 	ASSERT_EQ(result.get_task_queue().size(), 2); // 2 because of fake_task as root
 	auto task = result.get_task_queue().at(1);
@@ -263,8 +263,8 @@ TEST(job_test, load_of_worker_defaults)
 	ASSERT_EQ(limits.stack_size, 50000);
 	ASSERT_EQ(limits.memory_usage, 60000);
 	ASSERT_EQ(limits.processes, 1);
-	ASSERT_EQ(limits.disk_blocks, 50);
-	ASSERT_EQ(limits.disk_inodes, 7);
+	ASSERT_EQ(limits.disk_size, 50);
+	ASSERT_EQ(limits.disk_files, 7);
 
 	// cleanup after yourself
 	remove_all(dir_root);
@@ -363,8 +363,8 @@ TEST(job_test, correctly_built_queue)
 				"    stack-size: 50000\n"
 				"    memory: 60000\n"
 				"    parallel: 1\n"
-				"    disk-blocks: 50\n"
-				"    disk-inodes: 7\n"
+				"    disk-size: 50\n"
+				"    disk-files: 7\n"
 	);
 	auto worker_conf = std::make_shared<worker_config>(default_yaml);
 	auto fileman = std::make_shared<cache_manager>();
@@ -374,7 +374,7 @@ TEST(job_test, correctly_built_queue)
 	hello.close();
 
 	// construct and check
-	job result(job_meta, worker_conf, dir, fileman);
+	job result(job_meta, worker_conf, dir, temp_directory_path(), fileman);
 
 	auto tasks = result.get_task_queue();
 	ASSERT_EQ(tasks.size(), 8); // +1 because of fake_task root

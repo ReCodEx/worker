@@ -124,8 +124,8 @@ TEST(job_config_test, bad_format)
 		"                stack-size: 50000\n"
 		"                memory: 50000\n"
 		"                parallel: 1\n"
-		"                disk-blocks: 50\n"
-		"                disk-inodes: 5\n"
+		"                disk-size: 50\n"
+		"                disk-files: 5\n"
 		"                environ-variable:\n"
 		"                    ISOLATE_BOX: /box\n"
 		"                    ISOLATE_TMP: /tmp\n"
@@ -175,8 +175,8 @@ TEST(job_config_test, correct_format)
 		"                stack-size: 50000\n"
 		"                memory: 50000\n"
 		"                parallel: 1\n"
-		"                disk-blocks: 50\n"
-		"                disk-inodes: 5\n"
+		"                disk-size: 50\n"
+		"                disk-files: 5\n"
 		"                environ-variable:\n"
 		"                    ISOLATE_BOX: /box\n"
 		"                    ISOLATE_TMP: /tmp\n"
@@ -228,8 +228,8 @@ TEST(job_config_test, config_data)
 		"                stack-size: 50000\n"
 		"                memory: 60000\n"
 		"                parallel: 1\n"
-		"                disk-blocks: 50\n"
-		"                disk-inodes: 10\n"
+		"                disk-size: 50\n"
+		"                disk-files: 10\n"
 		"                chdir: /eval\n"
 		"                environ-variable:\n"
 		"                    ISOLATE_BOX: /box\n"
@@ -286,8 +286,8 @@ TEST(job_config_test, config_data)
 	ASSERT_EQ(limit1->stack_size, 50000);
 	ASSERT_EQ(limit1->processes, 1);
 	ASSERT_EQ(limit1->chdir, "/eval");
-	ASSERT_EQ(limit1->disk_blocks, 50);
-	ASSERT_EQ(limit1->disk_inodes, 10);
+	ASSERT_EQ(limit1->disk_size, 50);
+	ASSERT_EQ(limit1->disk_files, 10);
 	std::map<std::string, std::string> expected_environ = {
 		{ "ISOLATE_BOX", "/box" },
 		{ "ISOLATE_TMP", "/tmp" }
@@ -306,8 +306,8 @@ TEST(job_config_test, config_data)
 	ASSERT_EQ(limit2->stack_size, SIZE_MAX);
 	ASSERT_EQ(limit2->processes, SIZE_MAX);
 	ASSERT_EQ(limit2->chdir, "");
-	ASSERT_EQ(limit2->disk_blocks, SIZE_MAX);
-	ASSERT_EQ(limit2->disk_inodes, SIZE_MAX);
+	ASSERT_EQ(limit2->disk_size, SIZE_MAX);
+	ASSERT_EQ(limit2->disk_files, SIZE_MAX);
 	ASSERT_EQ(limit2->environ_vars.size(), 0);
 	ASSERT_EQ(limit2->bound_dirs.size(), 0);
 }

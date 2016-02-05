@@ -42,8 +42,11 @@ public:
 
 	/**
 	 * Only way to construct a job. All variables are needed to proper function.
-	 * @param tasks A collection of tasks in execution order
+	 * @param job_meta
+	 * @param worker_conf
 	 * @param source_path path to source codes of submission
+	 * @param result_path path to directory containing all results
+	 * @param fileman file manager which is provided to tasks
 	 * @throws job_exception if there is problem during loading of configuration
 	 */
 	job(std::shared_ptr<job_metadata> job_meta, std::shared_ptr<worker_config> worker_conf,
@@ -58,17 +61,13 @@ public:
 	 */
 	std::vector<std::pair<std::string, std::shared_ptr<task_results>>> run();
 
+	const std::vector<std::shared_ptr<task_base>> &get_task_queue() const;
+
 private:
 	/**
 	 * Init system logger for job. Resulting log will be send with other results to frontend.
 	 */
 	void init_logger();
-
-	std::map<std::string, std::shared_ptr<task_results>> get_results();
-
-	const std::vector<std::shared_ptr<task_base>> &get_task_queue() const;
-
-private:
 	/**
 	 * Cleanup after job evaluation, should be enough to delete all created files
 	 */
@@ -85,6 +84,8 @@ private:
 	fs::path result_path_;
 	std::shared_ptr<file_manager_base> fileman_;
 
+	/** Logical start of every job evaluation */
+	std::shared_ptr<task_base> root_task_;
 	/** Tasks in linear ordering prepared for evaluation */
 	std::vector<std::shared_ptr<task_base>> task_queue_;
 
