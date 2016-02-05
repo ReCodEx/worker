@@ -129,6 +129,8 @@ std::shared_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 						}
 						if (lim["parallel"] && lim["parallel"].IsScalar()) { // TODO not defined properly
 							sl->processes = lim["parallel"].as<size_t>();
+						} else {
+							sl->processes = SIZE_MAX; // set undefined value (max size_t)
 						}
 						if (lim["disk-blocks"] && lim["disk-blocks"].IsScalar()) {
 							sl->disk_blocks = lim["disk-blocks"].as<size_t>();

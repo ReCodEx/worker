@@ -35,7 +35,7 @@ TEST(worker_config, load_yaml_basic)
 		"    extra-time: 2\n"
 		"    stack-size: 50000\n"
 		"    memory: 60000\n"
-		"    parallel: false\n"
+		"    parallel: 1\n"
 		"    disk-blocks: 50\n"
 		"    disk-inodes: 7\n"
 		"sandboxes-wrap-limits:\n"
@@ -68,6 +68,7 @@ TEST(worker_config, load_yaml_basic)
 	expected_limits.cpu_time = 5;
 	expected_limits.wall_time = 6;
 	expected_limits.extra_time = 2;
+	expected_limits.processes = 1;
 	expected_limits.stack_size = 50000;
 	expected_limits.disk_blocks = 50;
 	expected_limits.disk_inodes = 7;

@@ -250,3 +250,8 @@ void job::cleanup_job()
 
 	return;
 }
+
+const std::vector<std::shared_ptr<task_base>> &job::get_task_queue() const
+{
+	return task_queue_;
+}

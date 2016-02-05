@@ -18,6 +18,9 @@ void external_task::sandbox_check()
 {
 	bool found = false;
 
+	if (sandbox_id_ == "fake") {
+		found = true;
+	}
 #ifndef _WIN32
 	if (sandbox_id_ == "isolate") {
 		found = true;
@@ -31,6 +34,9 @@ void external_task::sandbox_check()
 
 void external_task::sandbox_init()
 {
+	if (sandbox_id_ == "fake") {
+		sandbox_ = std::make_shared<fake_sandbox>();
+	}
 #ifndef _WIN32
 	if (sandbox_id_ == "isolate") {
 		sandbox_ = std::make_shared<isolate_sandbox>(limits_, worker_id_);
@@ -59,4 +65,9 @@ void external_task::run()
 std::shared_ptr<task_results> external_task::get_result()
 {
 	return results_;
+}
+
+sandbox_limits external_task::get_limits()
+{
+	return limits_;
 }

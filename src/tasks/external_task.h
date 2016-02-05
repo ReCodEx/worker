@@ -2,8 +2,8 @@
 #define CODEX_WORKER_EXTERNAL_TASK_HPP
 
 #include "task_base.h"
-#include "../sandbox/sandbox_base.h"
 #include "../sandbox/isolate_sandbox.h"
+#include "../sandbox/fake_sandbox.h"
 #include "../config/task_results.h"
 
 
@@ -52,6 +52,12 @@ public:
 	 * @return
 	 */
 	virtual std::shared_ptr<task_results> get_result();
+
+	/**
+	 * Get sandbox_limits structure, given during construction.
+	 * @return
+	 */
+	sandbox_limits get_limits();
 private:
 
 	/**
