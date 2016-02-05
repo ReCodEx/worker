@@ -111,7 +111,7 @@ worker_config::worker_config (const YAML::Node &config)
 				limits_.memory_usage = limits["memory"].as<size_t>();
 			} // no throw... can be omitted
 			if (limits["parallel"] && limits["parallel"].IsScalar()) {
-				// = limits["parallel"].as<bool>(); // TODO
+				limits_.processes = limits["parallel"].as<size_t>();
 			} // no throw... can be omitted
 			if (limits["disk-size"] && limits["disk-size"].IsScalar()) {
 				limits_.disk_size = limits["disk-size"].as<size_t>();

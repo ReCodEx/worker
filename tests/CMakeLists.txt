@@ -29,6 +29,7 @@ add_executable(${TESTS_NAME}
 	fallback_file_manager.cpp
 	isolate_sandbox.cpp
 	${SANDBOX_DIR}/isolate_sandbox.cpp
+	${SANDBOX_DIR}/fake_sandbox.cpp
 	${JOB_DIR}/job_evaluator.cpp
 	job.cpp
 	topological_sort.cpp

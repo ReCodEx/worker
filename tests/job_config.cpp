@@ -86,7 +86,6 @@ TEST(job_config_test, bad_format)
 	);
 	EXPECT_THROW(build_job_metadata(yaml), config_exception);
 
-#ifndef _WIN32
 	// task-id missing in external task
 	yaml = YAML::Load(
 		"---\n"
@@ -116,7 +115,7 @@ TEST(job_config_test, bad_format)
 		"      stdout: 01.out\n"
 		"      stderr: 01.err\n"
 		"      sandbox:\n"
-		"          name: isolate\n"
+		"          name: fake\n"
 		"          limits:\n"
 		"              - hw-group-id: group1\n"
 		"                time: 5\n"
@@ -133,12 +132,10 @@ TEST(job_config_test, bad_format)
 		"...\n"
 	);
 	EXPECT_THROW(build_job_metadata(yaml), config_exception);
-#endif
 }
 
 TEST(job_config_test, correct_format)
 {
-#ifndef _WIN32
 	// correct configuration
 	auto yaml = YAML::Load(
 		"---\n"
@@ -169,7 +166,7 @@ TEST(job_config_test, correct_format)
 		"      stdout: 01.out\n"
 		"      stderr: 01.err\n"
 		"      sandbox:\n"
-		"          name: isolate\n"
+		"          name: fake\n"
 		"          limits:\n"
 		"              - hw-group-id: group1\n"
 		"                time: 5\n"
@@ -189,7 +186,6 @@ TEST(job_config_test, correct_format)
 	);
 	build_job_metadata(yaml);
 	EXPECT_NO_THROW(build_job_metadata(yaml));
-#endif
 }
 
 TEST(job_config_test, config_data)
@@ -223,7 +219,7 @@ TEST(job_config_test, config_data)
 		"      stdout: 01.out\n"
 		"      stderr: 01.err\n"
 		"      sandbox:\n"
-		"          name: isolate\n"
+		"          name: fake\n"
 		"          limits:\n"
 		"              - hw-group-id: group1\n"
 		"                time: 5\n"
@@ -277,7 +273,7 @@ TEST(job_config_test, config_data)
 	ASSERT_EQ(task2->std_output, "01.out");
 	ASSERT_EQ(task2->std_error, "01.err");
 	ASSERT_NE(task2->sandbox, nullptr);
-	ASSERT_EQ(task2->sandbox->name, "isolate");
+	ASSERT_EQ(task2->sandbox->name, "fake");
 	ASSERT_EQ(task2->sandbox->limits.size(), 2);
 	EXPECT_NO_THROW(task2->sandbox->limits.at("group1"));
 	EXPECT_NO_THROW(task2->sandbox->limits.at("group2"));
@@ -308,7 +304,7 @@ TEST(job_config_test, config_data)
 	ASSERT_EQ(limit2->extra_time, FLT_MAX);
 	ASSERT_EQ(limit2->memory_usage, SIZE_MAX);
 	ASSERT_EQ(limit2->stack_size, SIZE_MAX);
-	ASSERT_EQ(limit2->processes, 0);
+	ASSERT_EQ(limit2->processes, SIZE_MAX);
 	ASSERT_EQ(limit2->chdir, "");
 	ASSERT_EQ(limit2->disk_blocks, SIZE_MAX);
 	ASSERT_EQ(limit2->disk_inodes, SIZE_MAX);

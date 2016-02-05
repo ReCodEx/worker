@@ -2,6 +2,7 @@
 #include <gmock/gmock.h>
 #include <iostream>
 #include <fstream>
+#include <type_traits>
 
 #define BOOST_FILESYSTEM_NO_DEPRECATED
 #define BOOST_NO_CXX11_SCOPED_ENUMS
@@ -9,8 +10,9 @@
 using namespace boost::filesystem;
 
 #include "../src/job/job.h"
-#include "../src/fileman/cache_manager.h"
 #include "../src/job/job_exception.h"
+#include "../src/fileman/cache_manager.h"
+#include "../src/helpers/config.h"
 
 
 TEST(job_test, bad_parameters)
@@ -122,7 +124,7 @@ TEST(job_test, empty_tasks_details)
 	EXPECT_THROW(job(job_meta, worker_conf, dir, fileman), job_exception);
 
 	// non-defined hwgroup name
-	sandbox->name = "isolate";
+	sandbox->name = "fake";
 	EXPECT_THROW(job(job_meta, worker_conf, dir, fileman), job_exception);
 
 	// cleanup after yourself
@@ -134,8 +136,47 @@ TEST(job_test, non_empty_details)
 	// prepare all things which need to be prepared
 	path dir_root = temp_directory_path() / "isoeval";
 	path dir = dir_root / "job_test";
-	auto job_meta = std::make_shared<job_metadata>();
-	auto yaml = YAML::Load(
+	auto job_yaml = YAML::Load(
+				"---\n"
+				"submission:\n"
+				"    job-id: 5\n"
+				"    language: cpp\n"
+				"    file-collector: localhost\n"
+				"tasks:\n"
+				"    - task-id: eval\n"
+				"      priority: 4\n"
+				"      fatal-failure: false\n"
+				"      cmd:\n"
+				"          bin: recodex\n"
+				"          args:\n"
+				"              - -v\n"
+				"              - \"-f 01.in\"\n"
+				"      stdin: 01.in\n"
+				"      stdout: 01.out\n"
+				"      stderr: 01.err\n"
+				"      sandbox:\n"
+				"          name: fake\n"
+				"          limits:\n"
+				"              - hw-group-id: group1\n"
+				"                time: 5\n"
+				"                wall-time: 6\n"
+				"                extra-time: 7\n"
+				"                stack-size: 50000\n"
+				"                memory: 60000\n"
+				"                parallel: 1\n"
+				"                disk-blocks: 50\n"
+				"                disk-inodes: 10\n"
+				"                chdir: /eval\n"
+				"                environ-variable:\n"
+				"                    ISOLATE_BOX: /box\n"
+				"                    ISOLATE_TMP: /tmp\n"
+				"                bound-directories:\n"
+				"                    /tmp/recodex: /recodex/tmp\n"
+				"              - hw-group-id: group2\n"
+				"...\n"
+	);
+	auto job_meta = helpers::build_job_metadata(job_yaml);
+	auto default_yaml = YAML::Load(
 				"worker-id: 8\n"
 				"broker-uri: localhost\n"
 				"headers:\n"
@@ -143,29 +184,87 @@ TEST(job_test, non_empty_details)
 				"file-managers:\n"
 				"    - hostname: http://localhost:80\n"
 				"      username: 654321\n"
-				"      password: 123456\n");
-	auto worker_conf = std::make_shared<worker_config>(yaml);
+				"      password: 123456\n"
+	);
+	auto worker_conf = std::make_shared<worker_config>(default_yaml);
 	auto fileman = std::make_shared<cache_manager>();
 	create_directories(dir);
 	std::ofstream hello((dir / "hello").string());
 	hello << "hello" << std::endl;
 	hello.close();
-	job_meta->job_id = "hello-job";
-	job_meta->language = "cpp";
-	job_meta->file_server_url = "localhost";
-	auto task = std::make_shared<task_metadata>();
-	job_meta->tasks.push_back(task);
-	task->task_id = "hello-task";
-	task->priority = 1;
-	task->binary = "hello";
-	auto sandbox = std::make_shared<sandbox_config>();
-	task->sandbox = sandbox;
-	sandbox->name = "isolate";
-	auto limits = std::make_shared<sandbox_limits>();
-	sandbox->limits.emplace("group1", limits);
 
 	// given correct (non empty) job/tasks details
 	EXPECT_NO_THROW(job(job_meta, worker_conf, dir, fileman));
+
+	// cleanup after yourself
+	remove_all(dir_root);
+}
+
+TEST(job_test, load_of_worker_defaults)
+{
+	// prepare all things which need to be prepared
+	path dir_root = temp_directory_path() / "isoeval";
+	path dir = dir_root / "job_test";
+	auto job_yaml = YAML::Load(
+				"---\n"
+				"submission:\n"
+				"    job-id: 5\n"
+				"    language: cpp\n"
+				"    file-collector: localhost\n"
+				"tasks:\n"
+				"    - task-id: eval\n"
+				"      priority: 4\n"
+				"      fatal-failure: false\n"
+				"      cmd:\n"
+				"          bin: recodex\n"
+				"      sandbox:\n"
+				"          name: fake\n"
+				"          limits:\n"
+				"              - hw-group-id: group1\n"
+				"...\n"
+	);
+	auto job_meta = helpers::build_job_metadata(job_yaml);
+	auto default_yaml = YAML::Load(
+				"worker-id: 8\n"
+				"broker-uri: localhost\n"
+				"headers:\n"
+				"    hwgroup: group1\n"
+				"file-managers:\n"
+				"    - hostname: http://localhost:80\n"
+				"      username: 654321\n"
+				"      password: 123456\n"
+				"limits:\n"
+				"    time: 5\n"
+				"    wall-time: 6\n"
+				"    extra-time: 2\n"
+				"    stack-size: 50000\n"
+				"    memory: 60000\n"
+				"    parallel: 1\n"
+				"    disk-blocks: 50\n"
+				"    disk-inodes: 7\n"
+	);
+	auto worker_conf = std::make_shared<worker_config>(default_yaml);
+	auto fileman = std::make_shared<cache_manager>();
+	create_directories(dir);
+	std::ofstream hello((dir / "hello").string());
+	hello << "hello" << std::endl;
+	hello.close();
+
+	// construct and check
+	job result(job_meta, worker_conf, dir, fileman);
+
+	ASSERT_EQ(result.get_task_queue().size(), 2); // 2 because of fake_task as root
+	auto task = result.get_task_queue().at(1);
+	auto ext_task = std::dynamic_pointer_cast<external_task>(task);
+	sandbox_limits limits = ext_task->get_limits();
+	ASSERT_EQ(limits.cpu_time, 5);
+	ASSERT_EQ(limits.wall_time, 6);
+	ASSERT_EQ(limits.extra_time, 2);
+	ASSERT_EQ(limits.stack_size, 50000);
+	ASSERT_EQ(limits.memory_usage, 60000);
+	ASSERT_EQ(limits.processes, 1);
+	ASSERT_EQ(limits.disk_blocks, 50);
+	ASSERT_EQ(limits.disk_inodes, 7);
 
 	// cleanup after yourself
 	remove_all(dir_root);

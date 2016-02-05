@@ -66,6 +66,9 @@ private:
 
 	std::map<std::string, std::shared_ptr<task_results>> get_results();
 
+	const std::vector<std::shared_ptr<task_base>> &get_task_queue() const;
+
+private:
 	/**
 	 * Cleanup after job evaluation, should be enough to delete all created files
 	 */
