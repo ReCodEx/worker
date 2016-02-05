@@ -270,24 +270,122 @@ TEST(job_test, load_of_worker_defaults)
 	remove_all(dir_root);
 }
 
-TEST(job_test, correct_build) // TODO
+TEST(job_test, correctly_built_queue)
 {
 	// prepare all things which need to be prepared
 	path dir_root = temp_directory_path() / "isoeval";
 	path dir = dir_root / "job_test";
-	auto job_meta = std::make_shared<job_metadata>();
-	auto worker_conf = std::make_shared<worker_config>();
+	auto job_yaml = YAML::Load(
+				"---\n"
+				"submission:\n"
+				"    job-id: 5\n"
+				"    language: cpp\n"
+				"    file-collector: localhost\n"
+				"tasks:\n"
+				"    - task-id: A\n"
+				"      priority: 1\n"
+				"      fatal-failure: false\n"
+				"      cmd:\n"
+				"          bin: mkdir\n"
+				"          args:\n"
+				"              - hello\n"
+				"    - task-id: B\n"
+				"      priority: 4\n"
+				"      fatal-failure: false\n"
+				"      dependencies:\n"
+				"          - A\n"
+				"      cmd:\n"
+				"          bin: mkdir\n"
+				"          args:\n"
+				"              - hello\n"
+				"    - task-id: C\n"
+				"      priority: 6\n"
+				"      fatal-failure: false\n"
+				"      dependencies:\n"
+				"          - B\n"
+				"          - D\n"
+				"      cmd:\n"
+				"          bin: mkdir\n"
+				"          args:\n"
+				"              - hello\n"
+				"    - task-id: D\n"
+				"      priority: 2\n"
+				"      fatal-failure: false\n"
+				"      dependencies:\n"
+				"          - A\n"
+				"      cmd:\n"
+				"          bin: mkdir\n"
+				"          args:\n"
+				"              - hello\n"
+				"    - task-id: E\n"
+				"      priority: 3\n"
+				"      fatal-failure: false\n"
+				"      dependencies:\n"
+				"          - D\n"
+				"      cmd:\n"
+				"          bin: mkdir\n"
+				"          args:\n"
+				"              - hello\n"
+				"    - task-id: F\n"
+				"      priority: 5\n"
+				"      fatal-failure: false\n"
+				"      dependencies:\n"
+				"          - D\n"
+				"      cmd:\n"
+				"          bin: mkdir\n"
+				"          args:\n"
+				"              - hello\n"
+				"    - task-id: G\n"
+				"      priority: 7\n"
+				"      fatal-failure: false\n"
+				"      dependencies:\n"
+				"          - C\n"
+				"      cmd:\n"
+				"          bin: mkdir\n"
+				"          args:\n"
+				"              - hello\n"
+				"...\n"
+	);
+	auto job_meta = helpers::build_job_metadata(job_yaml);
+	auto default_yaml = YAML::Load(
+				"worker-id: 8\n"
+				"broker-uri: localhost\n"
+				"headers:\n"
+				"    hwgroup: group1\n"
+				"file-managers:\n"
+				"    - hostname: http://localhost:80\n"
+				"      username: 654321\n"
+				"      password: 123456\n"
+				"limits:\n"
+				"    time: 5\n"
+				"    wall-time: 6\n"
+				"    extra-time: 2\n"
+				"    stack-size: 50000\n"
+				"    memory: 60000\n"
+				"    parallel: 1\n"
+				"    disk-blocks: 50\n"
+				"    disk-inodes: 7\n"
+	);
+	auto worker_conf = std::make_shared<worker_config>(default_yaml);
 	auto fileman = std::make_shared<cache_manager>();
 	create_directories(dir);
 	std::ofstream hello((dir / "hello").string());
 	hello << "hello" << std::endl;
 	hello.close();
-	job_meta->job_id = "hello-job";
-	job_meta->language = "cpp";
-	job_meta->file_server_url = "localhost";
 
-	// non-existing source code folder
-	EXPECT_NO_THROW(job(job_meta, worker_conf, dir, fileman));
+	// construct and check
+	job result(job_meta, worker_conf, dir, fileman);
+
+	auto tasks = result.get_task_queue();
+	ASSERT_EQ(tasks.size(), 8); // +1 because of fake_task root
+	ASSERT_EQ(tasks.at(0)->get_task_id(), ""); // fake root
+	ASSERT_EQ(tasks.at(1)->get_task_id(), "A");
+	ASSERT_EQ(tasks.at(2)->get_task_id(), "D");
+	ASSERT_EQ(tasks.at(3)->get_task_id(), "E");
+	ASSERT_EQ(tasks.at(4)->get_task_id(), "B");
+	ASSERT_EQ(tasks.at(5)->get_task_id(), "F");
+	ASSERT_EQ(tasks.at(6)->get_task_id(), "C");
+	ASSERT_EQ(tasks.at(7)->get_task_id(), "G");
 
 	// cleanup after yourself
 	remove_all(dir_root);
