@@ -5,11 +5,7 @@
 submission:
     job-id: hello_evaluation
     language: cpp
-    file-collector:
-        hostname: http://localhost:9999
-        port: 80
-        username: ""
-        password: ""
+    file-collector: http://localhost:9999
 tasks:
     - task-id: "new_mkdir"
       priority: 1
@@ -48,7 +44,7 @@ tasks:
               time: 10  # seconds
               wall-time: 10  # seconds
               extra-time: 2  # seconds
-              parallel: true  # time and memory limits are merged from all potential processes/threads
+              parallel: 0  # time and memory limits are merged from all potential processes/threads
               environ-variable:
                 ISOLATE_BOX: "/box"
                 PATH: "/usr/bin"

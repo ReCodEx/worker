@@ -24,7 +24,7 @@ limits:
     extra-time: 2  # seconds
     stack-size: 0  # normal in KB, but 0 means no special limit
     memory: 50000  # in KB
-    parallel: false  # time and memory limits are merged
+    parallel: 1  # time and memory limits are merged
     disk-size: 50
     disk-files: 5
 sandboxes-wrap-limits:
