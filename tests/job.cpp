@@ -19,15 +19,19 @@ TEST(job_test, bad_parameters)
 {
 	std::shared_ptr<job_metadata> job_meta = std::make_shared<job_metadata>();
 	std::shared_ptr<worker_config> worker_conf = std::make_shared<worker_config>();
+	auto fileman = std::make_shared<cache_manager>();
 
 	// job_config not given
-	EXPECT_THROW(job(nullptr, nullptr, "", temp_directory_path(), nullptr), job_exception);
+	EXPECT_THROW(job(nullptr, worker_conf, temp_directory_path(), temp_directory_path(), fileman), job_exception);
 
 	// worker_config not given
-	EXPECT_THROW(job(job_meta, nullptr, "", temp_directory_path(), nullptr), job_exception);
+	EXPECT_THROW(job(job_meta, nullptr, temp_directory_path(), temp_directory_path(), fileman), job_exception);
 
 	// source path not exists
-	EXPECT_THROW(job(job_meta, worker_conf, "", temp_directory_path(), nullptr), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, "/recodex", temp_directory_path(), fileman), job_exception);
+
+	// result path not exists
+	EXPECT_THROW(job(job_meta, worker_conf, temp_directory_path(), "/recodex", fileman), job_exception);
 
 	// fileman not given
 	EXPECT_THROW(job(job_meta, worker_conf, temp_directory_path(), temp_directory_path(), nullptr), job_exception);

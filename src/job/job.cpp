@@ -11,15 +11,15 @@ job::job(std::shared_ptr<job_metadata> job_meta, std::shared_ptr<worker_config> 
 		throw job_exception("Job configuration cannot be null");
 	} else if (worker_config_ == nullptr) {
 		throw job_exception("Worker configuration cannot be null");
-	} else if (!fs::exists(source_path_)) {
-		throw job_exception("Source code directory not exists");
-	} else if (!fs::is_directory(source_path_)) {
-		throw job_exception("Source code directory is not directory");
-	} else if (fs::is_empty(source_path_)) {
-		throw job_exception("Source code directory is empty");
 	} else if (fileman_ == nullptr) {
 		throw job_exception("File manager cannot be null");
 	}
+
+	// check injected directories
+	check_job_dirs();
+
+	// prepare variables which will be used in job config
+	prepare_job_vars();
 
 	// construct system logger for this job
 	init_logger();
@@ -31,6 +31,24 @@ job::job(std::shared_ptr<job_metadata> job_meta, std::shared_ptr<worker_config> 
 job::~job()
 {
 	cleanup_job();
+}
+
+void job::check_job_dirs()
+{
+	if (!fs::exists(source_path_)) {
+		throw job_exception("Source code directory not exists");
+	} else if (!fs::is_directory(source_path_)) {
+		throw job_exception("Source code directory is not directory");
+	} else if (fs::is_empty(source_path_)) {
+		throw job_exception("Source code directory is empty");
+	}
+
+	// check result files directory
+	if (!fs::exists(result_path_)) {
+		throw job_exception("Result files directory not exists");
+	} else if (!fs::is_directory(result_path_)) {
+		throw job_exception("Result files directory is not directory");
+	}
 }
 
 void job::build_job()
@@ -118,10 +136,19 @@ void job::build_job()
 				limits->disk_files = worker_limits.disk_files;
 			}
 
+			// go through variables parsing
+			task_meta->binary = parse_job_var(task_meta->binary);
+			limits->std_input = parse_job_var(task_meta->std_input);
+			limits->std_output = parse_job_var(task_meta->std_output);
+			limits->std_error = parse_job_var(task_meta->std_error);
+			limits->chdir = parse_job_var(limits->chdir);
+			std::map<std::string, std::string> new_bnd_dirs;
+			for (auto &bnd_dir : limits->bound_dirs) {
+				new_bnd_dirs.emplace(parse_job_var(bnd_dir.first), parse_job_var(bnd_dir.second));
+			}
+			limits->bound_dirs = new_bnd_dirs;
+
 			// ... and finally construct external task from given information
-			limits->std_input = task_meta->std_input;
-			limits->std_output = task_meta->std_output;
-			limits->std_error = task_meta->std_error;
 			std::shared_ptr<task_base> task = std::make_shared<external_task>(
 						worker_config_->get_worker_id(), id++, task_meta->task_id, task_meta->priority,
 						task_meta->fatal_failure, task_meta->dependencies, task_meta->binary,
@@ -288,4 +315,42 @@ void job::cleanup_job()
 const std::vector<std::shared_ptr<task_base>> &job::get_task_queue() const
 {
 	return task_queue_;
+}
+
+void job::prepare_job_vars()
+{
+	// define and fill variables which can be used within job configuration
+	job_variables_ = {
+		{ "WORKER_ID", std::to_string(worker_config_->get_worker_id()) },
+		{ "JOB_ID", job_meta_->job_id },
+		{ "SOURCE_DIR", source_path_.string() },
+		{ "EVAL_DIR", "/evaluate" },
+		{ "RESULT_DIR", result_path_.string() },
+		{ "TEMP_DIR", fs::temp_directory_path().string() }
+	};
+
+	return;
+}
+
+std::string job::parse_job_var(const std::string &src)
+{
+	std::string res = src;
+
+	size_t start = 0;
+	while ((start = res.find("${", start)) != std::string::npos) {
+		size_t end = res.find("}", start + 1);
+		size_t len = end - start - 2;
+		if (end == std::string::npos) {
+			throw job_exception("Not closed variable name: " + res.substr(start));
+		}
+
+		if (job_variables_.find(res.substr(start + 2, len)) != job_variables_.end()) {
+			// we found variable and can replace it in string
+			res.replace(start, end - start + 1, job_variables_.at(res.substr(start + 2, len)));
+		}
+
+		//start++; // just to be sure we're not in cycle
+	}
+
+	return res;
 }

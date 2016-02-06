@@ -50,6 +50,8 @@ void job_evaluator::prepare_submission()
 			std::to_string(config_->get_worker_id()) / job_id_;
 	source_path_ = fs::temp_directory_path() / "isoeval" / "eval" /
 			std::to_string(config_->get_worker_id()) / job_id_;
+	results_path_ = fs::temp_directory_path() / "isoeval" / "results" /
+			std::to_string(config_->get_worker_id()) / job_id_;
 
 	// decompress downloaded archive
 	try {
@@ -67,6 +69,12 @@ void job_evaluator::prepare_submission()
 		throw job_exception("Error copying source files to source code path: " + std::string(e.what()));
 	}
 
+	try {
+		fs::create_directories(results_path_);
+	} catch (fs::filesystem_error &e) {
+		throw job_exception("Result folder cannot be created: " + std::string(e.what()));
+	}
+
 	logger_->info() << "Submission prepared.";
 	return;
 }
@@ -75,11 +83,7 @@ void job_evaluator::build_job()
 {
 	logger_->info() << "Building job...";
 
-	// create result directory for temporary files
-	results_path_ = fs::temp_directory_path() / "isoeval" / "results" /
-			std::to_string(config_->get_worker_id()) / job_id_;
-	fs::create_directories(results_path_);
-
+	// find job-config.yml to load configuration
 	using namespace boost::filesystem;
 	path config_path(source_path_);
 	config_path /= "job-config.yml";
@@ -87,6 +91,7 @@ void job_evaluator::build_job()
 		throw job_exception("Job configuration not found");
 	}
 
+	// load configuration to object
 	logger_->info() << "Loading job configuration from yaml...";
 	YAML::Node conf;
 	try {
@@ -213,7 +218,7 @@ void job_evaluator::push_result()
 	}
 
 	// define path to result yaml file and archived result
-	fs::path result_path = results_path_ / "result.yml";
+	fs::path result_yaml = results_path_ / "result.yml";
 	fs::path archive_path = results_path_ / "result.zip";
 
 	logger_->info() << "Building yaml results file...";
@@ -266,7 +271,7 @@ void job_evaluator::push_result()
 	}
 
 	// open output stream and write constructed yaml
-	std::ofstream out(result_path.string());
+	std::ofstream out(result_yaml.string());
 	out << res;
 	out.close();
 	logger_->info() << "Yaml result file written succesfully.";

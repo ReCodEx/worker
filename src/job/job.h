@@ -65,6 +65,10 @@ public:
 
 private:
 	/**
+	 * Check directories given during construction for existence.
+	 */
+	void check_job_dirs();
+	/**
 	 * Init system logger for job. Resulting log will be send with other results to frontend.
 	 */
 	void init_logger();
@@ -77,12 +81,27 @@ private:
 	 */
 	void build_job();
 
+	/**
+	 * Prepare variables which can be used in job configuration.
+	 */
+	void prepare_job_vars();
+	/**
+	 * In input string tries to find internal job config variable.
+	 * If so, then replace variable with actual value and return it.
+	 * @param src scanned string for variables
+	 * @return new string with all variables replaced with values
+	 */
+	std::string parse_job_var(const std::string &src);
+
 	// PRIVATE DATA MEMBERS
 	std::shared_ptr<job_metadata> job_meta_;
 	std::shared_ptr<worker_config> worker_config_;
 	fs::path source_path_;
 	fs::path result_path_;
 	std::shared_ptr<file_manager_base> fileman_;
+
+	/** Variables which can be used in job configuration */
+	std::map<std::string, std::string> job_variables_;
 
 	/** Logical start of every job evaluation */
 	std::shared_ptr<task_base> root_task_;

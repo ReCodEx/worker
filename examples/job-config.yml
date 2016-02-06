@@ -10,5 +10,5 @@ tasks:
       cmd:
           bin: "mkdir"
           args:
-              - "/tmp/hello_from_codex_worker"
+              - "${TEMP_DIR}/hello_from_codex_worker"
 ...
