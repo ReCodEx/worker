@@ -36,7 +36,9 @@ isolate_sandbox::isolate_sandbox(sandbox_limits limits, size_t id, int max_timeo
 		max_timeout_ += 300; //5 minutes
 	}
 
+	//TODO: change dir
 	auto meta_dir = fs::temp_directory_path() / ("recodex_isolate_" + std::to_string(id_));
+
 	try {
 		fs::create_directories(meta_dir);
 	} catch (fs::filesystem_error &e) {
@@ -50,6 +52,7 @@ isolate_sandbox::isolate_sandbox(sandbox_limits limits, size_t id, int max_timeo
 	try {
 		isolate_init();
 	} catch (...) {
+		//TODO: change dir
 		fs::remove_all(fs::temp_directory_path() / ("recodex_isolate_" + std::to_string(id_)));
 		throw;
 	}
@@ -59,6 +62,7 @@ isolate_sandbox::~isolate_sandbox()
 {
 	try {
 		isolate_cleanup();
+		//TODO: Resolve cleaning directory with meta file (here or after whole job)
 		//fs::remove_all(fs::temp_directory_path() / ("recodex_isolate_" + std::to_string(id_)));
 	} catch (...) {
 		//We don't care if this failed. We can't fix it either. Just don't throw an exception in destructor.
@@ -331,6 +335,7 @@ char **isolate_sandbox::isolate_run_args(const std::string &binary, const std::v
 {
 	std::vector<std::string> vargs;
 
+	vargs.push_back(isolate_binary_); // First argument must be binary name
 	vargs.push_back("--cg");
 	vargs.push_back("--cg-timing");
 	vargs.push_back("--box-id=" + std::to_string(id_));
