@@ -41,32 +41,38 @@ worker_config::worker_config (const YAML::Node &config)
 			}
 		}
 
+		if (config["file-cache"] && config["file-cache"].IsMap()) {
+			auto &cache = config["file-cache"];
+
+			if (cache["cache-dir"] && cache["cache-dir"].IsScalar()) {
+				cache_dir_ = config["file-cache"]["cache-dir"].as<std::string>();
+			}
+		}
+
 		// load worker-id
 		if (config["worker-id"] && config["worker-id"].IsScalar()) {
 			worker_id_ = config["worker-id"].as<size_t>();
 		} else { throw config_error("Item worker-id not defined properly"); }
 
-		// load file-manager
-		if (config["file-manager"] && config["file-manager"].IsMap()) {
-			auto fileman = config["file-manager"];
-			if (fileman["file-collector"] && fileman["file-collector"].IsMap()) {
-				if (fileman["file-collector"]["hostname"] && fileman["file-collector"]["hostname"].IsScalar()) {
-					fileman_config_.remote_url = fileman["file-collector"]["hostname"].as<std::string>();
+		// load file-managers
+		if (config["file-managers"] && config["file-managers"].IsSequence()) {
+			for (auto &fileman : config["file-managers"]) {
+				fileman_config fileman_conf;
+				if (fileman.IsMap()) {
+					if (fileman["hostname"] && fileman["hostname"].IsScalar()) {
+						fileman_conf.remote_url = fileman["hostname"].as<std::string>();
+					} // no throw... can be omitted
+					if (fileman["username"] && fileman["username"].IsScalar()) {
+						fileman_conf.username = fileman["username"].as<std::string>();
+					} // no throw... can be omitted
+					if (fileman["password"] && fileman["password"].IsScalar()) {
+						fileman_conf.password = fileman["password"].as<std::string>();
+					} // no throw... can be omitted
 				} // no throw... can be omitted
-				if (fileman["file-collector"]["username"] && fileman["file-collector"]["username"].IsScalar()) {
-					fileman_config_.username = fileman["file-collector"]["username"].as<std::string>();
-				} // no throw... can be omitted
-				if (fileman["file-collector"]["password"] && fileman["file-collector"]["password"].IsScalar()) {
-					fileman_config_.password = fileman["file-collector"]["password"].as<std::string>();
-				} // no throw... can be omitted
-			} // no throw... can be omitted
 
-			if (fileman["cache"] && fileman["cache"].IsMap()) {
-				if (fileman["cache"]["cache-dir"] && fileman["cache"]["cache-dir"].IsScalar()) {
-					fileman_config_.cache_dir = fileman["cache"]["cache-dir"].as<std::string>();
-				} // no throw... can be omitted
-			} // no throw... can be omitted
-		} // no throw... can be omitted
+				filemans_configs_.push_back(fileman_conf);
+			}
+		} else { throw config_error("File managers not defined properly"); }
 
 		// load logger
 		if (config["logger"] && config["logger"].IsMap()) {
@@ -105,7 +111,7 @@ worker_config::worker_config (const YAML::Node &config)
 				limits_.memory_usage = limits["memory"].as<size_t>();
 			} // no throw... can be omitted
 			if (limits["parallel"] && limits["parallel"].IsScalar()) {
-				// = limits["parallel"].as<bool>(); // TODO
+				limits_.processes = limits["parallel"].as<size_t>();
 			} // no throw... can be omitted
 			if (limits["disk-size"] && limits["disk-size"].IsScalar()) {
 				limits_.disk_size = limits["disk-size"].as<size_t>();
@@ -168,9 +174,9 @@ const log_config &worker_config::get_log_config()
 	return log_config_;
 }
 
-const fileman_config &worker_config::get_fileman_config()
+const std::vector<fileman_config> &worker_config::get_filemans_configs()
 {
-	return fileman_config_;
+	return filemans_configs_;
 }
 
 const sandbox_limits &worker_config::get_limits()
@@ -181,4 +187,9 @@ const sandbox_limits &worker_config::get_limits()
 const std::map<std::string, size_t> &worker_config::get_sandboxes_limits()
 {
 	return sandboxes_limits_;
+}
+
+std::string worker_config::get_cache_dir () const
+{
+	return cache_dir_;
 }

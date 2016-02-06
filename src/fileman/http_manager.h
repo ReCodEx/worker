@@ -22,11 +22,10 @@ public:
 	http_manager(std::shared_ptr<spdlog::logger> logger = nullptr);
 	/**
 	 * Constructor with initialization.
-	 * @param username Username for HTTP Basic Authentication
-	 * @param password Password for HTTP Basic Authentication
+	 * @param configs File server configurations
 	 * @param logger Shared pointer to system logger (optional).
 	 */
-	http_manager(const fileman_config &config,
+	http_manager(const std::vector<fileman_config> &configs,
 				 std::shared_ptr<spdlog::logger> logger = nullptr);
 	/**
 	 * Destructor.
@@ -44,8 +43,17 @@ public:
 	 */
 	virtual void put_file(const std::string &src_name, const std::string &dst_path);
 
+protected:
+	/**
+	 * Finds the configuration for a file server that matches given URL
+	 * The pointer returned by this method is valid as long as this object exists
+	 * @param url The URL used to determine the file server
+	 * @return A pointer to the configuration, or a nullptr when nothing is found
+	 */
+	const fileman_config *find_config(const std::string &url) const;
+
 private:
-	fileman_config config_;
+	const std::vector<fileman_config> configs_;
 	std::shared_ptr<spdlog::logger> logger_;
 };
 

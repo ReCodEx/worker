@@ -19,11 +19,6 @@ public:
 	 * Classical credentials.
 	 */
 	std::string password = "";
-	/**
-	 * Directory in which files will be cached (worker side).
-	 */
-	std::string cache_dir = "";
-
 
 	/**
 	 * Classic equality operator. All variables should match.
@@ -34,8 +29,7 @@ public:
 	{
 		return (remote_url == second.remote_url &&
 				username == second.username &&
-				password == second.password &&
-				cache_dir == second.cache_dir);
+				password == second.password);
 	}
 
 	/**

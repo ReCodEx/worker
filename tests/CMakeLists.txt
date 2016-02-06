@@ -7,6 +7,8 @@ set(FILEMAN_DIR ../src/fileman)
 set(SANDBOX_DIR ../src/sandbox)
 set(TASKS_DIR ../src/tasks)
 set(HELPERS_DIR ../src/helpers)
+set(CONFIG_DIR ../src/config)
+set(JOB_DIR ../src/job)
 
 # Google Test and Google Mock headers
 include_directories(${LIBS_DIR}/googletest/include)
@@ -27,14 +29,15 @@ add_executable(${TESTS_NAME}
 	fallback_file_manager.cpp
 	isolate_sandbox.cpp
 	${SANDBOX_DIR}/isolate_sandbox.cpp
-	${SRC_DIR}/job_evaluator.cpp
+	${SANDBOX_DIR}/fake_sandbox.cpp
+	${JOB_DIR}/job_evaluator.cpp
 	job.cpp
 	topological_sort.cpp
-	${TASKS_DIR}/job.cpp
+	${JOB_DIR}/job.cpp
 	${TASKS_DIR}/task_base.cpp
 	${TASKS_DIR}/external_task.cpp
 	${TASKS_DIR}/fake_task.cpp
-	${SRC_DIR}/job_receiver.cpp
+	${JOB_DIR}/job_receiver.cpp
 	job_receiver.cpp
 	${TASKS_DIR}/internal/cp_task.cpp
 	${TASKS_DIR}/internal/mkdir_task.cpp
@@ -50,6 +53,9 @@ add_executable(${TESTS_NAME}
 	${HELPERS_DIR}/topological_sort.cpp
 	${HELPERS_DIR}/filesystem.h
 	${HELPERS_DIR}/filesystem.cpp
+	${HELPERS_DIR}/config.h
+	${HELPERS_DIR}/config.cpp
+	job_config.cpp
 )
 
 target_link_libraries(${TESTS_NAME} gtest gtest_main)

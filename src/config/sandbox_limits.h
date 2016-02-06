@@ -2,6 +2,8 @@
 #define CODEX_WORKER_SANDBOX_LIMITS_H
 
 #include <map>
+#include <cfloat>
+#include <limits>
 
 
 /**

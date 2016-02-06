@@ -1,6 +1,9 @@
 #include "job_evaluator.h"
-#include "fileman/fallback_file_manager.h"
-#include "fileman/prefixed_file_manager.h"
+#include "job_exception.h"
+#include "../config/job_metadata.h"
+#include "../fileman/fallback_file_manager.h"
+#include "../fileman/prefixed_file_manager.h"
+#include "../helpers/config.h"
 
 job_evaluator::job_evaluator(
 	std::shared_ptr<spdlog::logger> logger,
@@ -93,15 +96,25 @@ void job_evaluator::build_job()
 	}
 	logger_->info() << "Yaml job configuration loaded properly.";
 
-	auto job_fm = std::make_shared<fallback_file_manager>(
+	// build job_metadata structure
+	std::shared_ptr<job_metadata> job_meta = nullptr;
+	try {
+		job_meta = helpers::build_job_metadata(conf);
+	} catch (helpers::config_exception &e) {
+		throw job_exception("Job configuration loading problem: " + std::string(e.what()));
+	}
+
+	// construct manager which is used in job
+	auto task_fileman = std::make_shared<fallback_file_manager>(
 		cache_fm_,
 		std::make_shared<prefixed_file_manager>(
 			remote_fm_,
-			config_->get_fileman_config().remote_url + "/"
+			job_meta->file_server_url + "/"
 		)
 	);
 
-	job_ = std::make_shared<job>(conf, source_path_, results_path_, config_, job_fm);
+	// ... and construct job itself
+	job_ = std::make_shared<job>(job_meta, config_, source_path_, results_path_, task_fileman);
 
 	logger_->info() << "Job building done.";
 	return;
@@ -275,7 +288,7 @@ void job_evaluator::push_result()
 	return;
 }
 
-eval_response job_evaluator::evaluate (eval_request request)
+eval_response job_evaluator::evaluate(eval_request request)
 {
 	logger_->info() << "Request for job evaluation arrived to worker";
 	logger_->info() << "Job ID of incoming job is: " + request.job_id;
@@ -299,6 +312,7 @@ eval_response job_evaluator::evaluate (eval_request request)
 	}
 	cleanup_evaluator();
 
-	logger_->info() << "Job " + request.job_id + " ended";
+	logger_->info() << "Job (" + request.job_id + ") ended.";
+
 	return eval_response(request.job_id, "OK");
 }

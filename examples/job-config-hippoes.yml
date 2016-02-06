@@ -2,11 +2,7 @@
 submission:  # happy hippoes fence
     job-id: eval_1
     language: c
-    file-collector:
-        hostname: https://recodex.projekty.ms.mff.cuni.cz/
-        port: 80
-        username: "re"
-        password: "codex"
+    file-collector: https://recodex.projekty.ms.mff.cuni.cz/
 tasks:  # its assumed that source codes are placed into /tmp/isoeval/eval_5 folder
     - task-id: "compilation"
       priority: 2

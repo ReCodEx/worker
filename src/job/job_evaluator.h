@@ -12,13 +12,13 @@
 #include <boost/filesystem.hpp>
 namespace fs = boost::filesystem;
 
-#include "tasks/job.h"
-#include "config/worker_config.h"
-#include "fileman/file_manager_base.h"
-#include "eval_request.h"
-#include "eval_response.h"
-#include "archives/archivator.h"
-#include "helpers/filesystem.h"
+#include "job.h"
+#include "../config/worker_config.h"
+#include "../fileman/file_manager_base.h"
+#include "../eval_request.h"
+#include "../eval_response.h"
+#include "../archives/archivator.h"
+#include "../helpers/filesystem.h"
 
 
 /**

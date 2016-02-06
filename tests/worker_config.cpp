@@ -15,14 +15,15 @@ TEST(worker_config, load_yaml_basic)
 		"        - python\n"
 		"    threads: 10\n"
 		"    hwgroup: group_1\n"
-		"file-manager:\n"
-		"    file-collector:\n"
-		"        hostname: localhost\n"
-		"        port: 80\n"
-		"        username: 654321\n"
-		"        password: 123456\n"
-		"    cache:\n"
-		"        cache-dir: /tmp/cache\n"
+		"file-managers:\n"
+		"    - hostname: http://localhost:80\n"
+		"      username: 654321\n"
+		"      password: 123456\n"
+		"    - hostname: http://localhost:4242\n"
+		"      username: 123456\n"
+		"      password: 654321\n"
+		"file-cache:\n"
+		"    cache-dir: /tmp/isoeval/cache\n"
 		"logger:\n"
 		"    file: /var/log/isoeval\n"
 		"    level: emerg\n"
@@ -34,7 +35,7 @@ TEST(worker_config, load_yaml_basic)
 		"    extra-time: 2\n"
 		"    stack-size: 50000\n"
 		"    memory: 60000\n"
-		"    parallel: false\n"
+		"    parallel: 1\n"
 		"    disk-size: 50\n"
 		"    disk-files: 7\n"
 		"sandboxes-wrap-limits:\n"
@@ -67,6 +68,7 @@ TEST(worker_config, load_yaml_basic)
 	expected_limits.cpu_time = 5;
 	expected_limits.wall_time = 6;
 	expected_limits.extra_time = 2;
+	expected_limits.processes = 1;
 	expected_limits.stack_size = 50000;
 	expected_limits.disk_size = 50;
 	expected_limits.disk_files = 7;
@@ -82,19 +84,25 @@ TEST(worker_config, load_yaml_basic)
 	expected_log.log_file_size = 2048576;
 	expected_log.log_files_count = 5;
 
+	std::vector<fileman_config> expected_filemans;
 	fileman_config expected_fileman;
-	expected_fileman.remote_url = "localhost";
+	expected_fileman.remote_url = "http://localhost:80";
 	expected_fileman.username = "654321";
 	expected_fileman.password = "123456";
-	expected_fileman.cache_dir = "/tmp/cache";
+	expected_filemans.push_back(expected_fileman);
+	expected_fileman.remote_url = "http://localhost:4242";
+	expected_fileman.username = "123456";
+	expected_fileman.password = "654321";
+	expected_filemans.push_back(expected_fileman);
 
 	ASSERT_STREQ("tcp://localhost:1234", config.get_broker_uri().c_str());
 	ASSERT_EQ((size_t) 8, config.get_worker_id());
+	ASSERT_STREQ("/tmp/isoeval/cache", config.get_cache_dir().c_str());
 	ASSERT_EQ(expected_headers, config.get_headers());
 	ASSERT_EQ(expected_sand_limits, config.get_sandboxes_limits());
 	ASSERT_EQ(expected_limits, config.get_limits());
 	ASSERT_EQ(expected_log, config.get_log_config());
-	ASSERT_EQ(expected_fileman, config.get_fileman_config());
+	ASSERT_EQ(expected_filemans, config.get_filemans_configs());
 }
 
 /**

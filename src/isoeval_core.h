@@ -22,7 +22,7 @@ namespace fs = boost::filesystem;
 #include "config/log_config.h"
 #include "broker_connection.h"
 #include "connection_proxy.h"
-#include "job_receiver.h"
+#include "job/job_receiver.h"
 #include "fileman/file_manager_base.h"
 #include "fileman/fallback_file_manager.h"
 
