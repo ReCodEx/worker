@@ -436,7 +436,7 @@ TEST(job_test, job_variables)
 				"                    ISOLATE_BOX: /box\n"
 				"                    ISOLATE_TMP: /tmp\n"
 				"                bound-directories:\n"
-				"                    ${TEMP_DIR}/recodex: ${SOURCE_DIR}/tmp\n"
+				"                    ${TEMP_DIR}" + std::to_string(path::preferred_separator) + "recodex: ${SOURCE_DIR}" + std::to_string(path::preferred_separator) + "tmp\n"
 				"              - hw-group-id: group2\n"
 				"...\n"
 	);
