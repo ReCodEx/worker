@@ -394,3 +394,89 @@ TEST(job_test, correctly_built_queue)
 	// cleanup after yourself
 	remove_all(dir_root);
 }
+
+TEST(job_test, job_variables)
+{
+	// prepare all things which need to be prepared
+	path dir_root = temp_directory_path() / "isoeval";
+	path dir = dir_root / "job_test";
+	path res_dir = dir_root / "job_test_results";
+	auto job_yaml = YAML::Load(
+				"---\n"
+				"submission:\n"
+				"    job-id: eval5\n"
+				"    language: cpp\n"
+				"    file-collector: localhost\n"
+				"tasks:\n"
+				"    - task-id: eval\n"
+				"      priority: 4\n"
+				"      fatal-failure: false\n"
+				"      cmd:\n"
+				"          bin: ${EVAL_DIR}/recodex\n"
+				"          args:\n"
+				"              - -v\n"
+				"              - \"-f 01.in\"\n"
+				"      stdin: before_stdin_${WORKER_ID}_after_stdin\n"
+				"      stdout: before_stdout_${JOB_ID}_after_stdout\n"
+				"      stderr: before_stderr_${RESULT_DIR}_after_stderr\n"
+				"      sandbox:\n"
+				"          name: fake\n"
+				"          limits:\n"
+				"              - hw-group-id: group1\n"
+				"                time: 5\n"
+				"                wall-time: 6\n"
+				"                extra-time: 7\n"
+				"                stack-size: 50000\n"
+				"                memory: 60000\n"
+				"                parallel: 1\n"
+				"                disk-size: 50\n"
+				"                disk-files: 10\n"
+				"                chdir: ${EVAL_DIR}\n"
+				"                environ-variable:\n"
+				"                    ISOLATE_BOX: /box\n"
+				"                    ISOLATE_TMP: /tmp\n"
+				"                bound-directories:\n"
+				"                    ${TEMP_DIR}/recodex: ${SOURCE_DIR}/tmp\n"
+				"              - hw-group-id: group2\n"
+				"...\n"
+	);
+	auto job_meta = helpers::build_job_metadata(job_yaml);
+	auto default_yaml = YAML::Load(
+				"worker-id: 8\n"
+				"broker-uri: localhost\n"
+				"headers:\n"
+				"    hwgroup: group1\n"
+				"file-managers:\n"
+				"    - hostname: http://localhost:80\n"
+				"      username: 654321\n"
+				"      password: 123456\n"
+	);
+	auto worker_conf = std::make_shared<worker_config>(default_yaml);
+	auto fileman = std::make_shared<cache_manager>();
+	create_directories(dir);
+	create_directories(res_dir);
+	std::ofstream hello((dir / "hello").string());
+	hello << "hello" << std::endl;
+	hello.close();
+
+	// construct and check
+	job j(job_meta, worker_conf, dir, res_dir, fileman);
+	ASSERT_EQ(j.get_task_queue().size(), 2);
+
+	auto task = j.get_task_queue().at(1);
+	auto ext_task = std::dynamic_pointer_cast<external_task>(task);
+	sandbox_limits limits = ext_task->get_limits();
+	ASSERT_EQ(task->get_cmd(), path("/evaluate/recodex").string());
+	ASSERT_EQ(limits.std_input, "before_stdin_8_after_stdin");
+	ASSERT_EQ(limits.std_output, "before_stdout_eval5_after_stdout");
+	ASSERT_EQ(limits.std_error, "before_stderr_" + res_dir.string() + "_after_stderr");
+	ASSERT_EQ(limits.chdir, path("/evaluate").string());
+
+	auto bnd_dirs = limits.bound_dirs;
+	ASSERT_EQ(bnd_dirs.size(), 1);
+	ASSERT_EQ(bnd_dirs.begin()->first, (temp_directory_path() / "recodex").string());
+	ASSERT_EQ(bnd_dirs.begin()->second, (dir / "tmp").string());
+
+	// cleanup after yourself
+	remove_all(dir_root);
+}

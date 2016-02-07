@@ -324,7 +324,7 @@ void job::prepare_job_vars()
 		{ "WORKER_ID", std::to_string(worker_config_->get_worker_id()) },
 		{ "JOB_ID", job_meta_->job_id },
 		{ "SOURCE_DIR", source_path_.string() },
-		{ "EVAL_DIR", "/evaluate" },
+		{ "EVAL_DIR", fs::path("/evaluate").string() },
 		{ "RESULT_DIR", result_path_.string() },
 		{ "TEMP_DIR", fs::temp_directory_path().string() }
 	};
