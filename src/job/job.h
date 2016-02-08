@@ -50,7 +50,8 @@ public:
 	 * @throws job_exception if there is problem during loading of configuration
 	 */
 	job(std::shared_ptr<job_metadata> job_meta, std::shared_ptr<worker_config> worker_conf,
-		fs::path source_path, fs::path result_path, std::shared_ptr<file_manager_base> fileman);
+		fs::path working_directory, fs::path source_path, fs::path result_path,
+		std::shared_ptr<file_manager_base> fileman);
 
 	~job();
 
@@ -96,6 +97,7 @@ private:
 	// PRIVATE DATA MEMBERS
 	std::shared_ptr<job_metadata> job_meta_;
 	std::shared_ptr<worker_config> worker_config_;
+	fs::path working_directory_;
 	fs::path source_path_;
 	fs::path result_path_;
 	std::shared_ptr<file_manager_base> fileman_;

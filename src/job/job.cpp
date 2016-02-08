@@ -2,8 +2,10 @@
 #include "job_exception.h"
 
 job::job(std::shared_ptr<job_metadata> job_meta, std::shared_ptr<worker_config> worker_conf,
-		 fs::path source_path, fs::path result_path, std::shared_ptr<file_manager_base> fileman)
-	: job_meta_(job_meta), worker_config_(worker_conf), source_path_(source_path),
+		 fs::path working_directory, fs::path source_path, fs::path result_path,
+		 std::shared_ptr<file_manager_base> fileman)
+	: job_meta_(job_meta), worker_config_(worker_conf),
+	  working_directory_(working_directory), source_path_(source_path),
 	  result_path_(result_path), fileman_(fileman)
 {
 	// check construction parameters if they are in right format
@@ -35,6 +37,12 @@ job::~job()
 
 void job::check_job_dirs()
 {
+	if (!fs::exists(working_directory_)) {
+		throw job_exception("Working directory not exists");
+	} else if (!fs::is_directory(working_directory_)) {
+		throw job_exception("Working directory is not directory");
+	}
+
 	if (!fs::exists(source_path_)) {
 		throw job_exception("Source code directory not exists");
 	} else if (!fs::is_directory(source_path_)) {

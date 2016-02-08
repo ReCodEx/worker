@@ -9,9 +9,10 @@ job_evaluator::job_evaluator(
 	std::shared_ptr<spdlog::logger> logger,
 	std::shared_ptr<worker_config> config,
 	std::shared_ptr<file_manager_base> remote_fm,
-	std::shared_ptr<file_manager_base> cache_fm)
-	: job_(nullptr), job_results_(), remote_fm_(remote_fm), cache_fm_(cache_fm),
-	  logger_(logger), config_(config)
+	std::shared_ptr<file_manager_base> cache_fm,
+	fs::path working_directory)
+	: working_directory_(working_directory), job_(nullptr), job_results_(),
+	  remote_fm_(remote_fm), cache_fm_(cache_fm), logger_(logger), config_(config)
 {
 	if (logger == nullptr) {
 		//Create logger manually to avoid global registration of logger
@@ -29,7 +30,7 @@ void job_evaluator::download_submission()
 
 	// initialize all paths
 	fs::path archive_url = archive_url_;
-	archive_path_ = fs::temp_directory_path() / "isoeval" / "downloads" /
+	archive_path_ = working_directory_ / "downloads" /
 			std::to_string(config_->get_worker_id()) / job_id_;
 	fs::create_directories(archive_path_);
 
@@ -46,11 +47,11 @@ void job_evaluator::prepare_submission()
 	logger_->info() << "Preparing submission for usage...";
 
 	// initialize all paths
-	submission_path_ = fs::temp_directory_path() / "isoeval" / "submissions" /
+	submission_path_ = working_directory_ / "submissions" /
 			std::to_string(config_->get_worker_id()) / job_id_;
-	source_path_ = fs::temp_directory_path() / "isoeval" / "eval" /
+	source_path_ = working_directory_ / "eval" /
 			std::to_string(config_->get_worker_id()) / job_id_;
-	results_path_ = fs::temp_directory_path() / "isoeval" / "results" /
+	results_path_ = working_directory_ / "results" /
 			std::to_string(config_->get_worker_id()) / job_id_;
 
 	// decompress downloaded archive
@@ -119,7 +120,7 @@ void job_evaluator::build_job()
 	);
 
 	// ... and construct job itself
-	job_ = std::make_shared<job>(job_meta, config_, source_path_, results_path_, task_fileman);
+	job_ = std::make_shared<job>(job_meta, config_, working_directory_, source_path_, results_path_, task_fileman);
 
 	logger_->info() << "Job building done.";
 	return;

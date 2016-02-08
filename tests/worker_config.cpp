@@ -9,6 +9,7 @@ TEST(worker_config, load_yaml_basic)
 		"---\n"
 		"worker-id: 8\n"
 		"broker-uri: tcp://localhost:1234\n"
+		"working-directory: /tmp/working_dir\n"
 		"headers:\n"
 		"    env:\n"
 		"        - c\n"
@@ -97,6 +98,7 @@ TEST(worker_config, load_yaml_basic)
 
 	ASSERT_STREQ("tcp://localhost:1234", config.get_broker_uri().c_str());
 	ASSERT_EQ((size_t) 8, config.get_worker_id());
+	ASSERT_EQ("/tmp/working_directory", config.get_working_directory());
 	ASSERT_STREQ("/tmp/isoeval/cache", config.get_cache_dir().c_str());
 	ASSERT_EQ(expected_headers, config.get_headers());
 	ASSERT_EQ(expected_sand_limits, config.get_sandboxes_limits());
