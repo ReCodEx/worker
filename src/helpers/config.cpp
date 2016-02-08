@@ -33,6 +33,9 @@ std::shared_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 		if (submiss["file-collector"] && submiss["file-collector"].IsScalar()) {
 			job_meta->file_server_url = submiss["file-collector"].as<std::string>();
 		} else { throw config_exception("Submission.file-collector item not loaded properly"); }
+		if (submiss["log"] && submiss["log"].IsScalar()) {
+			job_meta->log = submiss["log"].as<bool>();
+		} // can be omitted... no throw
 
 
 		// load datas for tasks and save them

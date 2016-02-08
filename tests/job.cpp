@@ -407,6 +407,7 @@ TEST(job_test, job_variables)
 				"    job-id: eval5\n"
 				"    language: cpp\n"
 				"    file-collector: localhost\n"
+				"    log: false\n"
 				"tasks:\n"
 				"    - task-id: eval\n"
 				"      priority: 4\n"
@@ -460,10 +461,10 @@ TEST(job_test, job_variables)
 	hello.close();
 
 	// construct and check
-	auto j = std::make_shared<job>(job_meta, worker_conf, dir, res_dir, fileman);
-	ASSERT_EQ(j->get_task_queue().size(), 2);
+	job j(job_meta, worker_conf, dir, res_dir, fileman);
+	ASSERT_EQ(j.get_task_queue().size(), 2);
 
-	auto task = j->get_task_queue().at(1);
+	auto task = j.get_task_queue().at(1);
 	auto ext_task = std::dynamic_pointer_cast<external_task>(task);
 	sandbox_limits limits = ext_task->get_limits();
 	ASSERT_EQ(path(task->get_cmd()).string(), path("/evaluate/recodex").string());
@@ -478,6 +479,5 @@ TEST(job_test, job_variables)
 	ASSERT_EQ(path(bnd_dirs.begin()->second).string(), (dir / "tmp").string());
 
 	// cleanup after yourself
-	j = nullptr;
 	remove_all(dir_root);
 }

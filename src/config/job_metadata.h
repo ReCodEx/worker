@@ -14,6 +14,7 @@ public:
 	std::string job_id = "";
 	std::string language = "";
 	std::string file_server_url = "";
+	bool log = false;
 
 	std::vector<std::shared_ptr<task_metadata>> tasks;
 };

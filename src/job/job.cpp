@@ -279,6 +279,13 @@ std::vector<std::pair<std::string, std::shared_ptr<task_results>>> job::run()
 
 void job::init_logger()
 {
+	if (!job_meta_->log) {
+		// logging is disabled in configuration
+		auto sink = std::make_shared<spdlog::sinks::null_sink_st>();
+		logger_ = std::make_shared<spdlog::logger>("job_manager_nolog", sink);
+		return;
+	}
+
 	std::string log_name = "job_system_log.log";
 	spdlog::level::level_enum log_level = spdlog::level::debug;
 

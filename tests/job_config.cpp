@@ -196,6 +196,7 @@ TEST(job_config_test, config_data)
 		"    job-id: 5\n"
 		"    language: cpp\n"
 		"    file-collector: localhost\n"
+		"    log: true\n"
 		"tasks:\n"
 		"    - task-id: cp\n"
 		"      priority: 1\n"
@@ -246,6 +247,7 @@ TEST(job_config_test, config_data)
 	ASSERT_EQ(result->job_id, "5");
 	ASSERT_EQ(result->language, "cpp");
 	ASSERT_EQ(result->file_server_url, "localhost");
+	ASSERT_EQ(result->log, true);
 
 	auto task1 = result->tasks[0];
 	ASSERT_EQ(task1->task_id, "cp");
