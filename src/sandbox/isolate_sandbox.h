@@ -20,11 +20,12 @@ public:
 	 * Constructor.
 	 * @param limits Limits for current command.
 	 * @param id Number of current worker. This must be unique for each worker on one machine!
+	 * @param temp_dir Directory to store temporary files (generated isolate's meta log)
 	 * @param max_timeout Second security level - sandbox must end in this limit othrwise will be killed.
 	 * If not set (or set to -1), this number will be safely computed from @a limits. This limit is in seconds (optional).
 	 * @param logger Set system logger (optional).
 	 */
-	isolate_sandbox(sandbox_limits limits, size_t id, int max_timeout = -1,
+	isolate_sandbox(sandbox_limits limits, size_t id, const std::string &temp_dir = "/tmp", int max_timeout = -1,
 					std::shared_ptr<spdlog::logger> logger = nullptr);
 	/**
 	 * Destructor.
@@ -36,6 +37,7 @@ private:
 	std::shared_ptr<spdlog::logger> logger_;
 	size_t id_;
 	std::string isolate_binary_;
+	std::string temp_dir_;
 	std::string meta_file_;
 	int max_timeout_;
 	void isolate_init();

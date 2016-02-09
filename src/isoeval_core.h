@@ -115,6 +115,11 @@ private:
 	 */
 	void receiver_init ();
 
+	/**
+	 * Initialize working directory of whole worker.
+	 */
+	void filesystem_init();
+
 
 	// PRIVATE DATA MEMBERS
 	/** Cmd line parameters */
@@ -125,6 +130,9 @@ private:
 
 	/** Loaded worker configuration */
 	std::shared_ptr<worker_config> config_;
+
+	/** Working directory of this instance of worker */
+	fs::path working_directory_;
 
 	/** Pointer to logger */
 	std::shared_ptr<spdlog::logger> logger_;

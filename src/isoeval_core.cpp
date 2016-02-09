@@ -9,14 +9,16 @@
 
 
 isoeval_core::isoeval_core(std::vector<std::string> args)
-	: args_(args), config_filename_("config.yml"), logger_(nullptr),
-	  remote_fm_(nullptr), cache_fm_(nullptr),
+	: args_(args), config_filename_("config.yml"), working_directory_(fs::temp_directory_path() / "isoeval"),
+	  logger_(nullptr), remote_fm_(nullptr), cache_fm_(nullptr),
 	  job_receiver_(nullptr), broker_(nullptr)
 {
 	// parse cmd parameters
 	parse_params();
 	// load configuration from yaml file
 	load_config();
+	// initialize working directory
+	filesystem_init();
 	// initialize logger
 	log_init();
 	// initialize curl
@@ -97,6 +99,9 @@ void isoeval_core::load_config()
 	} catch (std::exception &e) {
 		force_exit("Error loading config file: " + std::string(e.what()));
 	}
+
+	// if there was working directory defined, than modify it accordingly...
+	working_directory_ = config_->get_working_directory();
 
 	return;
 }
@@ -179,11 +184,7 @@ void isoeval_core::broker_init()
 	logger_->info() << "Initializing broker connection...";
 	auto broker_proxy = std::make_shared<connection_proxy>(zmq_context_);
 
-	broker_ = std::make_shared<broker_connection<connection_proxy>>(
-		*config_,
-		broker_proxy,
-		logger_
-	);
+	broker_ = std::make_shared<broker_connection<connection_proxy>>(*config_, broker_proxy,	logger_);
 	logger_->info() << "Broker connection initialized.";
 
 	return;
@@ -203,8 +204,17 @@ void isoeval_core::fileman_init()
 void isoeval_core::receiver_init()
 {
 	logger_->info() << "Initializing job receiver and evaluator...";
-	auto evaluator = std::make_shared<job_evaluator>(logger_, config_, remote_fm_, cache_fm_);
+	auto evaluator = std::make_shared<job_evaluator>(logger_, config_, remote_fm_, cache_fm_, working_directory_);
 	job_receiver_ = std::make_shared<job_receiver>(zmq_context_, evaluator, logger_);
 	logger_->info() << "Job receiver and evaluator initialized.";
 	return;
+}
+
+void isoeval_core::filesystem_init()
+{
+	try {
+		fs::create_directories(working_directory_);
+	} catch (fs::filesystem_error &e) {
+		throw e;
+	}
 }

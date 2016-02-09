@@ -54,6 +54,11 @@ worker_config::worker_config (const YAML::Node &config)
 			worker_id_ = config["worker-id"].as<size_t>();
 		} else { throw config_error("Item worker-id not defined properly"); }
 
+		// load working directory path
+		if (config["working-directory"] && config["working-directory"].IsScalar()) {
+			working_directory_ = config["working-directory"].as<std::string>();
+		} // can be omitted... no throw
+
 		// load file-managers
 		if (config["file-managers"] && config["file-managers"].IsSequence()) {
 			for (auto &fileman : config["file-managers"]) {
@@ -157,6 +162,11 @@ worker_config::worker_config (const YAML::Node &config)
 size_t worker_config::get_worker_id()
 {
 	return worker_id_;
+}
+
+std::string worker_config::get_working_directory()
+{
+	return working_directory_;
 }
 
 std::string worker_config::get_broker_uri() const

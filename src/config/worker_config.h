@@ -42,6 +42,11 @@ public:
 	 */
 	size_t get_worker_id();
 	/**
+	 * Working directory path defined in config file.
+	 * @return
+	 */
+	std::string get_working_directory();
+	/**
 	 * Defines address on which broker run.
 	 * @return
 	 */
@@ -83,6 +88,8 @@ private:
 
 	/** Unique worker number in context of one machine (0-100) */
 	size_t worker_id_;
+	/** Working directory of whole server */
+	std::string working_directory_;
 	/** Broker URI, address where broker is listening */
 	std::string broker_uri_;
 	/** Header which are sent to broker and should specify worker abilities */

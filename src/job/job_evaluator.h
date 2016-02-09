@@ -42,7 +42,8 @@ public:
 	job_evaluator(std::shared_ptr<spdlog::logger> logger,
 				  std::shared_ptr<worker_config> config,
 				  std::shared_ptr<file_manager_base> remote_fm,
-				  std::shared_ptr<file_manager_base> cache_fm);
+				  std::shared_ptr<file_manager_base> cache_fm,
+				  fs::path working_directory);
 	/**
 	 * Theoretically not needed, but stated for completion.
 	 */
@@ -98,6 +99,8 @@ private:
 
 
 	// PRIVATE DATA MEMBERS
+	/** Working directory of this whole program */
+	fs::path working_directory_;
 	/** URL of remote archive in which is job configuration and source codes */
 	std::string archive_url_;
 	/** Archive filename is just a name and not a path */
@@ -110,6 +113,8 @@ private:
 	fs::path source_path_;
 	/** Results path in which result.yml and result.zip are stored */
 	fs::path results_path_;
+	/** Path for saving temporary files by tasks */
+	fs::path job_temp_dir_;
 	/** Url of remote file server which receives result of jobs */
 	std::string result_url_;
 

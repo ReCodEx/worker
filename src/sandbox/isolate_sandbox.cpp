@@ -20,7 +20,8 @@
 namespace fs = boost::filesystem;
 
 
-isolate_sandbox::isolate_sandbox(sandbox_limits limits, size_t id, int max_timeout, std::shared_ptr<spdlog::logger> logger) :
+isolate_sandbox::isolate_sandbox(sandbox_limits limits, size_t id, const std::string &temp_dir,
+	int max_timeout, std::shared_ptr<spdlog::logger> logger) :
 	limits_(limits), id_(id), isolate_binary_("isolate"), max_timeout_(max_timeout)
 {
 	if (logger != nullptr) {
@@ -36,24 +37,21 @@ isolate_sandbox::isolate_sandbox(sandbox_limits limits, size_t id, int max_timeo
 		max_timeout_ += 300; //5 minutes
 	}
 
-	//TODO: change dir
-	auto meta_dir = fs::temp_directory_path() / ("recodex_isolate_" + std::to_string(id_));
-
+	temp_dir_ = (fs::path(temp_dir) / std::to_string(id_)).string();
 	try {
-		fs::create_directories(meta_dir);
+		fs::create_directories(temp_dir_);
 	} catch (fs::filesystem_error &e) {
 		auto message = std::string("Failed to create directory for isolate meta file. Error: ") + e.what();
 		logger_->warn() << message;
 		throw sandbox_exception(message);
 	}
 
-	meta_file_ = (meta_dir / "meta.log").string();
+	meta_file_ = (fs::path(temp_dir_) / "meta.log").string();
 
 	try {
 		isolate_init();
 	} catch (...) {
-		//TODO: change dir
-		fs::remove_all(fs::temp_directory_path() / ("recodex_isolate_" + std::to_string(id_)));
+		fs::remove_all(temp_dir_);
 		throw;
 	}
 }
@@ -62,8 +60,7 @@ isolate_sandbox::~isolate_sandbox()
 {
 	try {
 		isolate_cleanup();
-		//TODO: Resolve cleaning directory with meta file (here or after whole job)
-		//fs::remove_all(fs::temp_directory_path() / ("recodex_isolate_" + std::to_string(id_)));
+		fs::remove_all(temp_dir_);
 	} catch (...) {
 		//We don't care if this failed. We can't fix it either. Just don't throw an exception in destructor.
 	}
@@ -364,7 +361,8 @@ char **isolate_sandbox::isolate_run_args(const std::string &binary, const std::v
 		vargs.push_back("--stderr=" + limits_.std_error);
 	}
 	if (!limits_.chdir.empty()) {
-		vargs.push_back("--chdir=" + limits_.chdir);
+		// path is relative to /box inside sandbox ... we want path to be relative to root (/)
+		vargs.push_back("--chdir=" + (fs::path("..") / limits_.chdir).string());
 	}
 	if (limits_.processes == 0) {
 		vargs.push_back("--processes");
@@ -396,7 +394,7 @@ char **isolate_sandbox::isolate_run_args(const std::string &binary, const std::v
 	int i = 0;
 	for (auto &it : vargs) {
 		c_args[i++] = strdup(it.c_str());
-		logger_->debug() << it;
+		logger_->debug() << "  " << it;
 	}
 	c_args[i] = NULL;
 	return c_args;

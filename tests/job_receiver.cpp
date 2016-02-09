@@ -13,7 +13,7 @@ using namespace testing;
 class mock_job_evaluator : public job_evaluator {
 public:
 	mock_job_evaluator () :
-		job_evaluator(nullptr, nullptr, nullptr, nullptr)
+		job_evaluator(nullptr, nullptr, nullptr, nullptr, "")
 	{
 	}
 

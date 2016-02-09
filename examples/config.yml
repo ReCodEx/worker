@@ -7,6 +7,7 @@ headers:
         - python
     threads: 2
     hwgroup: "group1"
+working-directory: /tmp/isoeval
 file-managers:
     - hostname: "http://localhost:9999"  # port is optional
       username: ""  # can be ignored in specific modules

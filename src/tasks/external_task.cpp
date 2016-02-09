@@ -1,11 +1,9 @@
 #include "external_task.h"
 
-external_task::external_task(size_t worker_id, size_t id, const std::string &task_id, size_t priority,
-							 bool fatal, const std::vector<std::string> &dependencies,
-							 const std::string &binary, const std::vector<std::string> &arguments,
-							 const std::string &sandbox_id, sandbox_limits limits, std::shared_ptr<spdlog::logger> logger)
-	: task_base(id, task_id, priority, fatal, dependencies, binary, arguments),
-	  worker_id_(worker_id), cmd_(binary), sandbox_id_(sandbox_id), limits_(limits), logger_(logger)
+external_task::external_task(const create_params &data)
+	: task_base(data.id, data.task_id, data.priority, data.fatal, data.dependencies, data.binary, data.arguments),
+	  worker_id_(data.worker_id), cmd_(data.binary), sandbox_id_(data.sandbox_id), limits_(data.limits),
+	  logger_(data.logger), temp_dir_(data.temp_dir)
 {
 	sandbox_check();
 }
@@ -38,7 +36,7 @@ void external_task::sandbox_init()
 	}
 #ifndef _WIN32
 	if (sandbox_id_ == "isolate") {
-		sandbox_ = std::make_shared<isolate_sandbox>(limits_, worker_id_, -1, logger_);
+		sandbox_ = std::make_shared<isolate_sandbox>(limits_, worker_id_, temp_dir_, -1, logger_);
 	}
 #endif
 }

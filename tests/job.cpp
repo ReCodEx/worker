@@ -22,19 +22,22 @@ TEST(job_test, bad_parameters)
 	auto fileman = std::make_shared<cache_manager>();
 
 	// job_config not given
-	EXPECT_THROW(job(nullptr, worker_conf, temp_directory_path(), temp_directory_path(), fileman), job_exception);
+	EXPECT_THROW(job(nullptr, worker_conf, temp_directory_path(), temp_directory_path(), temp_directory_path(), fileman), job_exception);
 
 	// worker_config not given
-	EXPECT_THROW(job(job_meta, nullptr, temp_directory_path(), temp_directory_path(), fileman), job_exception);
+	EXPECT_THROW(job(job_meta, nullptr, temp_directory_path(), temp_directory_path(), temp_directory_path(), fileman), job_exception);
+
+	// working dir not exists
+	EXPECT_THROW(job(job_meta, worker_conf, "/recodex", temp_directory_path(), temp_directory_path(), fileman), job_exception);
 
 	// source path not exists
-	EXPECT_THROW(job(job_meta, worker_conf, "/recodex", temp_directory_path(), fileman), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, temp_directory_path(), "/recodex", temp_directory_path(), fileman), job_exception);
 
 	// result path not exists
-	EXPECT_THROW(job(job_meta, worker_conf, temp_directory_path(), "/recodex", fileman), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, temp_directory_path(), temp_directory_path(), "/recodex", fileman), job_exception);
 
 	// fileman not given
-	EXPECT_THROW(job(job_meta, worker_conf, temp_directory_path(), temp_directory_path(), nullptr), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, temp_directory_path(), temp_directory_path(), temp_directory_path(), nullptr), job_exception);
 }
 
 TEST(job_test, bad_paths)
@@ -46,19 +49,23 @@ TEST(job_test, bad_paths)
 	auto worker_conf = std::make_shared<worker_config>();
 	auto fileman = std::make_shared<cache_manager>();
 
+	// non-existing working directory
+	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), fileman), job_exception);
+
 	// non-existing source code folder
-	EXPECT_THROW(job(job_meta, worker_conf, dir, temp_directory_path(), fileman), job_exception);
+	create_directories(dir_root);
+	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), fileman), job_exception);
 
 	// source code path with no source codes in it
 	create_directories(dir);
-	EXPECT_THROW(job(job_meta, worker_conf, dir, temp_directory_path(), fileman), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), fileman), job_exception);
 
 	// source code directory is not a directory
 	dir = dir / "hello";
 	std::ofstream hello(dir.string());
 	hello << "hello" << std::endl;
 	hello.close();
-	EXPECT_THROW(job(job_meta, worker_conf, dir, temp_directory_path(), fileman), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), fileman), job_exception);
 
 	// cleanup after yourself
 	remove_all(dir_root);
@@ -78,15 +85,15 @@ TEST(job_test, empty_submission_details)
 	hello.close();
 
 	// job-id is empty
-	EXPECT_THROW(job(job_meta, worker_conf, dir, temp_directory_path(), fileman), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), fileman), job_exception);
 
 	// language is empty
 	job_meta->job_id = "hello-job";
-	EXPECT_THROW(job(job_meta, worker_conf, dir, temp_directory_path(), fileman), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), fileman), job_exception);
 
 	// file-server-url is empty
 	job_meta->language = "cpp";
-	EXPECT_THROW(job(job_meta, worker_conf, dir, temp_directory_path(), fileman), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), fileman), job_exception);
 
 	// cleanup after yourself
 	remove_all(dir_root);
@@ -111,25 +118,25 @@ TEST(job_test, empty_tasks_details)
 	job_meta->tasks.push_back(task);
 
 	// empty task-id
-	EXPECT_THROW(job(job_meta, worker_conf, dir, temp_directory_path(), fileman), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), fileman), job_exception);
 
 	// empty task priority
 	task->task_id = "hello-task";
-	EXPECT_THROW(job(job_meta, worker_conf, dir, temp_directory_path(), fileman), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), fileman), job_exception);
 
 	// empty task binary
 	task->priority = 1;
-	EXPECT_THROW(job(job_meta, worker_conf, dir, temp_directory_path(), fileman), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), fileman), job_exception);
 
 	// empty sandbox name
 	task->binary = "hello";
 	auto sandbox = std::make_shared<sandbox_config>();
 	task->sandbox = sandbox;
-	EXPECT_THROW(job(job_meta, worker_conf, dir, temp_directory_path(), fileman), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), fileman), job_exception);
 
 	// non-defined hwgroup name
 	sandbox->name = "fake";
-	EXPECT_THROW(job(job_meta, worker_conf, dir, temp_directory_path(), fileman), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), fileman), job_exception);
 
 	// cleanup after yourself
 	remove_all(dir_root);
@@ -198,7 +205,7 @@ TEST(job_test, non_empty_details)
 	hello.close();
 
 	// given correct (non empty) job/tasks details
-	EXPECT_NO_THROW(job(job_meta, worker_conf, dir, temp_directory_path(), fileman));
+	EXPECT_NO_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), fileman));
 
 	// cleanup after yourself
 	remove_all(dir_root);
@@ -255,20 +262,20 @@ TEST(job_test, load_of_worker_defaults)
 	hello.close();
 
 	// construct and check
-	job result(job_meta, worker_conf, dir, temp_directory_path(), fileman);
+	job result(job_meta, worker_conf, dir_root, dir, temp_directory_path(), fileman);
 
-	ASSERT_EQ(result.get_task_queue().size(), 2); // 2 because of fake_task as root
+	ASSERT_EQ(result.get_task_queue().size(), 2u); // 2 because of fake_task as root
 	auto task = result.get_task_queue().at(1);
 	auto ext_task = std::dynamic_pointer_cast<external_task>(task);
 	sandbox_limits limits = ext_task->get_limits();
 	ASSERT_EQ(limits.cpu_time, 5);
 	ASSERT_EQ(limits.wall_time, 6);
 	ASSERT_EQ(limits.extra_time, 2);
-	ASSERT_EQ(limits.stack_size, 50000);
-	ASSERT_EQ(limits.memory_usage, 60000);
-	ASSERT_EQ(limits.processes, 1);
-	ASSERT_EQ(limits.disk_size, 50);
-	ASSERT_EQ(limits.disk_files, 7);
+	ASSERT_EQ(limits.stack_size, 50000u);
+	ASSERT_EQ(limits.memory_usage, 60000u);
+	ASSERT_EQ(limits.processes, 1u);
+	ASSERT_EQ(limits.disk_size, 50u);
+	ASSERT_EQ(limits.disk_files, 7u);
 
 	// cleanup after yourself
 	remove_all(dir_root);
@@ -378,10 +385,10 @@ TEST(job_test, correctly_built_queue)
 	hello.close();
 
 	// construct and check
-	job result(job_meta, worker_conf, dir, temp_directory_path(), fileman);
+	job result(job_meta, worker_conf, dir_root, dir, temp_directory_path(), fileman);
 
 	auto tasks = result.get_task_queue();
-	ASSERT_EQ(tasks.size(), 8); // +1 because of fake_task root
+	ASSERT_EQ(tasks.size(), 8u); // +1 because of fake_task root
 	ASSERT_EQ(tasks.at(0)->get_task_id(), ""); // fake root
 	ASSERT_EQ(tasks.at(1)->get_task_id(), "A");
 	ASSERT_EQ(tasks.at(2)->get_task_id(), "D");
@@ -461,20 +468,20 @@ TEST(job_test, job_variables)
 	hello.close();
 
 	// construct and check
-	job j(job_meta, worker_conf, dir, res_dir, fileman);
-	ASSERT_EQ(j.get_task_queue().size(), 2);
+	job j(job_meta, worker_conf, dir_root, dir, res_dir, fileman);
+	ASSERT_EQ(j.get_task_queue().size(), 2u);
 
 	auto task = j.get_task_queue().at(1);
 	auto ext_task = std::dynamic_pointer_cast<external_task>(task);
 	sandbox_limits limits = ext_task->get_limits();
-	ASSERT_EQ(path(task->get_cmd()).string(), path("/evaluate/recodex").string());
+	ASSERT_EQ(path(task->get_cmd()).string(), path("evaluate/recodex").string());
 	ASSERT_EQ(limits.std_input, "before_stdin_8_after_stdin");
 	ASSERT_EQ(limits.std_output, "before_stdout_eval5_after_stdout");
 	ASSERT_EQ(limits.std_error, "before_stderr_" + res_dir.string() + "_after_stderr");
-	ASSERT_EQ(path(limits.chdir).string(), path("/evaluate").string());
+	ASSERT_EQ(path(limits.chdir).string(), path("evaluate").string());
 
 	auto bnd_dirs = limits.bound_dirs;
-	ASSERT_EQ(bnd_dirs.size(), 1);
+	ASSERT_EQ(bnd_dirs.size(), 1u);
 	ASSERT_EQ(path(bnd_dirs.begin()->first).string(), (temp_directory_path() / "recodex").string());
 	ASSERT_EQ(path(bnd_dirs.begin()->second).string(), (dir / "tmp").string());
 

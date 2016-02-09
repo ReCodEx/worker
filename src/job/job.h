@@ -44,13 +44,16 @@ public:
 	 * Only way to construct a job. All variables are needed to proper function.
 	 * @param job_meta
 	 * @param worker_conf
+	 * @param working_directory Directory for temporary saving of files by tasks. Example
+	 *							use case is storing isolate's meta log file.
 	 * @param source_path path to source codes of submission
 	 * @param result_path path to directory containing all results
 	 * @param fileman file manager which is provided to tasks
 	 * @throws job_exception if there is problem during loading of configuration
 	 */
 	job(std::shared_ptr<job_metadata> job_meta, std::shared_ptr<worker_config> worker_conf,
-		fs::path source_path, fs::path result_path, std::shared_ptr<file_manager_base> fileman);
+		fs::path working_directory, fs::path source_path, fs::path result_path,
+		std::shared_ptr<file_manager_base> fileman);
 
 	~job();
 
@@ -96,6 +99,8 @@ private:
 	// PRIVATE DATA MEMBERS
 	std::shared_ptr<job_metadata> job_meta_;
 	std::shared_ptr<worker_config> worker_config_;
+	/** Directory, where tasks can create their own subfolders and temporary files. */
+	fs::path working_directory_;
 	fs::path source_path_;
 	fs::path result_path_;
 	std::shared_ptr<file_manager_base> fileman_;
