@@ -6,6 +6,7 @@ submission:
     job-id: hello_evaluation
     language: cpp
     file-collector: http://localhost:9999
+	log: true
 tasks:
     - task-id: "new_mkdir"
       priority: 1
@@ -48,7 +49,7 @@ tasks:
               environ-variable:
                 ISOLATE_BOX: "/box"
                 PATH: "/usr/bin"
-              chdir: "../evaluate"
+              chdir: "evaluate"
               bound-directories:
                 /tmp/hello_from_codex_worker: "evaluate"
                 /etc/alternatives: "etc/alternatives"

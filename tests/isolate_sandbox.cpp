@@ -148,7 +148,7 @@ TEST(IsolateSandbox, BindDirsExecuteGCC)
 	limits.processes = 0;
 	limits.bound_dirs = {{(tmp / "recodex_35_test").string(), "evaluate"},
 						 {"/etc/alternatives", "etc/alternatives"}};
-	limits.chdir = "../evaluate";
+	limits.chdir = "evaluate";
 	limits.environ_vars = {{"PATH", "/usr/bin"}};
 
 	fs::create_directories(tmp / "recodex_35_test");

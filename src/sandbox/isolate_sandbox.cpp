@@ -361,7 +361,8 @@ char **isolate_sandbox::isolate_run_args(const std::string &binary, const std::v
 		vargs.push_back("--stderr=" + limits_.std_error);
 	}
 	if (!limits_.chdir.empty()) {
-		vargs.push_back("--chdir=" + limits_.chdir);
+		// path is relative to /box inside sandbox ... we want path to be relative to root (/)
+		vargs.push_back("--chdir=" + (fs::path("..") / limits_.chdir).string());
 	}
 	if (limits_.processes == 0) {
 		vargs.push_back("--processes");
@@ -393,7 +394,7 @@ char **isolate_sandbox::isolate_run_args(const std::string &binary, const std::v
 	int i = 0;
 	for (auto &it : vargs) {
 		c_args[i++] = strdup(it.c_str());
-		logger_->debug() << it;
+		logger_->debug() << "  " << it;
 	}
 	c_args[i] = NULL;
 	return c_args;

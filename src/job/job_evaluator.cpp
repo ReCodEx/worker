@@ -121,8 +121,13 @@ void job_evaluator::build_job()
 		std::make_shared<prefixed_file_manager>(remote_fm_,	job_meta->file_server_url + "/"));
 
 	// set temporary directory for tasks in job
-	job_temp_dir_ = working_directory_ / "temp" /
-			std::to_string(config_->get_worker_id()) / job_id_;
+	job_temp_dir_ = working_directory_ / "temp" / std::to_string(config_->get_worker_id()) / job_id_;
+	try {
+		fs::create_directories(job_temp_dir_);
+	} catch (fs::filesystem_error &e) {
+		throw job_exception(std::string("Cannot create directories: ") + e.what());
+	}
+
 	// ... and construct job itself
 	job_ = std::make_shared<job>(job_meta, config_, job_temp_dir_, source_path_, results_path_, task_fileman);
 
