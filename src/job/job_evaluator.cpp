@@ -57,6 +57,10 @@ void job_evaluator::prepare_submission()
 			std::to_string(config_->get_worker_id()) / job_id_;
 	results_path_ = working_directory_ / "results" /
 			std::to_string(config_->get_worker_id()) / job_id_;
+	// set temporary directory for tasks in job
+	job_temp_dir_ = working_directory_ / "temp" /
+			std::to_string(config_->get_worker_id()) / job_id_;
+
 
 	// decompress downloaded archive
 	try {
@@ -81,6 +85,13 @@ void job_evaluator::prepare_submission()
 	} catch (fs::filesystem_error &e) {
 		throw job_exception("Result folder cannot be created: " + std::string(e.what()));
 	}
+
+	try {
+		fs::create_directories(job_temp_dir_);
+	} catch (fs::filesystem_error &e) {
+		throw job_exception("Cannot create directories: " + std::string(e.what()));
+	}
+
 
 	logger_->info() << "Submission prepared.";
 	return;
@@ -118,15 +129,7 @@ void job_evaluator::build_job()
 
 	// construct manager which is used in job
 	auto task_fileman = std::make_shared<fallback_file_manager>(cache_fm_,
-		std::make_shared<prefixed_file_manager>(remote_fm_,	job_meta->file_server_url + "/"));
-
-	// set temporary directory for tasks in job
-	job_temp_dir_ = working_directory_ / "temp" / std::to_string(config_->get_worker_id()) / job_id_;
-	try {
-		fs::create_directories(job_temp_dir_);
-	} catch (fs::filesystem_error &e) {
-		throw job_exception(std::string("Cannot create directories: ") + e.what());
-	}
+		std::make_shared<prefixed_file_manager>(remote_fm_, job_meta->file_server_url + "/"));
 
 	// ... and construct job itself
 	job_ = std::make_shared<job>(job_meta, config_, job_temp_dir_, source_path_, results_path_, task_fileman);
