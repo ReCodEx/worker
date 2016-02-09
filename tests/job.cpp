@@ -264,18 +264,18 @@ TEST(job_test, load_of_worker_defaults)
 	// construct and check
 	job result(job_meta, worker_conf, dir_root, dir, temp_directory_path(), fileman);
 
-	ASSERT_EQ(result.get_task_queue().size(), 2); // 2 because of fake_task as root
+	ASSERT_EQ(result.get_task_queue().size(), 2u); // 2 because of fake_task as root
 	auto task = result.get_task_queue().at(1);
 	auto ext_task = std::dynamic_pointer_cast<external_task>(task);
 	sandbox_limits limits = ext_task->get_limits();
 	ASSERT_EQ(limits.cpu_time, 5);
 	ASSERT_EQ(limits.wall_time, 6);
 	ASSERT_EQ(limits.extra_time, 2);
-	ASSERT_EQ(limits.stack_size, 50000);
-	ASSERT_EQ(limits.memory_usage, 60000);
-	ASSERT_EQ(limits.processes, 1);
-	ASSERT_EQ(limits.disk_size, 50);
-	ASSERT_EQ(limits.disk_files, 7);
+	ASSERT_EQ(limits.stack_size, 50000u);
+	ASSERT_EQ(limits.memory_usage, 60000u);
+	ASSERT_EQ(limits.processes, 1u);
+	ASSERT_EQ(limits.disk_size, 50u);
+	ASSERT_EQ(limits.disk_files, 7u);
 
 	// cleanup after yourself
 	remove_all(dir_root);
@@ -388,7 +388,7 @@ TEST(job_test, correctly_built_queue)
 	job result(job_meta, worker_conf, dir_root, dir, temp_directory_path(), fileman);
 
 	auto tasks = result.get_task_queue();
-	ASSERT_EQ(tasks.size(), 8); // +1 because of fake_task root
+	ASSERT_EQ(tasks.size(), 8u); // +1 because of fake_task root
 	ASSERT_EQ(tasks.at(0)->get_task_id(), ""); // fake root
 	ASSERT_EQ(tasks.at(1)->get_task_id(), "A");
 	ASSERT_EQ(tasks.at(2)->get_task_id(), "D");
@@ -469,7 +469,7 @@ TEST(job_test, job_variables)
 
 	// construct and check
 	job j(job_meta, worker_conf, dir_root, dir, res_dir, fileman);
-	ASSERT_EQ(j.get_task_queue().size(), 2);
+	ASSERT_EQ(j.get_task_queue().size(), 2u);
 
 	auto task = j.get_task_queue().at(1);
 	auto ext_task = std::dynamic_pointer_cast<external_task>(task);
@@ -481,7 +481,7 @@ TEST(job_test, job_variables)
 	ASSERT_EQ(path(limits.chdir).string(), path("/evaluate").string());
 
 	auto bnd_dirs = limits.bound_dirs;
-	ASSERT_EQ(bnd_dirs.size(), 1);
+	ASSERT_EQ(bnd_dirs.size(), 1u);
 	ASSERT_EQ(path(bnd_dirs.begin()->first).string(), (temp_directory_path() / "recodex").string());
 	ASSERT_EQ(path(bnd_dirs.begin()->second).string(), (dir / "tmp").string());
 

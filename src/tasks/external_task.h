@@ -15,29 +15,43 @@
  */
 class external_task : public task_base {
 public:
+	/** data for proper construction of @ref external_task class */
+	struct create_params {
+		/** unique worker identification on this machine */
+		size_t worker_id;
+		/** unique integer which means order in config file */
+		size_t id;
+		/** unique text identifier of task */
+		const std::string &task_id;
+		/** priority of task */
+		size_t priority;
+		/** if @a true than job will be killed immediatelly in case of error */
+		bool fatal;
+		/** dependencies of this task */
+		const std::vector<std::string> &dependencies;
+		/** program which will be launched */
+		const std::string &binary;
+		/** arguments for binary */
+		const std::vector<std::string> &arguments;
+		/** name of sandbox which will be used */
+		const std::string &sandbox_id;
+		/** limits for sandbox */
+		sandbox_limits limits;
+		/** job system logger */
+		std::shared_ptr<spdlog::logger> logger;
+		/** directory for optional saving temporary files during execution */
+		const std::string &temp_dir;
+	};
+
 	external_task() = delete;
 
 	/**
 	 * Only way to construct external task is through this constructor.
 	 * Choosing propriate sandbox and constructing it is also done here.
-	 * @param worker_id unique worker identification on this machine
-	 * @param id unique integer which means order in config file
-	 * @param task_id unique identifier of task
-	 * @param priority priority of task
-	 * @param fatal if true than job will be killed immediatelly in case of error
-	 * @param dependencies dependencies of this task
-	 * @param binary program which will be launched
-	 * @param arguments arguments for binary
-	 * @param sandbox_id name of sandbox which will be used
-	 * @param limits limits for sandbox
-	 * @param logger job system logger
+	 * @param data data to create external task class
 	 * @throws task_exception if @a sandbox_id is unknown
 	 */
-	external_task(size_t worker_id, size_t id, const std::string &task_id,
-				  size_t priority, bool fatal,
-				  const std::vector<std::string> &dependencies,
-				  const std::string &binary, const std::vector<std::string> &arguments,
-				  const std::string &sandbox_id, sandbox_limits limits, std::shared_ptr<spdlog::logger> logger);
+	external_task(const create_params &data);
 	/**
 	 * Empty right now.
 	 */
@@ -84,6 +98,9 @@ private:
 	sandbox_limits limits_;
 	/** Job system logger */
 	std::shared_ptr<spdlog::logger> logger_;
+	/** Directory for temporary files */
+	std::string temp_dir_;
+
 };
 
 #endif //CODEX_WORKER_EXTERNAL_TASK_HPP

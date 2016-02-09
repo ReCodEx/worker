@@ -32,7 +32,11 @@ void job_evaluator::download_submission()
 	fs::path archive_url = archive_url_;
 	archive_path_ = working_directory_ / "downloads" /
 			std::to_string(config_->get_worker_id()) / job_id_;
-	fs::create_directories(archive_path_);
+	try {
+		fs::create_directories(archive_path_);
+	} catch (fs::filesystem_error &e) {
+		throw job_exception(std::string("Cannot create downloading library: ") + e.what());
+	}
 
 	// download a file
 	archive_name_ = archive_url.filename();
@@ -64,7 +68,9 @@ void job_evaluator::prepare_submission()
 
 	// copy source codes to source code folder
 	try {
+		// stem().stem() is removing the .tar.bz2 ending (maybe working with just .zip ending too)
 		fs::path tmp_path = submission_path_ / archive_name_.stem().stem();
+		// source_path_ is automaticaly created in copy_directory()
 		helpers::copy_directory(tmp_path, source_path_);
 	} catch (helpers::filesystem_exception &e) {
 		throw job_exception("Error copying source files to source code path: " + std::string(e.what()));
@@ -111,16 +117,14 @@ void job_evaluator::build_job()
 	}
 
 	// construct manager which is used in job
-	auto task_fileman = std::make_shared<fallback_file_manager>(
-		cache_fm_,
-		std::make_shared<prefixed_file_manager>(
-			remote_fm_,
-			job_meta->file_server_url + "/"
-		)
-	);
+	auto task_fileman = std::make_shared<fallback_file_manager>(cache_fm_,
+		std::make_shared<prefixed_file_manager>(remote_fm_,	job_meta->file_server_url + "/"));
 
+	// set temporary directory for tasks in job
+	job_temp_dir_ = working_directory_ / "temp" /
+			std::to_string(config_->get_worker_id()) / job_id_;
 	// ... and construct job itself
-	job_ = std::make_shared<job>(job_meta, config_, working_directory_, source_path_, results_path_, task_fileman);
+	job_ = std::make_shared<job>(job_meta, config_, job_temp_dir_, source_path_, results_path_, task_fileman);
 
 	logger_->info() << "Job building done.";
 	return;
@@ -170,6 +174,16 @@ void job_evaluator::cleanup_submission()
 		}
 	} catch (fs::filesystem_error &e) {
 		logger_->warn() << "Archive directory not cleaned properly: " << e.what();
+	}
+
+	// delete temp directory
+	try {
+		logger_->info() << "Cleaning up temp directory for tasks...";
+		if (fs::exists(job_temp_dir_)) {
+			fs::remove_all(job_temp_dir_);
+		}
+	} catch (fs::filesystem_error &e) {
+		logger_->warn() << "Temp directory not cleaned properly: " << e.what();
 	}
 
 	// and finally delete created results directory

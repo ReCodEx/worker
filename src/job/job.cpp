@@ -4,9 +4,8 @@
 job::job(std::shared_ptr<job_metadata> job_meta, std::shared_ptr<worker_config> worker_conf,
 		 fs::path working_directory, fs::path source_path, fs::path result_path,
 		 std::shared_ptr<file_manager_base> fileman)
-	: job_meta_(job_meta), worker_config_(worker_conf),
-	  working_directory_(working_directory), source_path_(source_path),
-	  result_path_(result_path), fileman_(fileman)
+	: job_meta_(job_meta), worker_config_(worker_conf), working_directory_(working_directory),
+	  source_path_(source_path), result_path_(result_path), fileman_(fileman)
 {
 	// check construction parameters if they are in right format
 	if (job_meta_ == nullptr) {
@@ -157,10 +156,21 @@ void job::build_job()
 			limits->bound_dirs = new_bnd_dirs;
 
 			// ... and finally construct external task from given information
-			std::shared_ptr<task_base> task = std::make_shared<external_task>(
-						worker_config_->get_worker_id(), id++, task_meta->task_id, task_meta->priority,
-						task_meta->fatal_failure, task_meta->dependencies, task_meta->binary,
-						task_meta->cmd_args, sandbox->name, *limits, logger_);
+			external_task::create_params data = {
+				worker_config_->get_worker_id(),
+				id++,
+				task_meta->task_id,
+				task_meta->priority,
+				task_meta->fatal_failure,
+				task_meta->dependencies,
+				task_meta->binary,
+				task_meta->cmd_args,
+				sandbox->name,
+				*limits,
+				logger_,
+				working_directory_.string()
+			};
+			std::shared_ptr<task_base> task = std::make_shared<external_task>(data);
 			unconnected_tasks.insert(std::make_pair(task_meta->task_id, task));
 			eff_indegree.insert(std::make_pair(task_meta->task_id, 0));
 

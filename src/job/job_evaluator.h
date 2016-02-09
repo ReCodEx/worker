@@ -113,6 +113,8 @@ private:
 	fs::path source_path_;
 	/** Results path in which result.yml and result.zip are stored */
 	fs::path results_path_;
+	/** Path for saving temporary files by tasks */
+	fs::path job_temp_dir_;
 	/** Url of remote file server which receives result of jobs */
 	std::string result_url_;
 
