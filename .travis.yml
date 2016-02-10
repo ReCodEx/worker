@@ -34,3 +34,6 @@ script:
   - cmake ..
   - make
   - tests/run_tests
+
+after_success:
+  - tests/run_tool_tests
