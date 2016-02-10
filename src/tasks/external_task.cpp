@@ -1,4 +1,6 @@
 #include "external_task.h"
+#include "../sandbox/fake_sandbox.h"
+#include "../sandbox/isolate_sandbox.h"
 
 external_task::external_task(const create_params &data)
 	: task_base(data.id, data.task_id, data.priority, data.fatal, data.dependencies, data.binary, data.arguments),

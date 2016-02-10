@@ -4,9 +4,8 @@
 #include "spdlog/spdlog.h"
 #include <memory>
 #include "task_base.h"
-#include "../sandbox/isolate_sandbox.h"
-#include "../sandbox/fake_sandbox.h"
-#include "../config/task_results.h"
+#include "../sandbox/sandbox_base.h"
+#include "../config/sandbox_limits.h"
 
 
 /**
