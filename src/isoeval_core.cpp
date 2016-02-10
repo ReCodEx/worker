@@ -10,8 +10,7 @@
 
 isoeval_core::isoeval_core(std::vector<std::string> args)
 	: args_(args), config_filename_("config.yml"), working_directory_(fs::temp_directory_path() / "isoeval"),
-	  logger_(nullptr), remote_fm_(nullptr), cache_fm_(nullptr),
-	  job_receiver_(nullptr), broker_(nullptr)
+	  logger_(nullptr), remote_fm_(nullptr), cache_fm_(nullptr), job_receiver_(nullptr), broker_(nullptr)
 {
 	// parse cmd parameters
 	parse_params();
@@ -45,7 +44,7 @@ void isoeval_core::run()
 	std::thread broker_thread;
 	logger_->info() << "Trying to create broker connection thread.";
 	try {
-		 broker_thread = std::thread(std::bind(&broker_connection<connection_proxy>::receive_tasks, broker_));
+		broker_thread = std::thread(std::bind(&broker_connection<connection_proxy>::receive_tasks, broker_));
 	} catch (std::system_error &e) {
 		logger_->emerg() << "Broker connection thread cannot be started: " << e.what();
 		return;
@@ -65,9 +64,8 @@ void isoeval_core::parse_params()
 
 	// Declare the supported options.
 	options_description desc("Allowed options for IsoEval");
-	desc.add_options()
-		("help,h", "Writes this help message to stderr")
-		("config,c", value<std::string>(), "Set default configuration of this program");
+	desc.add_options()("help,h", "Writes this help message to stderr")(
+		"config,c", value<std::string>(), "Set default configuration of this program");
 
 	variables_map vm;
 	try {
@@ -123,34 +121,35 @@ void isoeval_core::log_init()
 {
 	auto log_conf = config_->get_log_config();
 
-	//Set up logger
-	//Try to create target directory for logs
+	// Set up logger
+	// Try to create target directory for logs
 	auto path = fs::path(log_conf.log_path);
 	try {
-		if(!fs::is_directory(path)) {
+		if (!fs::is_directory(path)) {
 			fs::create_directories(path);
 		}
-	} catch(fs::filesystem_error &e) {
+	} catch (fs::filesystem_error &e) {
 		std::cerr << "Logger: " << e.what() << std::endl;
 		throw;
 	}
 
-	//Create and register logger
+	// Create and register logger
 	try {
-		//Create multithreaded rotating file sink. Max filesize is 1024 * 1024 and we save 5 newest files.
-		auto rotating_sink = std::make_shared<spdlog::sinks::rotating_file_sink_mt>((path / log_conf.log_basename).string(),
-								log_conf.log_suffix, log_conf.log_file_size, log_conf.log_files_count, true);
-		//Set queue size for asynchronous logging. It must be a power of 2.
+		// Create multithreaded rotating file sink. Max filesize is 1024 * 1024 and we save 5 newest files.
+		auto rotating_sink =
+			std::make_shared<spdlog::sinks::rotating_file_sink_mt>((path / log_conf.log_basename).string(),
+				log_conf.log_suffix, log_conf.log_file_size, log_conf.log_files_count, true);
+		// Set queue size for asynchronous logging. It must be a power of 2.
 		spdlog::set_async_mode(1048576);
-		//Make log with name "logger"
+		// Make log with name "logger"
 		logger_ = std::make_shared<spdlog::logger>("logger", rotating_sink);
-		//Set logging level to debug
+		// Set logging level to debug
 		logger_->set_level(log_config::get_level(log_conf.log_level));
-		//Print header to log
+		// Print header to log
 		logger_->emerg() << "------------------------------";
 		logger_->emerg() << "    Started ReCodEx worker";
 		logger_->emerg() << "------------------------------";
-	} catch(spdlog::spdlog_ex &e) {
+	} catch (spdlog::spdlog_ex &e) {
 		std::cerr << "Logger: " << e.what() << std::endl;
 		throw;
 	}
@@ -160,7 +159,7 @@ void isoeval_core::log_init()
 
 void isoeval_core::curl_init()
 {
-	//Globally init curl library
+	// Globally init curl library
 
 	logger_->info() << "Initializing CURL...";
 	curl_global_init(CURL_GLOBAL_DEFAULT);
@@ -171,7 +170,7 @@ void isoeval_core::curl_init()
 
 void isoeval_core::curl_fini()
 {
-	//Clean after curl library
+	// Clean after curl library
 	logger_->info() << "Cleanup after CURL...";
 	curl_global_cleanup();
 	logger_->info() << "CURL cleaned.";
@@ -184,14 +183,14 @@ void isoeval_core::broker_init()
 	logger_->info() << "Initializing broker connection...";
 	auto broker_proxy = std::make_shared<connection_proxy>(zmq_context_);
 
-	broker_ = std::make_shared<broker_connection<connection_proxy>>(*config_, broker_proxy,	logger_);
+	broker_ = std::make_shared<broker_connection<connection_proxy>>(*config_, broker_proxy, logger_);
 	logger_->info() << "Broker connection initialized.";
 
 	return;
 }
 
 void isoeval_core::fileman_init()
-{	
+{
 	logger_->info() << "Initializing file managers...";
 	auto fileman_conf = config_->get_filemans_configs();
 	remote_fm_ = std::make_shared<http_manager>(fileman_conf, logger_);
