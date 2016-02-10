@@ -3,9 +3,9 @@
 #endif
 
 #include "isoeval_core.h"
-#include "job/job_receiver.h"
-#include "fileman/http_manager.h"
 #include "fileman/cache_manager.h"
+#include "fileman/http_manager.h"
+#include "job/job_receiver.h"
 
 
 isoeval_core::isoeval_core(std::vector<std::string> args)

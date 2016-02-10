@@ -1,14 +1,14 @@
 #ifndef CODEX_WORKER_ISOEVAL_CORE_HPP
 #define CODEX_WORKER_ISOEVAL_CORE_HPP
 
-#include <iostream>
-#include <yaml-cpp/yaml.h>
-#include <memory>
 #include "spdlog/spdlog.h"
 #include <curl/curl.h>
-#include <vector>
 #include <functional>
+#include <iostream>
+#include <memory>
 #include <thread>
+#include <vector>
+#include <yaml-cpp/yaml.h>
 
 #define BOOST_FILESYSTEM_NO_DEPRECATED
 #define BOOST_NO_CXX11_SCOPED_ENUMS
@@ -18,13 +18,13 @@ namespace fs = boost::filesystem;
 
 
 // Our very own code includes
-#include "config/worker_config.h"
-#include "config/log_config.h"
 #include "broker_connection.h"
+#include "config/log_config.h"
+#include "config/worker_config.h"
 #include "connection_proxy.h"
-#include "job/job_receiver.h"
-#include "fileman/file_manager_base.h"
 #include "fileman/fallback_file_manager.h"
+#include "fileman/file_manager_base.h"
+#include "job/job_receiver.h"
 
 
 /**
@@ -32,8 +32,7 @@ namespace fs = boost::filesystem;
  * It handles all creation and destruction of all used parts.
  * And of course run all those parts.
  */
-class isoeval_core
-{
+class isoeval_core {
 public:
 	isoeval_core() = delete;
 
