@@ -76,6 +76,7 @@ void job_evaluator::prepare_submission()
 		fs::path tmp_path = submission_path_ / archive_name_.stem().stem();
 		// source_path_ is automaticaly created in copy_directory()
 		helpers::copy_directory(tmp_path, source_path_);
+		fs::permissions(source_path_, fs::add_perms|fs::group_write|fs::others_write);
 	} catch (helpers::filesystem_exception &e) {
 		throw job_exception("Error copying source files to source code path: " + std::string(e.what()));
 	}

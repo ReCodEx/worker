@@ -14,12 +14,11 @@ tasks:
               - "solution.c"
               - "-o"
               - "a.out"
-      log: "compilation.log"
-      stderr: std.err
       sandbox:
           name: "isolate"
           limits:
               - hw-group-id: group1
+                parallel: 0
                 chdir: ${EVAL_DIR}
                 environ-variable:
                     PATH: "/usr/bin"
@@ -52,7 +51,6 @@ tasks:
           - fetch_test_1
       cmd:
           bin: "a.out"
-      log: "evaluation.log"
       sandbox:
           name: "isolate"
           limits:
@@ -85,7 +83,6 @@ tasks:
           args:
               - "1.out"
               - "plot.out"
-      log: "judging.log"
       sandbox:
           name: "isolate"
           limits:
