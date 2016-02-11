@@ -209,7 +209,7 @@ void job_evaluator::cleanup_submission()
 
 void job_evaluator::cleanup_evaluator()
 {
-	cleanup_submission();
+	//cleanup_submission(); // TODO: just for debugging purposes
 
 	try {
 		archive_url_ = "";

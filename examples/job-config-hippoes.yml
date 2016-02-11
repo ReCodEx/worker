@@ -74,7 +74,7 @@ tasks:  # its assumed that source codes are placed into ${SOURCE_DIR} folder
           bin: "/bin/codex_judge"
           args:
               - "1.out"
-                "plot.out"
+              - "plot.out"
       log: "judging.log"
       sandbox:
           name: "isolate"
@@ -140,7 +140,7 @@ tasks:  # its assumed that source codes are placed into ${SOURCE_DIR} folder
           bin: "/bin/codex_judge"
           args:
               - "2.out"
-                "plot.out"
+              - "plot.out"
       log: "judging.log"
       sandbox:
           name: "isolate"
@@ -206,7 +206,7 @@ tasks:  # its assumed that source codes are placed into ${SOURCE_DIR} folder
           bin: "/bin/codex_judge"
           args:
               - "3.out"
-                "plot.out"
+              - "plot.out"
       log: "judging.log"
       sandbox:
           name: "isolate"
@@ -272,7 +272,7 @@ tasks:  # its assumed that source codes are placed into ${SOURCE_DIR} folder
           bin: "/bin/codex_judge"
           args:
               - "4.out"
-                "plot.out"
+              - "plot.out"
       log: "judging.log"
       sandbox:
           name: "isolate"
@@ -338,7 +338,7 @@ tasks:  # its assumed that source codes are placed into ${SOURCE_DIR} folder
           bin: "/bin/codex_judge"
           args:
               - "5.out"
-                "plot.out"
+              - "plot.out"
       log: "judging.log"
       sandbox:
           name: "isolate"
@@ -404,7 +404,7 @@ tasks:  # its assumed that source codes are placed into ${SOURCE_DIR} folder
           bin: "/bin/codex_judge"
           args:
               - "6.out"
-                "plot.out"
+              - "plot.out"
       log: "judging.log"
       sandbox:
           name: "isolate"

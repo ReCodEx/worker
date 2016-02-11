@@ -88,6 +88,11 @@ void job::build_job()
 			throw job_exception("Command cannot be empty");
 		}
 
+		// go through variables parsing
+		for (size_t i = 0; i < task_meta->cmd_args.size(); ++i) {
+			task_meta->cmd_args.at(i) = parse_job_var(task_meta->cmd_args.at(i));
+		}
+
 		// distinguish internal/external command and construct suitable object
 		if (task_meta->sandbox != nullptr) {
 

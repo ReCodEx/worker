@@ -1,0 +1,110 @@
+---  # only one document which contains job, aka. list of tasks and some general infos
+submission:  # happy hippoes fence
+    job-id: hippoes
+    language: c
+    file-collector: http://localhost:9999/tasks
+    log: true
+tasks:
+    - task-id: "compilation"
+      priority: 2
+      fatal-failure: true
+      cmd:
+          bin: "/usr/bin/gcc"
+          args:
+              - "solution.c"
+              - "-o"
+              - "a.out"
+      log: "compilation.log"
+      stderr: std.err
+      sandbox:
+          name: "isolate"
+          limits:
+              - hw-group-id: group1
+                chdir: ${EVAL_DIR}
+                environ-variable:
+                    PATH: "/usr/bin"
+                bound-directories:
+                    ${SOURCE_DIR}: ${EVAL_DIR}
+                    /etc/alternatives: "etc/alternatives"
+    - task-id: "delete_source"
+      priority: 3
+      fatal-failure: false
+      dependencies:
+          - compilation
+      cmd:
+          bin: "rm"
+          args:
+              - "solution.c"
+    - task-id: "fetch_test_1"
+      priority: 4
+      fatal-failure: false
+      dependencies:
+          - compilation
+      cmd:
+          bin: "fetch"
+          args:
+              - "1.in"
+              - "${SOURCE_DIR}/kuly.in"
+    - task-id: "evaluation_test_1"
+      priority: 5
+      fatal-failure: false
+      dependencies:
+          - fetch_test_1
+      cmd:
+          bin: "a.out"
+      log: "evaluation.log"
+      sandbox:
+          name: "isolate"
+          limits:
+              - hw-group-id: group1
+                time: 0.5
+                memory: 8192
+                chdir: ${EVAL_DIR}
+                environ-variable:
+                    PATH: "/usr/bin"
+                bound-directories:
+                    ${SOURCE_DIR}: ${EVAL_DIR}
+                    /etc/alternatives: "etc/alternatives"
+    - task-id: "fetch_test_solution_1"
+      priority: 6
+      fatal-failure: false
+      dependencies:
+          - evaluation_test_1
+      cmd:
+          bin: "fetch"
+          args:
+              - "1.out"
+              - "${SOURCE_DIR}/1.out"
+    - task-id: "judging_test_1"
+      priority: 7
+      fatal-failure: false
+      dependencies:
+          - evaluation_test_1
+      cmd:
+          bin: "/tmp/judges/codex_judge"
+          args:
+              - "1.out"
+              - "plot.out"
+      log: "judging.log"
+      sandbox:
+          name: "isolate"
+          limits:
+              - hw-group-id: group1
+                chdir: ${EVAL_DIR}
+                environ-variable:
+                    PATH: "/usr/bin"
+                bound-directories:
+                    ${SOURCE_DIR}: ${EVAL_DIR}
+                    /etc/alternatives: "etc/alternatives"
+    - task-id: "rm_junk_test_1"
+      priority: 8
+      fatal-failure: false
+      dependencies:
+          - judging_test_1
+      cmd:
+          bin: "rm"
+          args:
+              - "${SOURCE_DIR}/1.in"
+              - "${SOURCE_DIR}/plot.out"
+              - "${SOURCE_DIR}/1.out"
+...
