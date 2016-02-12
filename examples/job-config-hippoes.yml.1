@@ -73,13 +73,22 @@ tasks:
           args:
               - "1.out"
               - "${SOURCE_DIR}/1.out"
+    - task-id: "copy_judge_1"
+      priority: 7
+      fatal-failure: false
+      dependencies: fetch_test_solution_1
+      cmd:
+          bin: "cp"
+          args:
+              - "${TEMP_DIR}/judges/codex_judge"
+              - "${SOURCE_DIR}/codex_judge"
     - task-id: "judging_test_1"
       priority: 7
       fatal-failure: false
       dependencies:
-          - evaluation_test_1
+          - copy_judge_1
       cmd:
-          bin: "/tmp/judges/codex_judge"
+          bin: "codex_judge"
           args:
               - "1.out"
               - "plot.out"
