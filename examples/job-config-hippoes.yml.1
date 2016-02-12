@@ -25,15 +25,6 @@ tasks:
                 bound-directories:
                     ${SOURCE_DIR}: ${EVAL_DIR}
                     /etc/alternatives: "etc/alternatives"
-    - task-id: "delete_source"
-      priority: 3
-      fatal-failure: false
-      dependencies:
-          - compilation
-      cmd:
-          bin: "rm"
-          args:
-              - "solution.c"
     - task-id: "fetch_test_1"
       priority: 4
       fatal-failure: false
@@ -73,22 +64,13 @@ tasks:
           args:
               - "1.out"
               - "${SOURCE_DIR}/1.out"
-    - task-id: "copy_judge_1"
-      priority: 7
-      fatal-failure: false
-      dependencies: fetch_test_solution_1
-      cmd:
-          bin: "cp"
-          args:
-              - "${TEMP_DIR}/judges/codex_judge"
-              - "${SOURCE_DIR}/codex_judge"
     - task-id: "judging_test_1"
       priority: 7
       fatal-failure: false
       dependencies:
-          - copy_judge_1
+          - fetch_test_solution_1
       cmd:
-          bin: "codex_judge"
+          bin: "${JUDGES_DIR}/codex_judge"
           args:
               - "1.out"
               - "plot.out"
@@ -96,11 +78,13 @@ tasks:
           name: "isolate"
           limits:
               - hw-group-id: group1
+                parallel: 0
                 chdir: ${EVAL_DIR}
                 environ-variable:
                     PATH: "/usr/bin"
                 bound-directories:
                     ${SOURCE_DIR}: ${EVAL_DIR}
+                    "${TEMP_DIR}/judges": ${JUDGES_DIR}
                     /etc/alternatives: "etc/alternatives"
     - task-id: "rm_junk_test_1"
       priority: 8
@@ -110,7 +94,7 @@ tasks:
       cmd:
           bin: "rm"
           args:
-              - "${SOURCE_DIR}/1.in"
+              - "${SOURCE_DIR}/kuly.in"
               - "${SOURCE_DIR}/plot.out"
               - "${SOURCE_DIR}/1.out"
 ...

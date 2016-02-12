@@ -89,6 +89,7 @@ void job::build_job()
 		}
 
 		// go through variables parsing
+		task_meta->binary = parse_job_var(task_meta->binary);
 		for (size_t i = 0; i < task_meta->cmd_args.size(); ++i) {
 			task_meta->cmd_args.at(i) = parse_job_var(task_meta->cmd_args.at(i));
 		}
@@ -149,7 +150,6 @@ void job::build_job()
 			}
 
 			// go through variables parsing
-			task_meta->binary = parse_job_var(task_meta->binary);
 			limits->std_input = parse_job_var(task_meta->std_input);
 			limits->std_output = parse_job_var(task_meta->std_output);
 			limits->std_error = parse_job_var(task_meta->std_error);
@@ -354,9 +354,10 @@ void job::prepare_job_vars()
 		{ "WORKER_ID", std::to_string(worker_config_->get_worker_id()) },
 		{ "JOB_ID", job_meta_->job_id },
 		{ "SOURCE_DIR", source_path_.string() },
-		{ "EVAL_DIR", fs::path("evaluate").string() },
+		{ "EVAL_DIR", fs::path("/evaluate").string() },
 		{ "RESULT_DIR", result_path_.string() },
-		{ "TEMP_DIR", fs::temp_directory_path().string() }
+		{ "TEMP_DIR", fs::temp_directory_path().string() },
+		{ "JUDGES_DIR", fs::path("/judges").string() }
 	};
 
 	return;
