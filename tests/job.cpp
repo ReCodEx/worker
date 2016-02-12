@@ -474,11 +474,11 @@ TEST(job_test, job_variables)
 	auto task = j.get_task_queue().at(1);
 	auto ext_task = std::dynamic_pointer_cast<external_task>(task);
 	sandbox_limits limits = ext_task->get_limits();
-	ASSERT_EQ(path(task->get_cmd()).string(), path("evaluate/recodex").string());
+	ASSERT_EQ(path(task->get_cmd()).string(), path("/evaluate/recodex").string());
 	ASSERT_EQ(limits.std_input, "before_stdin_8_after_stdin");
 	ASSERT_EQ(limits.std_output, "before_stdout_eval5_after_stdout");
 	ASSERT_EQ(limits.std_error, "before_stderr_" + res_dir.string() + "_after_stderr");
-	ASSERT_EQ(path(limits.chdir).string(), path("evaluate").string());
+	ASSERT_EQ(path(limits.chdir).string(), path("/evaluate").string());
 
 	auto bnd_dirs = limits.bound_dirs;
 	ASSERT_EQ(bnd_dirs.size(), 1u);
