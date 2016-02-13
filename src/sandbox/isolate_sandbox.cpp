@@ -338,7 +338,7 @@ char **isolate_sandbox::isolate_run_args(const std::string &binary, const std::v
 	vargs.push_back("--box-id=" + std::to_string(id_));
 
 	vargs.push_back("--cg-mem=" + std::to_string(limits_.memory_usage));
-	vargs.push_back("--mem=" + std::to_string(limits_.memory_usage));
+	// vargs.push_back("--mem=" + std::to_string(limits_.memory_usage));
 	vargs.push_back("--time=" + std::to_string(limits_.cpu_time));
 	vargs.push_back("--wall-time=" + std::to_string(limits_.wall_time));
 	vargs.push_back("--extra-time=" + std::to_string(limits_.extra_time));
