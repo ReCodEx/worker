@@ -42,6 +42,8 @@ tasks:
           - fetch_test_1
       cmd:
           bin: "a.out"
+      stdout: std.out
+      stderr: std.err
       sandbox:
           name: "isolate"
           limits:
