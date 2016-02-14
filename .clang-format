@@ -14,23 +14,10 @@ AllowShortLoopsOnASingleLine: true
 AlwaysBreakAfterDefinitionReturnType: false
 AlwaysBreakBeforeMultilineStrings: false
 AlwaysBreakTemplateDeclarations: false
-BinPackArguments: true
-BinPackParameters: true
-BraceWrapping: {
-    AfterClass: 'false'
-    AfterControlStatement: 'false'
-    AfterEnum: 'false'
-    AfterFunction: 'true'
-    AfterNamespace: 'true'
-    AfterObjCDeclaration: 'false'
-    AfterStruct: 'false'
-    AfterUnion: 'false'
-    BeforeCatch: 'false'
-    BeforeElse: 'false'
-    IndentBraces: 'false'
-}
+BinPackArguments: false
+BinPackParameters: false
 BreakBeforeBinaryOperators: None
-BreakBeforeBraces: Custom
+BreakBeforeBraces: Linux
 BreakBeforeTernaryOperators: false
 BreakConstructorInitializersBeforeComma: false
 ColumnLimit: 120
