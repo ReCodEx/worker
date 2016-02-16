@@ -27,4 +27,4 @@ public:
 };
 
 
-#endif //CODEX_WORKER_TASK_METADATA_H
+#endif // CODEX_WORKER_TASK_METADATA_H

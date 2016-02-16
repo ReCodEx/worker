@@ -3,18 +3,18 @@
 #include "../eval_request.h"
 #include "../eval_response.h"
 
-job_receiver::job_receiver (zmq::context_t &context, std::shared_ptr<job_evaluator> evaluator,
-							std::shared_ptr<spdlog::logger> logger) :
-	socket_(context, ZMQ_PAIR), evaluator_(evaluator), logger_(logger)
+job_receiver::job_receiver(
+	zmq::context_t &context, std::shared_ptr<job_evaluator> evaluator, std::shared_ptr<spdlog::logger> logger)
+	: socket_(context, ZMQ_PAIR), evaluator_(evaluator), logger_(logger)
 {
 	if (logger == nullptr) {
-		//Create logger manually to avoid global registration of logger
+		// Create logger manually to avoid global registration of logger
 		auto sink = std::make_shared<spdlog::sinks::null_sink_st>();
 		logger_ = std::make_shared<spdlog::logger>("job_receiver_nolog", sink);
 	}
 }
 
-void job_receiver::start_receiving ()
+void job_receiver::start_receiving()
 {
 	socket_.connect("inproc://" JOB_SOCKET_ID);
 

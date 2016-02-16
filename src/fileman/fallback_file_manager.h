@@ -15,9 +15,11 @@
  * Note that both managers need to use the same file names - some prefixing might need to be done
  * Failed operations throws @a fm_exception exception.
  */
-class fallback_file_manager : public file_manager_base {
+class fallback_file_manager : public file_manager_base
+{
 public:
 	typedef std::shared_ptr<file_manager_base> file_manager_ptr;
+
 public:
 	/**
 	 * Constructor for creating this class with instances of @a cache_manager and @a http_manager.
@@ -25,12 +27,14 @@ public:
 	 * @param cache_manager Cache manager poiter.
 	 * @param http_manager HTTP manager pointer.
 	 */
-	fallback_file_manager (file_manager_ptr primary, file_manager_ptr secondary);
+	fallback_file_manager(file_manager_ptr primary, file_manager_ptr secondary);
 
 	/**
 	 * Destructor.
 	 */
-	virtual ~fallback_file_manager () {}
+	virtual ~fallback_file_manager()
+	{
+	}
 
 	/**
 	 * Get file. If requested file is in cache, it'll be copied to @a dst_path immediately,
@@ -51,4 +55,4 @@ private:
 	file_manager_ptr secondary_manager_;
 };
 
-#endif //CODEX_WORKER_FILE_MANAGER_H
+#endif // CODEX_WORKER_FILE_MANAGER_H

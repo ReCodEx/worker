@@ -27,9 +27,7 @@ public:
 	 */
 	bool operator==(const fileman_config &second) const
 	{
-		return (remote_url == second.remote_url &&
-				username == second.username &&
-				password == second.password);
+		return (remote_url == second.remote_url && username == second.username && password == second.password);
 	}
 
 	/**
@@ -43,4 +41,4 @@ public:
 	}
 };
 
-#endif //CODEX_WORKER_FILEMAN_CONFIG_H
+#endif // CODEX_WORKER_FILEMAN_CONFIG_H

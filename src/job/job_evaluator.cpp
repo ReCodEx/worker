@@ -5,24 +5,24 @@
 #include "../fileman/prefixed_file_manager.h"
 #include "../helpers/config.h"
 
-job_evaluator::job_evaluator(
-	std::shared_ptr<spdlog::logger> logger,
+job_evaluator::job_evaluator(std::shared_ptr<spdlog::logger> logger,
 	std::shared_ptr<worker_config> config,
 	std::shared_ptr<file_manager_base> remote_fm,
 	std::shared_ptr<file_manager_base> cache_fm,
 	fs::path working_directory)
-	: working_directory_(working_directory), job_(nullptr), job_results_(),
-	  remote_fm_(remote_fm), cache_fm_(cache_fm), logger_(logger), config_(config)
+	: working_directory_(working_directory), job_(nullptr), job_results_(), remote_fm_(remote_fm), cache_fm_(cache_fm),
+	  logger_(logger), config_(config)
 {
 	if (logger == nullptr) {
-		//Create logger manually to avoid global registration of logger
+		// Create logger manually to avoid global registration of logger
 		auto sink = std::make_shared<spdlog::sinks::null_sink_st>();
 		logger_ = std::make_shared<spdlog::logger>("job_evaluator_nolog", sink);
 	}
 }
 
 job_evaluator::~job_evaluator()
-{}
+{
+}
 
 void job_evaluator::download_submission()
 {
@@ -30,8 +30,7 @@ void job_evaluator::download_submission()
 
 	// initialize all paths
 	fs::path archive_url = archive_url_;
-	archive_path_ = working_directory_ / "downloads" /
-			std::to_string(config_->get_worker_id()) / job_id_;
+	archive_path_ = working_directory_ / "downloads" / std::to_string(config_->get_worker_id()) / job_id_;
 	try {
 		fs::create_directories(archive_path_);
 	} catch (fs::filesystem_error &e) {
@@ -51,15 +50,11 @@ void job_evaluator::prepare_submission()
 	logger_->info() << "Preparing submission for usage...";
 
 	// initialize all paths
-	submission_path_ = working_directory_ / "submissions" /
-			std::to_string(config_->get_worker_id()) / job_id_;
-	source_path_ = working_directory_ / "eval" /
-			std::to_string(config_->get_worker_id()) / job_id_;
-	results_path_ = working_directory_ / "results" /
-			std::to_string(config_->get_worker_id()) / job_id_;
+	submission_path_ = working_directory_ / "submissions" / std::to_string(config_->get_worker_id()) / job_id_;
+	source_path_ = working_directory_ / "eval" / std::to_string(config_->get_worker_id()) / job_id_;
+	results_path_ = working_directory_ / "results" / std::to_string(config_->get_worker_id()) / job_id_;
 	// set temporary directory for tasks in job
-	job_temp_dir_ = working_directory_ / "temp" /
-			std::to_string(config_->get_worker_id()) / job_id_;
+	job_temp_dir_ = working_directory_ / "temp" / std::to_string(config_->get_worker_id()) / job_id_;
 
 
 	// decompress downloaded archive
@@ -76,7 +71,7 @@ void job_evaluator::prepare_submission()
 		fs::path tmp_path = submission_path_ / archive_name_.stem().stem();
 		// source_path_ is automaticaly created in copy_directory()
 		helpers::copy_directory(tmp_path, source_path_);
-		fs::permissions(source_path_, fs::add_perms|fs::group_write|fs::others_write);
+		fs::permissions(source_path_, fs::add_perms | fs::group_write | fs::others_write);
 	} catch (helpers::filesystem_exception &e) {
 		throw job_exception("Error copying source files to source code path: " + std::string(e.what()));
 	}
@@ -129,8 +124,8 @@ void job_evaluator::build_job()
 	}
 
 	// construct manager which is used in job
-	auto task_fileman = std::make_shared<fallback_file_manager>(cache_fm_,
-		std::make_shared<prefixed_file_manager>(remote_fm_, job_meta->file_server_url + "/"));
+	auto task_fileman = std::make_shared<fallback_file_manager>(
+		cache_fm_, std::make_shared<prefixed_file_manager>(remote_fm_, job_meta->file_server_url + "/"));
 
 	// ... and construct job itself
 	job_ = std::make_shared<job>(job_meta, config_, job_temp_dir_, source_path_, results_path_, task_fileman);
@@ -210,7 +205,7 @@ void job_evaluator::cleanup_submission()
 
 void job_evaluator::cleanup_evaluator()
 {
-	//cleanup_submission(); // TODO: just for debugging purposes
+	// cleanup_submission(); // TODO: just for debugging purposes
 
 	try {
 		archive_url_ = "";
@@ -267,21 +262,11 @@ void job_evaluator::push_result()
 			subnode["max-rss"] = sandbox->max_rss;
 
 			switch (sandbox->status) {
-			case isolate_status::OK:
-				subnode["status"] = "OK";
-				break;
-			case isolate_status::RE:
-				subnode["status"] = "RE";
-				break;
-			case isolate_status::SG:
-				subnode["status"] = "SG";
-				break;
-			case isolate_status::TO:
-				subnode["status"] = "TO";
-				break;
-			case isolate_status::XX:
-				subnode["status"] = "XX";
-				break;
+			case isolate_status::OK: subnode["status"] = "OK"; break;
+			case isolate_status::RE: subnode["status"] = "RE"; break;
+			case isolate_status::SG: subnode["status"] = "SG"; break;
+			case isolate_status::TO: subnode["status"] = "TO"; break;
+			case isolate_status::XX: subnode["status"] = "XX"; break;
 			}
 
 			subnode["exitsig"] = sandbox->exitsig;

@@ -18,7 +18,8 @@ namespace fs = boost::filesystem;
  * Manager of local file cache.
  * Failed operations throws @a fm_exception exception.
  */
-class cache_manager : public file_manager_base {
+class cache_manager : public file_manager_base
+{
 public:
 	/**
 	 * Constructor with optional logger.
@@ -34,7 +35,9 @@ public:
 	/**
 	 * Destructor.
 	 */
-	virtual ~cache_manager() {}
+	virtual ~cache_manager()
+	{
+	}
 	/**
 	 * Copy a file from cache to destination.
 	 * @param src_name Name of the file without path.
@@ -57,4 +60,4 @@ private:
 	std::shared_ptr<spdlog::logger> logger_;
 };
 
-#endif //CODEX_WORKER_CACHE_MANAGER_H
+#endif // CODEX_WORKER_CACHE_MANAGER_H

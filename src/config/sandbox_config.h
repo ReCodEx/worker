@@ -14,4 +14,4 @@ public:
 	std::map<std::string, std::shared_ptr<sandbox_limits>> limits;
 };
 
-#endif //CODEX_WORKER_SANDBOX_CONFIG_H
+#endif // CODEX_WORKER_SANDBOX_CONFIG_H

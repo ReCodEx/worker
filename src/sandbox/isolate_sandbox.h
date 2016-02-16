@@ -14,7 +14,8 @@
  * @note Requirements are Linux OS with Isolate installed. Isolate binary must be named "isolate"
  * and must be in PATH.
  */
-class isolate_sandbox : public sandbox_base {
+class isolate_sandbox : public sandbox_base
+{
 public:
 	/**
 	 * Constructor.
@@ -22,16 +23,21 @@ public:
 	 * @param id Number of current worker. This must be unique for each worker on one machine!
 	 * @param temp_dir Directory to store temporary files (generated isolate's meta log)
 	 * @param max_timeout Second security level - sandbox must end in this limit othrwise will be killed.
-	 * If not set (or set to -1), this number will be safely computed from @a limits. This limit is in seconds (optional).
+	 * If not set (or set to -1), this number will be safely computed from @a limits. This limit is in seconds
+	 * (optional).
 	 * @param logger Set system logger (optional).
 	 */
-	isolate_sandbox(sandbox_limits limits, size_t id, const std::string &temp_dir = "/tmp", int max_timeout = -1,
-					std::shared_ptr<spdlog::logger> logger = nullptr);
+	isolate_sandbox(sandbox_limits limits,
+		size_t id,
+		const std::string &temp_dir = "/tmp",
+		int max_timeout = -1,
+		std::shared_ptr<spdlog::logger> logger = nullptr);
 	/**
 	 * Destructor.
 	 */
 	virtual ~isolate_sandbox();
 	virtual sandbox_results run(const std::string &binary, const std::vector<std::string> &arguments);
+
 private:
 	sandbox_limits limits_;
 	std::shared_ptr<spdlog::logger> logger_;

@@ -11,12 +11,15 @@
  * Failed operations throws @a fm_exception exception.
  * For more info, see derived classes.
  */
-class file_manager_base {
+class file_manager_base
+{
 public:
 	/**
 	 * Destructor.
 	 */
-	virtual ~file_manager_base() {}
+	virtual ~file_manager_base()
+	{
+	}
 	/**
 	 * Get the file.
 	 * @param src_name Name of the file to retrieve. Mostly this is sha1sum of the file.
@@ -34,35 +37,42 @@ public:
 };
 
 
-
 /**
  * Generic file manager exception.
  */
-class fm_exception : public std::exception {
+class fm_exception : public std::exception
+{
 public:
 	/**
 	 * Constructor with default string.
 	 */
-	fm_exception() : what_("Generic file manager exception") {}
+	fm_exception() : what_("Generic file manager exception")
+	{
+	}
 	/**
 	 * Constructor with custom string.
 	 * @param what String with description of failure.
 	 */
-	fm_exception(std::string what) : what_(what) {}
+	fm_exception(std::string what) : what_(what)
+	{
+	}
 	/**
 	 * Destructor.
 	 */
-	virtual ~fm_exception() {}
+	virtual ~fm_exception()
+	{
+	}
 	/**
 	 * Get failure description.
 	 * @return Stored string.
 	 */
-	virtual const char* what() const noexcept
+	virtual const char *what() const noexcept
 	{
 		return what_.c_str();
 	}
+
 protected:
 	std::string what_;
 };
 
-#endif //CODEX_WORKER_FILE_MANAGER_BASE_H
+#endif // CODEX_WORKER_FILE_MANAGER_BASE_H

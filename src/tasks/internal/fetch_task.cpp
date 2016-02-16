@@ -1,9 +1,14 @@
 #include "fetch_task.h"
 
 
-fetch_task::fetch_task(size_t id, std::string task_id, size_t priority, bool fatal, const std::string &cmd,
-			const std::vector<std::string> &arguments, const std::vector<std::string> &dependencies,
-					   std::shared_ptr<file_manager_base> filemanager)
+fetch_task::fetch_task(size_t id,
+	std::string task_id,
+	size_t priority,
+	bool fatal,
+	const std::string &cmd,
+	const std::vector<std::string> &arguments,
+	const std::vector<std::string> &dependencies,
+	std::shared_ptr<file_manager_base> filemanager)
 	: task_base(id, task_id, priority, fatal, dependencies, cmd, arguments), filemanager_(filemanager)
 {
 	if (arguments_.size() != 2) {

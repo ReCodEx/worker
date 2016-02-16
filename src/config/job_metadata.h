@@ -19,4 +19,4 @@ public:
 	std::vector<std::shared_ptr<task_metadata>> tasks;
 };
 
-#endif //CODEX_WORKER_JOB_CONFIG_H
+#endif // CODEX_WORKER_JOB_CONFIG_H

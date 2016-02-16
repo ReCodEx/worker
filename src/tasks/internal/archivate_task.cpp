@@ -2,8 +2,13 @@
 #include "../../archives/archivator.h"
 
 
-archivate_task::archivate_task(size_t id, std::string task_id, size_t priority, bool fatal, const std::string &cmd,
-			const std::vector<std::string> &arguments, const std::vector<std::string> &dependencies)
+archivate_task::archivate_task(size_t id,
+	std::string task_id,
+	size_t priority,
+	bool fatal,
+	const std::string &cmd,
+	const std::vector<std::string> &arguments,
+	const std::vector<std::string> &dependencies)
 	: task_base(id, task_id, priority, fatal, dependencies, cmd, arguments)
 {
 	if (arguments_.size() != 2) {

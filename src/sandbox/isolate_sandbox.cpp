@@ -20,21 +20,24 @@
 namespace fs = boost::filesystem;
 
 
-isolate_sandbox::isolate_sandbox(sandbox_limits limits, size_t id, const std::string &temp_dir,
-	int max_timeout, std::shared_ptr<spdlog::logger> logger) :
-	limits_(limits), id_(id), isolate_binary_("isolate"), max_timeout_(max_timeout)
+isolate_sandbox::isolate_sandbox(sandbox_limits limits,
+	size_t id,
+	const std::string &temp_dir,
+	int max_timeout,
+	std::shared_ptr<spdlog::logger> logger)
+	: limits_(limits), id_(id), isolate_binary_("isolate"), max_timeout_(max_timeout)
 {
 	if (logger != nullptr) {
 		logger_ = logger;
 	} else {
-		//Create logger manually to avoid global registration of logger
+		// Create logger manually to avoid global registration of logger
 		auto sink = std::make_shared<spdlog::sinks::null_sink_st>();
 		logger_ = std::make_shared<spdlog::logger>("cache_manager_nolog", sink);
 	}
 
 	if (max_timeout_ == -1) {
 		max_timeout_ = limits_.wall_time > limits_.cpu_time ? limits_.wall_time : limits_.cpu_time;
-		max_timeout_ += 300; //5 minutes
+		max_timeout_ += 300; // 5 minutes
 	}
 
 	temp_dir_ = (fs::path(temp_dir) / std::to_string(id_)).string();
@@ -62,7 +65,7 @@ isolate_sandbox::~isolate_sandbox()
 		isolate_cleanup();
 		fs::remove_all(temp_dir_);
 	} catch (...) {
-		//We don't care if this failed. We can't fix it either. Just don't throw an exception in destructor.
+		// We don't care if this failed. We can't fix it either. Just don't throw an exception in destructor.
 	}
 }
 
@@ -79,8 +82,8 @@ void isolate_sandbox::isolate_init()
 
 	logger_->debug() << "Initializing isolate...";
 
-	//Create unnamend pipe
-	if(pipe(fd) == -1) {
+	// Create unnamend pipe
+	if (pipe(fd) == -1) {
 		auto message = std::string("Cannot create pipe: ") + strerror(errno);
 		logger_->warn() << message;
 		throw sandbox_exception(message);
@@ -89,24 +92,20 @@ void isolate_sandbox::isolate_init()
 	childpid = fork();
 
 	switch (childpid) {
-	case -1:
-		{
-			auto message = std::string("Fork failed: ") + strerror(errno);
-			logger_->warn() << message;
-			throw sandbox_exception(message);
-		}
-		break;
-	case 0:
-		isolate_init_child(fd[0], fd[1]);
-		break;
+	case -1: {
+		auto message = std::string("Fork failed: ") + strerror(errno);
+		logger_->warn() << message;
+		throw sandbox_exception(message);
+	} break;
+	case 0: isolate_init_child(fd[0], fd[1]); break;
 	default:
 		//---Parent---
-		//Close up input side of pipe
+		// Close up input side of pipe
 		close(fd[1]);
 
 		char buf[256];
 		int ret;
-		while ((ret = read(fd[0], (void *)buf, 256)) > 0) {
+		while ((ret = read(fd[0], (void *) buf, 256)) > 0) {
 			if (buf[ret - 1] == '\n') {
 				buf[ret - 1] = '\0';
 			}
@@ -120,7 +119,7 @@ void isolate_sandbox::isolate_init()
 
 		int status;
 		waitpid(childpid, &status, 0);
-		if(WEXITSTATUS(status) != 0) {
+		if (WEXITSTATUS(status) != 0) {
 			auto message = "Isolate init error. Return value: " + std::to_string(WEXITSTATUS(status));
 			logger_->warn() << message;
 			throw sandbox_exception(message);
@@ -133,13 +132,13 @@ void isolate_sandbox::isolate_init()
 
 void isolate_sandbox::isolate_init_child(int fd_0, int fd_1)
 {
-	//Close up output side of pipe
+	// Close up output side of pipe
 	close(fd_0);
 
-	//Close stdout, duplicate the input side of pipe to stdout
+	// Close stdout, duplicate the input side of pipe to stdout
 	dup2(fd_1, 1);
 
-	//Redirect stderr to /dev/null file
+	// Redirect stderr to /dev/null file
 	int devnull;
 	devnull = open("/dev/null", O_WRONLY);
 	if (devnull == -1) {
@@ -149,7 +148,7 @@ void isolate_sandbox::isolate_init_child(int fd_0, int fd_1)
 	}
 	dup2(devnull, 2);
 
-	//Exec isolate init command
+	// Exec isolate init command
 	const char *args[5];
 
 	args[0] = isolate_binary_.c_str();
@@ -158,10 +157,10 @@ void isolate_sandbox::isolate_init_child(int fd_0, int fd_1)
 	args[3] = "--init";
 	args[4] = NULL;
 
-	//const_cast is ugly, but this is working with C code - execv does not modify its arguments
+	// const_cast is ugly, but this is working with C code - execv does not modify its arguments
 	execvp(isolate_binary_.c_str(), const_cast<char **>(args));
 
-	//Never reached
+	// Never reached
 	{
 		auto message = std::string("Exec returned to child: ") + strerror(errno);
 		logger_->warn() << message;
@@ -178,16 +177,14 @@ void isolate_sandbox::isolate_cleanup()
 	childpid = fork();
 
 	switch (childpid) {
-	case -1:
-		{
-			auto message = std::string("Fork failed: ") + strerror(errno);
-			logger_->warn() << message;
-			throw sandbox_exception(message);
-		}
-		break;
+	case -1: {
+		auto message = std::string("Fork failed: ") + strerror(errno);
+		logger_->warn() << message;
+		throw sandbox_exception(message);
+	} break;
 	case 0:
 		//---Child---
-		//Redirect stderr to /dev/null file
+		// Redirect stderr to /dev/null file
 		int devnull;
 		devnull = open("/dev/null", O_WRONLY);
 		if (devnull == -1) {
@@ -197,17 +194,17 @@ void isolate_sandbox::isolate_cleanup()
 		}
 		dup2(devnull, 2);
 
-		//Exec isolate cleanup command
+		// Exec isolate cleanup command
 		const char *args[5];
 		args[0] = isolate_binary_.c_str();
 		args[1] = "--cg";
 		args[2] = ("--box-id=" + std::to_string(id_)).c_str();
 		args[3] = "--cleanup";
 		args[4] = NULL;
-		//const_cast is ugly, but this is working with C code - execv does not modify its arguments
+		// const_cast is ugly, but this is working with C code - execv does not modify its arguments
 		execvp(isolate_binary_.c_str(), const_cast<char **>(args));
 
-		//Never reached
+		// Never reached
 		{
 			auto message = std::string("Exec returned to child: ") + strerror(errno);
 			logger_->warn() << message;
@@ -237,94 +234,86 @@ void isolate_sandbox::isolate_run(const std::string &binary, const std::vector<s
 	childpid = fork();
 
 	switch (childpid) {
-	case -1:
-		{
+	case -1: {
+		auto message = std::string("Fork failed: ") + strerror(errno);
+		logger_->warn() << message;
+		throw sandbox_exception(message);
+	} break;
+	case 0: {
+		//---Child---
+		// Redirect stderr and stdout to /dev/null file
+		int devnull;
+		devnull = open("/dev/null", O_WRONLY);
+		if (devnull == -1) {
+			auto message = "Cannot open /dev/null file for writing.";
+			logger_->warn() << message;
+			throw sandbox_exception(message);
+		}
+		dup2(devnull, 0); // Don't allow process inside isolate to read from current standart input
+		dup2(devnull, 1);
+		dup2(devnull, 2);
+
+		auto args = isolate_run_args(binary, arguments);
+		execvp(isolate_binary_.c_str(), args);
+
+		// Never reached
+		auto message = std::string("Exec returned to child: ") + strerror(errno);
+		logger_->warn() << message;
+		throw sandbox_exception(message);
+	} break;
+	default: {
+		//---Parent---
+		/* Spawn a controll process, that will wait given timeout and then kills isolate process.
+		 * When a isolate process finishes before the timeout, parent thread kills control process
+		 * and calls waitpid() to remove zombie from system.
+		 */
+		pid_t controlpid;
+		controlpid = fork();
+		switch (controlpid) {
+		case -1: {
 			auto message = std::string("Fork failed: ") + strerror(errno);
 			logger_->warn() << message;
 			throw sandbox_exception(message);
-		}
-		break;
-	case 0:
-		{
-			//---Child---
-			//Redirect stderr and stdout to /dev/null file
-			int devnull;
-			devnull = open("/dev/null", O_WRONLY);
-			if (devnull == -1) {
-				auto message = "Cannot open /dev/null file for writing.";
+		} break;
+		case 0:
+			// Child---
+			{
+				int remaining = max_timeout_;
+				// Sleep can be interrupted by signal, so make sure to sleep whole time
+				while (remaining > 0) {
+					remaining = sleep(remaining);
+				}
+				kill(childpid, SIGKILL);
+			}
+			break;
+		default:
+			// Parent---
+
+			int status;
+			// Wait for isolate process. Waitpid returns no much longer than timeout if not earlier.
+			waitpid(childpid, &status, 0);
+			// Kill control process. If it already exits, nothing will be done
+			kill(controlpid, SIGKILL);
+			// Remove zombie from controll process.
+			waitpid(controlpid, NULL, 0);
+
+			// isolate was killed
+			if (WIFSIGNALED(status)) {
+				auto message =
+					"Isolate process was killed by signal " + std::to_string(WTERMSIG(status)) + " due to timeout.";
 				logger_->warn() << message;
 				throw sandbox_exception(message);
 			}
-			dup2(devnull, 0); // Don't allow process inside isolate to read from current standart input
-			dup2(devnull, 1);
-			dup2(devnull, 2);
-
-			auto args = isolate_run_args(binary, arguments);
-			execvp(isolate_binary_.c_str(), args);
-
-			//Never reached
-			auto message = std::string("Exec returned to child: ") + strerror(errno);
-			logger_->warn() << message;
-			throw sandbox_exception(message);
-		}
-		break;
-	default:
-		{
-			//---Parent---
-			/* Spawn a controll process, that will wait given timeout and then kills isolate process.
-			 * When a isolate process finishes before the timeout, parent thread kills control process
-			 * and calls waitpid() to remove zombie from system.
-			 */
-			pid_t controlpid;
-			controlpid = fork();
-			switch (controlpid) {
-			case -1:
-				{
-					auto message = std::string("Fork failed: ") + strerror(errno);
-					logger_->warn() << message;
-					throw sandbox_exception(message);
-				}
-				break;
-			case 0:
-				//Child---
-				{
-					int remaining = max_timeout_;
-					//Sleep can be interrupted by signal, so make sure to sleep whole time
-					while (remaining > 0) {
-						remaining = sleep(remaining);
-					}
-					kill(childpid, SIGKILL);
-				}
-				break;
-			default:
-				//Parent---
-
-				int status;
-				//Wait for isolate process. Waitpid returns no much longer than timeout if not earlier.
-				waitpid(childpid, &status, 0);
-				//Kill control process. If it already exits, nothing will be done
-				kill(controlpid, SIGKILL);
-				//Remove zombie from controll process.
-				waitpid(controlpid, NULL, 0);
-
-				//isolate was killed
-				if (WIFSIGNALED(status)) {
-					auto message = "Isolate process was killed by signal " + std::to_string(WTERMSIG(status)) +
-							" due to timeout.";
-					logger_->warn() << message;
-					throw sandbox_exception(message);
-				}
-				//isolate exited, but with return value signify internal error
-				if (WEXITSTATUS(status) != 0 && WEXITSTATUS(status) != 1) {
-					auto message = "Isolate run internal error. Return value: " + std::to_string(WEXITSTATUS(status));
-					logger_->warn() << message;
-					throw sandbox_exception(message);
-				}
-				logger_->debug() << "Isolate box " << id_ << " ran successfully.";
-				break;
+			// isolate exited, but with return value signify internal error
+			if (WEXITSTATUS(status) != 0 && WEXITSTATUS(status) != 1) {
+				auto message = "Isolate run internal error. Return value: " + std::to_string(WEXITSTATUS(status));
+				logger_->warn() << message;
+				throw sandbox_exception(message);
 			}
+			logger_->debug() << "Isolate box " << id_ << " ran successfully.";
+			break;
 		}
-		break;
+	} break;
 	}
 }
 
@@ -376,9 +365,7 @@ char **isolate_sandbox::isolate_run_args(const std::string &binary, const std::v
 		vargs.push_back("--env=" + i.first + "=" + i.second);
 	}
 	for (auto &i : limits_.bound_dirs) {
-		vargs.push_back(std::string("--dir=")
-				  + i.second + "="
-				  + i.first + ":rw");
+		vargs.push_back(std::string("--dir=") + i.second + "=" + i.first + ":rw");
 	}
 	vargs.push_back("--meta=" + meta_file_);
 
@@ -389,8 +376,8 @@ char **isolate_sandbox::isolate_run_args(const std::string &binary, const std::v
 		vargs.push_back(i);
 	}
 
-	//Convert string to char ** for execv call
-	char **c_args = new char*[vargs.size() + 1];
+	// Convert string to char ** for execv call
+	char **c_args = new char *[vargs.size() + 1];
 	int i = 0;
 	for (auto &it : vargs) {
 		c_args[i++] = strdup(it.c_str());

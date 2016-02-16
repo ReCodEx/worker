@@ -7,7 +7,8 @@
 /**
  * Fake sandbox for testing purposes.
  */
-class fake_sandbox : public sandbox_base {
+class fake_sandbox : public sandbox_base
+{
 public:
 	/**
 	 * Constructor.
@@ -24,7 +25,6 @@ public:
 	 * @return
 	 */
 	virtual sandbox_results run(const std::string &binary, const std::vector<std::string> &arguments);
-
 };
 
 

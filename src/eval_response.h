@@ -10,10 +10,9 @@ struct eval_response {
 	const std::string job_id;
 	const std::string result;
 
-	eval_response (std::string job_id, std::string result) :
-		job_id(job_id), result(result)
+	eval_response(std::string job_id, std::string result) : job_id(job_id), result(result)
 	{
 	}
 };
 
-#endif //CODEX_WORKER_EVAL_RESPONSE_H
+#endif // CODEX_WORKER_EVAL_RESPONSE_H

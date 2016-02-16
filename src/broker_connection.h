@@ -14,10 +14,7 @@
  * Contains types used by the proxy for polling
  */
 struct message_origin {
-	enum type {
-		BROKER = 0,
-		JOBS = 1
-	};
+	enum type { BROKER = 0, JOBS = 1 };
 
 	typedef std::bitset<2> set;
 };
@@ -27,25 +24,22 @@ struct message_origin {
  * When a job is received from the broker, a job callback is invoked to
  * process it.
  */
-template <typename proxy>
-class broker_connection {
+template <typename proxy> class broker_connection
+{
 private:
 	const worker_config &config;
 	std::shared_ptr<proxy> socket;
 	std::shared_ptr<spdlog::logger> logger_;
 
 public:
-	broker_connection (
-		const worker_config &config,
-		std::shared_ptr<proxy> socket,
-		std::shared_ptr<spdlog::logger> logger = nullptr
-	) :
-		config(config), socket(socket)
+	broker_connection(
+		const worker_config &config, std::shared_ptr<proxy> socket, std::shared_ptr<spdlog::logger> logger = nullptr)
+		: config(config), socket(socket)
 	{
-		if(logger != nullptr) {
+		if (logger != nullptr) {
 			logger_ = logger;
 		} else {
-			//Create logger manually to avoid global registration of logger
+			// Create logger manually to avoid global registration of logger
 			auto sink = std::make_shared<spdlog::sinks::null_sink_st>();
 			logger_ = std::make_shared<spdlog::logger>("cache_manager_nolog", sink);
 		}
@@ -54,7 +48,7 @@ public:
 	/**
 	 * Send the INIT command to the broker.
 	 */
-	void connect ()
+	void connect()
 	{
 		const worker_config::header_map_t &headers = config.get_headers();
 
@@ -63,7 +57,7 @@ public:
 
 		std::vector<std::string> msg = {"init"};
 
-		for (auto &it: headers) {
+		for (auto &it : headers) {
 			msg.push_back(it.first + "=" + it.second);
 		}
 
@@ -74,7 +68,7 @@ public:
 	 * Receive and process tasks
 	 * Blocks execution until the underlying ZeroMQ context is terminated
 	 */
-	void receive_tasks ()
+	void receive_tasks()
 	{
 		while (true) {
 			std::vector<std::string> msg;
@@ -116,4 +110,4 @@ public:
 	}
 };
 
-#endif //CODEX_WORKER_BROKER_CONNECTION_H
+#endif // CODEX_WORKER_BROKER_CONNECTION_H

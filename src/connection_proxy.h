@@ -13,20 +13,17 @@
  * A trivial wrapper for the ZeroMQ dealer socket used by broker_connection
  * The purpose of this class is to facilitate testing of the broker_connection class
  */
-class connection_proxy {
+class connection_proxy
+{
 private:
 	zmq::socket_t broker_;
 	zmq::socket_t jobs_;
 	zmq::pollitem_t items_[2];
 
-	bool send_through_socket (zmq::socket_t &socket, const std::vector<std::string> &msg)
+	bool send_through_socket(zmq::socket_t &socket, const std::vector<std::string> &msg)
 	{
 		for (auto it = std::begin(msg); it != std::end(msg); ++it) {
-			bool retval = socket.send(
-				it->c_str(),
-				it->size(),
-				std::next(it) != std::end(msg) ? ZMQ_SNDMORE : 0
-			) >= 0;
+			bool retval = socket.send(it->c_str(), it->size(), std::next(it) != std::end(msg) ? ZMQ_SNDMORE : 0) >= 0;
 
 			if (!retval) {
 				return false;
@@ -36,7 +33,7 @@ private:
 		return true;
 	}
 
-	bool recv_from_socket (zmq::socket_t &socket, std::vector<std::string> &target, bool *terminate = nullptr)
+	bool recv_from_socket(zmq::socket_t &socket, std::vector<std::string> &target, bool *terminate = nullptr)
 	{
 		zmq::message_t msg;
 		target.clear();
@@ -64,8 +61,7 @@ private:
 	}
 
 public:
-	connection_proxy (zmq::context_t &context) :
-		broker_(context, ZMQ_DEALER), jobs_(context, ZMQ_PAIR)
+	connection_proxy(zmq::context_t &context) : broker_(context, ZMQ_DEALER), jobs_(context, ZMQ_PAIR)
 	{
 		items_[0].socket = (void *) broker_;
 		items_[0].fd = 0;
@@ -78,7 +74,7 @@ public:
 		items_[1].revents = 0;
 	}
 
-	void connect (const std::string &addr)
+	void connect(const std::string &addr)
 	{
 		broker_.connect(addr);
 		jobs_.bind("inproc://" JOB_SOCKET_ID);
@@ -87,7 +83,7 @@ public:
 	/**
 	 * Block execution until a message arrives to a socket
 	 */
-	void poll (message_origin::set &result, int timeout, bool *terminate = nullptr)
+	void poll(message_origin::set &result, int timeout, bool *terminate = nullptr)
 	{
 		result.reset();
 
@@ -112,7 +108,7 @@ public:
 	/**
 	 * Send data to the broker
 	 */
-	bool send_broker (const std::vector<std::string> &msg)
+	bool send_broker(const std::vector<std::string> &msg)
 	{
 		return send_through_socket(broker_, msg);
 	}
@@ -120,7 +116,7 @@ public:
 	/**
 	 * Send data through the job socket
 	 */
-	bool send_jobs (const std::vector<std::string> &msg)
+	bool send_jobs(const std::vector<std::string> &msg)
 	{
 		return send_through_socket(jobs_, msg);
 	}
@@ -128,7 +124,7 @@ public:
 	/**
 	 * Receive data from the broker
 	 */
-	bool recv_broker (std::vector<std::string> &target, bool *terminate = nullptr)
+	bool recv_broker(std::vector<std::string> &target, bool *terminate = nullptr)
 	{
 		return recv_from_socket(broker_, target, terminate);
 	}
@@ -136,10 +132,10 @@ public:
 	/**
 	 * Receive data from the job socket
 	 */
-	bool recv_jobs (std::vector<std::string> &target, bool *terminate = nullptr)
+	bool recv_jobs(std::vector<std::string> &target, bool *terminate = nullptr)
 	{
 		return recv_from_socket(jobs_, target, terminate);
 	}
 };
 
-#endif //CODEX_WORKER_CONNECTION_PROXY_HPP
+#endif // CODEX_WORKER_CONNECTION_PROXY_HPP

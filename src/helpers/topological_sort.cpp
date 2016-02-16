@@ -1,8 +1,8 @@
 #include "topological_sort.h"
 
 void helpers::topological_sort(std::shared_ptr<task_base> root,
-							   std::map<std::string, size_t> &effective_indegree,
-							   std::vector<std::shared_ptr<task_base> > &result)
+	std::map<std::string, size_t> &effective_indegree,
+	std::vector<std::shared_ptr<task_base>> &result)
 {
 	// clean queue of tasks if there are any elements
 	result.clear();

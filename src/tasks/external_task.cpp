@@ -9,7 +9,8 @@ external_task::external_task(const create_params &data)
 }
 
 external_task::~external_task()
-{}
+{
+}
 
 void external_task::sandbox_check()
 {
@@ -51,7 +52,9 @@ std::shared_ptr<task_results> external_task::run()
 	sandbox_init();
 
 	// TODO: only temporary solution, should be removed
-	if (sandbox_ == nullptr) { return nullptr; }
+	if (sandbox_ == nullptr) {
+		return nullptr;
+	}
 
 	auto res = std::shared_ptr<task_results>(new task_results());
 	res->sandbox_status = std::unique_ptr<sandbox_results>(new sandbox_results(sandbox_->run(cmd_, arguments_)));

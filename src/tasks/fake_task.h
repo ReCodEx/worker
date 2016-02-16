@@ -10,15 +10,20 @@
  * Can be used for root task or as logical parent for some group of tasks.
  * Run method have no function and is empty.
  */
-class fake_task : public task_base {
+class fake_task : public task_base
+{
 public:
 	fake_task() = delete;
 	/**
 	 * Only send some fake information to task_base.
 	 */
-	fake_task(size_t id, std::string task_id = "", size_t priority = 0, bool fatal = false,
-			  std::vector<std::string> deps = {},
-			  std::string cmd = "", std::vector<std::string> args = {});
+	fake_task(size_t id,
+		std::string task_id = "",
+		size_t priority = 0,
+		bool fatal = false,
+		std::vector<std::string> deps = {},
+		std::string cmd = "",
+		std::vector<std::string> args = {});
 	/**
 	 * Empty destructor.
 	 */
@@ -30,4 +35,4 @@ public:
 	virtual std::shared_ptr<task_results> run();
 };
 
-#endif //CODEX_WORKER_FAKE_TASK_HPP
+#endif // CODEX_WORKER_FAKE_TASK_HPP

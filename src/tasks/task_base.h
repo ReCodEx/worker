@@ -13,7 +13,8 @@
  * Its abstract class which cannot be instantiated.
  * But it stores some information about task which always have to be defined.
  */
-class task_base {
+class task_base
+{
 public:
 	/**
 	 * Default constructor deleted.
@@ -29,9 +30,13 @@ public:
 	 * @param cmd command which will be executed in this task
 	 * @param arguments just command line arguments to executed command
 	 */
-	task_base(size_t id, std::string task_id, size_t priority, bool fatal,
-			  const std::vector<std::string> &dependencies,
-			  const std::string &cmd, const std::vector<std::string> &arguments);
+	task_base(size_t id,
+		std::string task_id,
+		size_t priority,
+		bool fatal,
+		const std::vector<std::string> &dependencies,
+		const std::string &cmd,
+		const std::vector<std::string> &arguments);
 	/**
 	 * Virtual destructor.
 	 */
@@ -119,29 +124,37 @@ protected:
 /**
  * Task exception class.
  */
-class task_exception : public std::exception {
+class task_exception : public std::exception
+{
 public:
 	/**
 	 * Generic task exception with no specification.
 	 */
-	task_exception() : what_("Generic task exception") {}
+	task_exception() : what_("Generic task exception")
+	{
+	}
 	/**
 	 * Exception with some brief description.
 	 * @param what textual description of a problem
 	 */
-	task_exception(const std::string &what) : what_(what) {}
+	task_exception(const std::string &what) : what_(what)
+	{
+	}
 	/**
 	 * Virtual destructor.
 	 */
-	virtual ~task_exception() {}
+	virtual ~task_exception()
+	{
+	}
 	/**
 	 * Return description of this exception.
 	 * @return C string
 	 */
-	virtual const char* what() const noexcept
+	virtual const char *what() const noexcept
 	{
 		return what_.c_str();
 	}
+
 protected:
 	std::string what_;
 };
@@ -150,7 +163,8 @@ protected:
 /**
  * Comparator which is used for topological sorting of tasks
  */
-class task_compare {
+class task_compare
+{
 public:
 	/**
 	 * Greater than operator on task_base objects.
@@ -158,7 +172,8 @@ public:
 	 * @param b second parameter
 	 * @return true if parameter a is greater than b
 	 */
-	bool operator()(std::shared_ptr<task_base> a, std::shared_ptr<task_base> b) {
+	bool operator()(std::shared_ptr<task_base> a, std::shared_ptr<task_base> b)
+	{
 		if (a->get_priority() > b->get_priority()) {
 			return true;
 		} else if (a->get_priority() == b->get_priority() && a->get_id() > b->get_id()) {
@@ -169,4 +184,4 @@ public:
 	}
 };
 
-#endif //CODEX_WORKER_TASK_BASE_HPP
+#endif // CODEX_WORKER_TASK_BASE_HPP

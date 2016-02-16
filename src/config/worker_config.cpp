@@ -1,41 +1,37 @@
 #include "worker_config.h"
 
-worker_config::worker_config ()
+worker_config::worker_config()
 {
 }
 
-worker_config::worker_config (const YAML::Node &config)
+worker_config::worker_config(const YAML::Node &config)
 {
 	try {
 		if (config["broker-uri"] && config["broker-uri"].IsScalar()) {
 			broker_uri_ = config["broker-uri"].as<std::string>();
-		} else { throw config_error("Item broker-uri not defined properly"); }
+		} else {
+			throw config_error("Item broker-uri not defined properly");
+		}
 
 		if (!config["headers"].IsMap()) {
 			throw config_error("Headers are not a map");
 		}
 
-		for (auto entry: config["headers"]) {
+		for (auto entry : config["headers"]) {
 			if (!entry.first.IsScalar()) {
 				throw config_error("A header key is not scalar");
 			}
 
 			if (entry.second.IsSequence()) {
-				for (auto value: entry.second) {
+				for (auto value : entry.second) {
 					if (!value.IsScalar()) {
 						throw config_error("A header value is not scalar");
 					}
 
-					headers_.insert(std::make_pair(
-						entry.first.as<std::string>(),
-						value.as<std::string>()
-					));
+					headers_.insert(std::make_pair(entry.first.as<std::string>(), value.as<std::string>()));
 				}
-			} else if (entry.second.IsScalar()){
-				headers_.insert(std::make_pair(
-					entry.first.as<std::string>(),
-					entry.second.as<std::string>()
-				));
+			} else if (entry.second.IsScalar()) {
+				headers_.insert(std::make_pair(entry.first.as<std::string>(), entry.second.as<std::string>()));
 			} else {
 				throw config_error("A header value is not scalar");
 			}
@@ -52,7 +48,9 @@ worker_config::worker_config (const YAML::Node &config)
 		// load worker-id
 		if (config["worker-id"] && config["worker-id"].IsScalar()) {
 			worker_id_ = config["worker-id"].as<size_t>();
-		} else { throw config_error("Item worker-id not defined properly"); }
+		} else {
+			throw config_error("Item worker-id not defined properly");
+		}
 
 		// load working directory path
 		if (config["working-directory"] && config["working-directory"].IsScalar()) {
@@ -77,7 +75,9 @@ worker_config::worker_config (const YAML::Node &config)
 
 				filemans_configs_.push_back(fileman_conf);
 			}
-		} else { throw config_error("File managers not defined properly"); }
+		} else {
+			throw config_error("File managers not defined properly");
+		}
 
 		// load logger
 		if (config["logger"] && config["logger"].IsMap()) {
@@ -129,10 +129,9 @@ worker_config::worker_config (const YAML::Node &config)
 		// sandboxes wrappers limits
 		if (config["sandboxes-wrap-limits"] && config["sandboxes-wrap-limits"].IsSequence()) {
 			for (auto &wraplim : config["sandboxes-wrap-limits"]) {
-				if (wraplim["name"] && wraplim["name"].IsScalar() &&
-						wraplim["time"] && wraplim["time"].IsScalar()) {
-					sandboxes_limits_.insert(std::make_pair(wraplim["name"].as<std::string>(),
-											 wraplim["time"].as<size_t>()));
+				if (wraplim["name"] && wraplim["name"].IsScalar() && wraplim["time"] && wraplim["time"].IsScalar()) {
+					sandboxes_limits_.insert(
+						std::make_pair(wraplim["name"].as<std::string>(), wraplim["time"].as<size_t>()));
 				} // no throw... can be omitted
 			}
 		} // no throw... can be omitted
@@ -147,10 +146,7 @@ worker_config::worker_config (const YAML::Node &config)
 					throw config_error("A bound directory path is not scalar");
 				}
 
-				limits_.bound_dirs.emplace(
-					dir.first.as<std::string>(),
-					dir.second.as<std::string>()
-				);
+				limits_.bound_dirs.emplace(dir.first.as<std::string>(), dir.second.as<std::string>());
 			}
 		}
 
@@ -199,7 +195,7 @@ const std::map<std::string, size_t> &worker_config::get_sandboxes_limits()
 	return sandboxes_limits_;
 }
 
-std::string worker_config::get_cache_dir () const
+std::string worker_config::get_cache_dir() const
 {
 	return cache_dir_;
 }

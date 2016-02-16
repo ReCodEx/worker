@@ -5,7 +5,7 @@
 #include "isoeval_core.h"
 
 
-int main (int argc, char **argv)
+int main(int argc, char **argv)
 {
 	std::vector<std::string> args(argv, argv + argc);
 	try {
