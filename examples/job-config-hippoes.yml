@@ -1,3 +1,8 @@
+# Hippoes config file
+# prerequisites: judge binary in /tmp/judges/codex_judge
+#                reachable input and output files - in /tmp/tmpxxxxxx/tasks for our testing file_server.py
+# expected result: results.zip uploaded to file server with result file and job log file
+#
 ---  # only one document which contains job, aka. list of tasks and some general infos
 submission:  # happy hippoes fence
     job-id: hippoes

@@ -37,6 +37,12 @@ void cache_manager::get_file(const std::string &src_name, const std::string &dst
 	fs::path destination_file = dst_path;
 	logger_->debug() << "Copying file " << src_name + " from cache to " + dst_path;
 
+	if (!fs::is_regular_file(source_file)) {
+		auto message = "Cache miss. File " + src_name + " is not present in cache.";
+		logger_->debug() << message;
+		throw fm_exception(message);
+	}
+
 	try {
 		fs::copy_file(source_file, destination_file, fs::copy_option::overwrite_if_exists);
 	} catch (fs::filesystem_error &e) {
