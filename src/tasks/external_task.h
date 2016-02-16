@@ -13,7 +13,8 @@
  * Class which handles external tasks, aka tasks which will be executed in sandbox.
  * This class have to deal with construction of apropriate sandbox and running program in it.
  */
-class external_task : public task_base {
+class external_task : public task_base
+{
 public:
 	/** data for proper construction of @ref external_task class */
 	struct create_params {
@@ -69,8 +70,8 @@ public:
 	 * @return
 	 */
 	sandbox_limits get_limits();
-private:
 
+private:
 	/**
 	 * Check if sandbox_id have counterpart in sandbox classes.
 	 */
@@ -100,7 +101,6 @@ private:
 	std::shared_ptr<spdlog::logger> logger_;
 	/** Directory for temporary files */
 	std::string temp_dir_;
-
 };
 
-#endif //CODEX_WORKER_EXTERNAL_TASK_HPP
+#endif // CODEX_WORKER_EXTERNAL_TASK_HPP

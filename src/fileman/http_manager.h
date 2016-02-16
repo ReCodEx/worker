@@ -13,7 +13,8 @@
  * Class for managing transfer over HTTP connection.
  * Failed operations throws @ref fm_exception exception.
  */
-class http_manager : public file_manager_base {
+class http_manager : public file_manager_base
+{
 public:
 	/**
 	  * Default constructor, optionally can set a system logger.
@@ -25,12 +26,13 @@ public:
 	 * @param configs File server configurations
 	 * @param logger Shared pointer to system logger (optional).
 	 */
-	http_manager(const std::vector<fileman_config> &configs,
-				 std::shared_ptr<spdlog::logger> logger = nullptr);
+	http_manager(const std::vector<fileman_config> &configs, std::shared_ptr<spdlog::logger> logger = nullptr);
 	/**
 	 * Destructor.
 	 */
-	virtual ~http_manager() {}
+	virtual ~http_manager()
+	{
+	}
 	/**
 	 * Get and save file locally.
 	 * @param src_name Name of requested file (without path)
@@ -58,4 +60,4 @@ private:
 	std::shared_ptr<spdlog::logger> logger_;
 };
 
-#endif //CODEX_WORKER_HTTP_MANAGER_H
+#endif // CODEX_WORKER_HTTP_MANAGER_H

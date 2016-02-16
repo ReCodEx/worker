@@ -73,12 +73,9 @@ public:
 	 */
 	bool operator==(const log_config &second) const
 	{
-		return (log_path == second.log_path &&
-				log_basename == second.log_basename &&
-				log_suffix == second.log_suffix &&
-				log_level == second.log_level &&
-				log_file_size == second.log_file_size &&
-				log_files_count == second.log_files_count);
+		return (log_path == second.log_path && log_basename == second.log_basename && log_suffix == second.log_suffix &&
+			log_level == second.log_level && log_file_size == second.log_file_size &&
+			log_files_count == second.log_files_count);
 	}
 
 	/**
@@ -92,4 +89,4 @@ public:
 	}
 };
 
-#endif //CODEX_WORKER_LOG_CONFIG_H
+#endif // CODEX_WORKER_LOG_CONFIG_H

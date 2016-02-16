@@ -2,7 +2,7 @@
 #define CODEX_WORKER_ARCHIVE_MANAGER_H
 
 #ifdef __linux__
-	#define	_FILE_OFFSET_BITS 64
+#define _FILE_OFFSET_BITS 64
 #endif
 #include "archive.h"
 #include "archive_entry.h"
@@ -19,7 +19,8 @@ namespace fs = boost::filesystem;
  * Class for creating and decompressing archives.
  * On error, both methods throws @ref archive_exception.
  */
-class archivator {
+class archivator
+{
 public:
 	/**
 	 * This method will create new .zip archive containing recursively all files inside
@@ -46,6 +47,7 @@ public:
 	 * @param destination Directory, where will be extracted files stored.
 	 */
 	static void decompress(const std::string &filename, const std::string &destination);
+
 private:
 	static void copy_data(archive *ar, archive *aw);
 };
@@ -54,31 +56,39 @@ private:
 /**
  * Generic archive manager exception.
  */
-class archive_exception : public std::exception {
+class archive_exception : public std::exception
+{
 public:
 	/**
 	 * Constructor with default string.
 	 */
-	archive_exception() : what_("Generic file manager exception") {}
+	archive_exception() : what_("Generic file manager exception")
+	{
+	}
 	/**
 	 * Constructor with custom string.
 	 * @param what String with description of failure.
 	 */
-	archive_exception(std::string what) : what_(what) {}
+	archive_exception(std::string what) : what_(what)
+	{
+	}
 	/**
 	 * Destructor.
 	 */
-	virtual ~archive_exception() {}
+	virtual ~archive_exception()
+	{
+	}
 	/**
 	 * Get failure description.
 	 * @return Stored string.
 	 */
-	virtual const char* what() const noexcept
+	virtual const char *what() const noexcept
 	{
 		return what_.c_str();
 	}
+
 protected:
 	std::string what_;
 };
 
-#endif //CODEX_WORKER_ARCHIVE_MANAGER_H
+#endif // CODEX_WORKER_ARCHIVE_MANAGER_H

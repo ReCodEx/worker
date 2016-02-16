@@ -26,13 +26,19 @@ std::shared_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 		auto submiss = conf["submission"];
 		if (submiss["job-id"] && submiss["job-id"].IsScalar()) {
 			job_meta->job_id = submiss["job-id"].as<std::string>();
-		} else { throw config_exception("Submission.job-id item not loaded properly"); }
+		} else {
+			throw config_exception("Submission.job-id item not loaded properly");
+		}
 		if (submiss["language"] && submiss["language"].IsScalar()) {
 			job_meta->language = submiss["language"].as<std::string>();
-		} else { throw config_exception("Submission.language item not loaded properly"); }
+		} else {
+			throw config_exception("Submission.language item not loaded properly");
+		}
 		if (submiss["file-collector"] && submiss["file-collector"].IsScalar()) {
 			job_meta->file_server_url = submiss["file-collector"].as<std::string>();
-		} else { throw config_exception("Submission.file-collector item not loaded properly"); }
+		} else {
+			throw config_exception("Submission.file-collector item not loaded properly");
+		}
 		if (submiss["log"] && submiss["log"].IsScalar()) {
 			job_meta->log = submiss["log"].as<bool>();
 		} // can be omitted... no throw
@@ -44,24 +50,36 @@ std::shared_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 
 			if (ctask["task-id"] && ctask["task-id"].IsScalar()) {
 				task_meta->task_id = ctask["task-id"].as<std::string>();
-			} else { throw config_exception("Configuration task has missing task-id"); }
+			} else {
+				throw config_exception("Configuration task has missing task-id");
+			}
 			if (ctask["priority"] && ctask["priority"].IsScalar()) {
 				task_meta->priority = ctask["priority"].as<size_t>();
-			} else { throw config_exception("Configuration task has missing priority"); }
+			} else {
+				throw config_exception("Configuration task has missing priority");
+			}
 			if (ctask["fatal-failure"] && ctask["fatal-failure"].IsScalar()) {
 				task_meta->fatal_failure = ctask["fatal-failure"].as<bool>();
-			} else { throw config_exception("Configuration task has missing fatal-failure"); }
+			} else {
+				throw config_exception("Configuration task has missing fatal-failure");
+			}
 			if (ctask["cmd"]) {
 				if (ctask["cmd"].IsMap()) {
 					if (ctask["cmd"]["bin"] && ctask["cmd"]["bin"].IsScalar()) {
 						task_meta->binary = ctask["cmd"]["bin"].as<std::string>();
-					} else { throw config_exception("Runnable binary for task not given"); }
+					} else {
+						throw config_exception("Runnable binary for task not given");
+					}
 
 					if (ctask["cmd"]["args"] && ctask["cmd"]["args"].IsSequence()) {
 						task_meta->cmd_args = ctask["cmd"]["args"].as<std::vector<std::string>>();
 					} // can be omitted... no throw
-				} else { throw config_exception("Command in task is not a map"); }
-			} else { throw config_exception("Configuration of one task has missing cmd"); }
+				} else {
+					throw config_exception("Command in task is not a map");
+				}
+			} else {
+				throw config_exception("Configuration of one task has missing cmd");
+			}
 
 			// load dependencies
 			if (ctask["dependencies"] && ctask["dependencies"].IsSequence()) {
@@ -89,7 +107,9 @@ std::shared_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 
 				if (ctask["sandbox"]["name"] && ctask["sandbox"]["name"].IsScalar()) {
 					sandbox->name = ctask["sandbox"]["name"].as<std::string>();
-				} else { throw config_exception("Name of sandbox not given"); }
+				} else {
+					throw config_exception("Name of sandbox not given");
+				}
 
 				// load limits... if they are supplied
 				if (ctask["sandbox"]["limits"]) {
@@ -103,7 +123,9 @@ std::shared_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 
 						if (lim["hw-group-id"] && lim["hw-group-id"].IsScalar()) {
 							hwgroup = lim["hw-group-id"].as<std::string>();
-						} else { throw config_exception("Hwgroup ID not defined in sandbox limits"); }
+						} else {
+							throw config_exception("Hwgroup ID not defined in sandbox limits");
+						}
 
 						if (lim["time"] && lim["time"].IsScalar()) {
 							sl->cpu_time = lim["time"].as<float>();
@@ -155,7 +177,8 @@ std::shared_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 
 						if (lim["environ-variable"] && lim["environ-variable"].IsMap()) {
 							for (auto &var : lim["environ-variable"]) {
-								sl->environ_vars.insert(std::make_pair(var.first.as<std::string>(), var.second.as<std::string>()));
+								sl->environ_vars.insert(
+									std::make_pair(var.first.as<std::string>(), var.second.as<std::string>()));
 							}
 						}
 
@@ -177,7 +200,7 @@ std::shared_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 			job_meta->tasks.push_back(task_meta);
 		}
 
-	}  catch (YAML::Exception &e) {
+	} catch (YAML::Exception &e) {
 		throw config_exception("Exception in yaml-cpp: " + std::string(e.what()));
 	}
 

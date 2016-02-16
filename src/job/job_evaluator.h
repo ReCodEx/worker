@@ -25,13 +25,14 @@ namespace fs = boost::filesystem;
  * Class which handles receiving job from broker_connection, construction of working tree and its evaluation.
  * Above stated run in loop, so this class is in program constructed only once.
  */
-class job_evaluator {
+class job_evaluator
+{
 public:
 	job_evaluator() = delete;
 	job_evaluator(const job_evaluator &source) = delete;
-	job_evaluator& operator=(const job_evaluator &source) = delete;
+	job_evaluator &operator=(const job_evaluator &source) = delete;
 	job_evaluator(const job_evaluator &&source) = delete;
-	job_evaluator& operator=(const job_evaluator &&source) = delete;
+	job_evaluator &operator=(const job_evaluator &&source) = delete;
 
 	/**
 	 * All other constructors are disabled, because of needed data.
@@ -40,10 +41,10 @@ public:
 	 * @param fileman filemanager used to download and upload files
 	 */
 	job_evaluator(std::shared_ptr<spdlog::logger> logger,
-				  std::shared_ptr<worker_config> config,
-				  std::shared_ptr<file_manager_base> remote_fm,
-				  std::shared_ptr<file_manager_base> cache_fm,
-				  fs::path working_directory);
+		std::shared_ptr<worker_config> config,
+		std::shared_ptr<file_manager_base> remote_fm,
+		std::shared_ptr<file_manager_base> cache_fm,
+		fs::path working_directory);
 	/**
 	 * Theoretically not needed, but stated for completion.
 	 */
@@ -55,7 +56,6 @@ public:
 	virtual eval_response evaluate(eval_request request);
 
 private:
-
 	/**
 	 * Download submission from remote source through filemanager given during construction.
 	 */
@@ -137,4 +137,4 @@ private:
 	std::shared_ptr<worker_config> config_;
 };
 
-#endif //CODEX_WORKER_JOB_EVALUATOR_HPP
+#endif // CODEX_WORKER_JOB_EVALUATOR_HPP

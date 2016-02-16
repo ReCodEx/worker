@@ -21,18 +21,26 @@ namespace helpers
 	/**
 	 * Special exception for filesystem helper functions/classes
 	 */
-	class filesystem_exception : public std::exception {
+	class filesystem_exception : public std::exception
+	{
 	public:
-		filesystem_exception() : what_("Generic filesystem exception") {}
-		filesystem_exception(const std::string &what) : what_(what) {}
-		virtual ~filesystem_exception() {}
-		virtual const char* what() const noexcept
+		filesystem_exception() : what_("Generic filesystem exception")
+		{
+		}
+		filesystem_exception(const std::string &what) : what_(what)
+		{
+		}
+		virtual ~filesystem_exception()
+		{
+		}
+		virtual const char *what() const noexcept
 		{
 			return what_.c_str();
 		}
+
 	protected:
 		std::string what_;
 	};
 }
 
-#endif //CODEX_WORKER_HELPERS_FILESYSTEM_HPP
+#endif // CODEX_WORKER_HELPERS_FILESYSTEM_HPP

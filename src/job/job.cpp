@@ -1,9 +1,12 @@
 #include "job.h"
 #include "job_exception.h"
 
-job::job(std::shared_ptr<job_metadata> job_meta, std::shared_ptr<worker_config> worker_conf,
-		 fs::path working_directory, fs::path source_path, fs::path result_path,
-		 std::shared_ptr<file_manager_base> fileman)
+job::job(std::shared_ptr<job_metadata> job_meta,
+	std::shared_ptr<worker_config> worker_conf,
+	fs::path working_directory,
+	fs::path source_path,
+	fs::path result_path,
+	std::shared_ptr<file_manager_base> fileman)
 	: job_meta_(job_meta), worker_config_(worker_conf), working_directory_(working_directory),
 	  source_path_(source_path), result_path_(result_path), fileman_(fileman)
 {
@@ -161,8 +164,7 @@ void job::build_job()
 			limits->bound_dirs = new_bnd_dirs;
 
 			// ... and finally construct external task from given information
-			external_task::create_params data = {
-				worker_config_->get_worker_id(),
+			external_task::create_params data = {worker_config_->get_worker_id(),
 				id++,
 				task_meta->task_id,
 				task_meta->priority,
@@ -173,8 +175,7 @@ void job::build_job()
 				sandbox->name,
 				*limits,
 				logger_,
-				working_directory_.string()
-			};
+				working_directory_.string()};
 			std::shared_ptr<task_base> task = std::make_shared<external_task>(data);
 			unconnected_tasks.insert(std::make_pair(task_meta->task_id, task));
 			eff_indegree.insert(std::make_pair(task_meta->task_id, 0));
@@ -188,33 +189,62 @@ void job::build_job()
 			std::shared_ptr<task_base> task;
 
 			if (task_meta->binary == "cp") {
-				task = std::make_shared<cp_task>(id++, task_meta->task_id, task_meta->priority,
-					task_meta->fatal_failure, task_meta->binary,
-					task_meta->cmd_args, task_meta->dependencies);
+				task = std::make_shared<cp_task>(id++,
+					task_meta->task_id,
+					task_meta->priority,
+					task_meta->fatal_failure,
+					task_meta->binary,
+					task_meta->cmd_args,
+					task_meta->dependencies);
 			} else if (task_meta->binary == "mkdir") {
-				task = std::make_shared<mkdir_task>(id++, task_meta->task_id, task_meta->priority,
-					task_meta->fatal_failure, task_meta->binary,
-					task_meta->cmd_args, task_meta->dependencies);
+				task = std::make_shared<mkdir_task>(id++,
+					task_meta->task_id,
+					task_meta->priority,
+					task_meta->fatal_failure,
+					task_meta->binary,
+					task_meta->cmd_args,
+					task_meta->dependencies);
 			} else if (task_meta->binary == "rename") {
-				task = std::make_shared<rename_task>(id++, task_meta->task_id, task_meta->priority,
-					task_meta->fatal_failure, task_meta->binary,
-					task_meta->cmd_args, task_meta->dependencies);
+				task = std::make_shared<rename_task>(id++,
+					task_meta->task_id,
+					task_meta->priority,
+					task_meta->fatal_failure,
+					task_meta->binary,
+					task_meta->cmd_args,
+					task_meta->dependencies);
 			} else if (task_meta->binary == "rm") {
-				task = std::make_shared<rm_task>(id++, task_meta->task_id, task_meta->priority,
-					task_meta->fatal_failure, task_meta->binary,
-					task_meta->cmd_args, task_meta->dependencies);
+				task = std::make_shared<rm_task>(id++,
+					task_meta->task_id,
+					task_meta->priority,
+					task_meta->fatal_failure,
+					task_meta->binary,
+					task_meta->cmd_args,
+					task_meta->dependencies);
 			} else if (task_meta->binary == "archivate") {
-				task = std::make_shared<archivate_task>(id++, task_meta->task_id, task_meta->priority,
-					task_meta->fatal_failure, task_meta->binary,
-					task_meta->cmd_args, task_meta->dependencies);
+				task = std::make_shared<archivate_task>(id++,
+					task_meta->task_id,
+					task_meta->priority,
+					task_meta->fatal_failure,
+					task_meta->binary,
+					task_meta->cmd_args,
+					task_meta->dependencies);
 			} else if (task_meta->binary == "extract") {
-				task = std::make_shared<extract_task>(id++, task_meta->task_id, task_meta->priority,
-					task_meta->fatal_failure, task_meta->binary,
-					task_meta->cmd_args, task_meta->dependencies);
+				task = std::make_shared<extract_task>(id++,
+					task_meta->task_id,
+					task_meta->priority,
+					task_meta->fatal_failure,
+					task_meta->binary,
+					task_meta->cmd_args,
+					task_meta->dependencies);
 			} else if (task_meta->binary == "fetch") {
-				task = std::make_shared<fetch_task>(id++, task_meta->task_id, task_meta->priority,
-					task_meta->fatal_failure, task_meta->binary,
-					task_meta->cmd_args, task_meta->dependencies, fileman_);
+				task = std::make_shared<fetch_task>(id++,
+					task_meta->task_id,
+					task_meta->priority,
+					task_meta->fatal_failure,
+					task_meta->binary,
+					task_meta->cmd_args,
+					task_meta->dependencies,
+					fileman_);
 			} else {
 				throw job_exception("Unknown internal task: " + task_meta->binary);
 			}
@@ -312,23 +342,23 @@ void job::init_logger()
 	std::string log_name = "job_system_log.log";
 	spdlog::level::level_enum log_level = spdlog::level::debug;
 
-	//Create and register logger
+	// Create and register logger
 	try {
-		//Create multithreaded rotating file sink. Max filesize is 1024 * 1024 and we save 5 newest files.
+		// Create multithreaded rotating file sink. Max filesize is 1024 * 1024 and we save 5 newest files.
 		auto file_sink = std::make_shared<spdlog::sinks::simple_file_sink_mt>((result_path_ / log_name).string(), true);
-		//Set queue size for asynchronous logging. It must be a power of 2.
+		// Set queue size for asynchronous logging. It must be a power of 2.
 		spdlog::set_async_mode(1048576);
-		//Make log with name "logger"
+		// Make log with name "logger"
 		auto file_logger = std::make_shared<spdlog::logger>("logger", file_sink);
-		//Set logging level to debug
+		// Set logging level to debug
 		file_logger->set_level(log_level);
-		//Print header to log
+		// Print header to log
 		file_logger->info() << "------------------------------";
 		file_logger->info() << "       Job system log";
 		file_logger->info() << "------------------------------";
 		logger_ = file_logger;
 	} catch (spdlog::spdlog_ex &e) {
-		//Suppose not happen. But in case, create only empty logger.
+		// Suppose not happen. But in case, create only empty logger.
 		auto sink = std::make_shared<spdlog::sinks::null_sink_st>();
 		logger_ = std::make_shared<spdlog::logger>("job_manager_nolog", sink);
 	}
@@ -350,15 +380,13 @@ const std::vector<std::shared_ptr<task_base>> &job::get_task_queue() const
 void job::prepare_job_vars()
 {
 	// define and fill variables which can be used within job configuration
-	job_variables_ = {
-		{ "WORKER_ID", std::to_string(worker_config_->get_worker_id()) },
-		{ "JOB_ID", job_meta_->job_id },
-		{ "SOURCE_DIR", source_path_.string() },
-		{ "EVAL_DIR", fs::path("/evaluate").string() },
-		{ "RESULT_DIR", result_path_.string() },
-		{ "TEMP_DIR", fs::temp_directory_path().string() },
-		{ "JUDGES_DIR", fs::path("/judges").string() }
-	};
+	job_variables_ = {{"WORKER_ID", std::to_string(worker_config_->get_worker_id())},
+		{"JOB_ID", job_meta_->job_id},
+		{"SOURCE_DIR", source_path_.string()},
+		{"EVAL_DIR", fs::path("/evaluate").string()},
+		{"RESULT_DIR", result_path_.string()},
+		{"TEMP_DIR", fs::temp_directory_path().string()},
+		{"JUDGES_DIR", fs::path("/judges").string()}};
 
 	return;
 }
@@ -380,7 +408,7 @@ std::string job::parse_job_var(const std::string &src)
 			res.replace(start, end - start + 1, job_variables_.at(res.substr(start + 2, len)));
 		}
 
-		//start++; // just to be sure we're not in cycle
+		// start++; // just to be sure we're not in cycle
 	}
 
 	return res;

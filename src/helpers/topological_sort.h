@@ -20,25 +20,33 @@ namespace helpers
 	 * @throws top_sort_exception
 	 */
 	void topological_sort(std::shared_ptr<task_base> root,
-						  std::map<std::string, size_t> &effective_indegree,
-						  std::vector<std::shared_ptr<task_base>> &result);
+		std::map<std::string, size_t> &effective_indegree,
+		std::vector<std::shared_ptr<task_base>> &result);
 
 
 	/**
 	 * Special exception for topological sort
 	 */
-	class top_sort_exception : public std::exception {
+	class top_sort_exception : public std::exception
+	{
 	public:
-		top_sort_exception() : what_("Generic topological sort exception") {}
-		top_sort_exception(const std::string &what) : what_(what) {}
-		virtual ~top_sort_exception() {}
-		virtual const char* what() const noexcept
+		top_sort_exception() : what_("Generic topological sort exception")
+		{
+		}
+		top_sort_exception(const std::string &what) : what_(what)
+		{
+		}
+		virtual ~top_sort_exception()
+		{
+		}
+		virtual const char *what() const noexcept
 		{
 			return what_.c_str();
 		}
+
 	protected:
 		std::string what_;
 	};
 }
 
-#endif //CODEX_WORKER_HELPERS_TOPOLOGICAL_SORT_HPP
+#endif // CODEX_WORKER_HELPERS_TOPOLOGICAL_SORT_HPP

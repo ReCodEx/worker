@@ -20,21 +20,21 @@ namespace fs = boost::filesystem;
 /**
  * An object representation of a default worker's configuration
  */
-class worker_config {
+class worker_config
+{
 public:
-
 	/** Type of the header map */
 	typedef std::multimap<std::string, std::string> header_map_t;
 
 	/**
 	 * The default constructor
 	 */
-	worker_config ();
+	worker_config();
 
 	/**
 	 * A constructor that loads the configuration from a YAML document
 	 */
-	worker_config (const YAML::Node &config);
+	worker_config(const YAML::Node &config);
 
 	/**
 	 * Get worker ID which has to be unique at least in context of one machine.
@@ -85,7 +85,6 @@ public:
 	const std::map<std::string, size_t> &get_sandboxes_limits();
 
 private:
-
 	/** Unique worker number in context of one machine (0-100) */
 	size_t worker_id_;
 	/** Working directory of whole server */
@@ -110,15 +109,16 @@ private:
 /**
  * Default worker configuration exception.
  */
-class config_error : public std::runtime_error {
+class config_error : public std::runtime_error
+{
 public:
 	/**
 	 * Construction with message returned with @ref what() method.
 	 * @param msg description of exception circumstances
 	 */
-	explicit config_error (const std::string &msg) : std::runtime_error(msg)
+	explicit config_error(const std::string &msg) : std::runtime_error(msg)
 	{
 	}
 };
 
-#endif //CODEX_WORKER_WORKER_CONFIG_H
+#endif // CODEX_WORKER_WORKER_CONFIG_H

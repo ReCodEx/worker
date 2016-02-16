@@ -58,7 +58,7 @@ void archivator::compress(const std::string &dir, const std::string &destination
 
 		archive_entry_set_pathname(entry, (fs::path(destination).stem() / file.second).string().c_str());
 		archive_entry_set_size(entry, fs::file_size(file.first));
-		archive_entry_set_mtime(entry, fs::last_write_time(file.first), 0); //0 nanoseconds
+		archive_entry_set_mtime(entry, fs::last_write_time(file.first), 0); // 0 nanoseconds
 		archive_entry_set_filetype(entry, AE_IFREG);
 		archive_entry_set_perm(entry, 0644);
 
@@ -78,8 +78,7 @@ void archivator::compress(const std::string &dir, const std::string &destination
 				auto read_len = ifs.gcount();
 				if (ifs.eof() && read_len == 0) {
 					break;
-				}
-				else if (read_len <= 0) {
+				} else if (read_len <= 0) {
 					throw archive_exception("Error reading input file.");
 				}
 
@@ -154,7 +153,7 @@ void archivator::decompress(const std::string &filename, const std::string &dest
 			throw archive_exception(archive_error_string(a));
 		}
 
-		const char* current_file = archive_entry_pathname(entry);
+		const char *current_file = archive_entry_pathname(entry);
 		const std::string full_path = (fs::path(destination) / current_file).string();
 		archive_entry_set_pathname(entry, full_path.c_str());
 		auto filetype = archive_entry_filetype(entry);

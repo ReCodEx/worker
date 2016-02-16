@@ -63,13 +63,15 @@ struct sandbox_results {
 	/**
 	 * Constructor with default values initialization.
 	 */
-	sandbox_results() : exitcode(0), time(0), wall_time(0), memory(0), max_rss(0),
-		status(isolate_status::OK), exitsig(0), killed(false), message()
-	{}
+	sandbox_results()
+		: exitcode(0), time(0), wall_time(0), memory(0), max_rss(0), status(isolate_status::OK), exitsig(0),
+		  killed(false), message()
+	{
+	}
 	sandbox_results(const sandbox_results &) = default;
 	sandbox_results(sandbox_results &&) = default;
-	sandbox_results& operator=(const sandbox_results &) = default;
-	sandbox_results& operator=(sandbox_results &&) = default;
+	sandbox_results &operator=(const sandbox_results &) = default;
+	sandbox_results &operator=(sandbox_results &&) = default;
 };
 
 
@@ -95,11 +97,12 @@ struct task_results {
 	 * Constructor with default values initiazation.
 	 */
 	task_results() : failed(false), error_message(), sandbox_status(nullptr)
-	{}
+	{
+	}
 	task_results(const task_results &) = default;
 	task_results(task_results &&) = default;
-	task_results& operator=(const task_results &) = default;
-	task_results& operator=(task_results &&) = default;
+	task_results &operator=(const task_results &) = default;
+	task_results &operator=(task_results &&) = default;
 };
 
 

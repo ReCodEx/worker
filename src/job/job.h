@@ -36,7 +36,8 @@ namespace fs = boost::filesystem;
  * Job is built from configuration in which all information should be provided.
  * Job building results in task tree and task queue in which task should be evaluated.
  */
-class job {
+class job
+{
 public:
 	job() = delete;
 
@@ -51,8 +52,11 @@ public:
 	 * @param fileman file manager which is provided to tasks
 	 * @throws job_exception if there is problem during loading of configuration
 	 */
-	job(std::shared_ptr<job_metadata> job_meta, std::shared_ptr<worker_config> worker_conf,
-		fs::path working_directory, fs::path source_path, fs::path result_path,
+	job(std::shared_ptr<job_metadata> job_meta,
+		std::shared_ptr<worker_config> worker_conf,
+		fs::path working_directory,
+		fs::path source_path,
+		fs::path result_path,
 		std::shared_ptr<file_manager_base> fileman);
 
 	~job();
@@ -118,4 +122,4 @@ private:
 };
 
 
-#endif //CODEX_WORKER_JOB_HPP
+#endif // CODEX_WORKER_JOB_HPP

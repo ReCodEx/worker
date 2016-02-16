@@ -32,7 +32,8 @@ namespace fs = boost::filesystem;
  * It handles all creation and destruction of all used parts.
  * And of course run all those parts.
  */
-class isoeval_core {
+class isoeval_core
+{
 public:
 	isoeval_core() = delete;
 
