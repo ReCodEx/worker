@@ -9,36 +9,36 @@
 
 namespace helpers
 {
-/**
- * From given configuration in yaml it build job_metadata structure and its tasks
- * @param config
- * @return
- */
-std::shared_ptr<job_metadata> build_job_metadata(const YAML::Node &conf);
+	/**
+	 * From given configuration in yaml it build job_metadata structure and its tasks
+	 * @param config
+	 * @return
+	 */
+	std::shared_ptr<job_metadata> build_job_metadata(const YAML::Node &conf);
 
-/**
- * Special exception for config helper functions/classes
- */
-class config_exception : public std::exception
-{
-public:
-	config_exception() : what_("Generic config exception")
+	/**
+	 * Special exception for config helper functions/classes
+	 */
+	class config_exception : public std::exception
 	{
-	}
-	config_exception(const std::string &what) : what_(what)
-	{
-	}
-	virtual ~config_exception()
-	{
-	}
-	virtual const char *what() const noexcept
-	{
-		return what_.c_str();
-	}
+	public:
+		config_exception() : what_("Generic config exception")
+		{
+		}
+		config_exception(const std::string &what) : what_(what)
+		{
+		}
+		virtual ~config_exception()
+		{
+		}
+		virtual const char *what() const noexcept
+		{
+			return what_.c_str();
+		}
 
-protected:
-	std::string what_;
-};
+	protected:
+		std::string what_;
+	};
 }
 
 
