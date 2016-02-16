@@ -10,8 +10,8 @@ private:
 	std::shared_ptr<file_manager_base> fm_;
 public:
 	prefixed_file_manager(std::shared_ptr<file_manager_base> fm, const std::string &prefix);
-	virtual void get_file(const std::string &src_name, const std::string &dst_path);
-	virtual void put_file(const std::string &src_name, const std::string &dst_path);
+	virtual void get_file(const std::string &src_name, const std::string &dst_name);
+	virtual void put_file(const std::string &src_name, const std::string &dst_name);
 };
 
 

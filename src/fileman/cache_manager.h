@@ -38,14 +38,15 @@ public:
 	/**
 	 * Copy a file from cache to destination.
 	 * @param src_name Name of the file without path.
-	 * @param dst_path Name of the destination path without filename.
+	 * @param dst_name Name of the destination path with requested filename.
 	 */
-	virtual void get_file(const std::string &src_name, const std::string &dst_path);
+	virtual void get_file(const std::string &src_name, const std::string &dst_name);
 	/**
-	 * Copy file from path to cache.
-	 * @param name Path and name of the file to be copied.
+	 * Copy file to cache.
+	 * @param src_name Path and name of the file to be copied.
+	 * @param dst_name Name of the file in cache.
 	 */
-	virtual void put_file(const std::string &src_name, const std::string &dst_path);
+	virtual void put_file(const std::string &src_name, const std::string &dst_name);
 
 	/**
 	 * Get the directory where files are stored

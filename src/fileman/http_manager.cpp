@@ -62,18 +62,18 @@ http_manager::http_manager(
 	}
 }
 
-void http_manager::get_file(const std::string &src_name, const std::string &dst_path)
+void http_manager::get_file(const std::string &src_name, const std::string &dst_name)
 {
 	CURL *curl;
 	CURLcode res;
 	FILE *fd;
 
-	logger_->debug() << "Downloading file " << src_name << " to " << dst_path;
+	logger_->debug() << "Downloading file " << src_name << " to " << dst_name;
 
 	//Open file to download
-	fd = fopen(dst_path.c_str(), "wb");
+	fd = fopen(dst_name.c_str(), "wb");
 	if(!fd) {
-		auto message = "Cannot open file " + dst_path + " for writing.";
+		auto message = "Cannot open file " + dst_name + " for writing.";
 		logger_->warn() << message;
 		throw fm_exception(message);
 	}
@@ -121,9 +121,9 @@ void http_manager::get_file(const std::string &src_name, const std::string &dst_
 		//Check for errors
 		if (res != CURLE_OK) {
 			try {
-				fs::remove(dst_path);
+				fs::remove(dst_name);
 			} catch (...) {}
-			auto error_message = "Failed to download " + src_name + " to " + dst_path +
+			auto error_message = "Failed to download " + src_name + " to " + dst_name +
 					". Error: " + curl_easy_strerror(res);
 			logger_->warn() << error_message;
 			curl_easy_cleanup(curl);
@@ -135,19 +135,19 @@ void http_manager::get_file(const std::string &src_name, const std::string &dst_
 	}
 }
 
-void http_manager::put_file(const std::string &src, const std::string &dst)
+void http_manager::put_file(const std::string &src_name, const std::string &dst_url)
 {
-	fs::path source_file(src);
+	fs::path source_file(src_name);
 	CURL *curl;
 	CURLcode res;
 	FILE *fd;
 
-	logger_->debug() << "Uploading file " << src << " to " << dst;
+	logger_->debug() << "Uploading file " << src_name << " to " << dst_url;
 
 	//Open file to upload
-	fd = fopen(src.c_str(), "rb");
+	fd = fopen(src_name.c_str(), "rb");
 	if (!fd) {
-		auto message = "Cannot open file " + src + " for reading.";
+		auto message = "Cannot open file " + src_name + " for reading.";
 		logger_->warn() << message;
 		throw fm_exception(message);
 	}
@@ -158,7 +158,7 @@ void http_manager::put_file(const std::string &src, const std::string &dst)
 	curl = curl_easy_init();
 	if (curl) {
 		//Destination URL
-		curl_easy_setopt(curl, CURLOPT_URL, dst.c_str());
+		curl_easy_setopt(curl, CURLOPT_URL, dst_url.c_str());
 
 		//Upload mode
 		curl_easy_setopt(curl, CURLOPT_UPLOAD, 1L);
@@ -189,7 +189,7 @@ void http_manager::put_file(const std::string &src, const std::string &dst)
 		curl_easy_setopt(curl, CURLOPT_FAILONERROR, 1L);
 
 		//Set HTTP authentication
-		auto config = find_config(dst);
+		auto config = find_config(dst_url);
 
 		if (config != nullptr) {
 			curl_easy_setopt(curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
@@ -206,7 +206,7 @@ void http_manager::put_file(const std::string &src, const std::string &dst)
 
 		//Check for errors
 		if (res != CURLE_OK) {
-			auto message = "Failed to upload " + src + " to " + dst +
+			auto message = "Failed to upload " + src_name + " to " + dst_url +
 					". Error: " + curl_easy_strerror(res);
 			logger_->warn() << message;
 			throw fm_exception(message);

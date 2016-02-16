@@ -34,8 +34,8 @@ cache_manager::cache_manager(const std::string &caching_dir, std::shared_ptr<spd
 void cache_manager::get_file(const std::string &src_name, const std::string &dst_path)
 {
 	fs::path source_file = caching_dir_ / src_name;
-	fs::path destination_file = fs::path(dst_path) / src_name;
-	logger_->debug() << "Copying file " << source_file.string() + " from cache to " + dst_path;
+	fs::path destination_file = dst_path;
+	logger_->debug() << "Copying file " << src_name + " from cache to " + dst_path;
 
 	try {
 		fs::copy_file(source_file, destination_file, fs::copy_option::overwrite_if_exists);
@@ -51,7 +51,7 @@ void cache_manager::put_file(const std::string &src_name, const std::string &dst
 {
 	fs::path source_file(src_name);
 	fs::path destination_file = caching_dir_ / dst_name;
-	logger_->debug() << "Copying file " << src_name + " to cache";
+	logger_->debug() << "Copying file " << src_name + " to cache with name " << dst_name;
 
 	try {
 		fs::copy_file(source_file, destination_file, fs::copy_option::overwrite_if_exists);

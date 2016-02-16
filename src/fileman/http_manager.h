@@ -11,7 +11,7 @@
 
 /**
  * Class for managing transfer over HTTP connection.
- * Failed operations throws @a fm_exception exception.
+ * Failed operations throws @ref fm_exception exception.
  */
 class http_manager : public file_manager_base {
 public:
@@ -34,14 +34,15 @@ public:
 	/**
 	 * Get and save file locally.
 	 * @param src_name Name of requested file (without path)
-	 * @param dst_path Path to directory, where the file will be saved.
+	 * @param dst_name Path to the directory with name of the created file.
 	 */
-	virtual void get_file(const std::string &src_name, const std::string &dst_path);
+	virtual void get_file(const std::string &src_name, const std::string &dst_name);
 	/**
 	 * Upload file to remote server with HTTP PUT method.
-	 * @param name Name with path to a file to upload.
+	 * @param src_name Name with path to a file to upload.
+	 * @param dst_url Url where the file will be uploaded.
 	 */
-	virtual void put_file(const std::string &src_name, const std::string &dst_path);
+	virtual void put_file(const std::string &src_name, const std::string &dst_url);
 
 protected:
 	/**

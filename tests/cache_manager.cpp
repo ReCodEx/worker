@@ -38,14 +38,14 @@ TEST(CacheManager, GetExistingFile)
 	}
 	cache_manager m((tmp / "recodex").string());
 	//Copy file to existing directory
-	m.get_file("test.txt", tmp.string());
+	m.get_file("test.txt", (tmp / "test.txt").string());
 	EXPECT_TRUE(fs::is_regular_file((tmp / "test.txt").string()));
 
 	//Copy the same file to same directory - should be overriden
-	EXPECT_NO_THROW(m.get_file("test.txt", tmp.string()));
+	EXPECT_NO_THROW(m.get_file("test.txt", (tmp / "test.txt").string()));
 
 	//Copy file to nonexisting directory
-	EXPECT_THROW(m.get_file("test.txt", (tmp / "recodex" / "nonexist").string()), fm_exception);
+	EXPECT_THROW(m.get_file("test.txt", (tmp / "recodex" / "nonexist" / "test.txt").string()), fm_exception);
 
 	//Clean used resources
 	fs::remove(tmp / "test.txt");

@@ -251,9 +251,9 @@ TEST(job_config_test, config_data)
 
 	auto task1 = result->tasks[0];
 	ASSERT_EQ(task1->task_id, "cp");
-	ASSERT_EQ(task1->priority, 1);
+	ASSERT_EQ(task1->priority, 1u);
 	ASSERT_EQ(task1->fatal_failure, true);
-	ASSERT_EQ(task1->dependencies.size(), 0);
+	ASSERT_EQ(task1->dependencies.size(), 0u);
 	ASSERT_EQ(task1->binary, "cp");
 	ASSERT_EQ(task1->cmd_args[0], "hello.cpp");
 	ASSERT_EQ(task1->cmd_args[1], "hello_world.cpp");
@@ -264,9 +264,9 @@ TEST(job_config_test, config_data)
 
 	auto task2 = result->tasks[1];
 	ASSERT_EQ(task2->task_id, "eval");
-	ASSERT_EQ(task2->priority, 4);
+	ASSERT_EQ(task2->priority, 4u);
 	ASSERT_EQ(task2->fatal_failure, false);
-	ASSERT_EQ(task2->dependencies.size(), 1);
+	ASSERT_EQ(task2->dependencies.size(), 1u);
 	ASSERT_EQ(task2->dependencies[0], "cp");
 	ASSERT_EQ(task2->binary, "recodex");
 	ASSERT_EQ(task2->cmd_args[0], "-v");
@@ -276,7 +276,7 @@ TEST(job_config_test, config_data)
 	ASSERT_EQ(task2->std_error, "01.err");
 	ASSERT_NE(task2->sandbox, nullptr);
 	ASSERT_EQ(task2->sandbox->name, "fake");
-	ASSERT_EQ(task2->sandbox->limits.size(), 2);
+	ASSERT_EQ(task2->sandbox->limits.size(), 2u);
 	EXPECT_NO_THROW(task2->sandbox->limits.at("group1"));
 	EXPECT_NO_THROW(task2->sandbox->limits.at("group2"));
 
@@ -284,12 +284,12 @@ TEST(job_config_test, config_data)
 	ASSERT_EQ(limit1->cpu_time, 5);
 	ASSERT_EQ(limit1->wall_time, 6);
 	ASSERT_EQ(limit1->extra_time, 7);
-	ASSERT_EQ(limit1->memory_usage, 60000);
-	ASSERT_EQ(limit1->stack_size, 50000);
-	ASSERT_EQ(limit1->processes, 1);
+	ASSERT_EQ(limit1->memory_usage, 60000u);
+	ASSERT_EQ(limit1->stack_size, 50000u);
+	ASSERT_EQ(limit1->processes, 1u);
 	ASSERT_EQ(limit1->chdir, "/eval");
-	ASSERT_EQ(limit1->disk_size, 50);
-	ASSERT_EQ(limit1->disk_files, 10);
+	ASSERT_EQ(limit1->disk_size, 50u);
+	ASSERT_EQ(limit1->disk_files, 10u);
 	std::map<std::string, std::string> expected_environ = {
 		{ "ISOLATE_BOX", "/box" },
 		{ "ISOLATE_TMP", "/tmp" }
@@ -310,6 +310,6 @@ TEST(job_config_test, config_data)
 	ASSERT_EQ(limit2->chdir, "");
 	ASSERT_EQ(limit2->disk_size, SIZE_MAX);
 	ASSERT_EQ(limit2->disk_files, SIZE_MAX);
-	ASSERT_EQ(limit2->environ_vars.size(), 0);
-	ASSERT_EQ(limit2->bound_dirs.size(), 0);
+	ASSERT_EQ(limit2->environ_vars.size(), 0u);
+	ASSERT_EQ(limit2->bound_dirs.size(), 0u);
 }

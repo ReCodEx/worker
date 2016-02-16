@@ -36,15 +36,16 @@ public:
 	 * Get file. If requested file is in cache, it'll be copied to @a dst_path immediately,
 	 * otherwise it'll be downloaded to cache first.
 	 * @param src_name Name of requested file.
-	 * @param dst_path Path where to save the file.
+	 * @param dst_name Path (with filename) where to save the file.
 	 */
-	virtual void get_file(const std::string &src_name, const std::string &dst_path);
+	virtual void get_file(const std::string &src_name, const std::string &dst_name);
 
 	/**
 	 * Upload file to remote server. It won't be saved to cache.
-	 * @param name Name of the file to upload.
+	 * @param src_name Name of the file to upload.
+	 * @param dst_url Url where to upload the file.
 	 */
-	virtual void put_file(const std::string &src_name, const std::string &dst_path);
+	virtual void put_file(const std::string &src_name, const std::string &dst_url);
 
 private:
 	file_manager_ptr primary_manager_;
