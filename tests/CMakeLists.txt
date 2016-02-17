@@ -34,7 +34,6 @@ elseif(MSVC)
 		set(LIBS ${LIBS}
 			${Boost_LIBRARIES}
 			${ZEROMQ_LIB}
-			${CURL_LIBRARIES}
 		)
 	endif()
 endif()
@@ -159,31 +158,54 @@ target_link_libraries(${TESTS_NAME} ${LIBS})
 target_compile_definitions(${TESTS_NAME} PRIVATE LIBARCHIVE_STATIC)
 
 # Tests that depend on external resources
-add_executable(${TOOL_TESTS_NAME}
+if(UNIX)
+	set(LIBS
+		gtest gmock
+		yaml-cpp
+		-lcurl
+		-lzmq
+		-lboost_system -lboost_filesystem -lboost_program_options
+		archive
+		)
+elseif(MSVC)
+	set(LIBS gtest gmock
+		yaml-cpp
+		archive_static
+	)
+
+	if(APPVEYOR_COMPILE)
+		set(LIBS ${LIBS}
+			${CURL_LIBRARIES}
+			${Boost_LIBRARIES}
+			${ZEROMQ_LIB}
+		)
+	endif()
+endif()
+
+unset(TEST_FILES)
+
+add_test_suite(isolate_sandbox
 	tests_main.cpp
 	isolate_sandbox.cpp
 	${SANDBOX_DIR}/isolate_sandbox.cpp
+)
+
+add_test_suite(archivator
+	tests_main.cpp
 	${SRC_DIR}/archives/archivator.cpp
 	archivator.cpp
+)
+
+add_test_suite(http_manager
+	tests_main.cpp
 	http_manager.cpp
 	${FILEMAN_DIR}/http_manager.cpp
 )
 
-target_link_libraries(${TOOL_TESTS_NAME} gtest)
-target_link_libraries(${TOOL_TESTS_NAME} gmock)
+list(REMOVE_DUPLICATES TEST_FILES)
+add_executable(${TOOL_TESTS_NAME}
+	${TEST_FILES}
+)
 
-if(UNIX)
-	target_link_libraries(${TOOL_TESTS_NAME} -lzmq)
-	target_link_libraries(${TOOL_TESTS_NAME} -lboost_system -lboost_filesystem -lboost_program_options)
-
-	target_link_libraries(${TOOL_TESTS_NAME} -lcurl)
-	target_link_libraries(${TOOL_TESTS_NAME} archive)
-elseif(MSVC)
-	target_link_libraries(${TOOL_TESTS_NAME} archive_static)
-	target_compile_definitions(${TOOL_TESTS_NAME} PRIVATE LIBARCHIVE_STATIC)
-	if(APPVEYOR_COMPILE)
-		target_link_libraries(${TOOL_TESTS_NAME} ${Boost_LIBRARIES})
-		target_link_libraries(${TOOL_TESTS_NAME} ${ZEROMQ_LIB})
-		target_link_libraries(${TOOL_TESTS_NAME} ${CURL_LIBRARIES})
-	endif()
-endif()
+target_link_libraries(${TOOL_TESTS_NAME} ${LIBS})
+target_compile_definitions(${TOOL_TESTS_NAME} PRIVATE LIBARCHIVE_STATIC)
