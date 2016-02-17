@@ -362,8 +362,28 @@ char **isolate_sandbox::isolate_run_args(const std::string &binary, const std::v
 		vargs.push_back("--env=" + i.first + "=" + i.second);
 	}
 	for (auto &i : limits_.bound_dirs) {
-		vargs.push_back(std::string("--dir=") + i.second + "=" + i.first + ":rw");
+		std::string mode = "";
+		auto flags = std::get<2>(i);
+		if (flags & sandbox_limits::dir_perm::RW) {
+			mode += ":rw";
+		}
+		if (flags & sandbox_limits::dir_perm::NOEXEC) {
+			mode += ":noexec";
+		}
+		if (flags & sandbox_limits::dir_perm::FS) {
+			mode += ":fs";
+		}
+		if (flags & sandbox_limits::dir_perm::MAYBE) {
+			mode += ":maybe";
+		}
+		if (flags & sandbox_limits::dir_perm::DEV) {
+			mode += ":dev";
+		}
+		vargs.push_back(std::string("--dir=") + std::get<1>(i) + "=" + std::get<0>(i) + mode);
 	}
+	// Bind /etc/alternatives directory if exists
+	vargs.push_back("--dir=etc/alternatives=/etc/alternatives:maybe");
+
 	vargs.push_back("--meta=" + meta_file_);
 
 	vargs.push_back("--run");

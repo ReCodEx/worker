@@ -28,8 +28,9 @@ tasks:
                 environ-variable:
                     PATH: "/usr/bin"
                 bound-directories:
-                    ${SOURCE_DIR}: ${EVAL_DIR}
-                    /etc/alternatives: "etc/alternatives"
+                    - src: ${SOURCE_DIR}
+                      dst: ${EVAL_DIR}
+                      mode: RW
     - task-id: "fetch_test_1"
       priority: 4
       fatal-failure: false
@@ -57,8 +58,9 @@ tasks:
                 environ-variable:
                     PATH: "/usr/bin"
                 bound-directories:
-                    ${SOURCE_DIR}: ${EVAL_DIR}
-                    /etc/alternatives: "etc/alternatives"
+                    - src: ${SOURCE_DIR}
+                      dst: ${EVAL_DIR}
+                      mode: RW
     - task-id: "fetch_test_solution_1"
       priority: 6
       fatal-failure: false
@@ -88,9 +90,12 @@ tasks:
                 environ-variable:
                     PATH: "/usr/bin"
                 bound-directories:
-                    ${SOURCE_DIR}: ${EVAL_DIR}
-                    "${TEMP_DIR}/judges": ${JUDGES_DIR}
-                    /etc/alternatives: "etc/alternatives"
+                    - src: ${SOURCE_DIR}
+                      dst: ${EVAL_DIR}
+                      mode: RW
+                    - src: "${TEMP_DIR}/judges"
+                      dst: ${JUDGES_DIR}
+                      mode: RO
     - task-id: "rm_junk_test_1"
       priority: 8
       fatal-failure: false
@@ -129,8 +134,9 @@ tasks:
                 environ-variable:
                     PATH: "/usr/bin"
                 bound-directories:
-                    ${SOURCE_DIR}: ${EVAL_DIR}
-                    /etc/alternatives: "etc/alternatives"
+                    - src: ${SOURCE_DIR}
+                      dst: ${EVAL_DIR}
+                      mode: RW
     - task-id: "fetch_test_solution_2"
       priority: 12
       fatal-failure: false
@@ -160,9 +166,12 @@ tasks:
                 environ-variable:
                     PATH: "/usr/bin"
                 bound-directories:
-                    ${SOURCE_DIR}: ${EVAL_DIR}
-                    "${TEMP_DIR}/judges": ${JUDGES_DIR}
-                    /etc/alternatives: "etc/alternatives"
+                    - src: ${SOURCE_DIR}
+                      dst: ${EVAL_DIR}
+                      mode: RW
+                    - src: "${TEMP_DIR}/judges"
+                      dst: ${JUDGES_DIR}
+                      mode: RO
     - task-id: "rm_junk_test_2"
       priority: 14
       fatal-failure: false
@@ -201,8 +210,9 @@ tasks:
                 environ-variable:
                     PATH: "/usr/bin"
                 bound-directories:
-                    ${SOURCE_DIR}: ${EVAL_DIR}
-                    /etc/alternatives: "etc/alternatives"
+                    - src: ${SOURCE_DIR}
+                      dst: ${EVAL_DIR}
+                      mode: RW
     - task-id: "fetch_test_solution_3"
       priority: 18
       fatal-failure: false
@@ -232,9 +242,12 @@ tasks:
                 environ-variable:
                     PATH: "/usr/bin"
                 bound-directories:
-                    ${SOURCE_DIR}: ${EVAL_DIR}
-                    "${TEMP_DIR}/judges": ${JUDGES_DIR}
-                    /etc/alternatives: "etc/alternatives"
+                    - src: ${SOURCE_DIR}
+                      dst: ${EVAL_DIR}
+                      mode: RW
+                    - src: "${TEMP_DIR}/judges"
+                      dst: ${JUDGES_DIR}
+                      mode: RO
     - task-id: "rm_junk_test_3"
       priority: 20
       fatal-failure: false
@@ -273,8 +286,9 @@ tasks:
                 environ-variable:
                     PATH: "/usr/bin"
                 bound-directories:
-                    ${SOURCE_DIR}: ${EVAL_DIR}
-                    /etc/alternatives: "etc/alternatives"
+                    - src: ${SOURCE_DIR}
+                      dst: ${EVAL_DIR}
+                      mode: RW
     - task-id: "fetch_test_solution_4"
       priority: 24
       fatal-failure: false
@@ -304,9 +318,12 @@ tasks:
                 environ-variable:
                     PATH: "/usr/bin"
                 bound-directories:
-                    ${SOURCE_DIR}: ${EVAL_DIR}
-                    "${TEMP_DIR}/judges": ${JUDGES_DIR}
-                    /etc/alternatives: "etc/alternatives"
+                    - src: ${SOURCE_DIR}
+                      dst: ${EVAL_DIR}
+                      mode: RW
+                    - src: "${TEMP_DIR}/judges"
+                      dst: ${JUDGES_DIR}
+                      mode: RO
     - task-id: "rm_junk_test_4"
       priority: 26
       fatal-failure: false
@@ -345,8 +362,9 @@ tasks:
                 environ-variable:
                     PATH: "/usr/bin"
                 bound-directories:
-                    ${SOURCE_DIR}: ${EVAL_DIR}
-                    /etc/alternatives: "etc/alternatives"
+                    - src: ${SOURCE_DIR}
+                      dst: ${EVAL_DIR}
+                      mode: RW
     - task-id: "fetch_test_solution_5"
       priority: 30
       fatal-failure: false
@@ -376,9 +394,12 @@ tasks:
                 environ-variable:
                     PATH: "/usr/bin"
                 bound-directories:
-                    ${SOURCE_DIR}: ${EVAL_DIR}
-                    "${TEMP_DIR}/judges": ${JUDGES_DIR}
-                    /etc/alternatives: "etc/alternatives"
+                    - src: ${SOURCE_DIR}
+                      dst: ${EVAL_DIR}
+                      mode: RW
+                    - src: "${TEMP_DIR}/judges"
+                      dst: ${JUDGES_DIR}
+                      mode: RO
     - task-id: "rm_junk_test_5"
       priority: 32
       fatal-failure: false
@@ -417,8 +438,9 @@ tasks:
                 environ-variable:
                     PATH: "/usr/bin"
                 bound-directories:
-                    ${SOURCE_DIR}: ${EVAL_DIR}
-                    /etc/alternatives: "etc/alternatives"
+                    - src: ${SOURCE_DIR}
+                      dst: ${EVAL_DIR}
+                      mode: RW
     - task-id: "fetch_test_solution_6"
       priority: 36
       fatal-failure: false
@@ -448,9 +470,12 @@ tasks:
                 environ-variable:
                     PATH: "/usr/bin"
                 bound-directories:
-                    ${SOURCE_DIR}: ${EVAL_DIR}
-                    "${TEMP_DIR}/judges": ${JUDGES_DIR}
-                    /etc/alternatives: "etc/alternatives"
+                    - src: ${SOURCE_DIR}
+                      dst: ${EVAL_DIR}
+                      mode: RW
+                    - src: "${TEMP_DIR}/judges"
+                      dst: ${JUDGES_DIR}
+                      mode: RO
     - task-id: "rm_junk_test_6"
       priority: 38
       fatal-failure: false

@@ -171,13 +171,54 @@ std::shared_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 							sl->chdir = lim["chdir"].as<std::string>();
 						}
 
-						if (lim["bound-directories"] && lim["bound-directories"].IsMap()) {
-							sl->bound_dirs = lim["bound-directories"].as<std::map<std::string, std::string>>();
+						if (lim["bound-directories"] && lim["bound-directories"].IsSequence()) {
+							for (auto &dir : lim["bound-directories"]) {
+								std::string src;
+								std::string dst;
+								sandbox_limits::dir_perm mode = sandbox_limits::dir_perm::RO;
+								if (dir.IsMap()) {
+									if (dir["src"] && dir["src"].IsScalar()) {
+										src = dir["src"].as<std::string>();
+									} else {
+										throw config_exception("Item 'src' in 'bound-directories' not defined");
+									}
+									if (dir["dst"] && dir["dst"].IsScalar()) {
+										dst = dir["dst"].as<std::string>();
+									} else {
+										throw config_exception("Item 'dst' in 'bound-directories' not defined");
+									}
+									if (dir["mode"] && dir["mode"].IsScalar()) {
+										std::string str_mode = dir["mode"].as<std::string>();
+										if (str_mode.find("RW") != std::string::npos) {
+											mode = static_cast<sandbox_limits::dir_perm>(
+												mode | sandbox_limits::dir_perm::RW);
+										}
+										if (str_mode.find("NOEXEC") != std::string::npos) {
+											mode = static_cast<sandbox_limits::dir_perm>(
+												mode | sandbox_limits::dir_perm::NOEXEC);
+										}
+										if (str_mode.find("FS") != std::string::npos) {
+											mode = static_cast<sandbox_limits::dir_perm>(
+												mode | sandbox_limits::dir_perm::FS);
+										}
+										if (str_mode.find("MAYBE") != std::string::npos) {
+											mode = static_cast<sandbox_limits::dir_perm>(
+												mode | sandbox_limits::dir_perm::MAYBE);
+										}
+										if (str_mode.find("DEV") != std::string::npos) {
+											mode = static_cast<sandbox_limits::dir_perm>(
+												mode | sandbox_limits::dir_perm::DEV);
+										}
+									} // no throw... can be omitted
+									sl->bound_dirs.push_back(
+										std::tuple<std::string, std::string, sandbox_limits::dir_perm>{src, dst, mode});
+								}
+							}
 						} // can be omitted... no throw
 
 						if (lim["environ-variable"] && lim["environ-variable"].IsMap()) {
 							for (auto &var : lim["environ-variable"]) {
-								sl->environ_vars.insert(
+								sl->environ_vars.push_back(
 									std::make_pair(var.first.as<std::string>(), var.second.as<std::string>()));
 							}
 						}

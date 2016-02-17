@@ -157,9 +157,10 @@ void job::build_job()
 			limits->std_output = parse_job_var(task_meta->std_output);
 			limits->std_error = parse_job_var(task_meta->std_error);
 			limits->chdir = parse_job_var(limits->chdir);
-			std::map<std::string, std::string> new_bnd_dirs;
+			std::vector<std::tuple<std::string, std::string, sandbox_limits::dir_perm>> new_bnd_dirs;
 			for (auto &bnd_dir : limits->bound_dirs) {
-				new_bnd_dirs.emplace(parse_job_var(bnd_dir.first), parse_job_var(bnd_dir.second));
+				new_bnd_dirs.push_back(std::tuple<std::string, std::string, sandbox_limits::dir_perm>{
+					parse_job_var(std::get<0>(bnd_dir)), parse_job_var(std::get<1>(bnd_dir)), std::get<2>(bnd_dir)});
 			}
 			limits->bound_dirs = new_bnd_dirs;
 

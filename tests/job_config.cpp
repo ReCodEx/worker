@@ -181,7 +181,8 @@ TEST(job_config_test, correct_format)
 		"                    ISOLATE_BOX: /box\n"
 		"                    ISOLATE_TMP: /tmp\n"
 		"                bound-directories:\n"
-		"                    /tmp: /recodex/tmp\n"
+		"                    - src: /tmp\n"
+		"                      dst: /recodex/tmp\n"
 		"...\n"
 	);
 	build_job_metadata(yaml);
@@ -190,6 +191,7 @@ TEST(job_config_test, correct_format)
 
 TEST(job_config_test, config_data)
 {
+	using sp = sandbox_limits::dir_perm;
 	auto yaml = YAML::Load(
 		"---\n"
 		"submission:\n"
@@ -236,7 +238,9 @@ TEST(job_config_test, config_data)
 		"                    ISOLATE_BOX: /box\n"
 		"                    ISOLATE_TMP: /tmp\n"
 		"                bound-directories:\n"
-		"                    /tmp/recodex: /recodex/tmp\n"
+		"                    - src: /tmp/recodex\n"
+		"                      dst: /recodex/tmp\n"
+		"                      mode: RW,NOEXEC\n"
 		"              - hw-group-id: group2\n"
 		"...\n"
 	);
@@ -290,13 +294,13 @@ TEST(job_config_test, config_data)
 	ASSERT_EQ(limit1->chdir, "/eval");
 	ASSERT_EQ(limit1->disk_size, 50u);
 	ASSERT_EQ(limit1->disk_files, 10u);
-	std::map<std::string, std::string> expected_environ = {
-		{ "ISOLATE_BOX", "/box" },
-		{ "ISOLATE_TMP", "/tmp" }
+	std::vector<std::pair<std::string, std::string>> expected_environ = {
+		{ "ISOLATE_TMP", "/tmp" },
+		{ "ISOLATE_BOX", "/box" }
 	};
 	ASSERT_EQ(limit1->environ_vars, expected_environ);
-	std::map<std::string, std::string> expected_bound_dirs = {
-		{ "/tmp/recodex", "/recodex/tmp" }
+	std::vector<std::tuple<std::string, std::string, sp>> expected_bound_dirs = {
+		std::tuple<std::string, std::string, sp>{ "/tmp/recodex", "/recodex/tmp", static_cast<sp>(sp::RW | sp::NOEXEC) }
 	};
 	ASSERT_EQ(limit1->bound_dirs, expected_bound_dirs);
 

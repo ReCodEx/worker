@@ -51,8 +51,9 @@ tasks:
                 PATH: "/usr/bin"
               chdir: "evaluate"
               bound-directories:
-                /tmp/hello_from_codex_worker: "evaluate"
-                /etc/alternatives: "etc/alternatives"
+                - src: /tmp/hello_from_codex_worker
+				  dst: "evaluate"
+				  mode: RW
     - task-id: "remove_created_dir"
       priority: 4
       fatal-failure: false

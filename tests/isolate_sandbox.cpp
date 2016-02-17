@@ -140,21 +140,22 @@ TEST(IsolateSandbox, NonzeroReturnCommand)
 
 TEST(IsolateSandbox, BindDirsExecuteGCC)
 {
+	using sp = sandbox_limits::dir_perm;
 	auto tmp = fs::temp_directory_path();
 	sandbox_limits limits;
 	limits.wall_time = 10;
 	limits.cpu_time = 10;
 	limits.extra_time = 1;
 	limits.processes = 0;
-	limits.bound_dirs = {{(tmp / "recodex_35_test").string(), "evaluate"},
-						 {"/etc/alternatives", "etc/alternatives"}};
+	limits.bound_dirs = {
+		std::tuple<std::string, std::string, sp>{(tmp / "recodex_35_test").string(), "evaluate", sp::RW}};
 	limits.chdir = "evaluate";
 	limits.environ_vars = {{"PATH", "/usr/bin"}};
 
 	fs::create_directories(tmp / "recodex_35_test");
 	fs::permissions(tmp / "recodex_35_test", fs::add_perms | fs::group_write | fs::others_write);
 	{
-		std::ofstream file((tmp / "recodex_35_test" /  "main.c").string());
+		std::ofstream file((tmp / "recodex_35_test" / "main.c").string());
 		file << "#include <stdio.h>\n\nint main(void)\n{\n\tprintf(\"Hello world!\\n\");\n\treturn 0;\n}\n";
 	}
 

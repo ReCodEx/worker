@@ -444,7 +444,8 @@ TEST(job_test, job_variables)
 				"                    ISOLATE_BOX: /box\n"
 				"                    ISOLATE_TMP: /tmp\n"
 				"                bound-directories:\n"
-				"                    ${TEMP_DIR}" + std::string(1, path::preferred_separator) + "recodex: ${SOURCE_DIR}" + std::string(1, path::preferred_separator) + "tmp\n"
+				"                    - src: ${TEMP_DIR}" + std::string(1, path::preferred_separator) + "recodex\n"
+				"                      dst: ${SOURCE_DIR}" + std::string(1, path::preferred_separator) + "tmp\n"
 				"              - hw-group-id: group2\n"
 				"...\n"
 	);
@@ -482,8 +483,8 @@ TEST(job_test, job_variables)
 
 	auto bnd_dirs = limits.bound_dirs;
 	ASSERT_EQ(bnd_dirs.size(), 1u);
-	ASSERT_EQ(path(bnd_dirs.begin()->first).string(), (temp_directory_path() / "recodex").string());
-	ASSERT_EQ(path(bnd_dirs.begin()->second).string(), (dir / "tmp").string());
+	ASSERT_EQ(path(std::get<0>(bnd_dirs[0])).string(), (temp_directory_path() / "recodex").string());
+	ASSERT_EQ(path(std::get<1>(bnd_dirs[0])).string(), (dir / "tmp").string());
 
 	// cleanup after yourself
 	remove_all(dir_root);

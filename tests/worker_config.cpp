@@ -5,6 +5,7 @@
 
 TEST(worker_config, load_yaml_basic)
 {
+	using sp = sandbox_limits::dir_perm;
 	auto yaml = YAML::Load(
 		"---\n"
 		"worker-id: 8\n"
@@ -40,8 +41,12 @@ TEST(worker_config, load_yaml_basic)
 		"    disk-size: 50\n"
 		"    disk-files: 7\n"
 		"bound-directories:\n"
-		"    localbin: /usr/local/bin\n"
-		"    share: /usr/share\n"
+		"    - src: /usr/local/bin\n"
+		"      dst: localbin\n"
+		"      mode: RW\n"
+		"    - src: /usr/share\n"
+		"      dst: share\n"
+		"      mode: MAYBE\n"
 		"..."
 	);
 
@@ -64,8 +69,8 @@ TEST(worker_config, load_yaml_basic)
 	expected_limits.disk_size = 50;
 	expected_limits.disk_files = 7;
 	expected_limits.bound_dirs = {
-		{ "localbin", "/usr/local/bin" },
-		{ "share", "/usr/share" }
+		std::tuple<std::string, std::string, sp>{ "/usr/local/bin", "localbin", sp::RW },
+		std::tuple<std::string, std::string, sp>{ "/usr/share", "share", sp::MAYBE }
 	};
 
 	log_config expected_log;

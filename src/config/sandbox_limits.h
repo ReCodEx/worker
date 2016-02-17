@@ -1,9 +1,11 @@
 #ifndef CODEX_WORKER_SANDBOX_LIMITS_H
 #define CODEX_WORKER_SANDBOX_LIMITS_H
 
-#include <map>
 #include <cfloat>
 #include <limits>
+#include <vector>
+#include <tuple>
+#include <utility>
 
 
 /**
@@ -12,6 +14,17 @@
 */
 struct sandbox_limits {
 public:
+	/**
+	 * Allowed permissions for directory bindings.
+	 * @param RO Read only.
+	 * @param RW Read and write access.
+	 * @param NOEXEC Disallow execution of binaries.
+	 * @param FS Instead of binding a directory, mount a device-less filesystem.
+	 * @param MAYBE Silently ignore the rule if the directory to be bound does not exist.
+	 * @param DEV Allow access to character and block devices.
+	 * @warning Not all options must be supported by all sandboxes. Please, consult your sandbox documentation first.
+	 */
+	enum dir_perm : unsigned short { RO = 0, RW = 1, NOEXEC = 2, FS = 4, MAYBE = 8, DEV = 16 };
 	/**
 	* Limit memory usage. For Isolate, this limits whole control group (--cg-mem switch).
 	* Memory size is set in kilobytes.
@@ -87,12 +100,11 @@ public:
 	/**
 	* Set environment variables before run command inside the sandbox.
 	*/
-	std::map<std::string, std::string> environ_vars;
-
+	std::vector<std::pair<std::string, std::string>> environ_vars;
 	/**
-	 * Contains local directories that should be bound into the sandbox
+	 * Contains local directories that should be bound into the sandbox.
 	 */
-	std::map<std::string, std::string> bound_dirs;
+	std::vector<std::tuple<std::string, std::string, dir_perm>> bound_dirs;
 
 
 	/**
