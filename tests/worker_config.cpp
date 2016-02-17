@@ -39,11 +39,6 @@ TEST(worker_config, load_yaml_basic)
 		"    parallel: 1\n"
 		"    disk-size: 50\n"
 		"    disk-files: 7\n"
-		"sandboxes-wrap-limits:\n"
-		"    - name: isolate\n"
-		"      time: 10\n"
-		"    - name: csharp\n"
-		"      time: 20\n"
 		"bound-directories:\n"
 		"    localbin: /usr/local/bin\n"
 		"    share: /usr/share\n"
@@ -57,11 +52,6 @@ TEST(worker_config, load_yaml_basic)
 		{"env", "python"},
 		{"threads", "10"},
 		{"hwgroup", "group_1"}
-	};
-
-	std::map<std::string, size_t> expected_sand_limits = {
-		{ "isolate", 10 },
-		{ "csharp", 20 }
 	};
 
 	sandbox_limits expected_limits;
@@ -101,7 +91,6 @@ TEST(worker_config, load_yaml_basic)
 	ASSERT_EQ("/tmp/working_dir", config.get_working_directory());
 	ASSERT_STREQ("/tmp/isoeval/cache", config.get_cache_dir().c_str());
 	ASSERT_EQ(expected_headers, config.get_headers());
-	ASSERT_EQ(expected_sand_limits, config.get_sandboxes_limits());
 	ASSERT_EQ(expected_limits, config.get_limits());
 	ASSERT_EQ(expected_log, config.get_log_config());
 	ASSERT_EQ(expected_filemans, config.get_filemans_configs());

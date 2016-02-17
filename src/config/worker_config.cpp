@@ -126,16 +126,6 @@ worker_config::worker_config(const YAML::Node &config)
 			} // no throw... can be omitted
 		} // no throw... can be omitted
 
-		// sandboxes wrappers limits
-		if (config["sandboxes-wrap-limits"] && config["sandboxes-wrap-limits"].IsSequence()) {
-			for (auto &wraplim : config["sandboxes-wrap-limits"]) {
-				if (wraplim["name"] && wraplim["name"].IsScalar() && wraplim["time"] && wraplim["time"].IsScalar()) {
-					sandboxes_limits_.insert(
-						std::make_pair(wraplim["name"].as<std::string>(), wraplim["time"].as<size_t>()));
-				} // no throw... can be omitted
-			}
-		} // no throw... can be omitted
-
 		if (config["bound-directories"] && config["bound-directories"].IsMap()) {
 			for (auto &dir : config["bound-directories"]) {
 				if (!dir.first.IsScalar()) {
@@ -188,11 +178,6 @@ const std::vector<fileman_config> &worker_config::get_filemans_configs()
 const sandbox_limits &worker_config::get_limits()
 {
 	return limits_;
-}
-
-const std::map<std::string, size_t> &worker_config::get_sandboxes_limits()
-{
-	return sandboxes_limits_;
 }
 
 std::string worker_config::get_cache_dir() const

@@ -12,7 +12,7 @@
 /**
  * Class implementing operations with Isolate sandbox.
  * @note Requirements are Linux OS with Isolate installed. Isolate binary must be named "isolate"
- * and must be in PATH.
+ * and must be in PATH (default installer of Isolate meets these requirements).
  */
 class isolate_sandbox : public sandbox_base
 {
@@ -22,15 +22,11 @@ public:
 	 * @param limits Limits for current command.
 	 * @param id Number of current worker. This must be unique for each worker on one machine!
 	 * @param temp_dir Directory to store temporary files (generated isolate's meta log)
-	 * @param max_timeout Second security level - sandbox must end in this limit othrwise will be killed.
-	 * If not set (or set to -1), this number will be safely computed from @a limits. This limit is in seconds
-	 * (optional).
 	 * @param logger Set system logger (optional).
 	 */
 	isolate_sandbox(sandbox_limits limits,
 		size_t id,
-		const std::string &temp_dir = "/tmp",
-		int max_timeout = -1,
+		const std::string &temp_dir,
 		std::shared_ptr<spdlog::logger> logger = nullptr);
 	/**
 	 * Destructor.

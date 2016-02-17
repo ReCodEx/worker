@@ -20,12 +20,9 @@
 namespace fs = boost::filesystem;
 
 
-isolate_sandbox::isolate_sandbox(sandbox_limits limits,
-	size_t id,
-	const std::string &temp_dir,
-	int max_timeout,
-	std::shared_ptr<spdlog::logger> logger)
-	: limits_(limits), id_(id), isolate_binary_("isolate"), max_timeout_(max_timeout)
+isolate_sandbox::isolate_sandbox(
+	sandbox_limits limits, size_t id, const std::string &temp_dir, std::shared_ptr<spdlog::logger> logger)
+	: limits_(limits), id_(id), isolate_binary_("isolate")
 {
 	if (logger != nullptr) {
 		logger_ = logger;
@@ -35,10 +32,10 @@ isolate_sandbox::isolate_sandbox(sandbox_limits limits,
 		logger_ = std::make_shared<spdlog::logger>("cache_manager_nolog", sink);
 	}
 
-	if (max_timeout_ == -1) {
-		max_timeout_ = limits_.wall_time > limits_.cpu_time ? limits_.wall_time : limits_.cpu_time;
-		max_timeout_ += 300; // 5 minutes
-	}
+	// Set backup limit (for killing isolate if it hasn't finished yet)
+	max_timeout_ = limits_.wall_time > limits_.cpu_time ? limits_.wall_time : limits_.cpu_time;
+	max_timeout_ += 300; // plus 5 minutes (for short tasks)
+	max_timeout_ *= 1.2; // 20% time more than necessary (better have some spare time)
 
 	temp_dir_ = (fs::path(temp_dir) / std::to_string(id_)).string();
 	try {

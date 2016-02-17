@@ -15,10 +15,10 @@ namespace fs = boost::filesystem;
 TEST(IsolateSandbox, BasicCreation)
 {
 	sandbox_limits limits;
-	EXPECT_NO_THROW(isolate_sandbox s(limits, 34));
-	isolate_sandbox is(limits, 34, "/tmp", 500);
+	EXPECT_NO_THROW(isolate_sandbox s(limits, 34, "/tmp"));
+	isolate_sandbox is(limits, 34, "/tmp");
 	EXPECT_EQ(is.get_dir(), "/var/local/lib/isolate/34");
-	EXPECT_THROW(isolate_sandbox s(limits, 2365), sandbox_exception);
+	EXPECT_THROW(isolate_sandbox s(limits, 2365, "/tmp"), sandbox_exception);
 }
 
 TEST(IsolateSandbox, NormalCommand)
@@ -38,7 +38,7 @@ TEST(IsolateSandbox, NormalCommand)
 	limits.processes = 0;
 	limits.share_net = false;
 	isolate_sandbox *is = nullptr;
-	EXPECT_NO_THROW(is = new isolate_sandbox(limits, 34));
+	EXPECT_NO_THROW(is = new isolate_sandbox(limits, 34, "/tmp"));
 	EXPECT_EQ(is->get_dir(), "/var/local/lib/isolate/34");
 	sandbox_results results;
 	EXPECT_NO_THROW(results = is->run("/bin/ls", std::vector<std::string>{"-a", "-l", "-i"}));
@@ -70,7 +70,7 @@ TEST(IsolateSandbox, TimeoutCommand)
 	limits.processes = 0;
 	limits.share_net = false;
 	isolate_sandbox *is = nullptr;
-	EXPECT_NO_THROW(is = new isolate_sandbox(limits, 34));
+	EXPECT_NO_THROW(is = new isolate_sandbox(limits, 34, "/tmp"));
 	EXPECT_EQ(is->get_dir(), "/var/local/lib/isolate/34");
 	sandbox_results results;
 	EXPECT_NO_THROW(results = is->run("/bin/sleep", std::vector<std::string>{"5"}));
@@ -100,7 +100,7 @@ TEST(IsolateSandbox, NonzeroReturnCommand)
 	limits.processes = 0;
 	limits.share_net = false;
 	isolate_sandbox *is = nullptr;
-	EXPECT_NO_THROW(is = new isolate_sandbox(limits, 34));
+	EXPECT_NO_THROW(is = new isolate_sandbox(limits, 34, "/tmp"));
 	EXPECT_EQ(is->get_dir(), "/var/local/lib/isolate/34");
 	sandbox_results results;
 	EXPECT_NO_THROW(results = is->run("/bin/false", std::vector<std::string>{}));
@@ -114,7 +114,7 @@ TEST(IsolateSandbox, NonzeroReturnCommand)
 	delete is;
 }
 
-TEST(IsolateSandbox, TimeoutIsolate)
+/*TEST(IsolateSandbox, TimeoutIsolate)
 {
 	sandbox_limits limits;
 	limits.wall_time = 10;
@@ -131,12 +131,12 @@ TEST(IsolateSandbox, TimeoutIsolate)
 	limits.processes = 0;
 	limits.share_net = false;
 	isolate_sandbox *is = nullptr;
-	EXPECT_NO_THROW(is = new isolate_sandbox(limits, 34, "/tmp", 2));
+	EXPECT_NO_THROW(is = new isolate_sandbox(limits, 34, "/tmp"));
 	EXPECT_EQ(is->get_dir(), "/var/local/lib/isolate/34");
 	sandbox_results results;
-	EXPECT_THROW(results = is->run("/bin/sleep", std::vector<std::string>{"5"}), sandbox_exception);
+	EXPECT_THROW(results = is->run("/bin/sleep", std::vector<std::string>{"400"}), sandbox_exception);
 	delete is;
-}
+}*/
 
 TEST(IsolateSandbox, BindDirsExecuteGCC)
 {
@@ -159,7 +159,7 @@ TEST(IsolateSandbox, BindDirsExecuteGCC)
 	}
 
 	isolate_sandbox *is = nullptr;
-	EXPECT_NO_THROW(is = new isolate_sandbox(limits, 35));
+	EXPECT_NO_THROW(is = new isolate_sandbox(limits, 35, "/tmp"));
 	sandbox_results results;
 	EXPECT_NO_THROW(results = is->run("/usr/bin/gcc", std::vector<std::string>{"-Wall", "-o", "test", "main.c"}));
 

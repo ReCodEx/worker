@@ -37,7 +37,7 @@ void external_task::sandbox_init()
 	}
 #ifndef _WIN32
 	if (sandbox_id_ == "isolate") {
-		sandbox_ = std::make_shared<isolate_sandbox>(limits_, worker_id_, temp_dir_, -1, logger_);
+		sandbox_ = std::make_shared<isolate_sandbox>(limits_, worker_id_, temp_dir_, logger_);
 	}
 #endif
 }

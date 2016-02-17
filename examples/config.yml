@@ -28,9 +28,4 @@ limits:
     parallel: 1  # time and memory limits are merged
     disk-size: 50
     disk-files: 5
-sandboxes-wrap-limits:
-    - name: "isolate"
-      time: 10  # in seconds
-    - name: "csharp"
-      time: 20  # in seconds
 ...

@@ -77,12 +77,6 @@ public:
 	 * @return non editable reference to sandbox_limits structure
 	 */
 	const sandbox_limits &get_limits();
-	/**
-	 * Return limits which are applied for sandbox wrapper classes.
-	 * Its a security restriction if sandbox gets mad and unresponsive.
-	 * @return associative array indexed with sandbox name and with values of sandbox wrapper time limit
-	 */
-	const std::map<std::string, size_t> &get_sandboxes_limits();
 
 private:
 	/** Unique worker number in context of one machine (0-100) */
@@ -101,8 +95,6 @@ private:
 	std::vector<fileman_config> filemans_configs_;
 	/** Default sandbox limits */
 	sandbox_limits limits_;
-	/** Time limits which are applied on whole sandbox */
-	std::map<std::string, size_t> sandboxes_limits_;
 };
 
 
