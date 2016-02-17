@@ -67,14 +67,26 @@ TEST(Tasks, InternalFetchTask)
 }
 
 
-class test_task_base : public task_base {
+class test_task_base : public task_base
+{
 public:
-	test_task_base(size_t id, std::string task_id, size_t priority, bool fatal,
-				   const std::vector<std::string> &dependencies,
-				   const std::string &cmd, const std::vector<std::string> &arguments) :
-		task_base(id, task_id, priority, fatal, dependencies, cmd, arguments) {}
-	virtual ~test_task_base() {}
-	std::shared_ptr<task_results> run() { return nullptr; }
+	test_task_base(size_t id,
+		std::string task_id,
+		size_t priority,
+		bool fatal,
+		const std::vector<std::string> &dependencies,
+		const std::string &cmd,
+		const std::vector<std::string> &arguments)
+		: task_base(id, task_id, priority, fatal, dependencies, cmd, arguments)
+	{
+	}
+	virtual ~test_task_base()
+	{
+	}
+	std::shared_ptr<task_results> run()
+	{
+		return nullptr;
+	}
 };
 
 TEST(Tasks, TaskBase)

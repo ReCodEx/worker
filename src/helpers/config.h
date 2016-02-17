@@ -15,6 +15,12 @@ namespace helpers
 	 * @return
 	 */
 	std::shared_ptr<job_metadata> build_job_metadata(const YAML::Node &conf);
+	/**
+	 * From given configuration in yaml get bind directories config for sandbox.
+	 * @param lim
+	 * @return
+	 */
+	std::vector<std::tuple<std::string, std::string, sandbox_limits::dir_perm>> get_bind_dirs(const YAML::Node &lim);
 
 	/**
 	 * Special exception for config helper functions/classes

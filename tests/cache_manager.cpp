@@ -15,9 +15,9 @@ TEST(CacheManager, CacheDir)
 	auto tmp = fs::temp_directory_path();
 
 	// disabled due to problems on windows machines
-	//EXPECT_THROW(cache_manager m("/a"), fm_exception);
-	//EXPECT_THROW(cache_manager m("/a/"), fm_exception);
-	//EXPECT_THROW(cache_manager o(""), fm_exception);
+	// EXPECT_THROW(cache_manager m("/a"), fm_exception);
+	// EXPECT_THROW(cache_manager m("/a/"), fm_exception);
+	// EXPECT_THROW(cache_manager o(""), fm_exception);
 
 	EXPECT_NO_THROW(cache_manager p(tmp.string()));
 	EXPECT_NO_THROW(cache_manager q("/tmp/"));
@@ -29,25 +29,25 @@ TEST(CacheManager, CacheDir)
 TEST(CacheManager, GetExistingFile)
 {
 	auto tmp = fs::temp_directory_path();
-	//std::string cache_path_name = "/tmp/recodex/";
-	//fs::path cache_path(cache_path_name);
+	// std::string cache_path_name = "/tmp/recodex/";
+	// fs::path cache_path(cache_path_name);
 	fs::create_directory(tmp / "recodex");
 	{
-		ofstream file((tmp / "recodex" /  "test.txt").string());
+		ofstream file((tmp / "recodex" / "test.txt").string());
 		file << "testing input" << endl;
 	}
 	cache_manager m((tmp / "recodex").string());
-	//Copy file to existing directory
+	// Copy file to existing directory
 	m.get_file("test.txt", (tmp / "test.txt").string());
 	EXPECT_TRUE(fs::is_regular_file((tmp / "test.txt").string()));
 
-	//Copy the same file to same directory - should be overriden
+	// Copy the same file to same directory - should be overriden
 	EXPECT_NO_THROW(m.get_file("test.txt", (tmp / "test.txt").string()));
 
-	//Copy file to nonexisting directory
+	// Copy file to nonexisting directory
 	EXPECT_THROW(m.get_file("test.txt", (tmp / "recodex" / "nonexist" / "test.txt").string()), fm_exception);
 
-	//Clean used resources
+	// Clean used resources
 	fs::remove(tmp / "test.txt");
 	fs::remove_all(tmp / "recodex");
 }

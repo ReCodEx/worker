@@ -6,58 +6,52 @@
 TEST(worker_config, load_yaml_basic)
 {
 	using sp = sandbox_limits::dir_perm;
-	auto yaml = YAML::Load(
-		"---\n"
-		"worker-id: 8\n"
-		"broker-uri: tcp://localhost:1234\n"
-		"working-directory: /tmp/working_dir\n"
-		"headers:\n"
-		"    env:\n"
-		"        - c\n"
-		"        - python\n"
-		"    threads: 10\n"
-		"    hwgroup: group_1\n"
-		"file-managers:\n"
-		"    - hostname: http://localhost:80\n"
-		"      username: 654321\n"
-		"      password: 123456\n"
-		"    - hostname: http://localhost:4242\n"
-		"      username: 123456\n"
-		"      password: 654321\n"
-		"file-cache:\n"
-		"    cache-dir: /tmp/isoeval/cache\n"
-		"logger:\n"
-		"    file: /var/log/isoeval\n"
-		"    level: emerg\n"
-		"    max-size: 2048576\n"
-		"    rotations: 5\n"
-		"limits:\n"
-		"    time: 5\n"
-		"    wall-time: 6\n"
-		"    extra-time: 2\n"
-		"    stack-size: 50000\n"
-		"    memory: 60000\n"
-		"    parallel: 1\n"
-		"    disk-size: 50\n"
-		"    disk-files: 7\n"
-		"bound-directories:\n"
-		"    - src: /usr/local/bin\n"
-		"      dst: localbin\n"
-		"      mode: RW\n"
-		"    - src: /usr/share\n"
-		"      dst: share\n"
-		"      mode: MAYBE\n"
-		"..."
-	);
+	auto yaml = YAML::Load("---\n"
+						   "worker-id: 8\n"
+						   "broker-uri: tcp://localhost:1234\n"
+						   "working-directory: /tmp/working_dir\n"
+						   "headers:\n"
+						   "    env:\n"
+						   "        - c\n"
+						   "        - python\n"
+						   "    threads: 10\n"
+						   "    hwgroup: group_1\n"
+						   "file-managers:\n"
+						   "    - hostname: http://localhost:80\n"
+						   "      username: 654321\n"
+						   "      password: 123456\n"
+						   "    - hostname: http://localhost:4242\n"
+						   "      username: 123456\n"
+						   "      password: 654321\n"
+						   "file-cache:\n"
+						   "    cache-dir: /tmp/isoeval/cache\n"
+						   "logger:\n"
+						   "    file: /var/log/isoeval\n"
+						   "    level: emerg\n"
+						   "    max-size: 2048576\n"
+						   "    rotations: 5\n"
+						   "limits:\n"
+						   "    time: 5\n"
+						   "    wall-time: 6\n"
+						   "    extra-time: 2\n"
+						   "    stack-size: 50000\n"
+						   "    memory: 60000\n"
+						   "    parallel: 1\n"
+						   "    disk-size: 50\n"
+						   "    disk-files: 7\n"
+						   "bound-directories:\n"
+						   "    - src: /usr/local/bin\n"
+						   "      dst: localbin\n"
+						   "      mode: RW\n"
+						   "    - src: /usr/share\n"
+						   "      dst: share\n"
+						   "      mode: MAYBE\n"
+						   "...");
 
 	worker_config config(yaml);
 
 	worker_config::header_map_t expected_headers = {
-		{"env", "c"},
-		{"env", "python"},
-		{"threads", "10"},
-		{"hwgroup", "group_1"}
-	};
+		{"env", "c"}, {"env", "python"}, {"threads", "10"}, {"hwgroup", "group_1"}};
 
 	sandbox_limits expected_limits;
 	expected_limits.memory_usage = 60000;
@@ -68,10 +62,8 @@ TEST(worker_config, load_yaml_basic)
 	expected_limits.stack_size = 50000;
 	expected_limits.disk_size = 50;
 	expected_limits.disk_files = 7;
-	expected_limits.bound_dirs = {
-		std::tuple<std::string, std::string, sp>{ "/usr/local/bin", "localbin", sp::RW },
-		std::tuple<std::string, std::string, sp>{ "/usr/share", "share", sp::MAYBE }
-	};
+	expected_limits.bound_dirs = {std::tuple<std::string, std::string, sp>{"/usr/local/bin", "localbin", sp::RW},
+		std::tuple<std::string, std::string, sp>{"/usr/share", "share", sp::MAYBE}};
 
 	log_config expected_log;
 	expected_log.log_path = "/var/log";
@@ -106,15 +98,13 @@ TEST(worker_config, load_yaml_basic)
  */
 TEST(worker_config, invalid_header_value_1)
 {
-	auto yaml = YAML::Load(
-		"worker-id: 1\n"
-		"broker-uri: tcp://localhost:1234\n"
-		"headers:\n"
-		"    env:\n"
-		"        foo: c\n"
-		"    threads: 10\n"
-		"    hwgroup: group_1\n"
-	);
+	auto yaml = YAML::Load("worker-id: 1\n"
+						   "broker-uri: tcp://localhost:1234\n"
+						   "headers:\n"
+						   "    env:\n"
+						   "        foo: c\n"
+						   "    threads: 10\n"
+						   "    hwgroup: group_1\n");
 
 	ASSERT_THROW(worker_config config(yaml), config_error);
 }
@@ -124,15 +114,13 @@ TEST(worker_config, invalid_header_value_1)
  */
 TEST(worker_config, invalid_header_value_2)
 {
-	auto yaml = YAML::Load(
-		"worker-id: 1\n"
-		"broker-uri: tcp://localhost:1234\n"
-		"headers:\n"
-		"    env:\n"
-		"        - foo: c\n"
-		"    threads: 10\n"
-		"    hwgroup: group_1\n"
-	);
+	auto yaml = YAML::Load("worker-id: 1\n"
+						   "broker-uri: tcp://localhost:1234\n"
+						   "headers:\n"
+						   "    env:\n"
+						   "        - foo: c\n"
+						   "    threads: 10\n"
+						   "    hwgroup: group_1\n");
 
 	ASSERT_THROW(worker_config config(yaml), config_error);
 }
@@ -142,16 +130,14 @@ TEST(worker_config, invalid_header_value_2)
  */
 TEST(worker_config, invalid_broker_uri)
 {
-	auto yaml = YAML::Load(
-		"worker-id: 1\n"
-		"broker-uri:\n"
-		"    tcp: localhost:1234\n"
-		"headers:\n"
-		"    env:\n"
-		"        - foo: c\n"
-		"    threads: 10\n"
-		"    hwgroup: group_1\n"
-	);
+	auto yaml = YAML::Load("worker-id: 1\n"
+						   "broker-uri:\n"
+						   "    tcp: localhost:1234\n"
+						   "headers:\n"
+						   "    env:\n"
+						   "        - foo: c\n"
+						   "    threads: 10\n"
+						   "    hwgroup: group_1\n");
 
 	ASSERT_THROW(worker_config config(yaml), config_error);
 }

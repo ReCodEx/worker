@@ -1,4 +1,5 @@
 #include "worker_config.h"
+#include "../helpers/config.h"
 
 worker_config::worker_config()
 {
@@ -126,44 +127,10 @@ worker_config::worker_config(const YAML::Node &config)
 			} // no throw... can be omitted
 		} // no throw... can be omitted
 
-		if (config["bound-directories"] && config["bound-directories"].IsSequence()) {
-			for (auto &dir : config["bound-directories"]) {
-				std::string src;
-				std::string dst;
-				sandbox_limits::dir_perm mode = sandbox_limits::dir_perm::RO;
-				if (dir.IsMap()) {
-					if (dir["src"] && dir["src"].IsScalar()) {
-						src = dir["src"].as<std::string>();
-					} else {
-						throw config_error("Item 'src' in 'bound-directories' not defined");
-					}
-					if (dir["dst"] && dir["dst"].IsScalar()) {
-						dst = dir["dst"].as<std::string>();
-					} else {
-						throw config_error("Item 'dst' in 'bound-directories' not defined");
-					}
-					if (dir["mode"] && dir["mode"].IsScalar()) {
-						std::string str_mode = dir["mode"].as<std::string>();
-						if (str_mode.find("RW") != std::string::npos) {
-							mode = static_cast<sandbox_limits::dir_perm>(mode | sandbox_limits::dir_perm::RW);
-						}
-						if (str_mode.find("NOEXEC") != std::string::npos) {
-							mode = static_cast<sandbox_limits::dir_perm>(mode | sandbox_limits::dir_perm::NOEXEC);
-						}
-						if (str_mode.find("FS") != std::string::npos) {
-							mode = static_cast<sandbox_limits::dir_perm>(mode | sandbox_limits::dir_perm::FS);
-						}
-						if (str_mode.find("MAYBE") != std::string::npos) {
-							mode = static_cast<sandbox_limits::dir_perm>(mode | sandbox_limits::dir_perm::MAYBE);
-						}
-						if (str_mode.find("DEV") != std::string::npos) {
-							mode = static_cast<sandbox_limits::dir_perm>(mode | sandbox_limits::dir_perm::DEV);
-						}
-					} // no throw... can be omitted
-					limits_.bound_dirs.push_back(
-						std::tuple<std::string, std::string, sandbox_limits::dir_perm>{src, dst, mode});
-				}
-			}
+		try {
+			limits_.bound_dirs = helpers::get_bind_dirs(config);
+		} catch (helpers::config_exception &e) {
+			throw config_error(e.what());
 		}
 
 	} catch (YAML::Exception &ex) {

@@ -24,8 +24,8 @@ tasks:
                     PATH: "/usr/bin"
                 bound-directories:
                     - src: ${SOURCE_DIR}
-					  dst: ${EVAL_DIR}
-					  mode: RW
+                      dst: ${EVAL_DIR}
+                      mode: RW
     - task-id: "fetch_test_1"
       priority: 4
       fatal-failure: false
@@ -56,8 +56,8 @@ tasks:
                     PATH: "/usr/bin"
                 bound-directories:
                     - src: ${SOURCE_DIR}
-					  dst: ${EVAL_DIR}
-					  mode: RW
+                      dst: ${EVAL_DIR}
+                      mode: RW
     - task-id: "fetch_test_solution_1"
       priority: 6
       fatal-failure: false
@@ -88,11 +88,11 @@ tasks:
                     PATH: "/usr/bin"
                 bound-directories:
                     - src: ${SOURCE_DIR}
-					  dst: ${EVAL_DIR}
-					  mode: RW
+                      dst: ${EVAL_DIR}
+                      mode: RW
                     - src: "${TEMP_DIR}/judges"
-					  dst: ${JUDGES_DIR}
-					  mode: RO
+                      dst: ${JUDGES_DIR}
+                      mode: RO
     - task-id: "rm_junk_test_1"
       priority: 8
       fatal-failure: false

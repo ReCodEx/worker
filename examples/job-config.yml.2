@@ -6,7 +6,7 @@ submission:
     job-id: hello_evaluation
     language: cpp
     file-collector: http://localhost:9999
-	log: true
+    log: true
 tasks:
     - task-id: "new_mkdir"
       priority: 1
@@ -52,8 +52,8 @@ tasks:
               chdir: "evaluate"
               bound-directories:
                 - src: /tmp/hello_from_codex_worker
-				  dst: "evaluate"
-				  mode: RW
+                  dst: "evaluate"
+                  mode: RW
     - task-id: "remove_created_dir"
       priority: 4
       fatal-failure: false

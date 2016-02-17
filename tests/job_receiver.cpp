@@ -10,17 +10,18 @@
 
 using namespace testing;
 
-class mock_job_evaluator : public job_evaluator {
+class mock_job_evaluator : public job_evaluator
+{
 public:
-	mock_job_evaluator () :
-		job_evaluator(nullptr, nullptr, nullptr, nullptr, "")
+	mock_job_evaluator() : job_evaluator(nullptr, nullptr, nullptr, nullptr, "")
 	{
 	}
 
 	MOCK_METHOD1(evaluate, eval_response(eval_request));
 };
 
-TEST(job_receiver, basic) {
+TEST(job_receiver, basic)
+{
 	zmq::context_t context(1);
 	zmq::socket_t socket(context, ZMQ_PAIR);
 	socket.bind("inproc://" JOB_SOCKET_ID);
@@ -33,16 +34,15 @@ TEST(job_receiver, basic) {
 
 	eval_response response(id, "OK");
 
-	EXPECT_CALL(*evaluator, evaluate(AllOf(
-		Field(&eval_request::job_id, StrEq(id)),
-		Field(&eval_request::job_url, StrEq(job_url)),
-		Field(&eval_request::result_url, StrEq(result_url))
-	))).Times(1).WillOnce(Return(response));
+	EXPECT_CALL(*evaluator,
+		evaluate(AllOf(Field(&eval_request::job_id, StrEq(id)),
+			Field(&eval_request::job_url, StrEq(job_url)),
+			Field(&eval_request::result_url, StrEq(result_url)))))
+		.Times(1)
+		.WillOnce(Return(response));
 
 	job_receiver receiver(context, evaluator, nullptr);
-	std::thread r([&receiver] () {
-		receiver.start_receiving();
-	});
+	std::thread r([&receiver]() { receiver.start_receiving(); });
 
 	socket.send("eval", 4, ZMQ_SNDMORE);
 	socket.send(id, 8, ZMQ_SNDMORE);
@@ -73,7 +73,8 @@ TEST(job_receiver, basic) {
 	r.join();
 }
 
-TEST(job_receiver, incomplete_msg) {
+TEST(job_receiver, incomplete_msg)
+{
 	zmq::context_t context(1);
 	zmq::socket_t socket(context, ZMQ_PAIR);
 	socket.bind("inproc://" JOB_SOCKET_ID);
@@ -82,9 +83,7 @@ TEST(job_receiver, incomplete_msg) {
 	auto evaluator = std::make_shared<StrictMock<mock_job_evaluator>>();
 
 	job_receiver receiver(context, evaluator, nullptr);
-	std::thread r([&receiver] () {
-		receiver.start_receiving();
-	});
+	std::thread r([&receiver]() { receiver.start_receiving(); });
 
 	socket.send("eval", 4, ZMQ_SNDMORE);
 	socket.send("foo", 3, ZMQ_SNDMORE);

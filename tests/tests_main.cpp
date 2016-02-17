@@ -14,7 +14,7 @@ namespace fs = boost::filesystem;
  */
 void init()
 {
-	//Globally init curl library
+	// Globally init curl library
 	curl_global_init(CURL_GLOBAL_DEFAULT);
 }
 
@@ -23,14 +23,15 @@ void init()
  */
 void fini()
 {
-	//Clean after curl library
+	// Clean after curl library
 	curl_global_cleanup();
 }
 
-int main(int argc, char **argv) {
-	try{
+int main(int argc, char **argv)
+{
+	try {
 		init();
-	} catch(...) {
+	} catch (...) {
 		return 1;
 	}
 	testing::InitGoogleTest(&argc, argv);

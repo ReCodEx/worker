@@ -13,7 +13,8 @@ using namespace testing;
 /**
  * A mock configuration object
  */
-class mock_worker_config : public worker_config {
+class mock_worker_config : public worker_config
+{
 public:
 	MOCK_CONST_METHOD0(get_broker_uri, std::string());
 	MOCK_CONST_METHOD0(get_headers, const worker_config::header_map_t &());
@@ -22,7 +23,8 @@ public:
 /**
  * A mock ZeroMQ proxy connection
  */
-class mock_connection_proxy {
+class mock_connection_proxy
+{
 public:
 	MOCK_METHOD1(connect, void(const std::string &addr));
 	MOCK_METHOD3(poll, void(message_origin::set &, int, bool *));
@@ -39,26 +41,17 @@ TEST(broker_connection, sends_init)
 	broker_connection<mock_connection_proxy> connection(config, proxy);
 
 	std::string addr("tcp://localhost:9876");
-	worker_config::header_map_t headers = {
-		std::make_pair("env", "c"),
-		std::make_pair("hwgroup", "group_1")
-	};
+	worker_config::header_map_t headers = {std::make_pair("env", "c"), std::make_pair("hwgroup", "group_1")};
 
-	EXPECT_CALL(config, get_broker_uri())
-		.WillRepeatedly(Return(addr));
+	EXPECT_CALL(config, get_broker_uri()).WillRepeatedly(Return(addr));
 
-	EXPECT_CALL(config, get_headers())
-		.WillRepeatedly(ReturnRef(headers));
+	EXPECT_CALL(config, get_headers()).WillRepeatedly(ReturnRef(headers));
 
 	{
 		InSequence s;
 
 		EXPECT_CALL(*proxy, connect(StrEq(addr)));
-		EXPECT_CALL(*proxy, send_broker(ElementsAre(
-			"init",
-			"env=c",
-			"hwgroup=group_1"
-		))).WillOnce(Return(true));
+		EXPECT_CALL(*proxy, send_broker(ElementsAre("init", "env=c", "hwgroup=group_1"))).WillOnce(Return(true));
 	}
 
 	connection.connect();
@@ -83,33 +76,26 @@ TEST(broker_connection, forwards_eval)
 	{
 		InSequence s;
 
-		EXPECT_CALL(*proxy, poll(_, _, _))
-			.WillOnce(DoAll(
-				ClearFlags(),
-				SetFlag(message_origin::BROKER)
-			));
+		EXPECT_CALL(*proxy, poll(_, _, _)).WillOnce(DoAll(ClearFlags(), SetFlag(message_origin::BROKER)));
 
 		EXPECT_CALL(*proxy, recv_broker(_, _))
 			.Times(1)
-			.WillOnce(DoAll(
-				SetArgReferee<0>(std::vector<std::string>{
-					"eval",
-					"10",
-					"http://localhost:5487/submission_archives/10.tar.gz",
-					"http://localhost:5487/results/10",
-				}),
-				Return(true)
-			));
+			.WillOnce(DoAll(SetArgReferee<0>(std::vector<std::string>{
+								"eval",
+								"10",
+								"http://localhost:5487/submission_archives/10.tar.gz",
+								"http://localhost:5487/results/10",
+							}),
+				Return(true)));
 
-		EXPECT_CALL(*proxy, send_jobs(ElementsAre(
-			"eval",
-			"10",
-			"http://localhost:5487/submission_archives/10.tar.gz",
-			"http://localhost:5487/results/10"
-		))).WillOnce(Return(true));
+		EXPECT_CALL(*proxy,
+			send_jobs(ElementsAre("eval",
+				"10",
+				"http://localhost:5487/submission_archives/10.tar.gz",
+				"http://localhost:5487/results/10")))
+			.WillOnce(Return(true));
 
-		EXPECT_CALL(*proxy, poll(_, _, _))
-			.WillRepeatedly(SetArgPointee<2>(true));
+		EXPECT_CALL(*proxy, poll(_, _, _)).WillRepeatedly(SetArgPointee<2>(true));
 	}
 
 	connection.receive_tasks();
