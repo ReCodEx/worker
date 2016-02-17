@@ -358,7 +358,7 @@ void job::init_logger()
 		file_logger->info() << "       Job system log";
 		file_logger->info() << "------------------------------";
 		logger_ = file_logger;
-	} catch (spdlog::spdlog_ex &e) {
+	} catch (spdlog::spdlog_ex) {
 		// Suppose not happen. But in case, create only empty logger.
 		auto sink = std::make_shared<spdlog::sinks::null_sink_st>();
 		logger_ = std::make_shared<spdlog::logger>("job_manager_nolog", sink);
