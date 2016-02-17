@@ -1,0 +1,22 @@
+# ReCodEx worker systemd configuration file
+#
+# This file should be placed in /etc/systemd/system/ directory
+# For starting worker with ID 1, following should be met:
+# 	- config file with name 'config-1.yml' in conf directory
+#	- run 'systemctl start recodex-worker@1.service
+
+[Unit]
+Description=Recodex Worker (%i)
+Documentation=http://recodex.github.io/BasicWorker/,https://github.com/ReCodEx/GlobalWiki/wiki
+DefaultDependencies=true
+
+[Service]
+Type=simple
+StandardInput=null
+StandardOutput=null
+StandardError=journal
+ExecStart=/home/petr/Documents/MFF/ReCodEx/BasicWorker/build/codex_worker -c /home/petr/Documents/MFF/ReCodEx/BasicWorker/examples/config.yml
+#ExecStart=/home/petr/Documents/MFF/ReCodEx/BasicWorker/build/codex_worker -c /home/petr/Documents/MFF/ReCodEx/BasicWorker/examples/config-%i.yml
+
+[Install]
+WantedBy=multi-user.target
