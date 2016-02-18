@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.11)
-project(codex_worker)
+project(recodex-worker)
 
 
 # If APPVEYOR_COMPILE is defined and set to ON then boost, curl and zeromq will be searched with find_package on windows machine too
@@ -238,8 +238,19 @@ if(NOT YAMLCPP_FOUND)
 endif()
 
 # Include Google Test libraries and then our very own unit tests
-add_subdirectory(vendor/googletest)
+add_subdirectory(vendor/googletest EXCLUDE_FROM_ALL)
 add_subdirectory(tests)
 
 # Include judges
 add_subdirectory(judges)
+
+
+# Install target
+if(UNIX)
+	install(TARGETS recodex-worker DESTINATION /usr/bin COMPONENT binaries)
+	install(FILES install/recodex-worker@.service DESTINATION /etc/systemd/system COMPONENT config)
+	install(FILES examples/config.yml DESTINATION /etc/recodex/worker COMPONENT config RENAME config-1.yml)
+
+	install(CODE "execute_process(COMMAND \"id -u recodex; if [ $? -eq 1 ]; then useradd --system --shell /sbin/nologin recodex; fi\")")
+	install(CODE "execute_process(COMMAND chown -R recodex:recodex /etc/recodex)")
+endif()

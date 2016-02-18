@@ -15,8 +15,9 @@ Type=simple
 StandardInput=null
 StandardOutput=null
 StandardError=journal
-ExecStart=/home/petr/Documents/MFF/ReCodEx/BasicWorker/build/codex_worker -c /home/petr/Documents/MFF/ReCodEx/BasicWorker/examples/config.yml
-#ExecStart=/home/petr/Documents/MFF/ReCodEx/BasicWorker/build/codex_worker -c /home/petr/Documents/MFF/ReCodEx/BasicWorker/examples/config-%i.yml
+User=recodex
+Group=recodex
+ExecStart=/usr/bin/recodex-worker -c /etc/recodex/worker/config-%i.yml
 
 [Install]
 WantedBy=multi-user.target
