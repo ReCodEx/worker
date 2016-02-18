@@ -111,7 +111,6 @@ protected:
 	size_t priority_;
 	bool fatal_failure_;
 	std::string cmd_;
-	std::string log_;
 	std::vector<std::string> dependencies_;
 	std::vector<std::string> arguments_;
 	bool execute_;
