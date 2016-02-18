@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 2.8.11)
 project(recodex-worker)
+set(RECODEX_VERSION 0.1.0)
 
 
 # If APPVEYOR_COMPILE is defined and set to ON then boost, curl and zeromq will be searched with find_package on windows machine too
@@ -245,12 +246,27 @@ add_subdirectory(tests)
 add_subdirectory(judges)
 
 
-# Install target
+# ========== Install targets - 'sudo make install' ==========
 if(UNIX)
-	install(TARGETS recodex-worker DESTINATION /usr/bin COMPONENT binaries)
-	install(FILES install/recodex-worker@.service DESTINATION /etc/systemd/system COMPONENT config)
-	install(FILES examples/config.yml DESTINATION /etc/recodex/worker COMPONENT config RENAME config-1.yml)
+	install(TARGETS recodex-worker DESTINATION usr/bin COMPONENT binaries)
+	install(FILES install/recodex-worker@.service DESTINATION etc/systemd/system COMPONENT config)
+	install(FILES examples/config.yml DESTINATION etc/recodex/worker COMPONENT config RENAME config-1.yml)
 
 	install(CODE "execute_process(COMMAND \"id -u recodex; if [ $? -eq 1 ]; then useradd --system --shell /sbin/nologin recodex; fi\")")
 	install(CODE "execute_process(COMMAND chown -R recodex:recodex /etc/recodex)")
 endif()
+
+
+# ========== Packaging targets - 'sudo make package' ==========
+include (InstallRequiredSystemLibraries)
+set(CPACK_PACKAGE_NAME "recodex-worker")
+set(CPACK_PACKAGE_VENDOR "ReCodEx Team")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "ReCodEx Worker - Backend part of ReCodEx programmer testing solution")
+set(CPACK_COMPONENTS_ALL binaries config)
+set(CPACK_PACKAGE_VERSION ${RECODEX_VERSION})
+set(CPACK_GENERATOR "RPM" "DEB")
+set(CPACK_RPM_PACKAGE_LICENSE "MIT")
+set(CPACK_RPM_PACKAGE_DESCRIPTION "Backend part of ReCodEx programmer testing solution.")
+#set(CPACK_RPM_PACKAGE_REQUIRES "boost-filesystem >= 1.53.0, boost-program-options >= 1.53.0, yaml-cpp >= 0.5.1, zeromq >= 4.0.5, libstdc++ >= 4.8.5")
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Petr Stefan <ps@stdin.cz>")
+include (CPack)
