@@ -247,17 +247,17 @@ add_subdirectory(judges)
 
 
 # ========== Install targets - 'sudo make install' ==========
+include(InstallRequiredSystemLibraries)
 if(UNIX)
-	install(TARGETS recodex-worker DESTINATION usr/bin COMPONENT binaries)
-	install(FILES install/recodex-worker@.service DESTINATION etc/systemd/system COMPONENT config)
-	install(FILES examples/config.yml DESTINATION etc/recodex/worker COMPONENT config RENAME config-1.yml)
+	install(TARGETS recodex-worker DESTINATION /usr/bin COMPONENT binaries)
+	install(FILES install/recodex-worker@.service DESTINATION /etc/systemd/system COMPONENT config)
+	install(FILES examples/config.yml DESTINATION /etc/recodex/worker COMPONENT config RENAME config-1.yml)
 
 	install(CODE "execute_process(COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/install/postinst)")
 endif()
 
 
 # ========== Packaging targets - 'sudo make package' ==========
-include (InstallRequiredSystemLibraries)
 set(CPACK_PACKAGE_NAME "recodex-worker")
 set(CPACK_PACKAGE_VENDOR "ReCodEx Team")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "ReCodEx Worker - Backend part of ReCodEx programmer testing solution")
