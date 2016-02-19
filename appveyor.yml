@@ -103,9 +103,9 @@ test_script:
 
     cd C:\projects\codex_worker\tests
 
-    ctest -C Release -E tool_
+    ctest -C Release -E tool_ --output-on-failure
 after_test:
 - cmd: >-
     cd C:\projects\codex_worker\tests
     
-    ctest -C Release -R tool_
+    ctest -C Release -R tool_ --output-on-failure
