@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.11)
 project(recodex-worker)
 set(RECODEX_VERSION 0.1.0)
-
+enable_testing()
 
 # If APPVEYOR_COMPILE is defined and set to ON then boost, curl and zeromq will be searched with find_package on windows machine too
 

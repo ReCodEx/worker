@@ -103,9 +103,9 @@ test_script:
 
     cd C:\projects\codex_worker\tests
 
-    .\Release\run_tests.exe
+    ctest -C Release -E tool_
 after_test:
 - cmd: >-
     cd C:\projects\codex_worker\tests
     
-    .\Release\run_tool_tests.exe
+    ctest -C Release -R tool_

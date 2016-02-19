@@ -45,6 +45,8 @@ function(add_test_suite name)
 	if (MSVC)
 		target_compile_definitions(run_test_${name} PRIVATE LIBARCHIVE_STATIC)
 	endif()
+
+	add_test(${name} run_test_${name})
 endfunction()
 
 # Unit and integration tests
@@ -152,11 +154,6 @@ add_test_suite(job_config
 	job_config.cpp
 )
 
-list(REMOVE_DUPLICATES TEST_FILES)
-add_executable(${TESTS_NAME} ${TEST_FILES})
-target_link_libraries(${TESTS_NAME} ${LIBS})
-target_compile_definitions(${TESTS_NAME} PRIVATE LIBARCHIVE_STATIC)
-
 # Tests that depend on external resources
 if(UNIX)
 	set(LIBS
@@ -182,30 +179,20 @@ elseif(MSVC)
 	endif()
 endif()
 
-unset(TEST_FILES)
-
-add_test_suite(isolate_sandbox
+add_test_suite(tool_isolate_sandbox
 	tests_main.cpp
 	isolate_sandbox.cpp
 	${SANDBOX_DIR}/isolate_sandbox.cpp
 )
 
-add_test_suite(archivator
+add_test_suite(tool_archivator
 	tests_main.cpp
 	${SRC_DIR}/archives/archivator.cpp
 	archivator.cpp
 )
 
-add_test_suite(http_manager
+add_test_suite(tool_http_manager
 	tests_main.cpp
 	http_manager.cpp
 	${FILEMAN_DIR}/http_manager.cpp
 )
-
-list(REMOVE_DUPLICATES TEST_FILES)
-add_executable(${TOOL_TESTS_NAME}
-	${TEST_FILES}
-)
-
-target_link_libraries(${TOOL_TESTS_NAME} ${LIBS})
-target_compile_definitions(${TOOL_TESTS_NAME} PRIVATE LIBARCHIVE_STATIC)
