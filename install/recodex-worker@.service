@@ -7,7 +7,7 @@
 
 [Unit]
 Description=Recodex Worker (%i)
-Documentation=http://recodex.github.io/BasicWorker/,https://github.com/ReCodEx/GlobalWiki/wiki
+Documentation=http://recodex.github.io/worker/,https://github.com/ReCodEx/GlobalWiki/wiki
 DefaultDependencies=true
 
 [Service]
