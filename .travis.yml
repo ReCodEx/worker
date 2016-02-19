@@ -33,7 +33,7 @@ script:
   - cd build
   - cmake ..
   - make
-  - ctest -E tool_
+  - ctest -E tool_ --output-on-failure
 
 after_success:
-  - ctest -R tool_
+  - ctest -R tool_ --output-on-failure
