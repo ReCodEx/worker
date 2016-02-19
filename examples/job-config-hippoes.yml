@@ -1,5 +1,5 @@
 # Hippoes config file
-# prerequisites: judge binary in /tmp/judges/codex_judge
+# prerequisites: judge binary in /tmp/judges/recodex-judge-normal
 #                reachable input and output files - in /tmp/tmpxxxxxx/tasks for our testing file_server.py
 # expected result: results.zip uploaded to file server with result file and job log file
 #
@@ -77,7 +77,7 @@ tasks:
       dependencies:
           - fetch_test_solution_1
       cmd:
-          bin: "${JUDGES_DIR}/codex_judge"
+          bin: "${JUDGES_DIR}/recodex-judge-normal"
           args:
               - "1.out"
               - "plot.out"
@@ -153,7 +153,7 @@ tasks:
       dependencies:
           - fetch_test_solution_2
       cmd:
-          bin: "${JUDGES_DIR}/codex_judge"
+          bin: "${JUDGES_DIR}/recodex-judge-normal"
           args:
               - "2.out"
               - "plot.out"
@@ -229,7 +229,7 @@ tasks:
       dependencies:
           - fetch_test_solution_3
       cmd:
-          bin: "${JUDGES_DIR}/codex_judge"
+          bin: "${JUDGES_DIR}/recodex-judge-normal"
           args:
               - "3.out"
               - "plot.out"
@@ -305,7 +305,7 @@ tasks:
       dependencies:
           - fetch_test_solution_4
       cmd:
-          bin: "${JUDGES_DIR}/codex_judge"
+          bin: "${JUDGES_DIR}/recodex-judge-normal"
           args:
               - "4.out"
               - "plot.out"
@@ -381,7 +381,7 @@ tasks:
       dependencies:
           - fetch_test_solution_5
       cmd:
-          bin: "${JUDGES_DIR}/codex_judge"
+          bin: "${JUDGES_DIR}/recodex-judge-normal"
           args:
               - "5.out"
               - "plot.out"
@@ -457,7 +457,7 @@ tasks:
       dependencies:
           - fetch_test_solution_6
       cmd:
-          bin: "${JUDGES_DIR}/codex_judge"
+          bin: "${JUDGES_DIR}/recodex-judge-normal"
           args:
               - "6.out"
               - "plot.out"

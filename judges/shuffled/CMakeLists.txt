@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
-project(codex_shufflejudge)
+project(recodex-judge-shuffle)
 
 # Use all settings from original Makefile
 if(UNIX)
@@ -15,3 +15,11 @@ set(SOURCE_FILES
 )
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
+
+
+# installation
+if(UNIX)
+	install(TARGETS recodex-judge-shuffle DESTINATION /usr/bin COMPONENT binaries)
+else()
+	install(TARGETS recodex-judge-shuffle DESTINATION recodex/worker/bin COMPONENT binaries)
+endif()

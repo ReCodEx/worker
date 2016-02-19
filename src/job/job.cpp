@@ -387,7 +387,7 @@ void job::prepare_job_vars()
 		{"EVAL_DIR", fs::path("/evaluate").string()},
 		{"RESULT_DIR", result_path_.string()},
 		{"TEMP_DIR", fs::temp_directory_path().string()},
-		{"JUDGES_DIR", fs::path("/judges").string()}};
+		{"JUDGES_DIR", fs::path("/usr/bin").string()}};
 
 	return;
 }

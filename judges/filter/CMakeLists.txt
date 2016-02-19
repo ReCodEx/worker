@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
-project(codex_filter)
+project(recodex-judge-filter)
 
 # Use all settings from original Makefile
 if(UNIX)
@@ -15,3 +15,10 @@ set(SOURCE_FILES
 )
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
+
+# installation
+if(UNIX)
+	install(TARGETS recodex-judge-filter DESTINATION /usr/bin COMPONENT binaries)
+else()
+	install(TARGETS recodex-judge-filter DESTINATION recodex/worker/bin COMPONENT binaries)
+endif()
