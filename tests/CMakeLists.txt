@@ -57,11 +57,13 @@ endfunction()
 add_test_suite(broker_connection
 	broker_connection.cpp
 	${SRC_DIR}/config/worker_config.cpp
+	${HELPERS_DIR}/config.cpp
 )
 
 add_test_suite(worker_config
 	${SRC_DIR}/config/worker_config.cpp
 	worker_config.cpp
+	${HELPERS_DIR}/config.cpp
 )
 
 add_test_suite(cache_manager
