@@ -107,72 +107,93 @@ $(document).ready(function(){initNavTree('external__task_8cpp_source.html','');}
 </div><!--header-->
 <div class="contents">
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#include &quot;external_task.h&quot;</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;</div>
-<div class="line"><a name="l00003"></a><span class="lineno"><a class="line" href="classexternal__task.html#aea52a83ddfd148b1bcb61163da6f3c62">    3</a></span>&#160;external_task::external_task(<span class="keywordtype">size_t</span> <span class="keywordtype">id</span>, <span class="keyword">const</span> std::string &amp;task_id, <span class="keywordtype">size_t</span> priority, <span class="keywordtype">bool</span> fatal, <span class="keyword">const</span> std::string &amp;log,</div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;                             <span class="keyword">const</span> std::vector&lt;std::string&gt; &amp;dependencies,</div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;                             <span class="keyword">const</span> std::string &amp;binary, <span class="keyword">const</span> std::vector&lt;std::string&gt; &amp;arguments,</div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;                             <span class="keyword">const</span> std::string &amp;sandbox, <a class="code" href="structsandbox__limits.html">sandbox_limits</a> limits)</div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;    : <a class="code" href="classtask__base.html">task_base</a>(id, task_id, priority, fatal, dependencies, binary, arguments, log),</div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;      cmd_(binary), sandbox_id_(sandbox), limits_(limits)</div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#include &quot;../sandbox/fake_sandbox.h&quot;</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &quot;../sandbox/isolate_sandbox.h&quot;</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;</div>
+<div class="line"><a name="l00005"></a><span class="lineno"><a class="line" href="classexternal__task.html#a91da878ffd5eca35d9bbf58393d3497e">    5</a></span>&#160;external_task::external_task(<span class="keyword">const</span> <a class="code" href="structexternal__task_1_1create__params.html">create_params</a> &amp;data)</div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;    : <a class="code" href="classtask__base.html">task_base</a>(data.id, data.task_id, data.priority, data.fatal, data.dependencies, data.binary, data.arguments),</div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;      worker_id_(data.worker_id), cmd_(data.binary), sandbox_id_(data.sandbox_id), limits_(data.limits),</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;      logger_(data.logger), temp_dir_(data.temp_dir)</div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;{</div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;    sandbox_check();</div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;}</div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;</div>
 <div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="classexternal__task.html#a214547602df9ab44bc507d45ab9aa40d">   13</a></span>&#160;<a class="code" href="classexternal__task.html#a214547602df9ab44bc507d45ab9aa40d">external_task::~external_task</a>()</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;{}</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keywordtype">void</span> external_task::sandbox_check()</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;{</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="keywordtype">bool</span> found = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#ifndef _WIN32</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keywordflow">if</span> (sandbox_id_ == <span class="stringliteral">&quot;isolate&quot;</span>) {</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;{</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;}</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keywordtype">void</span> external_task::sandbox_check()</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;{</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keywordtype">bool</span> found = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keywordflow">if</span> (sandbox_id_ == <span class="stringliteral">&quot;fake&quot;</span>) {</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        found = <span class="keyword">true</span>;</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    }</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keywordflow">if</span> (found == <span class="keyword">false</span>) {</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        <span class="keywordflow">throw</span> <a class="code" href="classtask__exception.html">task_exception</a>(<span class="stringliteral">&quot;Unknown sandbox type: &quot;</span> + sandbox_id_);</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    }</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;}</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keywordtype">void</span> external_task::sandbox_init()</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;{</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#ifndef _WIN32</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keywordflow">if</span> (sandbox_id_ == <span class="stringliteral">&quot;isolate&quot;</span>) {</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        <span class="comment">// TODO: isolate uid not given (it is constant 1)</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        sandbox_ = std::make_shared&lt;isolate_sandbox&gt;(limits_, 1);</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    }</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;}</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keywordtype">void</span> external_task::sandbox_fini()</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;{</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    sandbox_ = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;}</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
-<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="classexternal__task.html#a0ed4a1553af23ad6e1e6550bb12057a4">   46</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classexternal__task.html#a0ed4a1553af23ad6e1e6550bb12057a4">external_task::run</a>()</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;{</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="comment">// TODO: only temporary solution, should be removed</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordflow">if</span> (sandbox_ == <span class="keyword">nullptr</span>) { <span class="keywordflow">return</span>; }</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    sandbox_init();</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    sandbox_-&gt;run(cmd_, arguments_);</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    sandbox_fini();</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;}</div>
-<div class="ttc" id="classexternal__task_html_a0ed4a1553af23ad6e1e6550bb12057a4"><div class="ttname"><a href="classexternal__task.html#a0ed4a1553af23ad6e1e6550bb12057a4">external_task::run</a></div><div class="ttdeci">virtual void run()</div><div class="ttdef"><b>Definition:</b> <a href="external__task_8cpp_source.html#l00046">external_task.cpp:46</a></div></div>
-<div class="ttc" id="classtask__exception_html"><div class="ttname"><a href="classtask__exception.html">task_exception</a></div><div class="ttdef"><b>Definition:</b> <a href="task__base_8h_source.html#l00118">task_base.h:118</a></div></div>
-<div class="ttc" id="structsandbox__limits_html"><div class="ttname"><a href="structsandbox__limits.html">sandbox_limits</a></div><div class="ttdef"><b>Definition:</b> <a href="sandbox__limits_8h_source.html#l00011">sandbox_limits.h:11</a></div></div>
-<div class="ttc" id="classtask__base_html"><div class="ttname"><a href="classtask__base.html">task_base</a></div><div class="ttdef"><b>Definition:</b> <a href="task__base_8h_source.html#l00015">task_base.h:15</a></div></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#ifndef _WIN32</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keywordflow">if</span> (sandbox_id_ == <span class="stringliteral">&quot;isolate&quot;</span>) {</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        found = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    }</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keywordflow">if</span> (found == <span class="keyword">false</span>) {</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        <span class="keywordflow">throw</span> <a class="code" href="classtask__exception.html">task_exception</a>(<span class="stringliteral">&quot;Unknown sandbox type: &quot;</span> + sandbox_id_);</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    }</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;}</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keywordtype">void</span> external_task::sandbox_init()</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;{</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keywordflow">if</span> (sandbox_id_ == <span class="stringliteral">&quot;fake&quot;</span>) {</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        sandbox_ = std::make_shared&lt;fake_sandbox&gt;();</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    }</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#ifndef _WIN32</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keywordflow">if</span> (sandbox_id_ == <span class="stringliteral">&quot;isolate&quot;</span>) {</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        sandbox_ = std::make_shared&lt;isolate_sandbox&gt;(limits_, worker_id_, temp_dir_, logger_);</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    }</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;}</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keywordtype">void</span> external_task::sandbox_fini()</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;{</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    sandbox_ = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;}</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
+<div class="line"><a name="l00052"></a><span class="lineno"><a class="line" href="classexternal__task.html#ad4e5f9e133237885bff4f1db51dcd82d">   52</a></span>&#160;std::shared_ptr&lt;task_results&gt; <a class="code" href="classexternal__task.html#ad4e5f9e133237885bff4f1db51dcd82d">external_task::run</a>()</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;{</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    sandbox_init();</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="comment">// TODO: only temporary solution, should be removed</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keywordflow">if</span> (sandbox_ == <span class="keyword">nullptr</span>) {</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    }</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keyword">auto</span> res = std::shared_ptr&lt;task_results&gt;(<span class="keyword">new</span> <a class="code" href="structtask__results.html">task_results</a>());</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    res-&gt;sandbox_status = std::unique_ptr&lt;sandbox_results&gt;(<span class="keyword">new</span> <a class="code" href="structsandbox__results.html">sandbox_results</a>(sandbox_-&gt;run(cmd_, arguments_)));</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    sandbox_fini();</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keywordflow">return</span> res;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;}</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
+<div class="line"><a name="l00069"></a><span class="lineno"><a class="line" href="classexternal__task.html#a60c7d449864ae5dfa2ac6d1f3b74fd8f">   69</a></span>&#160;<a class="code" href="structsandbox__limits.html">sandbox_limits</a> <a class="code" href="classexternal__task.html#a60c7d449864ae5dfa2ac6d1f3b74fd8f">external_task::get_limits</a>()</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;{</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keywordflow">return</span> limits_;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;}</div>
+<div class="ttc" id="classtask__exception_html"><div class="ttname"><a href="classtask__exception.html">task_exception</a></div><div class="ttdef"><b>Definition:</b> <a href="task__base_8h_source.html#l00126">task_base.h:126</a></div></div>
+<div class="ttc" id="structsandbox__limits_html"><div class="ttname"><a href="structsandbox__limits.html">sandbox_limits</a></div><div class="ttdef"><b>Definition:</b> <a href="sandbox__limits_8h_source.html#l00015">sandbox_limits.h:15</a></div></div>
+<div class="ttc" id="structexternal__task_1_1create__params_html"><div class="ttname"><a href="structexternal__task_1_1create__params.html">external_task::create_params</a></div><div class="ttdef"><b>Definition:</b> <a href="external__task_8h_source.html#l00019">external_task.h:19</a></div></div>
+<div class="ttc" id="structtask__results_html"><div class="ttname"><a href="structtask__results.html">task_results</a></div><div class="ttdef"><b>Definition:</b> <a href="task__results_8h_source.html#l00081">task_results.h:81</a></div></div>
+<div class="ttc" id="structsandbox__results_html"><div class="ttname"><a href="structsandbox__results.html">sandbox_results</a></div><div class="ttdef"><b>Definition:</b> <a href="task__results_8h_source.html#l00017">task_results.h:17</a></div></div>
+<div class="ttc" id="classexternal__task_html_ad4e5f9e133237885bff4f1db51dcd82d"><div class="ttname"><a href="classexternal__task.html#ad4e5f9e133237885bff4f1db51dcd82d">external_task::run</a></div><div class="ttdeci">virtual std::shared_ptr&lt; task_results &gt; run()</div><div class="ttdef"><b>Definition:</b> <a href="external__task_8cpp_source.html#l00052">external_task.cpp:52</a></div></div>
+<div class="ttc" id="classtask__base_html"><div class="ttname"><a href="classtask__base.html">task_base</a></div><div class="ttdef"><b>Definition:</b> <a href="task__base_8h_source.html#l00016">task_base.h:16</a></div></div>
 <div class="ttc" id="classexternal__task_html_a214547602df9ab44bc507d45ab9aa40d"><div class="ttname"><a href="classexternal__task.html#a214547602df9ab44bc507d45ab9aa40d">external_task::~external_task</a></div><div class="ttdeci">virtual ~external_task()</div><div class="ttdef"><b>Definition:</b> <a href="external__task_8cpp_source.html#l00013">external_task.cpp:13</a></div></div>
+<div class="ttc" id="classexternal__task_html_a60c7d449864ae5dfa2ac6d1f3b74fd8f"><div class="ttname"><a href="classexternal__task.html#a60c7d449864ae5dfa2ac6d1f3b74fd8f">external_task::get_limits</a></div><div class="ttdeci">sandbox_limits get_limits()</div><div class="ttdef"><b>Definition:</b> <a href="external__task_8cpp_source.html#l00069">external_task.cpp:69</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_b118c466441e8db851de69c6796245a3.html">tasks</a></li><li class="navelem"><b>external_task.cpp</b></li>
-    <li class="footer">Generated on Sat Jan 9 2016 22:48:25 for ReCodEx - Worker by
+    <li class="footer">Generated on Fri Feb 19 2016 18:25:15 for ReCodEx - Worker by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.10 </li>
   </ul>

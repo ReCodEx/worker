@@ -1,5 +1,10 @@
 var annotated_dup =
 [
+    [ "helpers", null, [
+      [ "config_exception", "classhelpers_1_1config__exception.html", "classhelpers_1_1config__exception" ],
+      [ "filesystem_exception", "classhelpers_1_1filesystem__exception.html", "classhelpers_1_1filesystem__exception" ],
+      [ "top_sort_exception", "classhelpers_1_1top__sort__exception.html", "classhelpers_1_1top__sort__exception" ]
+    ] ],
     [ "archivate_task", "classarchivate__task.html", "classarchivate__task" ],
     [ "archivator", "classarchivator.html", null ],
     [ "archive_exception", "classarchive__exception.html", "classarchive__exception" ],
@@ -12,9 +17,10 @@ var annotated_dup =
     [ "eval_response", "structeval__response.html", "structeval__response" ],
     [ "external_task", "classexternal__task.html", "classexternal__task" ],
     [ "extract_task", "classextract__task.html", "classextract__task" ],
+    [ "fake_sandbox", "classfake__sandbox.html", "classfake__sandbox" ],
     [ "fake_task", "classfake__task.html", "classfake__task" ],
+    [ "fallback_file_manager", "classfallback__file__manager.html", "classfallback__file__manager" ],
     [ "fetch_task", "classfetch__task.html", "classfetch__task" ],
-    [ "file_manager", "classfile__manager.html", "classfile__manager" ],
     [ "file_manager_base", "classfile__manager__base.html", "classfile__manager__base" ],
     [ "fileman_config", "structfileman__config.html", "structfileman__config" ],
     [ "fm_exception", "classfm__exception.html", "classfm__exception" ],
@@ -24,18 +30,23 @@ var annotated_dup =
     [ "job", "classjob.html", "classjob" ],
     [ "job_evaluator", "classjob__evaluator.html", "classjob__evaluator" ],
     [ "job_exception", "classjob__exception.html", "classjob__exception" ],
+    [ "job_metadata", "classjob__metadata.html", "classjob__metadata" ],
     [ "job_receiver", "classjob__receiver.html", "classjob__receiver" ],
     [ "log_config", "structlog__config.html", "structlog__config" ],
     [ "message_origin", "structmessage__origin.html", "structmessage__origin" ],
     [ "mkdir_task", "classmkdir__task.html", "classmkdir__task" ],
+    [ "prefixed_file_manager", "classprefixed__file__manager.html", "classprefixed__file__manager" ],
     [ "rename_task", "classrename__task.html", "classrename__task" ],
     [ "rm_task", "classrm__task.html", "classrm__task" ],
     [ "sandbox_base", "classsandbox__base.html", "classsandbox__base" ],
+    [ "sandbox_config", "classsandbox__config.html", "classsandbox__config" ],
     [ "sandbox_exception", "classsandbox__exception.html", "classsandbox__exception" ],
     [ "sandbox_limits", "structsandbox__limits.html", "structsandbox__limits" ],
+    [ "sandbox_results", "structsandbox__results.html", "structsandbox__results" ],
     [ "task_base", "classtask__base.html", "classtask__base" ],
     [ "task_compare", "classtask__compare.html", "classtask__compare" ],
     [ "task_exception", "classtask__exception.html", "classtask__exception" ],
+    [ "task_metadata", "classtask__metadata.html", "classtask__metadata" ],
     [ "task_results", "structtask__results.html", "structtask__results" ],
     [ "worker_config", "classworker__config.html", "classworker__config" ]
 ];

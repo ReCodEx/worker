@@ -122,9 +122,10 @@ $(document).ready(function(){initNavTree('classfile__manager__base.html','');});
  <div class="center">
   <img src="classfile__manager__base.png" usemap="#file_manager_base_map" alt=""/>
   <map id="file_manager_base_map" name="file_manager_base_map">
-<area href="classcache__manager.html" alt="cache_manager" shape="rect" coords="0,56,119,80"/>
-<area href="classfile__manager.html" alt="file_manager" shape="rect" coords="129,56,248,80"/>
-<area href="classhttp__manager.html" alt="http_manager" shape="rect" coords="258,56,377,80"/>
+<area href="classcache__manager.html" alt="cache_manager" shape="rect" coords="0,56,138,80"/>
+<area href="classfallback__file__manager.html" alt="fallback_file_manager" shape="rect" coords="148,56,286,80"/>
+<area href="classhttp__manager.html" alt="http_manager" shape="rect" coords="296,56,434,80"/>
+<area href="classprefixed__file__manager.html" alt="prefixed_file_manager" shape="rect" coords="444,56,582,80"/>
 </map>
  </div></div>
 <table class="memberdecls">
@@ -134,12 +135,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a3f308ee9ec633297ec0308ef4280f0ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5d8608f11471dda9e44c9f0f5d127ad1"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classfile__manager__base.html#a5d8608f11471dda9e44c9f0f5d127ad1">get_file</a> (const std::string &amp;src_name, const std::string &amp;dst_path)=0</td></tr>
 <tr class="separator:a5d8608f11471dda9e44c9f0f5d127ad1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab555c2a493344ad3441d6365374cd2c8"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classfile__manager__base.html#ab555c2a493344ad3441d6365374cd2c8">put_file</a> (const std::string &amp;name)=0</td></tr>
-<tr class="separator:ab555c2a493344ad3441d6365374cd2c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0bc7edf5fac5c586e6815321a215abbf"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classfile__manager__base.html#a0bc7edf5fac5c586e6815321a215abbf">set_params</a> (const std::string &amp;destination, const std::string &amp;username, const std::string &amp;password)=0</td></tr>
-<tr class="separator:a0bc7edf5fac5c586e6815321a215abbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a72ac31e535d0c1c11dc7a01abf5b0912"><td class="memItemLeft" align="right" valign="top">virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classfile__manager__base.html#a72ac31e535d0c1c11dc7a01abf5b0912">get_destination</a> () const  =0</td></tr>
-<tr class="separator:a72ac31e535d0c1c11dc7a01abf5b0912"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d16ccc1adfa7188fe778f5ecfba4a00"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classfile__manager__base.html#a9d16ccc1adfa7188fe778f5ecfba4a00">put_file</a> (const std::string &amp;src_name, const std::string &amp;dst_path)=0</td></tr>
+<tr class="separator:a9d16ccc1adfa7188fe778f5ecfba4a00"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Base class for file manager. File manager can get you a copy of file to some directory or put a file somewhere. Failed operations throws <em><a class="el" href="classfm__exception.html">fm_exception</a></em> exception. For more info, see derived classes. </p>
@@ -168,37 +165,11 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Destructor. </p>
 
-<p>Definition at line <a class="el" href="file__manager__base_8h_source.html#l00019">19</a> of file <a class="el" href="file__manager__base_8h_source.html">file_manager_base.h</a>.</p>
+<p>Definition at line <a class="el" href="file__manager__base_8h_source.html#l00020">20</a> of file <a class="el" href="file__manager__base_8h_source.html">file_manager_base.h</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a class="anchor" id="a72ac31e535d0c1c11dc7a01abf5b0912"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual std::string file_manager_base::get_destination </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Get already set destination string. </p><dl class="section return"><dt>Returns</dt><dd>destination </dd></dl>
-
-<p>Implemented in <a class="el" href="classfile__manager.html#a271dc3e2dba4cc6129b8d481589063b2">file_manager</a>, <a class="el" href="classcache__manager.html#a5808997979d56ae75306f79b9b82c528">cache_manager</a>, and <a class="el" href="classhttp__manager.html#a90585f39976ba8a1786910567a00310e">http_manager</a>.</p>
-
-</div>
-</div>
 <a class="anchor" id="a5d8608f11471dda9e44c9f0f5d127ad1"></a>
 <div class="memitem">
 <div class="memproto">
@@ -238,11 +209,11 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Implemented in <a class="el" href="classfile__manager.html#aa83ef12012b3b39de1cdd11fe060e133">file_manager</a>, <a class="el" href="classcache__manager.html#a9c11bff4aa3afd564668f2c4cd90f581">cache_manager</a>, and <a class="el" href="classhttp__manager.html#a61f7ecfbf56ed5678b7784c2879c18ca">http_manager</a>.</p>
+<p>Implemented in <a class="el" href="classcache__manager.html#a35dc0d5ceffeb25416950e4799c925e1">cache_manager</a>, <a class="el" href="classfallback__file__manager.html#abf62a41f77e1559004661e98647b83a8">fallback_file_manager</a>, <a class="el" href="classhttp__manager.html#a3f8c2026c090f733c60c577f9320bf0f">http_manager</a>, and <a class="el" href="classprefixed__file__manager.html#ac79b8771fa4c0ee153c59484fcaac608">prefixed_file_manager</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ab555c2a493344ad3441d6365374cd2c8"></a>
+<a class="anchor" id="a9d16ccc1adfa7188fe778f5ecfba4a00"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -253,51 +224,13 @@ Public Member Functions</h2></td></tr>
           <td class="memname">virtual void file_manager_base::put_file </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>name</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Put the file. </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">name</td><td>Name of the file, which should be put somewhere. Possible use cases are insert this file to cache or send this file to remote server. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p>Implemented in <a class="el" href="classfile__manager.html#a75e64b21fed780ab52ce3714a806c420">file_manager</a>, <a class="el" href="classcache__manager.html#ab9cc3fa59de3c439064437234e45aebd">cache_manager</a>, and <a class="el" href="classhttp__manager.html#a5c6a320075699cb80da36c3318b47baa">http_manager</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a0bc7edf5fac5c586e6815321a215abbf"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void file_manager_base::set_params </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>destination</em>, </td>
+          <td class="paramname"><em>src_name</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>username</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>password</em>&#160;</td>
+          <td class="paramname"><em>dst_path</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -311,16 +244,15 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Set data at runtine. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Put the file. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">destination</td><td>Address where to get files from. Depending of derived classes this could be a server URL or local directory for caching. </td></tr>
-    <tr><td class="paramname">username</td><td>Username if authentication is required. </td></tr>
-    <tr><td class="paramname">password</td><td>Password if authentication is required. </td></tr>
+    <tr><td class="paramname">src_name</td><td>Name of the file, which should be put somewhere. Possible use cases are insert this file to cache or send this file to remote server. </td></tr>
+    <tr><td class="paramname">dst_path</td><td>Where the file should be stored </td></tr>
   </table>
   </dd>
 </dl>
 
-<p>Implemented in <a class="el" href="classfile__manager.html#a2966af433bb777b9c0f408400ee7b536">file_manager</a>, <a class="el" href="classcache__manager.html#a67ffce9d3d89da3cdb87bb47e5def0c2">cache_manager</a>, and <a class="el" href="classhttp__manager.html#a1c4a7aa7ab362e21883228acffc4c72e">http_manager</a>.</p>
+<p>Implemented in <a class="el" href="classcache__manager.html#ae141f07babca3847262fc3f12ad91492">cache_manager</a>, <a class="el" href="classfallback__file__manager.html#a737659f4087fca76b230b42867c4d018">fallback_file_manager</a>, <a class="el" href="classhttp__manager.html#ac819b7f3a1c37f93ae1d4b52def2cdfc">http_manager</a>, and <a class="el" href="classprefixed__file__manager.html#aa647ec2d4128d343e64fbc9adb29e974">prefixed_file_manager</a>.</p>
 
 </div>
 </div>
@@ -333,7 +265,7 @@ Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classfile__manager__base.html">file_manager_base</a></li>
-    <li class="footer">Generated on Sat Jan 9 2016 22:48:25 for ReCodEx - Worker by
+    <li class="footer">Generated on Fri Feb 19 2016 18:25:15 for ReCodEx - Worker by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.10 </li>
   </ul>

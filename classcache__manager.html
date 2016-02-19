@@ -134,14 +134,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a8e23b155e834c2ab15c732106377cb76"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4ee0d7fba2000d64afc2e07707e7a579"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcache__manager.html#a4ee0d7fba2000d64afc2e07707e7a579">~cache_manager</a> ()</td></tr>
 <tr class="separator:a4ee0d7fba2000d64afc2e07707e7a579"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9c11bff4aa3afd564668f2c4cd90f581"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcache__manager.html#a9c11bff4aa3afd564668f2c4cd90f581">get_file</a> (const std::string &amp;src_name, const std::string &amp;dst_path)</td></tr>
-<tr class="separator:a9c11bff4aa3afd564668f2c4cd90f581"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab9cc3fa59de3c439064437234e45aebd"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcache__manager.html#ab9cc3fa59de3c439064437234e45aebd">put_file</a> (const std::string &amp;name)</td></tr>
-<tr class="separator:ab9cc3fa59de3c439064437234e45aebd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a67ffce9d3d89da3cdb87bb47e5def0c2"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcache__manager.html#a67ffce9d3d89da3cdb87bb47e5def0c2">set_params</a> (const std::string &amp;destination, const std::string &amp;username=&quot;&quot;, const std::string &amp;password=&quot;&quot;)</td></tr>
-<tr class="separator:a67ffce9d3d89da3cdb87bb47e5def0c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5808997979d56ae75306f79b9b82c528"><td class="memItemLeft" align="right" valign="top">virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcache__manager.html#a5808997979d56ae75306f79b9b82c528">get_destination</a> () const </td></tr>
-<tr class="separator:a5808997979d56ae75306f79b9b82c528"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a35dc0d5ceffeb25416950e4799c925e1"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcache__manager.html#a35dc0d5ceffeb25416950e4799c925e1">get_file</a> (const std::string &amp;src_name, const std::string &amp;dst_name)</td></tr>
+<tr class="separator:a35dc0d5ceffeb25416950e4799c925e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae141f07babca3847262fc3f12ad91492"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcache__manager.html#ae141f07babca3847262fc3f12ad91492">put_file</a> (const std::string &amp;src_name, const std::string &amp;dst_name)</td></tr>
+<tr class="separator:ae141f07babca3847262fc3f12ad91492"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e84db99fc2b3b7547058912c23b6fb7"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcache__manager.html#a0e84db99fc2b3b7547058912c23b6fb7">get_caching_dir</a> () const </td></tr>
+<tr class="separator:a0e84db99fc2b3b7547058912c23b6fb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classfile__manager__base"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classfile__manager__base')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classfile__manager__base.html">file_manager_base</a></td></tr>
 <tr class="memitem:a3f308ee9ec633297ec0308ef4280f0ee inherit pub_methods_classfile__manager__base"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classfile__manager__base.html#a3f308ee9ec633297ec0308ef4280f0ee">~file_manager_base</a> ()</td></tr>
 <tr class="separator:a3f308ee9ec633297ec0308ef4280f0ee inherit pub_methods_classfile__manager__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -232,40 +230,30 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Destructor. </p>
 
-<p>Definition at line <a class="el" href="cache__manager_8h_source.html#l00037">37</a> of file <a class="el" href="cache__manager_8h_source.html">cache_manager.h</a>.</p>
+<p>Definition at line <a class="el" href="cache__manager_8h_source.html#l00038">38</a> of file <a class="el" href="cache__manager_8h_source.html">cache_manager.h</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a class="anchor" id="a5808997979d56ae75306f79b9b82c528"></a>
+<a class="anchor" id="a0e84db99fc2b3b7547058912c23b6fb7"></a>
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::string cache_manager::get_destination </td>
+          <td class="memname">std::string cache_manager::get_caching_dir </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
-<p>Get actual path to caching directory. </p><dl class="section return"><dt>Returns</dt><dd>path to cachin directory </dd></dl>
+<p>Get the directory where files are stored </p>
 
-<p>Implements <a class="el" href="classfile__manager__base.html#a72ac31e535d0c1c11dc7a01abf5b0912">file_manager_base</a>.</p>
-
-<p>Definition at line <a class="el" href="cache__manager_8cpp_source.html#l00082">82</a> of file <a class="el" href="cache__manager_8cpp_source.html">cache_manager.cpp</a>.</p>
+<p>Definition at line <a class="el" href="cache__manager_8cpp_source.html#l00070">70</a> of file <a class="el" href="cache__manager_8cpp_source.html">cache_manager.cpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a9c11bff4aa3afd564668f2c4cd90f581"></a>
+<a class="anchor" id="a35dc0d5ceffeb25416950e4799c925e1"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -282,7 +270,7 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>dst_path</em>&#160;</td>
+          <td class="paramname"><em>dst_name</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -299,7 +287,7 @@ Public Member Functions</h2></td></tr>
 <p>Copy a file from cache to destination. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">src_name</td><td>Name of the file without path. </td></tr>
-    <tr><td class="paramname">dst_path</td><td>Name of the destination path without filename. </td></tr>
+    <tr><td class="paramname">dst_name</td><td>Name of the destination path with requested filename. </td></tr>
   </table>
   </dd>
 </dl>
@@ -310,7 +298,7 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ab9cc3fa59de3c439064437234e45aebd"></a>
+<a class="anchor" id="ae141f07babca3847262fc3f12ad91492"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -321,53 +309,13 @@ Public Member Functions</h2></td></tr>
           <td class="memname">void cache_manager::put_file </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>name</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Copy file from path to cache. </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">name</td><td>Path and name of the file to be copied. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p>Implements <a class="el" href="classfile__manager__base.html#ab555c2a493344ad3441d6365374cd2c8">file_manager_base</a>.</p>
-
-<p>Definition at line <a class="el" href="cache__manager_8cpp_source.html#l00050">50</a> of file <a class="el" href="cache__manager_8cpp_source.html">cache_manager.cpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a67ffce9d3d89da3cdb87bb47e5def0c2"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void cache_manager::set_params </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>destination</em>, </td>
+          <td class="paramname"><em>src_name</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>username</em> = <code>&quot;&quot;</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>password</em> = <code>&quot;&quot;</code>&#160;</td>
+          <td class="paramname"><em>dst_name</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -381,18 +329,17 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Set caching directory in runtime. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Copy file to cache. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">destination</td><td>New directory where will cached files be stored. </td></tr>
-    <tr><td class="paramname">username</td><td>Not used. </td></tr>
-    <tr><td class="paramname">password</td><td>Not used. </td></tr>
+    <tr><td class="paramname">src_name</td><td>Path and name of the file to be copied. </td></tr>
+    <tr><td class="paramname">dst_name</td><td>Name of the file in cache. </td></tr>
   </table>
   </dd>
 </dl>
 
-<p>Implements <a class="el" href="classfile__manager__base.html#a0bc7edf5fac5c586e6815321a215abbf">file_manager_base</a>.</p>
+<p>Implements <a class="el" href="classfile__manager__base.html#a9d16ccc1adfa7188fe778f5ecfba4a00">file_manager_base</a>.</p>
 
-<p>Definition at line <a class="el" href="cache__manager_8cpp_source.html#l00065">65</a> of file <a class="el" href="cache__manager_8cpp_source.html">cache_manager.cpp</a>.</p>
+<p>Definition at line <a class="el" href="cache__manager_8cpp_source.html#l00055">55</a> of file <a class="el" href="cache__manager_8cpp_source.html">cache_manager.cpp</a>.</p>
 
 </div>
 </div>
@@ -406,7 +353,7 @@ Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classcache__manager.html">cache_manager</a></li>
-    <li class="footer">Generated on Sat Jan 9 2016 22:48:25 for ReCodEx - Worker by
+    <li class="footer">Generated on Fri Feb 19 2016 18:25:15 for ReCodEx - Worker by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.10 </li>
   </ul>

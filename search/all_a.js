@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['killed',['killed',['../structtask__results.html#a875f9da6d50de25ba3a2c2b921a4bf15',1,'task_results']]]
+  ['killed',['killed',['../structsandbox__results.html#a4008f7d55338dc3836dfc8c591abc6a5',1,'sandbox_results']]]
 ];

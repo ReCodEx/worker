@@ -106,6 +106,7 @@ $(document).ready(function(){initNavTree('structsandbox__limits.html','');});
 
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="structsandbox__limits-members.html">List of all members</a>  </div>
@@ -116,13 +117,25 @@ $(document).ready(function(){initNavTree('structsandbox__limits.html','');});
 
 <p><code>#include &lt;<a class="el" href="sandbox__limits_8h_source.html">sandbox_limits.h</a>&gt;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a930e0a1e99719dc676b253b7eedc97c8"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsandbox__limits.html#a930e0a1e99719dc676b253b7eedc97c8">dir_perm</a> : unsigned short { <br />
+&#160;&#160;<b>RO</b> = 0, 
+<b>RW</b> = 1, 
+<b>NOEXEC</b> = 2, 
+<b>FS</b> = 4, 
+<br />
+&#160;&#160;<b>MAYBE</b> = 8, 
+<b>DEV</b> = 16
+<br />
+ }<tr class="separator:a930e0a1e99719dc676b253b7eedc97c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a4900353a62213795318a5aa2f6538849"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4900353a62213795318a5aa2f6538849"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="structsandbox__limits.html">sandbox_limits</a> &amp;second) const </td></tr>
+<tr class="memitem:a4900353a62213795318a5aa2f6538849"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsandbox__limits.html#a4900353a62213795318a5aa2f6538849">operator==</a> (const <a class="el" href="structsandbox__limits.html">sandbox_limits</a> &amp;second) const </td></tr>
 <tr class="separator:a4900353a62213795318a5aa2f6538849"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afee236d8a808b17527d5f6963bc3d3d3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="afee236d8a808b17527d5f6963bc3d3d3"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator!=</b> (const <a class="el" href="structsandbox__limits.html">sandbox_limits</a> &amp;second) const </td></tr>
+<tr class="memitem:afee236d8a808b17527d5f6963bc3d3d3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsandbox__limits.html#afee236d8a808b17527d5f6963bc3d3d3">operator!=</a> (const <a class="el" href="structsandbox__limits.html">sandbox_limits</a> &amp;second) const </td></tr>
 <tr class="separator:afee236d8a808b17527d5f6963bc3d3d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
@@ -139,10 +152,10 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a80ede75c661368810229428d9282671b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5b227e9e8fca4f0838f953351e1819a9"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsandbox__limits.html#a5b227e9e8fca4f0838f953351e1819a9">files_size</a> = 0</td></tr>
 <tr class="separator:a5b227e9e8fca4f0838f953351e1819a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7d051c5ff42362e71eacc2678f7888bb"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsandbox__limits.html#a7d051c5ff42362e71eacc2678f7888bb">disk_blocks</a> = 0</td></tr>
-<tr class="separator:a7d051c5ff42362e71eacc2678f7888bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abe06023475382161b5f5157dbcbc1da9"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsandbox__limits.html#abe06023475382161b5f5157dbcbc1da9">disk_inodes</a> = 0</td></tr>
-<tr class="separator:abe06023475382161b5f5157dbcbc1da9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a80cb7bb9e773dfdc015a1362c2da216b"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsandbox__limits.html#a80cb7bb9e773dfdc015a1362c2da216b">disk_size</a> = 0</td></tr>
+<tr class="separator:a80cb7bb9e773dfdc015a1362c2da216b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aafc0a86e5ccdcd62416cbf72f1f5f89e"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsandbox__limits.html#aafc0a86e5ccdcd62416cbf72f1f5f89e">disk_files</a> = 0</td></tr>
+<tr class="separator:aafc0a86e5ccdcd62416cbf72f1f5f89e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a40394dcdd65c6a731cefdd8353c9434e"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsandbox__limits.html#a40394dcdd65c6a731cefdd8353c9434e">std_input</a></td></tr>
 <tr class="separator:a40394dcdd65c6a731cefdd8353c9434e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a999b6d914f0c366c54aeba52ef4f456c"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsandbox__limits.html#a999b6d914f0c366c54aeba52ef4f456c">std_output</a></td></tr>
@@ -155,14 +168,125 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a1eb0c9344ed40dc06f4b621519ced207"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a264791b4d550ac634119f2aadbc3c703"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsandbox__limits.html#a264791b4d550ac634119f2aadbc3c703">share_net</a> = false</td></tr>
 <tr class="separator:a264791b4d550ac634119f2aadbc3c703"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a23a8c129b809815ed8df902dbd23d6a0"><td class="memItemLeft" align="right" valign="top">std::map&lt; std::string, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsandbox__limits.html#a23a8c129b809815ed8df902dbd23d6a0">environ_vars</a></td></tr>
-<tr class="separator:a23a8c129b809815ed8df902dbd23d6a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a94995f788d00615f2bb3b38c28ae51cc"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::pair&lt; std::string, std::string &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsandbox__limits.html#a94995f788d00615f2bb3b38c28ae51cc">environ_vars</a></td></tr>
+<tr class="separator:a94995f788d00615f2bb3b38c28ae51cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae4eb77c46e7465768dc3b94f97f79cd3"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::tuple&lt; std::string, std::string, <a class="el" href="structsandbox__limits.html#a930e0a1e99719dc676b253b7eedc97c8">dir_perm</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsandbox__limits.html#ae4eb77c46e7465768dc3b94f97f79cd3">bound_dirs</a></td></tr>
+<tr class="separator:ae4eb77c46e7465768dc3b94f97f79cd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Sandbox limits. </p><dl class="section note"><dt>Note</dt><dd>Not all sandbox implementations must follow all these parameters. </dd></dl>
 
-<p>Definition at line <a class="el" href="sandbox__limits_8h_source.html#l00011">11</a> of file <a class="el" href="sandbox__limits_8h_source.html">sandbox_limits.h</a>.</p>
-</div><h2 class="groupheader">Member Data Documentation</h2>
+<p>Definition at line <a class="el" href="sandbox__limits_8h_source.html#l00015">15</a> of file <a class="el" href="sandbox__limits_8h_source.html">sandbox_limits.h</a>.</p>
+</div><h2 class="groupheader">Member Enumeration Documentation</h2>
+<a class="anchor" id="a930e0a1e99719dc676b253b7eedc97c8"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="structsandbox__limits.html#a930e0a1e99719dc676b253b7eedc97c8">sandbox_limits::dir_perm</a> : unsigned short</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Allowed permissions for directory bindings. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">RO</td><td>Read only. </td></tr>
+    <tr><td class="paramname">RW</td><td>Read and write access. </td></tr>
+    <tr><td class="paramname">NOEXEC</td><td>Disallow execution of binaries. </td></tr>
+    <tr><td class="paramname">FS</td><td>Instead of binding a directory, mount a device-less filesystem. </td></tr>
+    <tr><td class="paramname">MAYBE</td><td>Silently ignore the rule if the directory to be bound does not exist. </td></tr>
+    <tr><td class="paramname">DEV</td><td>Allow access to character and block devices. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section warning"><dt>Warning</dt><dd>Not all options must be supported by all sandboxes. Please, consult your sandbox documentation first. </dd></dl>
+
+<p>Definition at line <a class="el" href="sandbox__limits_8h_source.html#l00027">27</a> of file <a class="el" href="sandbox__limits_8h_source.html">sandbox_limits.h</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="afee236d8a808b17527d5f6963bc3d3d3"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool sandbox_limits::operator!= </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structsandbox__limits.html">sandbox_limits</a> &amp;&#160;</td>
+          <td class="paramname"><em>second</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Opposite of equality operator. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">second</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if structures are not the same </dd></dl>
+
+<p>Definition at line <a class="el" href="sandbox__limits_8h_source.html#l00130">130</a> of file <a class="el" href="sandbox__limits_8h_source.html">sandbox_limits.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a4900353a62213795318a5aa2f6538849"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool sandbox_limits::operator== </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structsandbox__limits.html">sandbox_limits</a> &amp;&#160;</td>
+          <td class="paramname"><em>second</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Classical equality operator on two structures. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">second</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if compared structures has same variable values </dd></dl>
+
+<p>Definition at line <a class="el" href="sandbox__limits_8h_source.html#l00115">115</a> of file <a class="el" href="sandbox__limits_8h_source.html">sandbox_limits.h</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a class="anchor" id="ae4eb77c46e7465768dc3b94f97f79cd3"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;std::tuple&lt;std::string, std::string, <a class="el" href="structsandbox__limits.html#a930e0a1e99719dc676b253b7eedc97c8">dir_perm</a>&gt; &gt; sandbox_limits::bound_dirs</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Contains local directories that should be bound into the sandbox. </p>
+
+<p>Definition at line <a class="el" href="sandbox__limits_8h_source.html#l00107">107</a> of file <a class="el" href="sandbox__limits_8h_source.html">sandbox_limits.h</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a25ac8f2afa3bff3ab96cbac7402b3de8"></a>
 <div class="memitem">
 <div class="memproto">
@@ -174,7 +298,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>Change working directory to subdirectory inside the sandbox. </p><dl class="section note"><dt>Note</dt><dd>Path must be accessible from inside of sandbox. </dd></dl>
 
-<p>Definition at line <a class="el" href="sandbox__limits_8h_source.html#l00072">72</a> of file <a class="el" href="sandbox__limits_8h_source.html">sandbox_limits.h</a>.</p>
+<p>Definition at line <a class="el" href="sandbox__limits_8h_source.html#l00089">89</a> of file <a class="el" href="sandbox__limits_8h_source.html">sandbox_limits.h</a>.</p>
 
 </div>
 </div>
@@ -189,52 +313,52 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>Limit total run time by CPU time. For Isolate, this is for whole control group. Time is set in seconds and can be fractional. </p>
 
-<p>Definition at line <a class="el" href="sandbox__limits_8h_source.html#l00022">22</a> of file <a class="el" href="sandbox__limits_8h_source.html">sandbox_limits.h</a>.</p>
+<p>Definition at line <a class="el" href="sandbox__limits_8h_source.html#l00037">37</a> of file <a class="el" href="sandbox__limits_8h_source.html">sandbox_limits.h</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a7d051c5ff42362e71eacc2678f7888bb"></a>
+<a class="anchor" id="aafc0a86e5ccdcd62416cbf72f1f5f89e"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">size_t sandbox_limits::disk_blocks = 0</td>
+          <td class="memname">size_t sandbox_limits::disk_files = 0</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Set disk quota to given number of blocks. </p><dl class="section warning"><dt>Warning</dt><dd>Underlying filesystem must support quotas. </dd></dl>
+<p>Set disk quota to given number of files. Actual implementation may vary, for example on Linux with ext4 filesystem this should be maximum number of used inodes. </p><dl class="section warning"><dt>Warning</dt><dd>Underlying filesystem must support quotas. </dd></dl>
 
-<p>Definition at line <a class="el" href="sandbox__limits_8h_source.html#l00047">47</a> of file <a class="el" href="sandbox__limits_8h_source.html">sandbox_limits.h</a>.</p>
+<p>Definition at line <a class="el" href="sandbox__limits_8h_source.html#l00069">69</a> of file <a class="el" href="sandbox__limits_8h_source.html">sandbox_limits.h</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="abe06023475382161b5f5157dbcbc1da9"></a>
+<a class="anchor" id="a80cb7bb9e773dfdc015a1362c2da216b"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">size_t sandbox_limits::disk_inodes = 0</td>
+          <td class="memname">size_t sandbox_limits::disk_size = 0</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Set disk quota to given number of inodes. </p><dl class="section warning"><dt>Warning</dt><dd>Underlying filesystem must support quotas. </dd></dl>
+<p>Set disk quota to given number of kilobytes. </p><dl class="section warning"><dt>Warning</dt><dd>Underlying filesystem must support quotas. </dd></dl>
 
-<p>Definition at line <a class="el" href="sandbox__limits_8h_source.html#l00052">52</a> of file <a class="el" href="sandbox__limits_8h_source.html">sandbox_limits.h</a>.</p>
+<p>Definition at line <a class="el" href="sandbox__limits_8h_source.html#l00063">63</a> of file <a class="el" href="sandbox__limits_8h_source.html">sandbox_limits.h</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a23a8c129b809815ed8df902dbd23d6a0"></a>
+<a class="anchor" id="a94995f788d00615f2bb3b38c28ae51cc"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::map&lt;std::string, std::string&gt; sandbox_limits::environ_vars</td>
+          <td class="memname">std::vector&lt;std::pair&lt;std::string, std::string&gt; &gt; sandbox_limits::environ_vars</td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>Set environment variables before run command inside the sandbox. </p>
 
-<p>Definition at line <a class="el" href="sandbox__limits_8h_source.html#l00086">86</a> of file <a class="el" href="sandbox__limits_8h_source.html">sandbox_limits.h</a>.</p>
+<p>Definition at line <a class="el" href="sandbox__limits_8h_source.html#l00103">103</a> of file <a class="el" href="sandbox__limits_8h_source.html">sandbox_limits.h</a>.</p>
 
 </div>
 </div>
@@ -249,7 +373,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>Set extra time before kill the process. If program finishes in this extra amount of time, it won't succeeded, but total run time will be reported to results log. This time is also in (fractional) seconds. </p>
 
-<p>Definition at line <a class="el" href="sandbox__limits_8h_source.html#l00032">32</a> of file <a class="el" href="sandbox__limits_8h_source.html">sandbox_limits.h</a>.</p>
+<p>Definition at line <a class="el" href="sandbox__limits_8h_source.html#l00047">47</a> of file <a class="el" href="sandbox__limits_8h_source.html">sandbox_limits.h</a>.</p>
 
 </div>
 </div>
@@ -262,9 +386,9 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Limit size of created files. This could be useful, if your filesystem doesn't support quotas. Otherwise, see items <em>disk_blocks</em> and <em>disk_inodes</em>. 0 means not set. </p>
+<p>Limit size of created files. This could be useful, if your filesystem doesn't support quotas. 0 means not set. </p><dl class="section warning"><dt>Warning</dt><dd>This option is deprecated! Use <a class="el" href="structsandbox__limits.html#a80cb7bb9e773dfdc015a1362c2da216b">disk_size</a> and <a class="el" href="structsandbox__limits.html#aafc0a86e5ccdcd62416cbf72f1f5f89e">disk_files</a> instead. </dd></dl>
 
-<p>Definition at line <a class="el" href="sandbox__limits_8h_source.html#l00042">42</a> of file <a class="el" href="sandbox__limits_8h_source.html">sandbox_limits.h</a>.</p>
+<p>Definition at line <a class="el" href="sandbox__limits_8h_source.html#l00058">58</a> of file <a class="el" href="sandbox__limits_8h_source.html">sandbox_limits.h</a>.</p>
 
 </div>
 </div>
@@ -279,7 +403,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>Limit memory usage. For Isolate, this limits whole control group (&ndash;cg-mem switch). Memory size is set in kilobytes. </p>
 
-<p>Definition at line <a class="el" href="sandbox__limits_8h_source.html#l00017">17</a> of file <a class="el" href="sandbox__limits_8h_source.html">sandbox_limits.h</a>.</p>
+<p>Definition at line <a class="el" href="sandbox__limits_8h_source.html#l00032">32</a> of file <a class="el" href="sandbox__limits_8h_source.html">sandbox_limits.h</a>.</p>
 
 </div>
 </div>
@@ -294,7 +418,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>Limit number of processes/threads that could be created. 0 means no limit. </p>
 
-<p>Definition at line <a class="el" href="sandbox__limits_8h_source.html#l00077">77</a> of file <a class="el" href="sandbox__limits_8h_source.html">sandbox_limits.h</a>.</p>
+<p>Definition at line <a class="el" href="sandbox__limits_8h_source.html#l00094">94</a> of file <a class="el" href="sandbox__limits_8h_source.html">sandbox_limits.h</a>.</p>
 
 </div>
 </div>
@@ -309,7 +433,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>Allow to share host computers network. Otherwise, dedicated local interface will be created. </p>
 
-<p>Definition at line <a class="el" href="sandbox__limits_8h_source.html#l00082">82</a> of file <a class="el" href="sandbox__limits_8h_source.html">sandbox_limits.h</a>.</p>
+<p>Definition at line <a class="el" href="sandbox__limits_8h_source.html#l00099">99</a> of file <a class="el" href="sandbox__limits_8h_source.html">sandbox_limits.h</a>.</p>
 
 </div>
 </div>
@@ -324,7 +448,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>Limit stack size. This is additional memory limit, 0 is no special limit for stack, global memory rules will aply. Otherwise, max stack size is <em>stack_size</em> kilobytes. </p>
 
-<p>Definition at line <a class="el" href="sandbox__limits_8h_source.html#l00037">37</a> of file <a class="el" href="sandbox__limits_8h_source.html">sandbox_limits.h</a>.</p>
+<p>Definition at line <a class="el" href="sandbox__limits_8h_source.html#l00052">52</a> of file <a class="el" href="sandbox__limits_8h_source.html">sandbox_limits.h</a>.</p>
 
 </div>
 </div>
@@ -339,7 +463,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>Redirect standard error output to given file. </p><dl class="section note"><dt>Note</dt><dd>Path must be accessible from inside of sandbox. </dd></dl>
 
-<p>Definition at line <a class="el" href="sandbox__limits_8h_source.html#l00067">67</a> of file <a class="el" href="sandbox__limits_8h_source.html">sandbox_limits.h</a>.</p>
+<p>Definition at line <a class="el" href="sandbox__limits_8h_source.html#l00084">84</a> of file <a class="el" href="sandbox__limits_8h_source.html">sandbox_limits.h</a>.</p>
 
 </div>
 </div>
@@ -354,7 +478,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>Redirect standard input from given file. </p><dl class="section note"><dt>Note</dt><dd>Path must be accessible from inside of sandbox. </dd></dl>
 
-<p>Definition at line <a class="el" href="sandbox__limits_8h_source.html#l00057">57</a> of file <a class="el" href="sandbox__limits_8h_source.html">sandbox_limits.h</a>.</p>
+<p>Definition at line <a class="el" href="sandbox__limits_8h_source.html#l00074">74</a> of file <a class="el" href="sandbox__limits_8h_source.html">sandbox_limits.h</a>.</p>
 
 </div>
 </div>
@@ -369,7 +493,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>Redirect standard output to given file. </p><dl class="section note"><dt>Note</dt><dd>Path must be accessible from inside of sandbox. </dd></dl>
 
-<p>Definition at line <a class="el" href="sandbox__limits_8h_source.html#l00062">62</a> of file <a class="el" href="sandbox__limits_8h_source.html">sandbox_limits.h</a>.</p>
+<p>Definition at line <a class="el" href="sandbox__limits_8h_source.html#l00079">79</a> of file <a class="el" href="sandbox__limits_8h_source.html">sandbox_limits.h</a>.</p>
 
 </div>
 </div>
@@ -384,7 +508,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>Limit total run time by wall clock. Time is set in seconds and can be fractional. </p>
 
-<p>Definition at line <a class="el" href="sandbox__limits_8h_source.html#l00026">26</a> of file <a class="el" href="sandbox__limits_8h_source.html">sandbox_limits.h</a>.</p>
+<p>Definition at line <a class="el" href="sandbox__limits_8h_source.html#l00041">41</a> of file <a class="el" href="sandbox__limits_8h_source.html">sandbox_limits.h</a>.</p>
 
 </div>
 </div>
@@ -397,7 +521,7 @@ Public Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="structsandbox__limits.html">sandbox_limits</a></li>
-    <li class="footer">Generated on Sat Jan 9 2016 22:48:25 for ReCodEx - Worker by
+    <li class="footer">Generated on Fri Feb 19 2016 18:25:15 for ReCodEx - Worker by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.10 </li>
   </ul>

@@ -110,42 +110,37 @@ $(document).ready(function(){initNavTree('fileman__config_8h_source.html','');})
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#define CODEX_WORKER_FILEMAN_CONFIG_H</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;</div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;</div>
-<div class="line"><a name="l00005"></a><span class="lineno"><a class="line" href="structfileman__config.html">    5</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structfileman__config.html">fileman_config</a> {</div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;    std::string hostname = <span class="stringliteral">&quot;&quot;</span>;</div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;    <span class="keywordtype">size_t</span> port = 0;</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;    std::string username = <span class="stringliteral">&quot;&quot;</span>;</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;    std::string password = <span class="stringliteral">&quot;&quot;</span>;</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;    std::string cache_dir = <span class="stringliteral">&quot;&quot;</span>;</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <span class="keywordtype">bool</span> operator==(<span class="keyword">const</span> <a class="code" href="structfileman__config.html">fileman_config</a> &amp;second)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;        <span class="keywordflow">if</span> (hostname != second.hostname ||</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;                port != second.port ||</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;                username != second.username ||</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;                password != second.password ||</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;                cache_dir != second.cache_dir) {</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;        }</div>
+<div class="line"><a name="l00008"></a><span class="lineno"><a class="line" href="structfileman__config.html">    8</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structfileman__config.html">fileman_config</a> {</div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="structfileman__config.html#a0a6d93a55ebda962de59263ad5b3e8a4">   13</a></span>&#160;    std::string <a class="code" href="structfileman__config.html#a0a6d93a55ebda962de59263ad5b3e8a4">remote_url</a> = <span class="stringliteral">&quot;&quot;</span>;</div>
+<div class="line"><a name="l00017"></a><span class="lineno"><a class="line" href="structfileman__config.html#a6db1db70971103dc8c1aa803594a16b0">   17</a></span>&#160;    std::string <a class="code" href="structfileman__config.html#a6db1db70971103dc8c1aa803594a16b0">username</a> = <span class="stringliteral">&quot;&quot;</span>;</div>
+<div class="line"><a name="l00021"></a><span class="lineno"><a class="line" href="structfileman__config.html#a6eb4e178040c6fb2cc54b2b6300366cb">   21</a></span>&#160;    std::string <a class="code" href="structfileman__config.html#a6eb4e178040c6fb2cc54b2b6300366cb">password</a> = <span class="stringliteral">&quot;&quot;</span>;</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    }</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keywordtype">bool</span> operator!=(<span class="keyword">const</span> <a class="code" href="structfileman__config.html">fileman_config</a> &amp;second)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        <span class="keywordflow">return</span> !((*this) == second);</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    }</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;};</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#endif //CODEX_WORKER_FILEMAN_CONFIG_H</span></div>
-<div class="ttc" id="structfileman__config_html"><div class="ttname"><a href="structfileman__config.html">fileman_config</a></div><div class="ttdef"><b>Definition:</b> <a href="fileman__config_8h_source.html#l00005">fileman_config.h:5</a></div></div>
+<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="structfileman__config.html#af0c0084550da0de1dbd436dd0b0f87a3">   28</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="structfileman__config.html#af0c0084550da0de1dbd436dd0b0f87a3">operator==</a>(<span class="keyword">const</span> <a class="code" href="structfileman__config.html">fileman_config</a> &amp;second)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        <span class="keywordflow">return</span> (remote_url == second.<a class="code" href="structfileman__config.html#a0a6d93a55ebda962de59263ad5b3e8a4">remote_url</a> &amp;&amp; username == second.<a class="code" href="structfileman__config.html#a6db1db70971103dc8c1aa803594a16b0">username</a> &amp;&amp; password == second.<a class="code" href="structfileman__config.html#a6eb4e178040c6fb2cc54b2b6300366cb">password</a>);</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    }</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
+<div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="structfileman__config.html#a22a7ba3772a6a5824a517222cdee0c44">   38</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="structfileman__config.html#a22a7ba3772a6a5824a517222cdee0c44">operator!=</a>(<span class="keyword">const</span> <a class="code" href="structfileman__config.html">fileman_config</a> &amp;second)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        <span class="keywordflow">return</span> !((*this) == second);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    }</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;};</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">#endif // CODEX_WORKER_FILEMAN_CONFIG_H</span></div>
+<div class="ttc" id="structfileman__config_html"><div class="ttname"><a href="structfileman__config.html">fileman_config</a></div><div class="ttdef"><b>Definition:</b> <a href="fileman__config_8h_source.html#l00008">fileman_config.h:8</a></div></div>
+<div class="ttc" id="structfileman__config_html_a6db1db70971103dc8c1aa803594a16b0"><div class="ttname"><a href="structfileman__config.html#a6db1db70971103dc8c1aa803594a16b0">fileman_config::username</a></div><div class="ttdeci">std::string username</div><div class="ttdef"><b>Definition:</b> <a href="fileman__config_8h_source.html#l00017">fileman_config.h:17</a></div></div>
+<div class="ttc" id="structfileman__config_html_a6eb4e178040c6fb2cc54b2b6300366cb"><div class="ttname"><a href="structfileman__config.html#a6eb4e178040c6fb2cc54b2b6300366cb">fileman_config::password</a></div><div class="ttdeci">std::string password</div><div class="ttdef"><b>Definition:</b> <a href="fileman__config_8h_source.html#l00021">fileman_config.h:21</a></div></div>
+<div class="ttc" id="structfileman__config_html_a22a7ba3772a6a5824a517222cdee0c44"><div class="ttname"><a href="structfileman__config.html#a22a7ba3772a6a5824a517222cdee0c44">fileman_config::operator!=</a></div><div class="ttdeci">bool operator!=(const fileman_config &amp;second) const </div><div class="ttdef"><b>Definition:</b> <a href="fileman__config_8h_source.html#l00038">fileman_config.h:38</a></div></div>
+<div class="ttc" id="structfileman__config_html_a0a6d93a55ebda962de59263ad5b3e8a4"><div class="ttname"><a href="structfileman__config.html#a0a6d93a55ebda962de59263ad5b3e8a4">fileman_config::remote_url</a></div><div class="ttdeci">std::string remote_url</div><div class="ttdef"><b>Definition:</b> <a href="fileman__config_8h_source.html#l00013">fileman_config.h:13</a></div></div>
+<div class="ttc" id="structfileman__config_html_af0c0084550da0de1dbd436dd0b0f87a3"><div class="ttname"><a href="structfileman__config.html#af0c0084550da0de1dbd436dd0b0f87a3">fileman_config::operator==</a></div><div class="ttdeci">bool operator==(const fileman_config &amp;second) const </div><div class="ttdef"><b>Definition:</b> <a href="fileman__config_8h_source.html#l00028">fileman_config.h:28</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_7e83d1792d529f4aa7126ac7e0b3b699.html">config</a></li><li class="navelem"><b>fileman_config.h</b></li>
-    <li class="footer">Generated on Sat Jan 9 2016 22:48:25 for ReCodEx - Worker by
+    <li class="footer">Generated on Fri Feb 19 2016 18:25:15 for ReCodEx - Worker by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.10 </li>
   </ul>

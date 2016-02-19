@@ -112,17 +112,17 @@ $(document).ready(function(){initNavTree('classjob.html','');});
 
 <p>This is the complete list of members for <a class="el" href="classjob.html">job</a>, including all inherited members.</p>
 <table class="directory">
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>job</b>()=delete (defined in <a class="el" href="classjob.html">job</a>)</td><td class="entry"><a class="el" href="classjob.html">job</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0"><td class="entry"><b>job</b>(const YAML::Node &amp;job_config, fs::path source_path, std::shared_ptr&lt; spdlog::logger &gt; logger, std::shared_ptr&lt; worker_config &gt; default_config, std::shared_ptr&lt; file_manager_base &gt; fileman) (defined in <a class="el" href="classjob.html">job</a>)</td><td class="entry"><a class="el" href="classjob.html">job</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>run</b>() (defined in <a class="el" href="classjob.html">job</a>)</td><td class="entry"><a class="el" href="classjob.html">job</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="classjob.html#a83b1c2ca4f0a37f67d48f678a9cf8482">topological_sort</a>(std::shared_ptr&lt; task_base &gt; root, std::map&lt; std::string, size_t &gt; &amp;effective_indegree, std::vector&lt; std::shared_ptr&lt; task_base &gt;&gt; &amp;result)</td><td class="entry"><a class="el" href="classjob.html">job</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>get_task_queue</b>() const  (defined in <a class="el" href="classjob.html">job</a>)</td><td class="entry"><a class="el" href="classjob.html">job</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>job</b>()=delete (defined in <a class="el" href="classjob.html">job</a>)</td><td class="entry"><a class="el" href="classjob.html">job</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classjob.html#a185f6c31b6291cbdefd40f62414c76c4">job</a>(std::shared_ptr&lt; job_metadata &gt; job_meta, std::shared_ptr&lt; worker_config &gt; worker_conf, fs::path working_directory, fs::path source_path, fs::path result_path, std::shared_ptr&lt; file_manager_base &gt; fileman)</td><td class="entry"><a class="el" href="classjob.html">job</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="classjob.html#a0769f62cc7f246aa09f95d59d55fdb93">run</a>()</td><td class="entry"><a class="el" href="classjob.html">job</a></td><td class="entry"></td></tr>
   <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>~job</b>() (defined in <a class="el" href="classjob.html">job</a>)</td><td class="entry"><a class="el" href="classjob.html">job</a></td><td class="entry"></td></tr>
 </table></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat Jan 9 2016 22:48:25 for ReCodEx - Worker by
+    <li class="footer">Generated on Fri Feb 19 2016 18:25:15 for ReCodEx - Worker by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.10 </li>
   </ul>

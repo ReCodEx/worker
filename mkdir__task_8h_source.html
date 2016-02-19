@@ -112,26 +112,31 @@ $(document).ready(function(){initNavTree('mkdir__task_8h_source.html','');});
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;../task_base.h&quot;</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;</div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;</div>
-<div class="line"><a name="l00010"></a><span class="lineno"><a class="line" href="classmkdir__task.html">   10</a></span>&#160;<span class="keyword">class </span><a class="code" href="classmkdir__task.html">mkdir_task</a> : <span class="keyword">public</span> <a class="code" href="classtask__base.html">task_base</a> {</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    <a class="code" href="classmkdir__task.html">mkdir_task</a>(<span class="keywordtype">size_t</span> <span class="keywordtype">id</span>, std::string task_id, <span class="keywordtype">size_t</span> priority, <span class="keywordtype">bool</span> fatal, <span class="keyword">const</span> std::string &amp;cmd,</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;            <span class="keyword">const</span> std::vector&lt;std::string&gt; &amp;arguments, <span class="keyword">const</span> std::string &amp;log,</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;            <span class="keyword">const</span> std::vector&lt;std::string&gt; &amp;dependencies);</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classmkdir__task.html">mkdir_task</a>();</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classmkdir__task.html#ad2232a6e9cf45d79e7240d2ad8d49db7">run</a>();</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;};</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#endif //CODEX_WORKER_INTERNAL_MKDIR_TASK_H</span></div>
-<div class="ttc" id="classtask__base_html"><div class="ttname"><a href="classtask__base.html">task_base</a></div><div class="ttdef"><b>Definition:</b> <a href="task__base_8h_source.html#l00015">task_base.h:15</a></div></div>
+<div class="line"><a name="l00010"></a><span class="lineno"><a class="line" href="classmkdir__task.html">   10</a></span>&#160;<span class="keyword">class </span><a class="code" href="classmkdir__task.html">mkdir_task</a> : <span class="keyword">public</span> <a class="code" href="classtask__base.html">task_base</a></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;{</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <a class="code" href="classmkdir__task.html">mkdir_task</a>(<span class="keywordtype">size_t</span> <span class="keywordtype">id</span>,</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;        std::string task_id,</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;        <span class="keywordtype">size_t</span> priority,</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;        <span class="keywordtype">bool</span> fatal,</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        <span class="keyword">const</span> std::string &amp;cmd,</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        <span class="keyword">const</span> std::vector&lt;std::string&gt; &amp;arguments,</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;        <span class="keyword">const</span> std::vector&lt;std::string&gt; &amp;dependencies);</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="classmkdir__task.html">mkdir_task</a>();</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keyword">virtual</span> std::shared_ptr&lt;task_results&gt; <a class="code" href="classmkdir__task.html#ad1a4291f6e8d82bc7056fce1b968bbf4">run</a>();</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;};</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#endif // CODEX_WORKER_INTERNAL_MKDIR_TASK_H</span></div>
+<div class="ttc" id="classmkdir__task_html_ad1a4291f6e8d82bc7056fce1b968bbf4"><div class="ttname"><a href="classmkdir__task.html#ad1a4291f6e8d82bc7056fce1b968bbf4">mkdir_task::run</a></div><div class="ttdeci">virtual std::shared_ptr&lt; task_results &gt; run()</div><div class="ttdef"><b>Definition:</b> <a href="mkdir__task_8cpp_source.html#l00030">mkdir_task.cpp:30</a></div></div>
+<div class="ttc" id="classtask__base_html"><div class="ttname"><a href="classtask__base.html">task_base</a></div><div class="ttdef"><b>Definition:</b> <a href="task__base_8h_source.html#l00016">task_base.h:16</a></div></div>
 <div class="ttc" id="classmkdir__task_html"><div class="ttname"><a href="classmkdir__task.html">mkdir_task</a></div><div class="ttdef"><b>Definition:</b> <a href="mkdir__task_8h_source.html#l00010">mkdir_task.h:10</a></div></div>
-<div class="ttc" id="classmkdir__task_html_ad2232a6e9cf45d79e7240d2ad8d49db7"><div class="ttname"><a href="classmkdir__task.html#ad2232a6e9cf45d79e7240d2ad8d49db7">mkdir_task::run</a></div><div class="ttdeci">virtual void run()</div><div class="ttdef"><b>Definition:</b> <a href="mkdir__task_8cpp_source.html#l00026">mkdir_task.cpp:26</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_b118c466441e8db851de69c6796245a3.html">tasks</a></li><li class="navelem"><a class="el" href="dir_09805b93aae25377bd958f645bcc429a.html">internal</a></li><li class="navelem"><b>mkdir_task.h</b></li>
-    <li class="footer">Generated on Sat Jan 9 2016 22:48:25 for ReCodEx - Worker by
+    <li class="footer">Generated on Fri Feb 19 2016 18:25:15 for ReCodEx - Worker by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.10 </li>
   </ul>

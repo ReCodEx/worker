@@ -108,93 +108,118 @@ $(document).ready(function(){initNavTree('task__base_8cpp_source.html','');});
 <div class="contents">
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#include &quot;task_base.h&quot;</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;</div>
-<div class="line"><a name="l00003"></a><span class="lineno"><a class="line" href="classtask__base.html#a914615d663d60cfbcf6bbe3aab81f7f4">    3</a></span>&#160;<a class="code" href="classtask__base.html#a1ba57f10c2e3f26228925e76021a2e60">task_base::task_base</a>(<span class="keywordtype">size_t</span> <span class="keywordtype">id</span>, std::string task_id, <span class="keywordtype">size_t</span> priority, <span class="keywordtype">bool</span> fatal,</div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;                     <span class="keyword">const</span> std::vector&lt;std::string&gt; &amp;dependencies,</div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;                     <span class="keyword">const</span> std::string &amp;cmd, <span class="keyword">const</span> std::vector&lt;std::string&gt; &amp;arguments,</div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;                     <span class="keyword">const</span> std::string &amp;log)</div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;    : id_(id), task_id_(task_id), priority_(priority), fatal_failure_(fatal),</div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;      cmd_(cmd), log_(log), dependencies_(dependencies), arguments_(arguments)</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;{}</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;</div>
-<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="classtask__base.html#a9511a486964147a1a57929b483142465">   11</a></span>&#160;<a class="code" href="classtask__base.html#a9511a486964147a1a57929b483142465">task_base::~task_base</a>()</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;{}</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;</div>
-<div class="line"><a name="l00014"></a><span class="lineno"><a class="line" href="classtask__base.html#a7a416901241831f45d5932567afac4b1">   14</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classtask__base.html#a7a416901241831f45d5932567afac4b1">task_base::add_children</a>(std::shared_ptr&lt;task_base&gt; add)</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;{</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    children_.push_back(add);</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;}</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;</div>
-<div class="line"><a name="l00020"></a><span class="lineno"><a class="line" href="classtask__base.html#a97e292bbe2f9a6091303b6d54efb8f9c">   20</a></span>&#160;<span class="keyword">const</span> std::vector&lt;std::shared_ptr&lt;task_base&gt;&gt; &amp;<a class="code" href="classtask__base.html#a97e292bbe2f9a6091303b6d54efb8f9c">task_base::get_children</a>()</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;{</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keywordflow">return</span> children_;</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;}</div>
+<div class="line"><a name="l00003"></a><span class="lineno"><a class="line" href="classtask__base.html#a4cb88a596ba8eb0b4bf7a7fa6f4565a2">    3</a></span>&#160;<a class="code" href="classtask__base.html#a1ba57f10c2e3f26228925e76021a2e60">task_base::task_base</a>(<span class="keywordtype">size_t</span> <span class="keywordtype">id</span>,</div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;    std::string task_id,</div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;    <span class="keywordtype">size_t</span> priority,</div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;    <span class="keywordtype">bool</span> fatal,</div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;    <span class="keyword">const</span> std::vector&lt;std::string&gt; &amp;dependencies,</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;    <span class="keyword">const</span> std::string &amp;cmd,</div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;    <span class="keyword">const</span> std::vector&lt;std::string&gt; &amp;arguments)</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;    : id_(id), task_id_(task_id), priority_(priority), fatal_failure_(fatal), cmd_(cmd), dependencies_(dependencies),</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;      arguments_(arguments), execute_(true)</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;{</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;}</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;</div>
+<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="classtask__base.html#a9511a486964147a1a57929b483142465">   15</a></span>&#160;<a class="code" href="classtask__base.html#a9511a486964147a1a57929b483142465">task_base::~task_base</a>()</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;{</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;}</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;</div>
+<div class="line"><a name="l00019"></a><span class="lineno"><a class="line" href="classtask__base.html#a7a416901241831f45d5932567afac4b1">   19</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classtask__base.html#a7a416901241831f45d5932567afac4b1">task_base::add_children</a>(std::shared_ptr&lt;task_base&gt; add)</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;{</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keywordflow">if</span> (add == <span class="keyword">nullptr</span>) {</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    }</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;</div>
-<div class="line"><a name="l00025"></a><span class="lineno"><a class="line" href="classtask__base.html#aae582b590672663e85300ba463251f48">   25</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classtask__base.html#aae582b590672663e85300ba463251f48">task_base::add_parent</a>(std::shared_ptr&lt;task_base&gt; add)</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;{</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    parents_.push_back(add);</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;}</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
-<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="classtask__base.html#a9e67d4dea49bcddc369ba09e86b05598">   31</a></span>&#160;<span class="keywordtype">size_t</span> <a class="code" href="classtask__base.html#a9e67d4dea49bcddc369ba09e86b05598">task_base::get_id</a>()</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;{</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keywordflow">return</span> id_;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;}</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
-<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="classtask__base.html#a406ff20533982d8722ec5deb48d8dff8">   36</a></span>&#160;<span class="keyword">const</span> std::string &amp;<a class="code" href="classtask__base.html#a406ff20533982d8722ec5deb48d8dff8">task_base::get_task_id</a>()</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;{</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keywordflow">return</span> task_id_;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;}</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="classtask__base.html#a167f2266cdd153a4f11f519a29b5867e">   41</a></span>&#160;<span class="keywordtype">size_t</span> <a class="code" href="classtask__base.html#a167f2266cdd153a4f11f519a29b5867e">task_base::get_priority</a>()</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;{</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keywordflow">return</span> priority_;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;}</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
-<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="classtask__base.html#a0c03dbd11df4401fceded01ccf164db4">   46</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classtask__base.html#a0c03dbd11df4401fceded01ccf164db4">task_base::get_fatal_failure</a>()</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;{</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keywordflow">return</span> fatal_failure_;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;}</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
-<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="classtask__base.html#ac9bb1a5d29617f929a5757eb6897b588">   51</a></span>&#160;<span class="keyword">const</span> std::string &amp;<a class="code" href="classtask__base.html#ac9bb1a5d29617f929a5757eb6897b588">task_base::get_cmd</a>()</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;{</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keywordflow">return</span> cmd_;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;}</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
-<div class="line"><a name="l00056"></a><span class="lineno"><a class="line" href="classtask__base.html#a5326f936dec28e4adec302ea8f49bc90">   56</a></span>&#160;<span class="keyword">const</span> std::vector&lt;std::string&gt; &amp;<a class="code" href="classtask__base.html#a5326f936dec28e4adec302ea8f49bc90">task_base::get_args</a>()</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;{</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keywordflow">return</span> arguments_;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;}</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
-<div class="line"><a name="l00061"></a><span class="lineno"><a class="line" href="classtask__base.html#a9b56fcb8be1d899bfd3fcd7efdf423ea">   61</a></span>&#160;<span class="keyword">const</span> std::string &amp;<a class="code" href="classtask__base.html#a9b56fcb8be1d899bfd3fcd7efdf423ea">task_base::get_log</a>()</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;{</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordflow">return</span> log_;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;}</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
-<div class="line"><a name="l00066"></a><span class="lineno"><a class="line" href="classtask__base.html#a4b2101fa704a279fd0b547c16fc31420">   66</a></span>&#160;<span class="keyword">const</span> std::vector&lt;std::string&gt; &amp;<a class="code" href="classtask__base.html#a4b2101fa704a279fd0b547c16fc31420">task_base::get_dependencies</a>()</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;{</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keywordflow">return</span> dependencies_;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;}</div>
-<div class="ttc" id="classtask__base_html_a5326f936dec28e4adec302ea8f49bc90"><div class="ttname"><a href="classtask__base.html#a5326f936dec28e4adec302ea8f49bc90">task_base::get_args</a></div><div class="ttdeci">const std::vector&lt; std::string &gt; &amp; get_args()</div><div class="ttdef"><b>Definition:</b> <a href="task__base_8cpp_source.html#l00056">task_base.cpp:56</a></div></div>
-<div class="ttc" id="classtask__base_html_a0c03dbd11df4401fceded01ccf164db4"><div class="ttname"><a href="classtask__base.html#a0c03dbd11df4401fceded01ccf164db4">task_base::get_fatal_failure</a></div><div class="ttdeci">bool get_fatal_failure()</div><div class="ttdef"><b>Definition:</b> <a href="task__base_8cpp_source.html#l00046">task_base.cpp:46</a></div></div>
-<div class="ttc" id="classtask__base_html_a406ff20533982d8722ec5deb48d8dff8"><div class="ttname"><a href="classtask__base.html#a406ff20533982d8722ec5deb48d8dff8">task_base::get_task_id</a></div><div class="ttdeci">const std::string &amp; get_task_id()</div><div class="ttdef"><b>Definition:</b> <a href="task__base_8cpp_source.html#l00036">task_base.cpp:36</a></div></div>
-<div class="ttc" id="classtask__base_html_a167f2266cdd153a4f11f519a29b5867e"><div class="ttname"><a href="classtask__base.html#a167f2266cdd153a4f11f519a29b5867e">task_base::get_priority</a></div><div class="ttdeci">size_t get_priority()</div><div class="ttdef"><b>Definition:</b> <a href="task__base_8cpp_source.html#l00041">task_base.cpp:41</a></div></div>
-<div class="ttc" id="classtask__base_html_a9511a486964147a1a57929b483142465"><div class="ttname"><a href="classtask__base.html#a9511a486964147a1a57929b483142465">task_base::~task_base</a></div><div class="ttdeci">virtual ~task_base()</div><div class="ttdef"><b>Definition:</b> <a href="task__base_8cpp_source.html#l00011">task_base.cpp:11</a></div></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    children_.push_back(add);</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;}</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
+<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="classtask__base.html#a97e292bbe2f9a6091303b6d54efb8f9c">   29</a></span>&#160;<span class="keyword">const</span> std::vector&lt;std::shared_ptr&lt;task_base&gt;&gt; &amp;<a class="code" href="classtask__base.html#a97e292bbe2f9a6091303b6d54efb8f9c">task_base::get_children</a>()</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;{</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keywordflow">return</span> children_;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;}</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
+<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="classtask__base.html#aae582b590672663e85300ba463251f48">   34</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classtask__base.html#aae582b590672663e85300ba463251f48">task_base::add_parent</a>(std::shared_ptr&lt;task_base&gt; add)</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;{</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keywordflow">if</span> (add == <span class="keyword">nullptr</span>) {</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    }</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    parents_.push_back(add);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;}</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
+<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="classtask__base.html#a9e67d4dea49bcddc369ba09e86b05598">   44</a></span>&#160;<span class="keywordtype">size_t</span> <a class="code" href="classtask__base.html#a9e67d4dea49bcddc369ba09e86b05598">task_base::get_id</a>()</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;{</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keywordflow">return</span> id_;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;}</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
+<div class="line"><a name="l00049"></a><span class="lineno"><a class="line" href="classtask__base.html#a406ff20533982d8722ec5deb48d8dff8">   49</a></span>&#160;<span class="keyword">const</span> std::string &amp;<a class="code" href="classtask__base.html#a406ff20533982d8722ec5deb48d8dff8">task_base::get_task_id</a>()</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;{</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keywordflow">return</span> task_id_;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;}</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
+<div class="line"><a name="l00054"></a><span class="lineno"><a class="line" href="classtask__base.html#a167f2266cdd153a4f11f519a29b5867e">   54</a></span>&#160;<span class="keywordtype">size_t</span> <a class="code" href="classtask__base.html#a167f2266cdd153a4f11f519a29b5867e">task_base::get_priority</a>()</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;{</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keywordflow">return</span> priority_;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;}</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
+<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="classtask__base.html#a0c03dbd11df4401fceded01ccf164db4">   59</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classtask__base.html#a0c03dbd11df4401fceded01ccf164db4">task_base::get_fatal_failure</a>()</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;{</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordflow">return</span> fatal_failure_;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;}</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
+<div class="line"><a name="l00064"></a><span class="lineno"><a class="line" href="classtask__base.html#ac9bb1a5d29617f929a5757eb6897b588">   64</a></span>&#160;<span class="keyword">const</span> std::string &amp;<a class="code" href="classtask__base.html#ac9bb1a5d29617f929a5757eb6897b588">task_base::get_cmd</a>()</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;{</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keywordflow">return</span> cmd_;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;}</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
+<div class="line"><a name="l00069"></a><span class="lineno"><a class="line" href="classtask__base.html#a5326f936dec28e4adec302ea8f49bc90">   69</a></span>&#160;<span class="keyword">const</span> std::vector&lt;std::string&gt; &amp;<a class="code" href="classtask__base.html#a5326f936dec28e4adec302ea8f49bc90">task_base::get_args</a>()</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;{</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keywordflow">return</span> arguments_;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;}</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
+<div class="line"><a name="l00074"></a><span class="lineno"><a class="line" href="classtask__base.html#a4b2101fa704a279fd0b547c16fc31420">   74</a></span>&#160;<span class="keyword">const</span> std::vector&lt;std::string&gt; &amp;<a class="code" href="classtask__base.html#a4b2101fa704a279fd0b547c16fc31420">task_base::get_dependencies</a>()</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;{</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keywordflow">return</span> dependencies_;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;}</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="keywordtype">bool</span> task_base::is_executable()</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;{</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keywordflow">return</span> execute_;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;}</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="keywordtype">void</span> task_base::set_execution(<span class="keywordtype">bool</span> set)</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;{</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    execute_ = set;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;}</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="keywordtype">void</span> task_base::set_children_execution(<span class="keywordtype">bool</span> set)</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;{</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;i : children_) {</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        i-&gt;set_execution(set);</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    }</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;}</div>
+<div class="ttc" id="classtask__base_html_a5326f936dec28e4adec302ea8f49bc90"><div class="ttname"><a href="classtask__base.html#a5326f936dec28e4adec302ea8f49bc90">task_base::get_args</a></div><div class="ttdeci">const std::vector&lt; std::string &gt; &amp; get_args()</div><div class="ttdef"><b>Definition:</b> <a href="task__base_8cpp_source.html#l00069">task_base.cpp:69</a></div></div>
+<div class="ttc" id="classtask__base_html_a0c03dbd11df4401fceded01ccf164db4"><div class="ttname"><a href="classtask__base.html#a0c03dbd11df4401fceded01ccf164db4">task_base::get_fatal_failure</a></div><div class="ttdeci">bool get_fatal_failure()</div><div class="ttdef"><b>Definition:</b> <a href="task__base_8cpp_source.html#l00059">task_base.cpp:59</a></div></div>
+<div class="ttc" id="classtask__base_html_a406ff20533982d8722ec5deb48d8dff8"><div class="ttname"><a href="classtask__base.html#a406ff20533982d8722ec5deb48d8dff8">task_base::get_task_id</a></div><div class="ttdeci">const std::string &amp; get_task_id()</div><div class="ttdef"><b>Definition:</b> <a href="task__base_8cpp_source.html#l00049">task_base.cpp:49</a></div></div>
+<div class="ttc" id="classtask__base_html_a167f2266cdd153a4f11f519a29b5867e"><div class="ttname"><a href="classtask__base.html#a167f2266cdd153a4f11f519a29b5867e">task_base::get_priority</a></div><div class="ttdeci">size_t get_priority()</div><div class="ttdef"><b>Definition:</b> <a href="task__base_8cpp_source.html#l00054">task_base.cpp:54</a></div></div>
+<div class="ttc" id="classtask__base_html_a9511a486964147a1a57929b483142465"><div class="ttname"><a href="classtask__base.html#a9511a486964147a1a57929b483142465">task_base::~task_base</a></div><div class="ttdeci">virtual ~task_base()</div><div class="ttdef"><b>Definition:</b> <a href="task__base_8cpp_source.html#l00015">task_base.cpp:15</a></div></div>
 <div class="ttc" id="classtask__base_html_a1ba57f10c2e3f26228925e76021a2e60"><div class="ttname"><a href="classtask__base.html#a1ba57f10c2e3f26228925e76021a2e60">task_base::task_base</a></div><div class="ttdeci">task_base()=delete</div></div>
-<div class="ttc" id="classtask__base_html_a9b56fcb8be1d899bfd3fcd7efdf423ea"><div class="ttname"><a href="classtask__base.html#a9b56fcb8be1d899bfd3fcd7efdf423ea">task_base::get_log</a></div><div class="ttdeci">const std::string &amp; get_log()</div><div class="ttdef"><b>Definition:</b> <a href="task__base_8cpp_source.html#l00061">task_base.cpp:61</a></div></div>
-<div class="ttc" id="classtask__base_html_aae582b590672663e85300ba463251f48"><div class="ttname"><a href="classtask__base.html#aae582b590672663e85300ba463251f48">task_base::add_parent</a></div><div class="ttdeci">void add_parent(std::shared_ptr&lt; task_base &gt; add)</div><div class="ttdef"><b>Definition:</b> <a href="task__base_8cpp_source.html#l00025">task_base.cpp:25</a></div></div>
-<div class="ttc" id="classtask__base_html_a97e292bbe2f9a6091303b6d54efb8f9c"><div class="ttname"><a href="classtask__base.html#a97e292bbe2f9a6091303b6d54efb8f9c">task_base::get_children</a></div><div class="ttdeci">const std::vector&lt; std::shared_ptr&lt; task_base &gt; &gt; &amp; get_children()</div><div class="ttdef"><b>Definition:</b> <a href="task__base_8cpp_source.html#l00020">task_base.cpp:20</a></div></div>
-<div class="ttc" id="classtask__base_html_ac9bb1a5d29617f929a5757eb6897b588"><div class="ttname"><a href="classtask__base.html#ac9bb1a5d29617f929a5757eb6897b588">task_base::get_cmd</a></div><div class="ttdeci">const std::string &amp; get_cmd()</div><div class="ttdef"><b>Definition:</b> <a href="task__base_8cpp_source.html#l00051">task_base.cpp:51</a></div></div>
-<div class="ttc" id="classtask__base_html_a9e67d4dea49bcddc369ba09e86b05598"><div class="ttname"><a href="classtask__base.html#a9e67d4dea49bcddc369ba09e86b05598">task_base::get_id</a></div><div class="ttdeci">size_t get_id()</div><div class="ttdef"><b>Definition:</b> <a href="task__base_8cpp_source.html#l00031">task_base.cpp:31</a></div></div>
-<div class="ttc" id="classtask__base_html_a4b2101fa704a279fd0b547c16fc31420"><div class="ttname"><a href="classtask__base.html#a4b2101fa704a279fd0b547c16fc31420">task_base::get_dependencies</a></div><div class="ttdeci">const std::vector&lt; std::string &gt; &amp; get_dependencies()</div><div class="ttdef"><b>Definition:</b> <a href="task__base_8cpp_source.html#l00066">task_base.cpp:66</a></div></div>
-<div class="ttc" id="classtask__base_html_a7a416901241831f45d5932567afac4b1"><div class="ttname"><a href="classtask__base.html#a7a416901241831f45d5932567afac4b1">task_base::add_children</a></div><div class="ttdeci">void add_children(std::shared_ptr&lt; task_base &gt; add)</div><div class="ttdef"><b>Definition:</b> <a href="task__base_8cpp_source.html#l00014">task_base.cpp:14</a></div></div>
+<div class="ttc" id="classtask__base_html_aae582b590672663e85300ba463251f48"><div class="ttname"><a href="classtask__base.html#aae582b590672663e85300ba463251f48">task_base::add_parent</a></div><div class="ttdeci">void add_parent(std::shared_ptr&lt; task_base &gt; add)</div><div class="ttdef"><b>Definition:</b> <a href="task__base_8cpp_source.html#l00034">task_base.cpp:34</a></div></div>
+<div class="ttc" id="classtask__base_html_a97e292bbe2f9a6091303b6d54efb8f9c"><div class="ttname"><a href="classtask__base.html#a97e292bbe2f9a6091303b6d54efb8f9c">task_base::get_children</a></div><div class="ttdeci">const std::vector&lt; std::shared_ptr&lt; task_base &gt; &gt; &amp; get_children()</div><div class="ttdef"><b>Definition:</b> <a href="task__base_8cpp_source.html#l00029">task_base.cpp:29</a></div></div>
+<div class="ttc" id="classtask__base_html_ac9bb1a5d29617f929a5757eb6897b588"><div class="ttname"><a href="classtask__base.html#ac9bb1a5d29617f929a5757eb6897b588">task_base::get_cmd</a></div><div class="ttdeci">const std::string &amp; get_cmd()</div><div class="ttdef"><b>Definition:</b> <a href="task__base_8cpp_source.html#l00064">task_base.cpp:64</a></div></div>
+<div class="ttc" id="classtask__base_html_a9e67d4dea49bcddc369ba09e86b05598"><div class="ttname"><a href="classtask__base.html#a9e67d4dea49bcddc369ba09e86b05598">task_base::get_id</a></div><div class="ttdeci">size_t get_id()</div><div class="ttdef"><b>Definition:</b> <a href="task__base_8cpp_source.html#l00044">task_base.cpp:44</a></div></div>
+<div class="ttc" id="classtask__base_html_a4b2101fa704a279fd0b547c16fc31420"><div class="ttname"><a href="classtask__base.html#a4b2101fa704a279fd0b547c16fc31420">task_base::get_dependencies</a></div><div class="ttdeci">const std::vector&lt; std::string &gt; &amp; get_dependencies()</div><div class="ttdef"><b>Definition:</b> <a href="task__base_8cpp_source.html#l00074">task_base.cpp:74</a></div></div>
+<div class="ttc" id="classtask__base_html_a7a416901241831f45d5932567afac4b1"><div class="ttname"><a href="classtask__base.html#a7a416901241831f45d5932567afac4b1">task_base::add_children</a></div><div class="ttdeci">void add_children(std::shared_ptr&lt; task_base &gt; add)</div><div class="ttdef"><b>Definition:</b> <a href="task__base_8cpp_source.html#l00019">task_base.cpp:19</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_b118c466441e8db851de69c6796245a3.html">tasks</a></li><li class="navelem"><b>task_base.cpp</b></li>
-    <li class="footer">Generated on Sat Jan 9 2016 22:48:25 for ReCodEx - Worker by
+    <li class="footer">Generated on Fri Feb 19 2016 18:25:15 for ReCodEx - Worker by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.10 </li>
   </ul>

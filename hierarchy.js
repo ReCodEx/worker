@@ -3,11 +3,15 @@ var hierarchy =
     [ "archivator", "classarchivator.html", null ],
     [ "broker_connection< proxy >", "classbroker__connection.html", null ],
     [ "connection_proxy", "classconnection__proxy.html", null ],
+    [ "external_task::create_params", "structexternal__task_1_1create__params.html", null ],
     [ "eval_request", "structeval__request.html", null ],
     [ "eval_response", "structeval__response.html", null ],
     [ "std::exception", null, [
       [ "archive_exception", "classarchive__exception.html", null ],
       [ "fm_exception", "classfm__exception.html", null ],
+      [ "helpers::config_exception", "classhelpers_1_1config__exception.html", null ],
+      [ "helpers::filesystem_exception", "classhelpers_1_1filesystem__exception.html", null ],
+      [ "helpers::top_sort_exception", "classhelpers_1_1top__sort__exception.html", null ],
       [ "job_exception", "classjob__exception.html", null ],
       [ "sandbox_exception", "classsandbox__exception.html", null ],
       [ "std::runtime_error", null, [
@@ -17,20 +21,25 @@ var hierarchy =
     ] ],
     [ "file_manager_base", "classfile__manager__base.html", [
       [ "cache_manager", "classcache__manager.html", null ],
-      [ "file_manager", "classfile__manager.html", null ],
-      [ "http_manager", "classhttp__manager.html", null ]
+      [ "fallback_file_manager", "classfallback__file__manager.html", null ],
+      [ "http_manager", "classhttp__manager.html", null ],
+      [ "prefixed_file_manager", "classprefixed__file__manager.html", null ]
     ] ],
     [ "fileman_config", "structfileman__config.html", null ],
     [ "isoeval_core", "classisoeval__core.html", null ],
     [ "job", "classjob.html", null ],
     [ "job_evaluator", "classjob__evaluator.html", null ],
+    [ "job_metadata", "classjob__metadata.html", null ],
     [ "job_receiver", "classjob__receiver.html", null ],
     [ "log_config", "structlog__config.html", null ],
     [ "message_origin", "structmessage__origin.html", null ],
     [ "sandbox_base", "classsandbox__base.html", [
+      [ "fake_sandbox", "classfake__sandbox.html", null ],
       [ "isolate_sandbox", "classisolate__sandbox.html", null ]
     ] ],
+    [ "sandbox_config", "classsandbox__config.html", null ],
     [ "sandbox_limits", "structsandbox__limits.html", null ],
+    [ "sandbox_results", "structsandbox__results.html", null ],
     [ "task_base", "classtask__base.html", [
       [ "archivate_task", "classarchivate__task.html", null ],
       [ "cp_task", "classcp__task.html", null ],
@@ -43,6 +52,7 @@ var hierarchy =
       [ "rm_task", "classrm__task.html", null ]
     ] ],
     [ "task_compare", "classtask__compare.html", null ],
+    [ "task_metadata", "classtask__metadata.html", null ],
     [ "task_results", "structtask__results.html", null ],
     [ "worker_config", "classworker__config.html", null ]
 ];

@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['rename_5ftask',['rename_task',['../classrename__task.html',1,'']]],
-  ['rm_5ftask',['rm_task',['../classrm__task.html',1,'']]]
+  ['prefixed_5ffile_5fmanager',['prefixed_file_manager',['../classprefixed__file__manager.html',1,'']]]
 ];

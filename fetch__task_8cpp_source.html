@@ -109,42 +109,49 @@ $(document).ready(function(){initNavTree('fetch__task_8cpp_source.html','');});
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#include &quot;fetch_task.h&quot;</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;</div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;</div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;fetch_task::fetch_task(<span class="keywordtype">size_t</span> <span class="keywordtype">id</span>, std::string task_id, <span class="keywordtype">size_t</span> priority, <span class="keywordtype">bool</span> fatal, <span class="keyword">const</span> std::string &amp;cmd,</div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;            <span class="keyword">const</span> std::vector&lt;std::string&gt; &amp;arguments, <span class="keyword">const</span> std::string &amp;log,</div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;            <span class="keyword">const</span> std::vector&lt;std::string&gt; &amp;dependencies, std::shared_ptr&lt;file_manager&gt; filemanager)</div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;    : <a class="code" href="classtask__base.html">task_base</a>(id, task_id, priority, fatal, dependencies, cmd, arguments, log), filemanager_(filemanager)</div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;{</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;    <span class="keywordflow">if</span> (arguments_.size() != 2) {</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;        <span class="keywordflow">throw</span> <a class="code" href="classtask__exception.html">task_exception</a>(<span class="stringliteral">&quot;Wrong number of arguments. Required: 2, Actual: &quot;</span> + arguments_.size());</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;    }</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;}</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;fetch_task::~fetch_task()</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;{</div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;fetch_task::fetch_task(<span class="keywordtype">size_t</span> <span class="keywordtype">id</span>,</div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;    std::string task_id,</div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;    <span class="keywordtype">size_t</span> priority,</div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;    <span class="keywordtype">bool</span> fatal,</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;    <span class="keyword">const</span> std::string &amp;cmd,</div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;    <span class="keyword">const</span> std::vector&lt;std::string&gt; &amp;arguments,</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;    <span class="keyword">const</span> std::vector&lt;std::string&gt; &amp;dependencies,</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;    std::shared_ptr&lt;file_manager_base&gt; filemanager)</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    : <a class="code" href="classtask__base.html">task_base</a>(id, task_id, priority, fatal, dependencies, cmd, arguments), filemanager_(filemanager)</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;{</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <span class="keywordflow">if</span> (arguments_.size() != 2) {</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;        <span class="keywordflow">throw</span> <a class="code" href="classtask__exception.html">task_exception</a>(<span class="stringliteral">&quot;Wrong number of arguments. Required: 2, Actual: &quot;</span> + arguments_.size());</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    }</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;}</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;</div>
-<div class="line"><a name="l00020"></a><span class="lineno"><a class="line" href="classfetch__task.html#aff85f14e65e86d6b7f3bfac48674ec4c">   20</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classfetch__task.html#aff85f14e65e86d6b7f3bfac48674ec4c">fetch_task::run</a>()</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;fetch_task::~fetch_task()</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;{</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        filemanager_-&gt;get_file(arguments_[0], arguments_[1]);</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    } <span class="keywordflow">catch</span> (<a class="code" href="classfm__exception.html">fm_exception</a> &amp;e) {</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        <span class="keywordflow">throw</span> <a class="code" href="classtask__exception.html">task_exception</a>(std::string(<span class="stringliteral">&quot;Cannot fetch files. Error: &quot;</span>) + e.<a class="code" href="classfm__exception.html#aaa8b4dc6739c6583c5c7cfe386163968">what</a>());</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    }</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;}</div>
-<div class="ttc" id="classtask__exception_html"><div class="ttname"><a href="classtask__exception.html">task_exception</a></div><div class="ttdef"><b>Definition:</b> <a href="task__base_8h_source.html#l00118">task_base.h:118</a></div></div>
-<div class="ttc" id="classfm__exception_html_aaa8b4dc6739c6583c5c7cfe386163968"><div class="ttname"><a href="classfm__exception.html#aaa8b4dc6739c6583c5c7cfe386163968">fm_exception::what</a></div><div class="ttdeci">virtual const char * what() const  noexcept</div><div class="ttdef"><b>Definition:</b> <a href="file__manager__base_8h_source.html#l00072">file_manager_base.h:72</a></div></div>
-<div class="ttc" id="classfetch__task_html_aff85f14e65e86d6b7f3bfac48674ec4c"><div class="ttname"><a href="classfetch__task.html#aff85f14e65e86d6b7f3bfac48674ec4c">fetch_task::run</a></div><div class="ttdeci">virtual void run()</div><div class="ttdef"><b>Definition:</b> <a href="fetch__task_8cpp_source.html#l00020">fetch_task.cpp:20</a></div></div>
-<div class="ttc" id="classfm__exception_html"><div class="ttname"><a href="classfm__exception.html">fm_exception</a></div><div class="ttdef"><b>Definition:</b> <a href="file__manager__base_8h_source.html#l00053">file_manager_base.h:53</a></div></div>
-<div class="ttc" id="classtask__base_html"><div class="ttname"><a href="classtask__base.html">task_base</a></div><div class="ttdef"><b>Definition:</b> <a href="task__base_8h_source.html#l00015">task_base.h:15</a></div></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;}</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;</div>
+<div class="line"><a name="l00025"></a><span class="lineno"><a class="line" href="classfetch__task.html#a4058ae92f11c81d4182c594dfb7509be">   25</a></span>&#160;std::shared_ptr&lt;task_results&gt; <a class="code" href="classfetch__task.html#a4058ae92f11c81d4182c594dfb7509be">fetch_task::run</a>()</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;{</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        filemanager_-&gt;get_file(arguments_[0], arguments_[1]);</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <span class="keywordflow">return</span> std::shared_ptr&lt;task_results&gt;(<span class="keyword">new</span> <a class="code" href="structtask__results.html">task_results</a>());</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    } <span class="keywordflow">catch</span> (<a class="code" href="classfm__exception.html">fm_exception</a> &amp;e) {</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        <span class="keywordflow">throw</span> <a class="code" href="classtask__exception.html">task_exception</a>(std::string(<span class="stringliteral">&quot;Cannot fetch files. Error: &quot;</span>) + e.<a class="code" href="classfm__exception.html#aaa8b4dc6739c6583c5c7cfe386163968">what</a>());</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    }</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;}</div>
+<div class="ttc" id="classtask__exception_html"><div class="ttname"><a href="classtask__exception.html">task_exception</a></div><div class="ttdef"><b>Definition:</b> <a href="task__base_8h_source.html#l00126">task_base.h:126</a></div></div>
+<div class="ttc" id="classfetch__task_html_a4058ae92f11c81d4182c594dfb7509be"><div class="ttname"><a href="classfetch__task.html#a4058ae92f11c81d4182c594dfb7509be">fetch_task::run</a></div><div class="ttdeci">virtual std::shared_ptr&lt; task_results &gt; run()</div><div class="ttdef"><b>Definition:</b> <a href="fetch__task_8cpp_source.html#l00025">fetch_task.cpp:25</a></div></div>
+<div class="ttc" id="classfm__exception_html_aaa8b4dc6739c6583c5c7cfe386163968"><div class="ttname"><a href="classfm__exception.html#aaa8b4dc6739c6583c5c7cfe386163968">fm_exception::what</a></div><div class="ttdeci">virtual const char * what() const  noexcept</div><div class="ttdef"><b>Definition:</b> <a href="file__manager__base_8h_source.html#l00069">file_manager_base.h:69</a></div></div>
+<div class="ttc" id="structtask__results_html"><div class="ttname"><a href="structtask__results.html">task_results</a></div><div class="ttdef"><b>Definition:</b> <a href="task__results_8h_source.html#l00081">task_results.h:81</a></div></div>
+<div class="ttc" id="classfm__exception_html"><div class="ttname"><a href="classfm__exception.html">fm_exception</a></div><div class="ttdef"><b>Definition:</b> <a href="file__manager__base_8h_source.html#l00043">file_manager_base.h:43</a></div></div>
+<div class="ttc" id="classtask__base_html"><div class="ttname"><a href="classtask__base.html">task_base</a></div><div class="ttdef"><b>Definition:</b> <a href="task__base_8h_source.html#l00016">task_base.h:16</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_b118c466441e8db851de69c6796245a3.html">tasks</a></li><li class="navelem"><a class="el" href="dir_09805b93aae25377bd958f645bcc429a.html">internal</a></li><li class="navelem"><b>fetch_task.cpp</b></li>
-    <li class="footer">Generated on Sat Jan 9 2016 22:48:25 for ReCodEx - Worker by
+    <li class="footer">Generated on Fri Feb 19 2016 18:25:15 for ReCodEx - Worker by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.10 </li>
   </ul>

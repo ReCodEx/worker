@@ -107,55 +107,68 @@ $(document).ready(function(){initNavTree('classjob.html','');});
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="classjob-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">job Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="job_8h_source.html">job.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a765f1c81790f153262402060bf680fcb"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a765f1c81790f153262402060bf680fcb"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>job</b> (const YAML::Node &amp;job_config, fs::path source_path, std::shared_ptr&lt; spdlog::logger &gt; logger, std::shared_ptr&lt; <a class="el" href="classworker__config.html">worker_config</a> &gt; default_config, std::shared_ptr&lt; <a class="el" href="classfile__manager__base.html">file_manager_base</a> &gt; fileman)</td></tr>
-<tr class="separator:a765f1c81790f153262402060bf680fcb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af61d511c2c2533ac3778d59aba80e6d4"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af61d511c2c2533ac3778d59aba80e6d4"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>run</b> ()</td></tr>
-<tr class="separator:af61d511c2c2533ac3778d59aba80e6d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
-Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a83b1c2ca4f0a37f67d48f678a9cf8482"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classjob.html#a83b1c2ca4f0a37f67d48f678a9cf8482">topological_sort</a> (std::shared_ptr&lt; <a class="el" href="classtask__base.html">task_base</a> &gt; root, std::map&lt; std::string, size_t &gt; &amp;effective_indegree, std::vector&lt; std::shared_ptr&lt; <a class="el" href="classtask__base.html">task_base</a> &gt;&gt; &amp;result)</td></tr>
-<tr class="separator:a83b1c2ca4f0a37f67d48f678a9cf8482"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a185f6c31b6291cbdefd40f62414c76c4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classjob.html#a185f6c31b6291cbdefd40f62414c76c4">job</a> (std::shared_ptr&lt; <a class="el" href="classjob__metadata.html">job_metadata</a> &gt; job_meta, std::shared_ptr&lt; <a class="el" href="classworker__config.html">worker_config</a> &gt; worker_conf, fs::path working_directory, fs::path source_path, fs::path result_path, std::shared_ptr&lt; <a class="el" href="classfile__manager__base.html">file_manager_base</a> &gt; fileman)</td></tr>
+<tr class="separator:a185f6c31b6291cbdefd40f62414c76c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0769f62cc7f246aa09f95d59d55fdb93"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::pair&lt; std::string, std::shared_ptr&lt; <a class="el" href="structtask__results.html">task_results</a> &gt; &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classjob.html#a0769f62cc7f246aa09f95d59d55fdb93">run</a> ()</td></tr>
+<tr class="separator:a0769f62cc7f246aa09f95d59d55fdb93"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2916a8dd8fcc38072e073db2617cc8a3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2916a8dd8fcc38072e073db2617cc8a3"></a>
+const std::vector&lt; std::shared_ptr&lt; <a class="el" href="classtask__base.html">task_base</a> &gt; &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>get_task_queue</b> () const </td></tr>
+<tr class="separator:a2916a8dd8fcc38072e073db2617cc8a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p>Definition at line <a class="el" href="job_8h_source.html#l00030">30</a> of file <a class="el" href="job_8h_source.html">job.h</a>.</p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
-<a class="anchor" id="a83b1c2ca4f0a37f67d48f678a9cf8482"></a>
+<div class="textblock"><p>Job is unit which is received from broker and should be evaluated. Job is built from configuration in which all information should be provided. Job building results in task tree and task queue in which task should be evaluated. </p>
+
+<p>Definition at line <a class="el" href="job_8h_source.html#l00039">39</a> of file <a class="el" href="job_8h_source.html">job.h</a>.</p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="a185f6c31b6291cbdefd40f62414c76c4"></a>
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void job::topological_sort </td>
+          <td class="memname">job::job </td>
           <td>(</td>
-          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classtask__base.html">task_base</a> &gt;&#160;</td>
-          <td class="paramname"><em>root</em>, </td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classjob__metadata.html">job_metadata</a> &gt;&#160;</td>
+          <td class="paramname"><em>job_meta</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::map&lt; std::string, size_t &gt; &amp;&#160;</td>
-          <td class="paramname"><em>effective_indegree</em>, </td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classworker__config.html">worker_config</a> &gt;&#160;</td>
+          <td class="paramname"><em>worker_conf</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::vector&lt; std::shared_ptr&lt; <a class="el" href="classtask__base.html">task_base</a> &gt;&gt; &amp;&#160;</td>
-          <td class="paramname"><em>result</em>&#160;</td>
+          <td class="paramtype">fs::path&#160;</td>
+          <td class="paramname"><em>working_directory</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">fs::path&#160;</td>
+          <td class="paramname"><em>source_path</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">fs::path&#160;</td>
+          <td class="paramname"><em>result_path</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classfile__manager__base.html">file_manager_base</a> &gt;&#160;</td>
+          <td class="paramname"><em>fileman</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -163,28 +176,51 @@ Static Public Member Functions</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
-<p>Topological sort of tasks starting from root. Result order is saved in result variable, which is cleared before computation. Priorities and configuration file order are taken into account. Algorithm itself taken from: <a href="http://stackoverflow.com/a/11236027">http://stackoverflow.com/a/11236027</a> </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Only way to construct a job. All variables are needed to proper function. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">root</td><td></td></tr>
-    <tr><td class="paramname">effective_indegree</td><td></td></tr>
-    <tr><td class="paramname">result</td><td></td></tr>
+    <tr><td class="paramname">job_meta</td><td></td></tr>
+    <tr><td class="paramname">worker_conf</td><td></td></tr>
+    <tr><td class="paramname">working_directory</td><td>Directory for temporary saving of files by tasks. Example use case is storing isolate's meta log file. </td></tr>
+    <tr><td class="paramname">source_path</td><td>path to source codes of submission </td></tr>
+    <tr><td class="paramname">result_path</td><td>path to directory containing all results </td></tr>
+    <tr><td class="paramname">fileman</td><td>file manager which is provided to tasks </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classjob__exception.html">job_exception</a></td><td>if there is problem during loading of configuration </td></tr>
   </table>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="job_8cpp_source.html#l00346">346</a> of file <a class="el" href="job_8cpp_source.html">job.cpp</a>.</p>
+<p>Definition at line <a class="el" href="job_8cpp_source.html#l00004">4</a> of file <a class="el" href="job_8cpp_source.html">job.cpp</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="a0769f62cc7f246aa09f95d59d55fdb93"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; std::pair&lt; std::string, std::shared_ptr&lt; <a class="el" href="structtask__results.html">task_results</a> &gt; &gt; &gt; job::run </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Runs all task which are sorted in task queue and get results from all of them. Should not throw an exception. </p><dl class="section return"><dt>Returns</dt><dd>Vector with pairs task id - <a class="el" href="structtask__results.html">task_results</a>. Values are not <em>nullptr</em>. </dd></dl>
+
+<p>Definition at line <a class="el" href="job_8cpp_source.html#l00293">293</a> of file <a class="el" href="job_8cpp_source.html">job.cpp</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>src/tasks/<a class="el" href="job_8h_source.html">job.h</a></li>
-<li>src/tasks/<a class="el" href="job_8cpp_source.html">job.cpp</a></li>
+<li>src/job/<a class="el" href="job_8h_source.html">job.h</a></li>
+<li>src/job/<a class="el" href="job_8cpp_source.html">job.cpp</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
@@ -192,7 +228,7 @@ Static Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classjob.html">job</a></li>
-    <li class="footer">Generated on Sat Jan 9 2016 22:48:25 for ReCodEx - Worker by
+    <li class="footer">Generated on Fri Feb 19 2016 18:25:15 for ReCodEx - Worker by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.10 </li>
   </ul>

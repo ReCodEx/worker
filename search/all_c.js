@@ -1,9 +1,9 @@
 var searchData=
 [
-  ['max_5frss',['max_rss',['../structtask__results.html#a34c210bd5faeadc128e026d9279fd1d0',1,'task_results']]],
-  ['memory',['memory',['../structtask__results.html#ab23af837729d379dc026d428aa831f55',1,'task_results']]],
+  ['max_5frss',['max_rss',['../structsandbox__results.html#ae6bb98d9da5d9031223d6afc510d6cff',1,'sandbox_results']]],
+  ['memory',['memory',['../structsandbox__results.html#a4d88ac68d19536321865db97af42cffa',1,'sandbox_results']]],
   ['memory_5fusage',['memory_usage',['../structsandbox__limits.html#a88f70fa02260abb64bac8c348b90aa58',1,'sandbox_limits']]],
-  ['message',['message',['../structtask__results.html#acc106e21097c979c434b7b719ef3eef3',1,'task_results']]],
+  ['message',['message',['../structsandbox__results.html#a97830dfcff3e27ecabd782d24e792dd8',1,'sandbox_results']]],
   ['message_5forigin',['message_origin',['../structmessage__origin.html',1,'']]],
   ['mkdir_5ftask',['mkdir_task',['../classmkdir__task.html',1,'']]]
 ];

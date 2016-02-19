@@ -129,8 +129,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a27ac6d5a6410a6da8bf28d129992a033"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a27ac6d5a6410a6da8bf28d129992a033"></a>
 <a class="el" href="classjob__evaluator.html">job_evaluator</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="classjob__evaluator.html">job_evaluator</a> &amp;&amp;source)=delete</td></tr>
 <tr class="separator:a27ac6d5a6410a6da8bf28d129992a033"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a07b911022e7464247923c63b4041e6b1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classjob__evaluator.html#a07b911022e7464247923c63b4041e6b1">job_evaluator</a> (std::shared_ptr&lt; spdlog::logger &gt; logger, std::shared_ptr&lt; <a class="el" href="classworker__config.html">worker_config</a> &gt; config, std::shared_ptr&lt; <a class="el" href="classfile__manager__base.html">file_manager_base</a> &gt; fileman)</td></tr>
-<tr class="separator:a07b911022e7464247923c63b4041e6b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5495073884337a4916a0d9f8e378db54"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classjob__evaluator.html#a5495073884337a4916a0d9f8e378db54">job_evaluator</a> (std::shared_ptr&lt; spdlog::logger &gt; logger, std::shared_ptr&lt; <a class="el" href="classworker__config.html">worker_config</a> &gt; config, std::shared_ptr&lt; <a class="el" href="classfile__manager__base.html">file_manager_base</a> &gt; remote_fm, std::shared_ptr&lt; <a class="el" href="classfile__manager__base.html">file_manager_base</a> &gt; cache_fm, fs::path working_directory)</td></tr>
+<tr class="separator:a5495073884337a4916a0d9f8e378db54"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a95e5379fa71f9817f7bc7e8c2b3204cc"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classjob__evaluator.html#a95e5379fa71f9817f7bc7e8c2b3204cc">~job_evaluator</a> ()</td></tr>
 <tr class="separator:a95e5379fa71f9817f7bc7e8c2b3204cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ace5ab8c5423a4a85f69b612111de52c5"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structeval__response.html">eval_response</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classjob__evaluator.html#ace5ab8c5423a4a85f69b612111de52c5">evaluate</a> (<a class="el" href="structeval__request.html">eval_request</a> request)</td></tr>
@@ -139,9 +139,9 @@ Public Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class which handles receiving job from <a class="el" href="classbroker__connection.html">broker_connection</a>, construction of working tree and its evaluation. Above stated run in loop, so this class is in program constructed only once. </p>
 
-<p>Definition at line <a class="el" href="job__evaluator_8h_source.html#l00024">24</a> of file <a class="el" href="job__evaluator_8h_source.html">job_evaluator.h</a>.</p>
+<p>Definition at line <a class="el" href="job__evaluator_8h_source.html#l00028">28</a> of file <a class="el" href="job__evaluator_8h_source.html">job_evaluator.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a07b911022e7464247923c63b4041e6b1"></a>
+<a class="anchor" id="a5495073884337a4916a0d9f8e378db54"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -161,7 +161,19 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classfile__manager__base.html">file_manager_base</a> &gt;&#160;</td>
-          <td class="paramname"><em>fileman</em>&#160;</td>
+          <td class="paramname"><em>remote_fm</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classfile__manager__base.html">file_manager_base</a> &gt;&#160;</td>
+          <td class="paramname"><em>cache_fm</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">fs::path&#160;</td>
+          <td class="paramname"><em>working_directory</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -179,7 +191,7 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="job__evaluator_8cpp_source.html#l00003">3</a> of file <a class="el" href="job__evaluator_8cpp_source.html">job_evaluator.cpp</a>.</p>
+<p>Definition at line <a class="el" href="job__evaluator_8cpp_source.html#l00008">8</a> of file <a class="el" href="job__evaluator_8cpp_source.html">job_evaluator.cpp</a>.</p>
 
 </div>
 </div>
@@ -205,7 +217,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Theoretically not needed, but stated for completion. </p>
 
-<p>Definition at line <a class="el" href="job__evaluator_8cpp_source.html#l00010">10</a> of file <a class="el" href="job__evaluator_8cpp_source.html">job_evaluator.cpp</a>.</p>
+<p>Definition at line <a class="el" href="job__evaluator_8cpp_source.html#l00023">23</a> of file <a class="el" href="job__evaluator_8cpp_source.html">job_evaluator.cpp</a>.</p>
 
 </div>
 </div>
@@ -233,13 +245,13 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Process an "eval" request </p>
 
-<p>Definition at line <a class="el" href="job__evaluator_8cpp_source.html#l00110">110</a> of file <a class="el" href="job__evaluator_8cpp_source.html">job_evaluator.cpp</a>.</p>
+<p>Definition at line <a class="el" href="job__evaluator_8cpp_source.html#l00305">305</a> of file <a class="el" href="job__evaluator_8cpp_source.html">job_evaluator.cpp</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>src/<a class="el" href="job__evaluator_8h_source.html">job_evaluator.h</a></li>
-<li>src/<a class="el" href="job__evaluator_8cpp_source.html">job_evaluator.cpp</a></li>
+<li>src/job/<a class="el" href="job__evaluator_8h_source.html">job_evaluator.h</a></li>
+<li>src/job/<a class="el" href="job__evaluator_8cpp_source.html">job_evaluator.cpp</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
@@ -247,7 +259,7 @@ Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classjob__evaluator.html">job_evaluator</a></li>
-    <li class="footer">Generated on Sat Jan 9 2016 22:48:25 for ReCodEx - Worker by
+    <li class="footer">Generated on Fri Feb 19 2016 18:25:15 for ReCodEx - Worker by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.10 </li>
   </ul>

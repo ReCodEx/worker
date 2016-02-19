@@ -125,56 +125,70 @@ $(document).ready(function(){initNavTree('worker__config_8h_source.html','');});
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#include &quot;../sandbox/sandbox_base.h&quot;</span></div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;</div>
-<div class="line"><a name="l00023"></a><span class="lineno"><a class="line" href="classworker__config.html">   23</a></span>&#160;<span class="keyword">class </span><a class="code" href="classworker__config.html">worker_config</a> {</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
+<div class="line"><a name="l00023"></a><span class="lineno"><a class="line" href="classworker__config.html">   23</a></span>&#160;<span class="keyword">class </span><a class="code" href="classworker__config.html">worker_config</a></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;{</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="keyword">public</span>:</div>
 <div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="classworker__config.html#ae8122667dc3f6f5258dc8d93f53b3db2">   27</a></span>&#160;    <span class="keyword">typedef</span> std::multimap&lt;std::string, std::string&gt; <a class="code" href="classworker__config.html#ae8122667dc3f6f5258dc8d93f53b3db2">header_map_t</a>;</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <a class="code" href="classworker__config.html#a995e38f56bea88e411bab36fe21f859d">worker_config</a> ();</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <a class="code" href="classworker__config.html#a995e38f56bea88e411bab36fe21f859d">worker_config</a>();</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <a class="code" href="classworker__config.html#a995e38f56bea88e411bab36fe21f859d">worker_config</a> (<span class="keyword">const</span> YAML::Node &amp;config);</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <a class="code" href="classworker__config.html#a995e38f56bea88e411bab36fe21f859d">worker_config</a>(<span class="keyword">const</span> YAML::Node &amp;config);</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    std::string get_worker_id();</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keyword">virtual</span> std::string get_broker_uri() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keyword">virtual</span> <span class="keyword">const</span> header_map_t &amp;get_headers() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keyword">const</span> <a class="code" href="structlog__config.html">log_config</a> &amp;get_log_config();</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keyword">const</span> <a class="code" href="structfileman__config.html">fileman_config</a> &amp;get_fileman_config();</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keyword">const</span> <a class="code" href="structsandbox__limits.html">sandbox_limits</a> &amp;get_limits();</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">const</span> std::map&lt;std::string, size_t&gt; &amp;get_sandboxes_limits();</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    std::string worker_id_;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    std::string broker_uri_;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    header_map_t headers_;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <a class="code" href="structlog__config.html">log_config</a> log_config_;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <a class="code" href="structfileman__config.html">fileman_config</a> fileman_config_;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <a class="code" href="structsandbox__limits.html">sandbox_limits</a> limits_;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    std::map&lt;std::string, size_t&gt; sandboxes_limits_;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;};</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
-<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="classconfig__error.html">   59</a></span>&#160;<span class="keyword">class </span><a class="code" href="classconfig__error.html">config_error</a> : <span class="keyword">public</span> std::runtime_error {</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classconfig__error.html">config_error</a> (<span class="keyword">const</span> std::string &amp;msg): std::runtime_error(msg)</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    {</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    }</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;};</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="preprocessor">#endif //CODEX_WORKER_WORKER_CONFIG_H</span></div>
-<div class="ttc" id="structfileman__config_html"><div class="ttname"><a href="structfileman__config.html">fileman_config</a></div><div class="ttdef"><b>Definition:</b> <a href="fileman__config_8h_source.html#l00005">fileman_config.h:5</a></div></div>
-<div class="ttc" id="structsandbox__limits_html"><div class="ttname"><a href="structsandbox__limits.html">sandbox_limits</a></div><div class="ttdef"><b>Definition:</b> <a href="sandbox__limits_8h_source.html#l00011">sandbox_limits.h:11</a></div></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keywordtype">size_t</span> <a class="code" href="classworker__config.html#abe16b2d0c05790b2ea9ffb844a7e52ff">get_worker_id</a>();</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    std::string <a class="code" href="classworker__config.html#a510077965774a991fd32e1d5e1118930">get_working_directory</a>();</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keyword">virtual</span> std::string <a class="code" href="classworker__config.html#a9146975c7b9fd483fe511bde77c2e783">get_broker_uri</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keyword">virtual</span> <span class="keyword">const</span> header_map_t &amp;<a class="code" href="classworker__config.html#ac30ea5854e1e411f6b8cc61e7ebd875f">get_headers</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    std::string <a class="code" href="classworker__config.html#a41f855af50d15c24a8feacba73dd597b">get_cache_dir</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keyword">const</span> <a class="code" href="structlog__config.html">log_config</a> &amp;<a class="code" href="classworker__config.html#a69340f2be1bc41d34822b9a2250f6ed6">get_log_config</a>();</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keyword">const</span> std::vector&lt;fileman_config&gt; &amp;<a class="code" href="classworker__config.html#a82967ec637b232c94f3a562588a2fc53">get_filemans_configs</a>();</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keyword">const</span> <a class="code" href="structsandbox__limits.html">sandbox_limits</a> &amp;<a class="code" href="classworker__config.html#a08476c258b8ef482e3538addfb275085">get_limits</a>();</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keywordtype">size_t</span> worker_id_;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    std::string working_directory_;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    std::string broker_uri_;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    header_map_t headers_;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    std::string cache_dir_;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <a class="code" href="structlog__config.html">log_config</a> log_config_;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    std::vector&lt;fileman_config&gt; filemans_configs_;</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <a class="code" href="structsandbox__limits.html">sandbox_limits</a> limits_;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;};</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
+<div class="line"><a name="l00104"></a><span class="lineno"><a class="line" href="classconfig__error.html">  104</a></span>&#160;<span class="keyword">class </span><a class="code" href="classconfig__error.html">config_error</a> : <span class="keyword">public</span> std::runtime_error</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;{</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00111"></a><span class="lineno"><a class="line" href="classconfig__error.html#a8d9627108e5a250a223e3de47da28b6c">  111</a></span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classconfig__error.html#a8d9627108e5a250a223e3de47da28b6c">config_error</a>(<span class="keyword">const</span> std::string &amp;msg) : <a class="code" href="namespacestd.html">std</a>::runtime_error(msg)</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    {</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    }</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;};</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="preprocessor">#endif // CODEX_WORKER_WORKER_CONFIG_H</span></div>
+<div class="ttc" id="classworker__config_html_a69340f2be1bc41d34822b9a2250f6ed6"><div class="ttname"><a href="classworker__config.html#a69340f2be1bc41d34822b9a2250f6ed6">worker_config::get_log_config</a></div><div class="ttdeci">const log_config &amp; get_log_config()</div><div class="ttdef"><b>Definition:</b> <a href="worker__config_8cpp_source.html#l00161">worker_config.cpp:161</a></div></div>
+<div class="ttc" id="namespacestd_html"><div class="ttname"><a href="namespacestd.html">std</a></div><div class="ttdoc">STL namespace. </div></div>
+<div class="ttc" id="classconfig__error_html_a8d9627108e5a250a223e3de47da28b6c"><div class="ttname"><a href="classconfig__error.html#a8d9627108e5a250a223e3de47da28b6c">config_error::config_error</a></div><div class="ttdeci">config_error(const std::string &amp;msg)</div><div class="ttdef"><b>Definition:</b> <a href="worker__config_8h_source.html#l00111">worker_config.h:111</a></div></div>
+<div class="ttc" id="structsandbox__limits_html"><div class="ttname"><a href="structsandbox__limits.html">sandbox_limits</a></div><div class="ttdef"><b>Definition:</b> <a href="sandbox__limits_8h_source.html#l00015">sandbox_limits.h:15</a></div></div>
+<div class="ttc" id="classworker__config_html_a510077965774a991fd32e1d5e1118930"><div class="ttname"><a href="classworker__config.html#a510077965774a991fd32e1d5e1118930">worker_config::get_working_directory</a></div><div class="ttdeci">std::string get_working_directory()</div><div class="ttdef"><b>Definition:</b> <a href="worker__config_8cpp_source.html#l00146">worker_config.cpp:146</a></div></div>
 <div class="ttc" id="classworker__config_html"><div class="ttname"><a href="classworker__config.html">worker_config</a></div><div class="ttdef"><b>Definition:</b> <a href="worker__config_8h_source.html#l00023">worker_config.h:23</a></div></div>
 <div class="ttc" id="structlog__config_html"><div class="ttname"><a href="structlog__config.html">log_config</a></div><div class="ttdef"><b>Definition:</b> <a href="log__config_8h_source.html#l00010">log_config.h:10</a></div></div>
-<div class="ttc" id="classconfig__error_html"><div class="ttname"><a href="classconfig__error.html">config_error</a></div><div class="ttdef"><b>Definition:</b> <a href="worker__config_8h_source.html#l00059">worker_config.h:59</a></div></div>
+<div class="ttc" id="classworker__config_html_a41f855af50d15c24a8feacba73dd597b"><div class="ttname"><a href="classworker__config.html#a41f855af50d15c24a8feacba73dd597b">worker_config::get_cache_dir</a></div><div class="ttdeci">std::string get_cache_dir() const </div><div class="ttdef"><b>Definition:</b> <a href="worker__config_8cpp_source.html#l00176">worker_config.cpp:176</a></div></div>
+<div class="ttc" id="classconfig__error_html"><div class="ttname"><a href="classconfig__error.html">config_error</a></div><div class="ttdef"><b>Definition:</b> <a href="worker__config_8h_source.html#l00104">worker_config.h:104</a></div></div>
 <div class="ttc" id="classworker__config_html_ae8122667dc3f6f5258dc8d93f53b3db2"><div class="ttname"><a href="classworker__config.html#ae8122667dc3f6f5258dc8d93f53b3db2">worker_config::header_map_t</a></div><div class="ttdeci">std::multimap&lt; std::string, std::string &gt; header_map_t</div><div class="ttdef"><b>Definition:</b> <a href="worker__config_8h_source.html#l00027">worker_config.h:27</a></div></div>
-<div class="ttc" id="classworker__config_html_a995e38f56bea88e411bab36fe21f859d"><div class="ttname"><a href="classworker__config.html#a995e38f56bea88e411bab36fe21f859d">worker_config::worker_config</a></div><div class="ttdeci">worker_config()</div><div class="ttdef"><b>Definition:</b> <a href="worker__config_8cpp_source.html#l00003">worker_config.cpp:3</a></div></div>
+<div class="ttc" id="classworker__config_html_a82967ec637b232c94f3a562588a2fc53"><div class="ttname"><a href="classworker__config.html#a82967ec637b232c94f3a562588a2fc53">worker_config::get_filemans_configs</a></div><div class="ttdeci">const std::vector&lt; fileman_config &gt; &amp; get_filemans_configs()</div><div class="ttdef"><b>Definition:</b> <a href="worker__config_8cpp_source.html#l00166">worker_config.cpp:166</a></div></div>
+<div class="ttc" id="classworker__config_html_a9146975c7b9fd483fe511bde77c2e783"><div class="ttname"><a href="classworker__config.html#a9146975c7b9fd483fe511bde77c2e783">worker_config::get_broker_uri</a></div><div class="ttdeci">virtual std::string get_broker_uri() const </div><div class="ttdef"><b>Definition:</b> <a href="worker__config_8cpp_source.html#l00151">worker_config.cpp:151</a></div></div>
+<div class="ttc" id="classworker__config_html_ac30ea5854e1e411f6b8cc61e7ebd875f"><div class="ttname"><a href="classworker__config.html#ac30ea5854e1e411f6b8cc61e7ebd875f">worker_config::get_headers</a></div><div class="ttdeci">virtual const header_map_t &amp; get_headers() const </div><div class="ttdef"><b>Definition:</b> <a href="worker__config_8cpp_source.html#l00156">worker_config.cpp:156</a></div></div>
+<div class="ttc" id="classworker__config_html_abe16b2d0c05790b2ea9ffb844a7e52ff"><div class="ttname"><a href="classworker__config.html#abe16b2d0c05790b2ea9ffb844a7e52ff">worker_config::get_worker_id</a></div><div class="ttdeci">size_t get_worker_id()</div><div class="ttdef"><b>Definition:</b> <a href="worker__config_8cpp_source.html#l00141">worker_config.cpp:141</a></div></div>
+<div class="ttc" id="classworker__config_html_a08476c258b8ef482e3538addfb275085"><div class="ttname"><a href="classworker__config.html#a08476c258b8ef482e3538addfb275085">worker_config::get_limits</a></div><div class="ttdeci">const sandbox_limits &amp; get_limits()</div><div class="ttdef"><b>Definition:</b> <a href="worker__config_8cpp_source.html#l00171">worker_config.cpp:171</a></div></div>
+<div class="ttc" id="classworker__config_html_a995e38f56bea88e411bab36fe21f859d"><div class="ttname"><a href="classworker__config.html#a995e38f56bea88e411bab36fe21f859d">worker_config::worker_config</a></div><div class="ttdeci">worker_config()</div><div class="ttdef"><b>Definition:</b> <a href="worker__config_8cpp_source.html#l00004">worker_config.cpp:4</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_7e83d1792d529f4aa7126ac7e0b3b699.html">config</a></li><li class="navelem"><b>worker_config.h</b></li>
-    <li class="footer">Generated on Sat Jan 9 2016 22:48:25 for ReCodEx - Worker by
+    <li class="footer">Generated on Fri Feb 19 2016 18:25:15 for ReCodEx - Worker by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.10 </li>
   </ul>

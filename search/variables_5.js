@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['max_5frss',['max_rss',['../structtask__results.html#a34c210bd5faeadc128e026d9279fd1d0',1,'task_results']]],
-  ['memory',['memory',['../structtask__results.html#ab23af837729d379dc026d428aa831f55',1,'task_results']]],
-  ['memory_5fusage',['memory_usage',['../structsandbox__limits.html#a88f70fa02260abb64bac8c348b90aa58',1,'sandbox_limits']]],
-  ['message',['message',['../structtask__results.html#acc106e21097c979c434b7b719ef3eef3',1,'task_results']]]
+  ['failed',['failed',['../structtask__results.html#aeb49159a3adebca3d7eba2c0cca929aa',1,'task_results']]],
+  ['fatal',['fatal',['../structexternal__task_1_1create__params.html#ae2ee0fcdd67bcadcd8fe9e28735fd186',1,'external_task::create_params']]],
+  ['files_5fsize',['files_size',['../structsandbox__limits.html#a5b227e9e8fca4f0838f953351e1819a9',1,'sandbox_limits']]]
 ];

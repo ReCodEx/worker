@@ -1,6 +1,8 @@
 var searchData=
 [
   ['decompress',['decompress',['../classarchivator.html#a35fef485e01b2d4e6aafeddf524493ab',1,'archivator']]],
-  ['disk_5fblocks',['disk_blocks',['../structsandbox__limits.html#a7d051c5ff42362e71eacc2678f7888bb',1,'sandbox_limits']]],
-  ['disk_5finodes',['disk_inodes',['../structsandbox__limits.html#abe06023475382161b5f5157dbcbc1da9',1,'sandbox_limits']]]
+  ['dependencies',['dependencies',['../structexternal__task_1_1create__params.html#acce140eeae4f4ea1e677ff26424989a7',1,'external_task::create_params']]],
+  ['dir_5fperm',['dir_perm',['../structsandbox__limits.html#a930e0a1e99719dc676b253b7eedc97c8',1,'sandbox_limits']]],
+  ['disk_5ffiles',['disk_files',['../structsandbox__limits.html#aafc0a86e5ccdcd62416cbf72f1f5f89e',1,'sandbox_limits']]],
+  ['disk_5fsize',['disk_size',['../structsandbox__limits.html#a80cb7bb9e773dfdc015a1362c2da216b',1,'sandbox_limits']]]
 ];

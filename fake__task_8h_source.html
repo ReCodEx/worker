@@ -113,22 +113,26 @@ $(document).ready(function(){initNavTree('fake__task_8h_source.html','');});
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;task_base.h&quot;</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;</div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;</div>
-<div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="classfake__task.html">   13</a></span>&#160;<span class="keyword">class </span><a class="code" href="classfake__task.html">fake_task</a> : <span class="keyword">public</span> <a class="code" href="classtask__base.html">task_base</a> {</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <a class="code" href="classfake__task.html">fake_task</a>() = <span class="keyword">delete</span>;</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <a class="code" href="classfake__task.html">fake_task</a>(<span class="keywordtype">size_t</span> <span class="keywordtype">id</span>, std::string task_id = <span class="stringliteral">&quot;&quot;</span>, <span class="keywordtype">size_t</span> priority = 0, <span class="keywordtype">bool</span> fatal = <span class="keyword">false</span>,</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;              std::vector&lt;std::string&gt; deps = {},</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;              std::string cmd = <span class="stringliteral">&quot;&quot;</span>, std::vector&lt;std::string&gt; args = {},</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;              std::string log = <span class="stringliteral">&quot;&quot;</span>);</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="classfake__task.html#ae277a00e4162a5601741906318d65891">~fake_task</a>();</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classfake__task.html#ae593f88c2de14eef4969182bc3351e74">run</a>();</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;};</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#endif //CODEX_WORKER_FAKE_TASK_HPP</span></div>
-<div class="ttc" id="classfake__task_html_ae277a00e4162a5601741906318d65891"><div class="ttname"><a href="classfake__task.html#ae277a00e4162a5601741906318d65891">fake_task::~fake_task</a></div><div class="ttdeci">virtual ~fake_task()</div><div class="ttdef"><b>Definition:</b> <a href="fake__task_8cpp_source.html#l00010">fake_task.cpp:10</a></div></div>
-<div class="ttc" id="classfake__task_html_ae593f88c2de14eef4969182bc3351e74"><div class="ttname"><a href="classfake__task.html#ae593f88c2de14eef4969182bc3351e74">fake_task::run</a></div><div class="ttdeci">virtual void run()</div><div class="ttdef"><b>Definition:</b> <a href="fake__task_8cpp_source.html#l00013">fake_task.cpp:13</a></div></div>
-<div class="ttc" id="classtask__base_html"><div class="ttname"><a href="classtask__base.html">task_base</a></div><div class="ttdef"><b>Definition:</b> <a href="task__base_8h_source.html#l00015">task_base.h:15</a></div></div>
+<div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="classfake__task.html">   13</a></span>&#160;<span class="keyword">class </span><a class="code" href="classfake__task.html">fake_task</a> : <span class="keyword">public</span> <a class="code" href="classtask__base.html">task_base</a></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;{</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <a class="code" href="classfake__task.html">fake_task</a>() = <span class="keyword">delete</span>;</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <a class="code" href="classfake__task.html">fake_task</a>(<span class="keywordtype">size_t</span> <span class="keywordtype">id</span>,</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;        std::string task_id = <span class="stringliteral">&quot;&quot;</span>,</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        <span class="keywordtype">size_t</span> priority = 0,</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        <span class="keywordtype">bool</span> fatal = <span class="keyword">false</span>,</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        std::vector&lt;std::string&gt; deps = {},</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        std::string cmd = <span class="stringliteral">&quot;&quot;</span>,</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        std::vector&lt;std::string&gt; args = {});</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="classfake__task.html#ae277a00e4162a5601741906318d65891">~fake_task</a>();</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keyword">virtual</span> std::shared_ptr&lt;task_results&gt; <a class="code" href="classfake__task.html#a22d52bb9810ca35804fd2c81bc92dc67">run</a>();</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;};</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#endif // CODEX_WORKER_FAKE_TASK_HPP</span></div>
+<div class="ttc" id="classfake__task_html_ae277a00e4162a5601741906318d65891"><div class="ttname"><a href="classfake__task.html#ae277a00e4162a5601741906318d65891">fake_task::~fake_task</a></div><div class="ttdeci">virtual ~fake_task()</div><div class="ttdef"><b>Definition:</b> <a href="fake__task_8cpp_source.html#l00014">fake_task.cpp:14</a></div></div>
+<div class="ttc" id="classfake__task_html_a22d52bb9810ca35804fd2c81bc92dc67"><div class="ttname"><a href="classfake__task.html#a22d52bb9810ca35804fd2c81bc92dc67">fake_task::run</a></div><div class="ttdeci">virtual std::shared_ptr&lt; task_results &gt; run()</div><div class="ttdef"><b>Definition:</b> <a href="fake__task_8cpp_source.html#l00018">fake_task.cpp:18</a></div></div>
+<div class="ttc" id="classtask__base_html"><div class="ttname"><a href="classtask__base.html">task_base</a></div><div class="ttdef"><b>Definition:</b> <a href="task__base_8h_source.html#l00016">task_base.h:16</a></div></div>
 <div class="ttc" id="classfake__task_html"><div class="ttname"><a href="classfake__task.html">fake_task</a></div><div class="ttdef"><b>Definition:</b> <a href="fake__task_8h_source.html#l00013">fake_task.h:13</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
@@ -136,7 +140,7 @@ $(document).ready(function(){initNavTree('fake__task_8h_source.html','');});
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_b118c466441e8db851de69c6796245a3.html">tasks</a></li><li class="navelem"><b>fake_task.h</b></li>
-    <li class="footer">Generated on Sat Jan 9 2016 22:48:25 for ReCodEx - Worker by
+    <li class="footer">Generated on Fri Feb 19 2016 18:25:15 for ReCodEx - Worker by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.10 </li>
   </ul>
