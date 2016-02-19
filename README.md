@@ -2,7 +2,7 @@
 
 [![Join the chat at https://gitter.im/ReCodEx/worker](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ReCodEx/worker?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Linux build Status](https://img.shields.io/travis/ReCodEx/worker/master.svg?label=Linux%20build)](https://travis-ci.org/ReCodEx/worker)
-[![Windows build status](https://img.shields.io/appveyor/ci/ReCodEx/worker/master.svg?label=Windows%20build)](https://ci.appveyor.com/project/ReCodEx/basicworker/branch/master)
+[![Windows build status](https://img.shields.io/appveyor/ci/ReCodEx/BasicWorker/master.svg?label=Windows%20build)](https://ci.appveyor.com/project/ReCodEx/basicworker/branch/master)
 
 A daemon that consumes assignments from the message queue, builds and runs them 
 and then sends results back.
