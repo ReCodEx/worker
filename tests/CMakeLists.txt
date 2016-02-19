@@ -39,14 +39,18 @@ elseif(MSVC)
 endif()
 
 function(add_test_suite name)
-	set(TEST_FILES ${TEST_FILES} ${ARGN} PARENT_SCOPE)
-	add_executable(run_test_${name} ${ARGN})
+	cmake_parse_arguments(TEST "" "WORKING_DIRECTORY" "" ${ARGN})
+	add_executable(run_test_${name} ${TEST_UNPARSED_ARGUMENTS})
 	target_link_libraries(run_test_${name} ${LIBS})
-	if (MSVC)
+	if(MSVC)
 		target_compile_definitions(run_test_${name} PRIVATE LIBARCHIVE_STATIC)
 	endif()
 
-	add_test(${name} run_test_${name})
+	if(TEST_WORKING_DIRECTORY)
+		add_test(NAME ${name} COMMAND run_test_${name} WORKING_DIRECTORY "${TEST_WORKING_DIRECTORY}")
+	else()
+		add_test(NAME ${name} COMMAND run_test_${name})
+	endif()
 endfunction()
 
 # Unit and integration tests
@@ -189,6 +193,7 @@ add_test_suite(tool_archivator
 	tests_main.cpp
 	${SRC_DIR}/archives/archivator.cpp
 	archivator.cpp
+	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/tests
 )
 
 add_test_suite(tool_http_manager

@@ -18,8 +18,7 @@ TEST(Archivator, DecompressNonexistingArchive)
 
 TEST(Archivator, DecompressZip)
 {
-	EXPECT_NO_THROW(
-		archivator::decompress("../tests/testing_archives/valid_zip.zip", fs::temp_directory_path().string()));
+	ASSERT_NO_THROW(archivator::decompress("testing_archives/valid_zip.zip", fs::temp_directory_path().string()));
 	EXPECT_TRUE(fs::is_directory(fs::temp_directory_path() / "valid_zip"));
 	EXPECT_TRUE(fs::is_regular_file(fs::temp_directory_path() / "valid_zip" / "a.txt"));
 	EXPECT_TRUE(fs::file_size(fs::temp_directory_path() / "valid_zip" / "a.txt") > 0);
@@ -28,8 +27,7 @@ TEST(Archivator, DecompressZip)
 
 TEST(Archivator, DecompressTar)
 {
-	EXPECT_NO_THROW(
-		archivator::decompress("../tests/testing_archives/valid_tar.tar", fs::temp_directory_path().string()));
+	ASSERT_NO_THROW(archivator::decompress("testing_archives/valid_tar.tar", fs::temp_directory_path().string()));
 	EXPECT_TRUE(fs::is_directory(fs::temp_directory_path() / "valid_tar"));
 	EXPECT_TRUE(fs::is_regular_file(fs::temp_directory_path() / "valid_tar" / "a.txt"));
 	EXPECT_TRUE(fs::file_size(fs::temp_directory_path() / "valid_tar" / "a.txt") > 0);
@@ -38,8 +36,7 @@ TEST(Archivator, DecompressTar)
 
 TEST(Archivator, DecompressTarGz)
 {
-	EXPECT_NO_THROW(
-		archivator::decompress("../tests/testing_archives/valid_tar.tar.gz", fs::temp_directory_path().string()));
+	ASSERT_NO_THROW(archivator::decompress("testing_archives/valid_tar.tar.gz", fs::temp_directory_path().string()));
 	EXPECT_TRUE(fs::is_directory(fs::temp_directory_path() / "valid_tar"));
 	EXPECT_TRUE(fs::is_regular_file(fs::temp_directory_path() / "valid_tar" / "a.txt"));
 	EXPECT_TRUE(fs::file_size(fs::temp_directory_path() / "valid_tar" / "a.txt") > 0);
@@ -48,8 +45,7 @@ TEST(Archivator, DecompressTarGz)
 
 TEST(Archivator, DecompressTarBz2)
 {
-	EXPECT_NO_THROW(
-		archivator::decompress("../tests/testing_archives/valid_tar.tar.bz2", fs::temp_directory_path().string()));
+	ASSERT_NO_THROW(archivator::decompress("testing_archives/valid_tar.tar.bz2", fs::temp_directory_path().string()));
 	EXPECT_TRUE(fs::is_directory(fs::temp_directory_path() / "valid_tar"));
 	EXPECT_TRUE(fs::is_regular_file(fs::temp_directory_path() / "valid_tar" / "a.txt"));
 	EXPECT_TRUE(fs::file_size(fs::temp_directory_path() / "valid_tar" / "a.txt") > 0);
@@ -58,20 +54,19 @@ TEST(Archivator, DecompressTarBz2)
 
 TEST(Archivator, DecompressCorruptedZip)
 {
-	EXPECT_THROW(
-		archivator::decompress("../tests/testing_archives/corrupted_zip.zip", fs::temp_directory_path().string()),
-		archive_exception);
+	EXPECT_THROW(archivator::decompress("testing_archives/corrupted_zip.zip",
+		fs::temp_directory_path().string()), archive_exception);
 }
 
 TEST(Archivator, DecompressDotPathZip)
 {
-	EXPECT_THROW(archivator::decompress("../tests/testing_archives/dot_path.zip", fs::temp_directory_path().string()),
-		archive_exception);
+	EXPECT_THROW(archivator::decompress("testing_archives/dot_path.zip",
+		fs::temp_directory_path().string()), archive_exception);
 }
 
 TEST(Archivator, CompressZip)
 {
-	EXPECT_NO_THROW(archivator::compress("../tests", (fs::temp_directory_path() / "archive.zip").string()));
+	ASSERT_NO_THROW(archivator::compress(".", (fs::temp_directory_path() / "archive.zip").string()));
 	EXPECT_TRUE(fs::is_regular_file(fs::temp_directory_path() / "archive.zip"));
 	EXPECT_TRUE(fs::file_size(fs::temp_directory_path() / "archive.zip") > 0);
 	fs::remove_all(fs::temp_directory_path() / "archive.zip");
@@ -100,8 +95,7 @@ TEST(Archivator, CompressAbsolutePath)
 	archivator::compress(archive_path.string(), result_path.string());
 	ASSERT_TRUE(fs::is_regular_file(result_path));
 
-	EXPECT_NO_THROW(archivator::decompress(result_path.string(), fs::temp_directory_path().string()));
-	// archivator::decompress(result_path.string(), fs::temp_directory_path().string());
+	ASSERT_NO_THROW(archivator::decompress(result_path.string(), fs::temp_directory_path().string()));
 	ASSERT_TRUE(fs::is_regular_file(extracted_path / "test_file.txt"));
 	ASSERT_EQ((size_t) 7, fs::file_size(extracted_path / "test_file.txt"));
 
