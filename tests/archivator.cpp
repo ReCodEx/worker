@@ -54,14 +54,14 @@ TEST(Archivator, DecompressTarBz2)
 
 TEST(Archivator, DecompressCorruptedZip)
 {
-	EXPECT_THROW(archivator::decompress("testing_archives/corrupted_zip.zip",
-		fs::temp_directory_path().string()), archive_exception);
+	EXPECT_THROW(archivator::decompress("testing_archives/corrupted_zip.zip", fs::temp_directory_path().string()),
+		archive_exception);
 }
 
 TEST(Archivator, DecompressDotPathZip)
 {
-	EXPECT_THROW(archivator::decompress("testing_archives/dot_path.zip",
-		fs::temp_directory_path().string()), archive_exception);
+	EXPECT_THROW(
+		archivator::decompress("testing_archives/dot_path.zip", fs::temp_directory_path().string()), archive_exception);
 }
 
 TEST(Archivator, CompressZip)

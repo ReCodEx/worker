@@ -206,7 +206,8 @@ std::shared_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 	return job_meta;
 }
 
-std::vector<std::tuple<std::string, std::string, sandbox_limits::dir_perm>> helpers::get_bind_dirs(const YAML::Node &lim)
+std::vector<std::tuple<std::string, std::string, sandbox_limits::dir_perm>> helpers::get_bind_dirs(
+	const YAML::Node &lim)
 {
 	std::vector<std::tuple<std::string, std::string, sandbox_limits::dir_perm>> bound_dirs;
 
@@ -231,28 +232,22 @@ std::vector<std::tuple<std::string, std::string, sandbox_limits::dir_perm>> help
 					std::transform(str_mode.begin(), str_mode.end(), str_mode.begin(), ::toupper);
 
 					if (str_mode.find("RW") != std::string::npos) {
-						mode = static_cast<sandbox_limits::dir_perm>(
-							mode | sandbox_limits::dir_perm::RW);
+						mode = static_cast<sandbox_limits::dir_perm>(mode | sandbox_limits::dir_perm::RW);
 					}
 					if (str_mode.find("NOEXEC") != std::string::npos) {
-						mode = static_cast<sandbox_limits::dir_perm>(
-							mode | sandbox_limits::dir_perm::NOEXEC);
+						mode = static_cast<sandbox_limits::dir_perm>(mode | sandbox_limits::dir_perm::NOEXEC);
 					}
 					if (str_mode.find("FS") != std::string::npos) {
-						mode = static_cast<sandbox_limits::dir_perm>(
-							mode | sandbox_limits::dir_perm::FS);
+						mode = static_cast<sandbox_limits::dir_perm>(mode | sandbox_limits::dir_perm::FS);
 					}
 					if (str_mode.find("MAYBE") != std::string::npos) {
-						mode = static_cast<sandbox_limits::dir_perm>(
-							mode | sandbox_limits::dir_perm::MAYBE);
+						mode = static_cast<sandbox_limits::dir_perm>(mode | sandbox_limits::dir_perm::MAYBE);
 					}
 					if (str_mode.find("DEV") != std::string::npos) {
-						mode = static_cast<sandbox_limits::dir_perm>(
-							mode | sandbox_limits::dir_perm::DEV);
+						mode = static_cast<sandbox_limits::dir_perm>(mode | sandbox_limits::dir_perm::DEV);
 					}
 				} // no throw... can be omitted
-				bound_dirs.push_back(
-					std::tuple<std::string, std::string, sandbox_limits::dir_perm>{src, dst, mode});
+				bound_dirs.push_back(std::tuple<std::string, std::string, sandbox_limits::dir_perm>{src, dst, mode});
 			}
 		}
 	} // can be omitted... no throw
