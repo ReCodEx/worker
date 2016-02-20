@@ -296,18 +296,25 @@ std::vector<std::pair<std::string, std::shared_ptr<task_results>>> job::run()
 
 	// simply run all tasks in given topological order
 	for (auto &i : task_queue_) {
+		// we don't want nullptr dereference
+		if (i == nullptr) {
+			continue;
+		}
+
 		auto task_id = i->get_task_id();
-		logger_->info() << "Running task " << task_id;
+		logger_->info() << "Processing task \"" << task_id << "\"";
 		try {
 			if (i->is_executable()) {
 				auto res = i->run();
-				if (res == nullptr) {
-					continue;
+				logger_->info() << "Task ran successfully";
+
+				// if task has some results than publish them in output
+				if (res != nullptr) {
+					results.push_back({task_id, res});
 				}
-				results.push_back({task_id, res});
 			} else {
 				// we have to pass information about non-execution to children
-				logger_->info() << "Task not executable";
+				logger_->info() << "Task marked as not executable";
 				i->set_children_execution(false);
 			}
 		} catch (std::exception &e) {
@@ -315,17 +322,20 @@ std::vector<std::pair<std::string, std::shared_ptr<task_results>>> job::run()
 			result->failed = true;
 			result->error_message = e.what();
 			results.push_back({task_id, result});
+
+			logger_->info() << "Task failed: " << e.what();
+
 			if (i->get_fatal_failure()) {
-				logger_->info() << "Task failed - fatal failure";
+				logger_->info() << "Fatal failure bit set. Terminating of job execution...";
 				break;
 			} else {
 				// set executable bit in this task and in children
-				logger_->info() << "Task failed - childs will not be executed";
+				logger_->info() << "Task children will not be executed";
 				i->set_execution(false);
 				i->set_children_execution(false);
 			}
 		}
-		logger_->info() << "Task " << task_id << " finished";
+		logger_->info() << "Processing of task \"" << task_id << "\" done";
 	}
 
 	return results;

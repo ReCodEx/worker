@@ -152,8 +152,8 @@ void job_evaluator::cleanup_submission()
 {
 	// cleanup source code directory after job evaluation
 	try {
-		logger_->info() << "Cleaning up source code directory...";
 		if (fs::exists(source_path_)) {
+			logger_->info() << "Cleaning up source code directory...";
 			fs::remove_all(source_path_);
 		}
 	} catch (fs::filesystem_error &e) {
@@ -162,8 +162,8 @@ void job_evaluator::cleanup_submission()
 
 	// delete submission decompressed directory
 	try {
-		logger_->info() << "Cleaning up decompressed submission directory...";
 		if (fs::exists(submission_path_)) {
+			logger_->info() << "Cleaning up decompressed submission directory...";
 			fs::remove_all(submission_path_);
 		}
 	} catch (fs::filesystem_error &e) {
@@ -172,8 +172,8 @@ void job_evaluator::cleanup_submission()
 
 	// delete downloaded archive directory
 	try {
-		logger_->info() << "Cleaning up directory containing downloaded archive...";
 		if (fs::exists(archive_path_)) {
+			logger_->info() << "Cleaning up directory containing downloaded archive...";
 			fs::remove_all(archive_path_);
 		}
 	} catch (fs::filesystem_error &e) {
@@ -182,8 +182,8 @@ void job_evaluator::cleanup_submission()
 
 	// delete temp directory
 	try {
-		logger_->info() << "Cleaning up temp directory for tasks...";
 		if (fs::exists(job_temp_dir_)) {
+			logger_->info() << "Cleaning up temp directory for tasks...";
 			fs::remove_all(job_temp_dir_);
 		}
 	} catch (fs::filesystem_error &e) {
@@ -192,8 +192,8 @@ void job_evaluator::cleanup_submission()
 
 	// and finally delete created results directory
 	try {
-		logger_->info() << "Cleaning up directory containing created results...";
 		if (fs::exists(results_path_)) {
+			logger_->info() << "Cleaning up directory containing created results...";
 			fs::remove_all(results_path_);
 		}
 	} catch (fs::filesystem_error &e) {
@@ -205,7 +205,7 @@ void job_evaluator::cleanup_submission()
 
 void job_evaluator::cleanup_evaluator()
 {
-	// cleanup_submission(); // TODO: just for debugging purposes
+	cleanup_submission();
 
 	try {
 		archive_url_ = "";
@@ -311,10 +311,12 @@ eval_response job_evaluator::evaluate(eval_request request)
 	job_id_ = request.job_id;
 	archive_url_ = request.job_url;
 	result_url_ = request.result_url;
-	std::cerr << "Job ID: " << job_id_ << std::endl;
-	std::cerr << "Archive url: " << archive_url_ << std::endl;
-	std::cerr << "Result url: " << result_url_ << std::endl;
+	std::cerr << "Job ID: " << job_id_ << std::endl; // TODO: just for debugging purposes
+	std::cerr << "Archive url: " << archive_url_ << std::endl; // TODO: just for debugging purposes
+	std::cerr << "Result url: " << result_url_ << std::endl; // TODO: just for debugging purposes
 
+	// just to be sure, do cleanup before entering job execution
+	cleanup_evaluator();
 	try {
 		download_submission();
 		prepare_submission();
@@ -324,7 +326,7 @@ eval_response job_evaluator::evaluate(eval_request request)
 	} catch (std::exception &e) {
 		logger_->warn() << "Job evaluator encountered error: " << e.what();
 	}
-	cleanup_evaluator();
+	// cleanup_evaluator(); // TODO: just for debugging purposes
 
 	logger_->info() << "Job (" + request.job_id + ") ended.";
 
