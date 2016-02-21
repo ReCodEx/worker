@@ -307,6 +307,9 @@ eval_response job_evaluator::evaluate(eval_request request)
 	logger_->info() << "Request for job evaluation arrived to worker";
 	logger_->info() << "Job ID of incoming job is: " + request.job_id;
 
+	// just to be sure, do cleanup before entering job execution
+	cleanup_evaluator();
+
 	// set all needed variables for evaluation
 	job_id_ = request.job_id;
 	archive_url_ = request.job_url;
@@ -315,8 +318,6 @@ eval_response job_evaluator::evaluate(eval_request request)
 	std::cerr << "Archive url: " << archive_url_ << std::endl; // TODO: just for debugging purposes
 	std::cerr << "Result url: " << result_url_ << std::endl; // TODO: just for debugging purposes
 
-	// just to be sure, do cleanup before entering job execution
-	cleanup_evaluator();
 	try {
 		download_submission();
 		prepare_submission();
