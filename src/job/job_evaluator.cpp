@@ -48,14 +48,6 @@ void job_evaluator::prepare_submission()
 {
 	logger_->info() << "Preparing submission for usage...";
 
-	// initialize all paths
-	submission_path_ = working_directory_ / "submissions" / std::to_string(config_->get_worker_id()) / job_id_;
-	source_path_ = working_directory_ / "eval" / std::to_string(config_->get_worker_id()) / job_id_;
-	results_path_ = working_directory_ / "results" / std::to_string(config_->get_worker_id()) / job_id_;
-	// set temporary directory for tasks in job
-	job_temp_dir_ = working_directory_ / "temp" / std::to_string(config_->get_worker_id()) / job_id_;
-
-
 	// decompress downloaded archive
 	try {
 		fs::create_directories(submission_path_);
@@ -212,10 +204,8 @@ void job_evaluator::cleanup_submission()
 	return;
 }
 
-void job_evaluator::cleanup_evaluator()
+void job_evaluator::cleanup_variables()
 {
-	cleanup_submission();
-
 	try {
 		archive_url_ = "";
 		archive_name_ = "";
@@ -231,8 +221,19 @@ void job_evaluator::cleanup_evaluator()
 	} catch (std::exception &e) {
 		logger_->warn() << "Error in deinicialization of evaluator: " << e.what();
 	}
+}
 
-	return;
+void job_evaluator::prepare_evaluator()
+{
+	cleanup_variables();
+	init_submission_paths();
+	cleanup_submission();
+}
+
+void job_evaluator::cleanup_evaluator()
+{
+	// cleanup_submission(); // TODO: just for debugging purposes
+	cleanup_variables();
 }
 
 void job_evaluator::push_result()
@@ -324,10 +325,7 @@ eval_response job_evaluator::evaluate(eval_request request)
 	std::cerr << "Archive url: " << archive_url_ << std::endl; // TODO: just for debugging purposes
 	std::cerr << "Result url: " << result_url_ << std::endl; // TODO: just for debugging purposes
 
-	// just to be sure, do cleanup before entering job execution
-	init_submission_paths();
-	cleanup_submission();
-
+	prepare_evaluator();
 	try {
 		download_submission();
 		prepare_submission();
@@ -337,7 +335,7 @@ eval_response job_evaluator::evaluate(eval_request request)
 	} catch (std::exception &e) {
 		logger_->warn() << "Job evaluator encountered error: " << e.what();
 	}
-	// cleanup_evaluator(); // TODO: just for debugging purposes
+	cleanup_evaluator();
 
 	logger_->info() << "Job (" + request.job_id + ") ended.";
 

@@ -86,10 +86,22 @@ private:
 	void cleanup_submission();
 
 	/**
+	 * Prepare submission paths and cleanup to be sure that nothing left from last evaluation.
+	 * No throw function.
+	 */
+	void prepare_evaluator();
+
+	/**
 	 * Cleanup all variables before new iteration.
 	 * No throw function.
 	 */
 	void cleanup_evaluator();
+
+	/**
+	 * Set variables which are connected to submission to defaults.
+	 * No throw function.
+	 */
+	void cleanup_variables();
 
 	/**
 	 * Get results from job and push them to filemanager.
@@ -99,6 +111,7 @@ private:
 
 	/**
 	 * Initialize all paths used in job_evaluator. Has to be done before any other action.
+	 * No throw function.
 	 */
 	void init_submission_paths();
 
