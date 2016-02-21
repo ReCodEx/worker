@@ -97,6 +97,11 @@ private:
 	 */
 	void push_result();
 
+	/**
+	 * Initialize all paths used in job_evaluator. Has to be done before any other action.
+	 */
+	void init_submission_paths();
+
 
 	// PRIVATE DATA MEMBERS
 	/** Working directory of this whole program */

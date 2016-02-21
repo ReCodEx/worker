@@ -28,9 +28,8 @@ void job_evaluator::download_submission()
 {
 	logger_->info() << "Trying to download submission archive...";
 
-	// initialize all paths
+	// create directory for downloaded archive
 	fs::path archive_url = archive_url_;
-	archive_path_ = working_directory_ / "downloads" / std::to_string(config_->get_worker_id()) / job_id_;
 	try {
 		fs::create_directories(archive_path_);
 	} catch (fs::filesystem_error &e) {
@@ -146,6 +145,16 @@ void job_evaluator::run_job()
 		throw;
 	}
 	return;
+}
+
+void job_evaluator::init_submission_paths()
+{
+	source_path_ = working_directory_ / "eval" / std::to_string(config_->get_worker_id()) / job_id_;
+	submission_path_ = working_directory_ / "submissions" / std::to_string(config_->get_worker_id()) / job_id_;
+	archive_path_ = working_directory_ / "downloads" / std::to_string(config_->get_worker_id()) / job_id_;
+	// set temporary directory for tasks in job
+	job_temp_dir_ = working_directory_ / "temp" / std::to_string(config_->get_worker_id()) / job_id_;
+	results_path_ = working_directory_ / "results" / std::to_string(config_->get_worker_id()) / job_id_;
 }
 
 void job_evaluator::cleanup_submission()
@@ -307,9 +316,6 @@ eval_response job_evaluator::evaluate(eval_request request)
 	logger_->info() << "Request for job evaluation arrived to worker";
 	logger_->info() << "Job ID of incoming job is: " + request.job_id;
 
-	// just to be sure, do cleanup before entering job execution
-	cleanup_evaluator();
-
 	// set all needed variables for evaluation
 	job_id_ = request.job_id;
 	archive_url_ = request.job_url;
@@ -317,6 +323,10 @@ eval_response job_evaluator::evaluate(eval_request request)
 	std::cerr << "Job ID: " << job_id_ << std::endl; // TODO: just for debugging purposes
 	std::cerr << "Archive url: " << archive_url_ << std::endl; // TODO: just for debugging purposes
 	std::cerr << "Result url: " << result_url_ << std::endl; // TODO: just for debugging purposes
+
+	// just to be sure, do cleanup before entering job execution
+	init_submission_paths();
+	cleanup_submission();
 
 	try {
 		download_submission();

@@ -1,5 +1,5 @@
 # Hippoes config file
-# prerequisites: judge binary in /tmp/judges/recodex-judge-normal
+# prerequisites: judge binary in /usr/bin/recodex-judge-normal
 #                reachable input and output files - in /tmp/tmpxxxxxx/tasks for our testing file_server.py
 # expected result: results.zip uploaded to file server with result file and job log file
 #
@@ -93,9 +93,6 @@ tasks:
                     - src: ${SOURCE_DIR}
                       dst: ${EVAL_DIR}
                       mode: RW
-                    - src: "${TEMP_DIR}/judges"
-                      dst: ${JUDGES_DIR}
-                      mode: RO
     - task-id: "rm_junk_test_1"
       priority: 8
       fatal-failure: false
@@ -169,9 +166,6 @@ tasks:
                     - src: ${SOURCE_DIR}
                       dst: ${EVAL_DIR}
                       mode: RW
-                    - src: "${TEMP_DIR}/judges"
-                      dst: ${JUDGES_DIR}
-                      mode: RO
     - task-id: "rm_junk_test_2"
       priority: 14
       fatal-failure: false
@@ -245,9 +239,6 @@ tasks:
                     - src: ${SOURCE_DIR}
                       dst: ${EVAL_DIR}
                       mode: RW
-                    - src: "${TEMP_DIR}/judges"
-                      dst: ${JUDGES_DIR}
-                      mode: RO
     - task-id: "rm_junk_test_3"
       priority: 20
       fatal-failure: false
@@ -321,9 +312,6 @@ tasks:
                     - src: ${SOURCE_DIR}
                       dst: ${EVAL_DIR}
                       mode: RW
-                    - src: "${TEMP_DIR}/judges"
-                      dst: ${JUDGES_DIR}
-                      mode: RO
     - task-id: "rm_junk_test_4"
       priority: 26
       fatal-failure: false
@@ -397,9 +385,6 @@ tasks:
                     - src: ${SOURCE_DIR}
                       dst: ${EVAL_DIR}
                       mode: RW
-                    - src: "${TEMP_DIR}/judges"
-                      dst: ${JUDGES_DIR}
-                      mode: RO
     - task-id: "rm_junk_test_5"
       priority: 32
       fatal-failure: false
@@ -473,9 +458,6 @@ tasks:
                     - src: ${SOURCE_DIR}
                       dst: ${EVAL_DIR}
                       mode: RW
-                    - src: "${TEMP_DIR}/judges"
-                      dst: ${JUDGES_DIR}
-                      mode: RO
     - task-id: "rm_junk_test_6"
       priority: 38
       fatal-failure: false
