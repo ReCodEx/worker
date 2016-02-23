@@ -10,13 +10,7 @@
 class archivate_task : public task_base
 {
 public:
-	archivate_task(size_t id,
-		std::string task_id,
-		size_t priority,
-		bool fatal,
-		const std::string &cmd,
-		const std::vector<std::string> &arguments,
-		const std::vector<std::string> &dependencies);
+	archivate_task(size_t id, task_metadata task_meta);
 	virtual ~archivate_task();
 	virtual std::shared_ptr<task_results> run();
 };

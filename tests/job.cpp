@@ -267,15 +267,15 @@ TEST(job_test, load_of_worker_defaults)
 	ASSERT_EQ(result.get_task_queue().size(), 2u); // 2 because of fake_task as root
 	auto task = result.get_task_queue().at(1);
 	auto ext_task = std::dynamic_pointer_cast<external_task>(task);
-	sandbox_limits limits = ext_task->get_limits();
-	ASSERT_EQ(limits.cpu_time, 5);
-	ASSERT_EQ(limits.wall_time, 6);
-	ASSERT_EQ(limits.extra_time, 2);
-	ASSERT_EQ(limits.stack_size, 50000u);
-	ASSERT_EQ(limits.memory_usage, 60000u);
-	ASSERT_EQ(limits.processes, 1u);
-	ASSERT_EQ(limits.disk_size, 50u);
-	ASSERT_EQ(limits.disk_files, 7u);
+	std::shared_ptr<sandbox_limits> limits = ext_task->get_limits();
+	ASSERT_EQ(limits->cpu_time, 5);
+	ASSERT_EQ(limits->wall_time, 6);
+	ASSERT_EQ(limits->extra_time, 2);
+	ASSERT_EQ(limits->stack_size, 50000u);
+	ASSERT_EQ(limits->memory_usage, 60000u);
+	ASSERT_EQ(limits->processes, 1u);
+	ASSERT_EQ(limits->disk_size, 50u);
+	ASSERT_EQ(limits->disk_files, 7u);
 
 	// cleanup after yourself
 	remove_all(dir_root);
@@ -468,14 +468,14 @@ TEST(job_test, job_variables)
 
 	auto task = j.get_task_queue().at(1);
 	auto ext_task = std::dynamic_pointer_cast<external_task>(task);
-	sandbox_limits limits = ext_task->get_limits();
+	std::shared_ptr<sandbox_limits> limits = ext_task->get_limits();
 	ASSERT_EQ(path(task->get_cmd()).string(), path("/evaluate/recodex").string());
-	ASSERT_EQ(limits.std_input, "before_stdin_8_after_stdin");
-	ASSERT_EQ(limits.std_output, "before_stdout_eval5_after_stdout");
-	ASSERT_EQ(limits.std_error, "before_stderr_" + res_dir.string() + "_after_stderr");
-	ASSERT_EQ(path(limits.chdir).string(), path("/evaluate").string());
+	ASSERT_EQ(limits->std_input, "before_stdin_8_after_stdin");
+	ASSERT_EQ(limits->std_output, "before_stdout_eval5_after_stdout");
+	ASSERT_EQ(limits->std_error, "before_stderr_" + res_dir.string() + "_after_stderr");
+	ASSERT_EQ(path(limits->chdir).string(), path("/evaluate").string());
 
-	auto bnd_dirs = limits.bound_dirs;
+	auto bnd_dirs = limits->bound_dirs;
 	ASSERT_EQ(bnd_dirs.size(), 1u);
 	ASSERT_EQ(path(std::get<0>(bnd_dirs[0])).string(), (temp_directory_path() / "recodex").string());
 	ASSERT_EQ(path(std::get<1>(bnd_dirs[0])).string(), (dir / "tmp").string());

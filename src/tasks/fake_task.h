@@ -17,13 +17,7 @@ public:
 	/**
 	 * Only send some fake information to task_base.
 	 */
-	fake_task(size_t id,
-		std::string task_id = "",
-		size_t priority = 0,
-		bool fatal = false,
-		std::vector<std::string> deps = {},
-		std::string cmd = "",
-		std::vector<std::string> args = {});
+	fake_task(size_t id, task_metadata task_meta = task_metadata());
 	/**
 	 * Empty destructor.
 	 */

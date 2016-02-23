@@ -21,22 +21,8 @@ public:
 		size_t worker_id;
 		/** unique integer which means order in config file */
 		size_t id;
-		/** unique text identifier of task */
-		const std::string &task_id;
-		/** priority of task */
-		size_t priority;
-		/** if @a true than job will be killed immediatelly in case of error */
-		bool fatal;
-		/** dependencies of this task */
-		const std::vector<std::string> &dependencies;
-		/** program which will be launched */
-		const std::string &binary;
-		/** arguments for binary */
-		const std::vector<std::string> &arguments;
-		/** name of sandbox which will be used */
-		const std::string &sandbox_id;
-		/** limits for sandbox */
-		sandbox_limits limits;
+		/** structure containing information loaded about task */
+		task_metadata task_meta;
 		/** job system logger */
 		std::shared_ptr<spdlog::logger> logger;
 		/** directory for optional saving temporary files during execution */
@@ -68,7 +54,7 @@ public:
 	 * Get sandbox_limits structure, given during construction.
 	 * @return
 	 */
-	sandbox_limits get_limits();
+	std::shared_ptr<sandbox_limits> get_limits();
 
 private:
 	/**
@@ -86,16 +72,8 @@ private:
 
 	/** Id of this instance of worker loaded from default configuration */
 	size_t worker_id_;
-	/** Name of program which will be run in sandbox */
-	std::string cmd_;
-	/** Cmd line arguments to program */
-	std::vector<std::string> args_;
-	/** Name of sandbox */
-	std::string sandbox_id_;
 	/** Constructed sandbox itself */
 	std::shared_ptr<sandbox_base> sandbox_;
-	/** Limits for sandbox in which program will be started */
-	sandbox_limits limits_;
 	/** Job system logger */
 	std::shared_ptr<spdlog::logger> logger_;
 	/** Directory for temporary files */

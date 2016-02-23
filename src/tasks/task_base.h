@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <memory>
 #include "../config/task_results.h"
+#include "../config/task_metadata.h"
 
 
 /**
@@ -23,20 +24,9 @@ public:
 	/**
 	 * Only possible way of construction which just store all given parameters into private variables.
 	 * @param id unique identificator of load order of tasks
-	 * @param task_id task identificator as written in job configuration
-	 * @param priority integer identificator of priority, smaller number, higher priority
-	 * @param fatal if true, than failure in this task will end all execution
-	 * @param dependencies array of names of task which has to be evaluated before this task
-	 * @param cmd command which will be executed in this task
-	 * @param arguments just command line arguments to executed command
+	 * @param task_meta variable containing further info about task
 	 */
-	task_base(size_t id,
-		std::string task_id,
-		size_t priority,
-		bool fatal,
-		const std::vector<std::string> &dependencies,
-		const std::string &cmd,
-		const std::vector<std::string> &arguments);
+	task_base(size_t id, task_metadata task_meta);
 	/**
 	 * Virtual destructor.
 	 */
@@ -107,12 +97,7 @@ public:
 
 protected:
 	size_t id_;
-	std::string task_id_;
-	size_t priority_;
-	bool fatal_failure_;
-	std::string cmd_;
-	std::vector<std::string> dependencies_;
-	std::vector<std::string> arguments_;
+	task_metadata task_meta_;
 	bool execute_;
 
 	std::vector<std::weak_ptr<task_base>> parents_;

@@ -181,7 +181,7 @@ std::shared_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 							}
 						}
 
-						sandbox->limits.insert(std::make_pair(hwgroup, sl));
+						sandbox->all_limits.insert(std::make_pair(hwgroup, sl));
 					}
 				}
 
