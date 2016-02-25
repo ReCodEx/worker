@@ -112,12 +112,13 @@ void job::build_job()
 			}
 
 			// first we have to get propriate hwgroup limits
+			auto limits = std::make_shared<sandbox_limits>();
 			bool hw_found = false;
 			auto its = worker_config_->get_headers().equal_range("hwgroup");
 			for (auto it = its.first; it != its.second; ++it) {
-				auto hwit = sandbox->all_limits.find(it->second);
-				if (hwit != sandbox->all_limits.end()) {
-					task_meta->sandbox->limits = hwit->second;
+				auto hwit = sandbox->loaded_limits.find(it->second);
+				if (hwit != sandbox->loaded_limits.end()) {
+					limits = hwit->second;
 					hw_found = true;
 				}
 			}
@@ -126,46 +127,46 @@ void job::build_job()
 			}
 
 			// we have to load defaults from worker_config if necessary
-			if (task_meta->sandbox->limits->cpu_time == FLT_MAX) {
-				task_meta->sandbox->limits->cpu_time = worker_limits.cpu_time;
+			if (limits->cpu_time == FLT_MAX) {
+				limits->cpu_time = worker_limits.cpu_time;
 			}
-			if (task_meta->sandbox->limits->wall_time == FLT_MAX) {
-				task_meta->sandbox->limits->wall_time = worker_limits.wall_time;
+			if (limits->wall_time == FLT_MAX) {
+				limits->wall_time = worker_limits.wall_time;
 			}
-			if (task_meta->sandbox->limits->extra_time == FLT_MAX) {
-				task_meta->sandbox->limits->extra_time = worker_limits.extra_time;
+			if (limits->extra_time == FLT_MAX) {
+				limits->extra_time = worker_limits.extra_time;
 			}
-			if (task_meta->sandbox->limits->stack_size == SIZE_MAX) {
-				task_meta->sandbox->limits->stack_size = worker_limits.stack_size;
+			if (limits->stack_size == SIZE_MAX) {
+				limits->stack_size = worker_limits.stack_size;
 			}
-			if (task_meta->sandbox->limits->memory_usage == SIZE_MAX) {
-				task_meta->sandbox->limits->memory_usage = worker_limits.memory_usage;
+			if (limits->memory_usage == SIZE_MAX) {
+				limits->memory_usage = worker_limits.memory_usage;
 			}
-			if (task_meta->sandbox->limits->processes == SIZE_MAX) {
-				task_meta->sandbox->limits->processes = worker_limits.processes;
+			if (limits->processes == SIZE_MAX) {
+				limits->processes = worker_limits.processes;
 			}
-			if (task_meta->sandbox->limits->disk_size == SIZE_MAX) {
-				task_meta->sandbox->limits->disk_size = worker_limits.disk_size;
+			if (limits->disk_size == SIZE_MAX) {
+				limits->disk_size = worker_limits.disk_size;
 			}
-			if (task_meta->sandbox->limits->disk_files == SIZE_MAX) {
-				task_meta->sandbox->limits->disk_files = worker_limits.disk_files;
+			if (limits->disk_files == SIZE_MAX) {
+				limits->disk_files = worker_limits.disk_files;
 			}
 
 			// go through variables parsing
-			task_meta->sandbox->limits->std_input = parse_job_var(task_meta->std_input);
-			task_meta->sandbox->limits->std_output = parse_job_var(task_meta->std_output);
-			task_meta->sandbox->limits->std_error = parse_job_var(task_meta->std_error);
-			task_meta->sandbox->limits->chdir = parse_job_var(task_meta->sandbox->limits->chdir);
+			limits->std_input = parse_job_var(task_meta->std_input);
+			limits->std_output = parse_job_var(task_meta->std_output);
+			limits->std_error = parse_job_var(task_meta->std_error);
+			limits->chdir = parse_job_var(limits->chdir);
 			std::vector<std::tuple<std::string, std::string, sandbox_limits::dir_perm>> new_bnd_dirs;
-			for (auto &bnd_dir : task_meta->sandbox->limits->bound_dirs) {
+			for (auto &bnd_dir : limits->bound_dirs) {
 				new_bnd_dirs.push_back(std::tuple<std::string, std::string, sandbox_limits::dir_perm>{
 					parse_job_var(std::get<0>(bnd_dir)), parse_job_var(std::get<1>(bnd_dir)), std::get<2>(bnd_dir)});
 			}
-			task_meta->sandbox->limits->bound_dirs = new_bnd_dirs;
+			limits->bound_dirs = new_bnd_dirs;
 
 			// ... and finally construct external task from given information
 			external_task::create_params data = {
-				worker_config_->get_worker_id(), id++, *task_meta, logger_, working_directory_.string()};
+				worker_config_->get_worker_id(), id++, task_meta, limits, logger_, working_directory_.string()};
 			std::shared_ptr<task_base> task = std::make_shared<external_task>(data);
 			unconnected_tasks.insert(std::make_pair(task_meta->task_id, task));
 			eff_indegree.insert(std::make_pair(task_meta->task_id, 0));
@@ -179,19 +180,19 @@ void job::build_job()
 			std::shared_ptr<task_base> task;
 
 			if (task_meta->binary == "cp") {
-				task = std::make_shared<cp_task>(id++, *task_meta);
+				task = std::make_shared<cp_task>(id++, task_meta);
 			} else if (task_meta->binary == "mkdir") {
-				task = std::make_shared<mkdir_task>(id++, *task_meta);
+				task = std::make_shared<mkdir_task>(id++, task_meta);
 			} else if (task_meta->binary == "rename") {
-				task = std::make_shared<rename_task>(id++, *task_meta);
+				task = std::make_shared<rename_task>(id++, task_meta);
 			} else if (task_meta->binary == "rm") {
-				task = std::make_shared<rm_task>(id++, *task_meta);
+				task = std::make_shared<rm_task>(id++, task_meta);
 			} else if (task_meta->binary == "archivate") {
-				task = std::make_shared<archivate_task>(id++, *task_meta);
+				task = std::make_shared<archivate_task>(id++, task_meta);
 			} else if (task_meta->binary == "extract") {
-				task = std::make_shared<extract_task>(id++, *task_meta);
+				task = std::make_shared<extract_task>(id++, task_meta);
 			} else if (task_meta->binary == "fetch") {
-				task = std::make_shared<fetch_task>(id++, *task_meta, fileman_);
+				task = std::make_shared<fetch_task>(id++, task_meta, fileman_);
 			} else {
 				throw job_exception("Unknown internal task: " + task_meta->binary);
 			}

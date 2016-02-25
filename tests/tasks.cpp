@@ -10,47 +10,47 @@
 #include "../src/tasks/internal/fetch_task.h"
 
 
-task_metadata get_task_meta()
+std::shared_ptr<task_metadata> get_task_meta()
 {
-	task_metadata res;
-	res.task_id = "id2";
-	res.priority = 3;
-	res.fatal_failure = false;
-	res.dependencies = {"dep1", "dep2", "dep3"};
-	res.binary = "command";
-	res.cmd_args = {"arg1", "arg2"};
-	res.std_input = "";
-	res.std_output = "";
-	res.std_error = "";
-	res.sandbox = nullptr;
+	auto res = std::make_shared<task_metadata>();
+	res->task_id = "id2";
+	res->priority = 3;
+	res->fatal_failure = false;
+	res->dependencies = {"dep1", "dep2", "dep3"};
+	res->binary = "command";
+	res->cmd_args = {"arg1", "arg2"};
+	res->std_input = "";
+	res->std_output = "";
+	res->std_error = "";
+	res->sandbox = nullptr;
 	return res;
 }
 
-task_metadata get_three_args()
+std::shared_ptr<task_metadata> get_three_args()
 {
-	task_metadata res = get_task_meta();
-	res.cmd_args = {"one", "two", "three"};
+	auto res = get_task_meta();
+	res->cmd_args = {"one", "two", "three"};
 	return res;
 }
 
-task_metadata get_two_args()
+std::shared_ptr<task_metadata> get_two_args()
 {
-	task_metadata res = get_task_meta();
-	res.cmd_args = {"one", "two"};
+	auto res = get_task_meta();
+	res->cmd_args = {"one", "two"};
 	return res;
 }
 
-task_metadata get_one_args()
+std::shared_ptr<task_metadata> get_one_args()
 {
-	task_metadata res = get_task_meta();
-	res.cmd_args = {"one"};
+	auto res = get_task_meta();
+	res->cmd_args = {"one"};
 	return res;
 }
 
-task_metadata get_zero_args()
+std::shared_ptr<task_metadata> get_zero_args()
 {
-	task_metadata res = get_task_meta();
-	res.cmd_args = {};
+	auto res = get_task_meta();
+	res->cmd_args = {};
 	return res;
 }
 
@@ -114,7 +114,7 @@ TEST(Tasks, InternalFetchTask)
 class test_task_base : public task_base
 {
 public:
-	test_task_base(size_t id, task_metadata task_meta) : task_base(id, task_meta)
+	test_task_base(size_t id, std::shared_ptr<task_metadata> task_meta) : task_base(id, task_meta)
 	{
 	}
 	virtual ~test_task_base()

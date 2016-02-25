@@ -22,7 +22,9 @@ public:
 		/** unique integer which means order in config file */
 		size_t id;
 		/** structure containing information loaded about task */
-		task_metadata task_meta;
+		std::shared_ptr<task_metadata> task_meta;
+		/** limits for sandbox */
+		std::shared_ptr<sandbox_limits> limits;
 		/** job system logger */
 		std::shared_ptr<spdlog::logger> logger;
 		/** directory for optional saving temporary files during execution */
@@ -74,6 +76,8 @@ private:
 	size_t worker_id_;
 	/** Constructed sandbox itself */
 	std::shared_ptr<sandbox_base> sandbox_;
+	/** Limits for sandbox in which program will be started */
+	std::shared_ptr<sandbox_limits> limits_;
 	/** Job system logger */
 	std::shared_ptr<spdlog::logger> logger_;
 	/** Directory for temporary files */

@@ -10,7 +10,7 @@
 class rm_task : public task_base
 {
 public:
-	rm_task(size_t id, task_metadata task_meta);
+	rm_task(size_t id, std::shared_ptr<task_metadata> task_meta);
 	virtual ~rm_task();
 	virtual std::shared_ptr<task_results> run();
 };

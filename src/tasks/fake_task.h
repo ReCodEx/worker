@@ -17,7 +17,7 @@ public:
 	/**
 	 * Only send some fake information to task_base.
 	 */
-	fake_task(size_t id, task_metadata task_meta = task_metadata());
+	fake_task(size_t id, std::shared_ptr<task_metadata> task_meta = std::make_shared<task_metadata>());
 	/**
 	 * Empty destructor.
 	 */

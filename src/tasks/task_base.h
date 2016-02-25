@@ -26,7 +26,7 @@ public:
 	 * @param id unique identificator of load order of tasks
 	 * @param task_meta variable containing further info about task
 	 */
-	task_base(size_t id, task_metadata task_meta);
+	task_base(size_t id, std::shared_ptr<task_metadata> task_meta);
 	/**
 	 * Virtual destructor.
 	 */
@@ -97,7 +97,7 @@ public:
 
 protected:
 	size_t id_;
-	task_metadata task_meta_;
+	std::shared_ptr<task_metadata> task_meta_;
 	bool execute_;
 
 	std::vector<std::weak_ptr<task_base>> parents_;

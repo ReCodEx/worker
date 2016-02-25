@@ -10,7 +10,7 @@
 class archivate_task : public task_base
 {
 public:
-	archivate_task(size_t id, task_metadata task_meta);
+	archivate_task(size_t id, std::shared_ptr<task_metadata> task_meta);
 	virtual ~archivate_task();
 	virtual std::shared_ptr<task_results> run();
 };

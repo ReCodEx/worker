@@ -1,6 +1,6 @@
 #include "fake_task.h"
 
-fake_task::fake_task(size_t id, task_metadata task_meta) : task_base(id, task_meta)
+fake_task::fake_task(size_t id, std::shared_ptr<task_metadata> task_meta) : task_base(id, task_meta)
 {
 }
 

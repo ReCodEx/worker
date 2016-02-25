@@ -10,7 +10,7 @@
 class extract_task : public task_base
 {
 public:
-	extract_task(size_t id, task_metadata task_meta);
+	extract_task(size_t id, std::shared_ptr<task_metadata> task_meta);
 	virtual ~extract_task();
 	virtual std::shared_ptr<task_results> run();
 };

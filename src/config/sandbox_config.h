@@ -12,8 +12,7 @@ class sandbox_config
 {
 public:
 	std::string name = "";
-	std::map<std::string, std::shared_ptr<sandbox_limits>> all_limits;
-	std::shared_ptr<sandbox_limits> limits;
+	std::map<std::string, std::shared_ptr<sandbox_limits>> loaded_limits;
 };
 
 #endif // CODEX_WORKER_SANDBOX_CONFIG_H

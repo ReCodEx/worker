@@ -11,7 +11,7 @@
 class rename_task : public task_base
 {
 public:
-	rename_task(size_t id, task_metadata task_meta);
+	rename_task(size_t id, std::shared_ptr<task_metadata> task_meta);
 	virtual ~rename_task();
 	virtual std::shared_ptr<task_results> run();
 };

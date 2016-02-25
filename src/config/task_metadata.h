@@ -6,7 +6,7 @@
 
 
 /**
- *
+ * Information about one task loaded from job configuration file.
  */
 class task_metadata
 {

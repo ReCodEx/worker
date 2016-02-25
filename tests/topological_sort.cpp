@@ -27,9 +27,9 @@ TEST(topological_sort_test, top_sort_1)
 	 *
 	 * expected = A, C, B
 	 */
-	shared_ptr<task_base> A = make_shared<fake_task>(id++, task_metadata("A", 1));
-	shared_ptr<task_base> B = make_shared<fake_task>(id++, task_metadata("B", 3));
-	shared_ptr<task_base> C = make_shared<fake_task>(id++, task_metadata("C", 2));
+	shared_ptr<task_base> A = make_shared<fake_task>(id++, std::make_shared<task_metadata>("A", 1));
+	shared_ptr<task_base> B = make_shared<fake_task>(id++, std::make_shared<task_metadata>("B", 3));
+	shared_ptr<task_base> C = make_shared<fake_task>(id++, std::make_shared<task_metadata>("C", 2));
 	A->add_children(B);
 	B->add_parent(A);
 	A->add_children(C);
@@ -56,7 +56,7 @@ TEST(topological_sort_test, top_sort_1)
 	 *
 	 * expected = A, C, B, D
 	 */
-	shared_ptr<task_base> D = make_shared<fake_task>(id++, task_metadata("D", 4));
+	shared_ptr<task_base> D = make_shared<fake_task>(id++, std::make_shared<task_metadata>("D", 4));
 	C->add_children(D);
 	D->add_parent(C);
 	eff_ind = {{"A", 0}, {"B", 1}, {"C", 1}, {"D", 1}};
@@ -90,9 +90,9 @@ TEST(topological_sort_test, top_sort_2)
 	 *
 	 * expected = A, B, C
 	 */
-	shared_ptr<task_base> A = make_shared<fake_task>(id++, task_metadata("A", 1));
-	shared_ptr<task_base> B = make_shared<fake_task>(id++, task_metadata("B", 2));
-	shared_ptr<task_base> C = make_shared<fake_task>(id++, task_metadata("C", 3));
+	shared_ptr<task_base> A = make_shared<fake_task>(id++, std::make_shared<task_metadata>("A", 1));
+	shared_ptr<task_base> B = make_shared<fake_task>(id++, std::make_shared<task_metadata>("B", 2));
+	shared_ptr<task_base> C = make_shared<fake_task>(id++, std::make_shared<task_metadata>("C", 3));
 	A->add_children(B);
 	B->add_parent(A);
 	B->add_children(C);
@@ -121,9 +121,9 @@ TEST(topological_sort_test, top_sort_2)
 	 *
 	 * expected = A, B, C, D, E, F
 	 */
-	shared_ptr<task_base> D = make_shared<fake_task>(id++, task_metadata("D", 4));
-	shared_ptr<task_base> E = make_shared<fake_task>(id++, task_metadata("E", 4));
-	shared_ptr<task_base> F = make_shared<fake_task>(id++, task_metadata("F", 4));
+	shared_ptr<task_base> D = make_shared<fake_task>(id++, std::make_shared<task_metadata>("D", 4));
+	shared_ptr<task_base> E = make_shared<fake_task>(id++, std::make_shared<task_metadata>("E", 4));
+	shared_ptr<task_base> F = make_shared<fake_task>(id++, std::make_shared<task_metadata>("F", 4));
 	C->add_children(D);
 	D->add_parent(C);
 	C->add_children(E);
@@ -165,19 +165,19 @@ TEST(topological_sort_test, top_sort_3)
 	 *            E, F, G,
 	 *            K, L, M
 	 */
-	shared_ptr<task_base> A = make_shared<fake_task>(id++, task_metadata("A", 1));
-	shared_ptr<task_base> B = make_shared<fake_task>(id++, task_metadata("B", 2));
-	shared_ptr<task_base> C = make_shared<fake_task>(id++, task_metadata("C", 2));
-	shared_ptr<task_base> D = make_shared<fake_task>(id++, task_metadata("D", 2));
-	shared_ptr<task_base> E = make_shared<fake_task>(id++, task_metadata("E", 4));
-	shared_ptr<task_base> F = make_shared<fake_task>(id++, task_metadata("F", 4));
-	shared_ptr<task_base> G = make_shared<fake_task>(id++, task_metadata("G", 4));
-	shared_ptr<task_base> H = make_shared<fake_task>(id++, task_metadata("H", 3));
-	shared_ptr<task_base> I = make_shared<fake_task>(id++, task_metadata("I", 3));
-	shared_ptr<task_base> J = make_shared<fake_task>(id++, task_metadata("J", 3));
-	shared_ptr<task_base> K = make_shared<fake_task>(id++, task_metadata("K", 5));
-	shared_ptr<task_base> L = make_shared<fake_task>(id++, task_metadata("L", 5));
-	shared_ptr<task_base> M = make_shared<fake_task>(id++, task_metadata("M", 5));
+	shared_ptr<task_base> A = make_shared<fake_task>(id++, std::make_shared<task_metadata>("A", 1));
+	shared_ptr<task_base> B = make_shared<fake_task>(id++, std::make_shared<task_metadata>("B", 2));
+	shared_ptr<task_base> C = make_shared<fake_task>(id++, std::make_shared<task_metadata>("C", 2));
+	shared_ptr<task_base> D = make_shared<fake_task>(id++, std::make_shared<task_metadata>("D", 2));
+	shared_ptr<task_base> E = make_shared<fake_task>(id++, std::make_shared<task_metadata>("E", 4));
+	shared_ptr<task_base> F = make_shared<fake_task>(id++, std::make_shared<task_metadata>("F", 4));
+	shared_ptr<task_base> G = make_shared<fake_task>(id++, std::make_shared<task_metadata>("G", 4));
+	shared_ptr<task_base> H = make_shared<fake_task>(id++, std::make_shared<task_metadata>("H", 3));
+	shared_ptr<task_base> I = make_shared<fake_task>(id++, std::make_shared<task_metadata>("I", 3));
+	shared_ptr<task_base> J = make_shared<fake_task>(id++, std::make_shared<task_metadata>("J", 3));
+	shared_ptr<task_base> K = make_shared<fake_task>(id++, std::make_shared<task_metadata>("K", 5));
+	shared_ptr<task_base> L = make_shared<fake_task>(id++, std::make_shared<task_metadata>("L", 5));
+	shared_ptr<task_base> M = make_shared<fake_task>(id++, std::make_shared<task_metadata>("M", 5));
 	A->add_children(B);
 	A->add_children(C);
 	A->add_children(D);
@@ -247,13 +247,13 @@ TEST(topological_sort_test, top_sort_4)
 	 *
 	 * expected = A, D, E, B, F, C, G
 	 */
-	shared_ptr<task_base> A = make_shared<fake_task>(id++, task_metadata("A", 1));
-	shared_ptr<task_base> B = make_shared<fake_task>(id++, task_metadata("B", 4));
-	shared_ptr<task_base> C = make_shared<fake_task>(id++, task_metadata("C", 6));
-	shared_ptr<task_base> D = make_shared<fake_task>(id++, task_metadata("D", 2));
-	shared_ptr<task_base> E = make_shared<fake_task>(id++, task_metadata("E", 3));
-	shared_ptr<task_base> F = make_shared<fake_task>(id++, task_metadata("F", 5));
-	shared_ptr<task_base> G = make_shared<fake_task>(id++, task_metadata("G", 7));
+	shared_ptr<task_base> A = make_shared<fake_task>(id++, std::make_shared<task_metadata>("A", 1));
+	shared_ptr<task_base> B = make_shared<fake_task>(id++, std::make_shared<task_metadata>("B", 4));
+	shared_ptr<task_base> C = make_shared<fake_task>(id++, std::make_shared<task_metadata>("C", 6));
+	shared_ptr<task_base> D = make_shared<fake_task>(id++, std::make_shared<task_metadata>("D", 2));
+	shared_ptr<task_base> E = make_shared<fake_task>(id++, std::make_shared<task_metadata>("E", 3));
+	shared_ptr<task_base> F = make_shared<fake_task>(id++, std::make_shared<task_metadata>("F", 5));
+	shared_ptr<task_base> G = make_shared<fake_task>(id++, std::make_shared<task_metadata>("G", 7));
 	A->add_children(B);
 	B->add_parent(A);
 	B->add_children(C);
@@ -300,13 +300,13 @@ TEST(topological_sort_test, top_sort_cycle_1)
 	 *
 	 * expected = throw job_exception("Cycle detected")
 	 */
-	shared_ptr<task_base> A = make_shared<fake_task>(id++, task_metadata("A", 1));
-	shared_ptr<task_base> B = make_shared<fake_task>(id++, task_metadata("B", 4));
-	shared_ptr<task_base> C = make_shared<fake_task>(id++, task_metadata("C", 6));
-	shared_ptr<task_base> D = make_shared<fake_task>(id++, task_metadata("D", 2));
-	shared_ptr<task_base> E = make_shared<fake_task>(id++, task_metadata("E", 3));
-	shared_ptr<task_base> F = make_shared<fake_task>(id++, task_metadata("F", 5));
-	shared_ptr<task_base> G = make_shared<fake_task>(id++, task_metadata("G", 7));
+	shared_ptr<task_base> A = make_shared<fake_task>(id++, std::make_shared<task_metadata>("A", 1));
+	shared_ptr<task_base> B = make_shared<fake_task>(id++, std::make_shared<task_metadata>("B", 4));
+	shared_ptr<task_base> C = make_shared<fake_task>(id++, std::make_shared<task_metadata>("C", 6));
+	shared_ptr<task_base> D = make_shared<fake_task>(id++, std::make_shared<task_metadata>("D", 2));
+	shared_ptr<task_base> E = make_shared<fake_task>(id++, std::make_shared<task_metadata>("E", 3));
+	shared_ptr<task_base> F = make_shared<fake_task>(id++, std::make_shared<task_metadata>("F", 5));
+	shared_ptr<task_base> G = make_shared<fake_task>(id++, std::make_shared<task_metadata>("G", 7));
 	A->add_children(B);
 	B->add_parent(A);
 	B->add_children(C);
@@ -348,10 +348,10 @@ TEST(topological_sort_test, top_sort_cycle_2)
 	 *
 	 * expected = throw job_exception("Cycle detected")
 	 */
-	shared_ptr<task_base> A = make_shared<fake_task>(id++, task_metadata("A", 1));
-	shared_ptr<task_base> B = make_shared<fake_task>(id++, task_metadata("B", 2));
-	shared_ptr<task_base> C = make_shared<fake_task>(id++, task_metadata("C", 3));
-	shared_ptr<task_base> D = make_shared<fake_task>(id++, task_metadata("D", 4));
+	shared_ptr<task_base> A = make_shared<fake_task>(id++, std::make_shared<task_metadata>("A", 1));
+	shared_ptr<task_base> B = make_shared<fake_task>(id++, std::make_shared<task_metadata>("B", 2));
+	shared_ptr<task_base> C = make_shared<fake_task>(id++, std::make_shared<task_metadata>("C", 3));
+	shared_ptr<task_base> D = make_shared<fake_task>(id++, std::make_shared<task_metadata>("D", 4));
 	A->add_children(B);
 	B->add_parent(A);
 	B->add_children(C);
