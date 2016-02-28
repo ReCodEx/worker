@@ -32,6 +32,12 @@ private:
 	std::shared_ptr<spdlog::logger> logger_;
 
 public:
+	/**
+	 * TODO: documentation
+	 * @param config
+	 * @param socket
+	 * @param logger
+	 */
 	broker_connection(
 		const worker_config &config, std::shared_ptr<proxy> socket, std::shared_ptr<spdlog::logger> logger = nullptr)
 		: config(config), socket(socket)

@@ -11,6 +11,9 @@
 class task_metadata
 {
 public:
+	/**
+	 * Just constructor which takes all internal variables. Stated for better construction of class.
+	 */
 	task_metadata(std::string task_id = "",
 		size_t priority = 0,
 		bool fatal = false,
@@ -26,18 +29,28 @@ public:
 	{
 	}
 
+	/** Unique identifier of task in job. */
 	std::string task_id;
+	/** Priority of task among all others. */
 	size_t priority;
+	/** If true than failure of task will end execution of whole job. */
 	bool fatal_failure;
+	/** Dependent tasks which have to be executed before this one. */
 	std::vector<std::string> dependencies;
 
+	/** Command which will be executed within this task. */
 	std::string binary;
+	/** Arguments for executed command. */
 	std::vector<std::string> cmd_args;
 
+	/** If stated than standard input will be redirected from this file. */
 	std::string std_input;
+	/** If stated than standard output will be redirected to this file. */
 	std::string std_output;
+	/** If stated than error output will be redirected to this file. */
 	std::string std_error;
 
+	/** If not null than this task is external and will be executed in given sandbox. */
 	std::shared_ptr<sandbox_config> sandbox;
 };
 

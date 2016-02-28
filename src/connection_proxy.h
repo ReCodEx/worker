@@ -61,6 +61,10 @@ private:
 	}
 
 public:
+	/**
+	 * TODO: documentation
+	 * @param context
+	 */
 	connection_proxy(zmq::context_t &context) : broker_(context, ZMQ_DEALER), jobs_(context, ZMQ_PAIR)
 	{
 		items_[0].socket = (void *) broker_;
@@ -74,6 +78,10 @@ public:
 		items_[1].revents = 0;
 	}
 
+	/**
+	 * TODO: documentation
+	 * @param addr
+	 */
 	void connect(const std::string &addr)
 	{
 		broker_.connect(addr);

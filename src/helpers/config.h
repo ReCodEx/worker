@@ -12,7 +12,7 @@ namespace helpers
 	/**
 	 * From given configuration in yaml it build job_metadata structure and its tasks
 	 * @param config
-	 * @return
+	 * @return pointer on job_metadata class
 	 */
 	std::shared_ptr<job_metadata> build_job_metadata(const YAML::Node &conf);
 	/**

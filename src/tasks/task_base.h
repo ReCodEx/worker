@@ -91,16 +91,33 @@ public:
 	 */
 	const std::vector<std::string> &get_dependencies();
 
+	/**
+	 * Tells whether task can be safely executed or not.
+	 * @return true if task can be executed
+	 */
 	bool is_executable();
+	/**
+	 * To this particular task set execution bit on false.
+	 * @param set false if task cannot be safely executed
+	 */
 	void set_execution(bool set);
+	/**
+	 * Calls @a set_execution function on all children of this task.
+	 * @param set flag which will be passed to children
+	 */
 	void set_children_execution(bool set);
 
 protected:
+	/** Unique integer ID of task. */
 	size_t id_;
+	/** Information about this task loaded from configuration file. */
 	std::shared_ptr<task_metadata> task_meta_;
+	/** If true task can be executed safely, otherwise its not wise. */
 	bool execute_;
 
+	/** Weak pointers to parents of task. */
 	std::vector<std::weak_ptr<task_base>> parents_;
+	/** Pointers to children of task. */
 	std::vector<std::shared_ptr<task_base>> children_;
 };
 

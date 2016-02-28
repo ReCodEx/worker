@@ -36,13 +36,9 @@ class isoeval_core
 {
 public:
 	isoeval_core() = delete;
-
 	isoeval_core(const isoeval_core &source) = delete;
-
 	isoeval_core &operator=(const isoeval_core &source) = delete;
-
 	isoeval_core(const isoeval_core &&source) = delete;
-
 	isoeval_core &operator=(const isoeval_core &&source) = delete;
 
 	/**
@@ -126,7 +122,6 @@ private:
 
 	/** Filename of default configuration of worker */
 	std::string config_filename_;
-
 	/** Loaded worker configuration */
 	std::shared_ptr<worker_config> config_;
 

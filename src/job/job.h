@@ -59,6 +59,9 @@ public:
 		fs::path result_path,
 		std::shared_ptr<file_manager_base> fileman);
 
+	/**
+	 * Job cleanup (if needed) is executed.
+	 */
 	~job();
 
 	/**
@@ -101,12 +104,17 @@ private:
 	std::string parse_job_var(const std::string &src);
 
 	// PRIVATE DATA MEMBERS
+	/** Information about this job given on construction. */
 	std::shared_ptr<job_metadata> job_meta_;
+	/** Pointer on default worker config. */
 	std::shared_ptr<worker_config> worker_config_;
 	/** Directory, where tasks can create their own subfolders and temporary files. */
 	fs::path working_directory_;
+	/** Directory where source codes needed in job execution are stored. */
 	fs::path source_path_;
+	/** Directory where results and log of job are stored. */
 	fs::path result_path_;
+	/** File manager which will be used for fetch tasks. */
 	std::shared_ptr<file_manager_base> fileman_;
 
 	/** Variables which can be used in job configuration */
