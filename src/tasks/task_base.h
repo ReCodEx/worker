@@ -13,6 +13,10 @@
  * Logical base of all possible tasks.
  * Its abstract class which cannot be instantiated.
  * But it stores some information about task which always have to be defined.
+ * @note Task can be created only with one constructor which receive pointer to task_metadata as parameter.
+ * Task_metadata structure is mutable, so it can be changed during task execution.
+ * This case should never happen in ReCodEx worker, but posibility is still here.
+ * Please keep this in mind if you're editing this code otherwise it can end up very bad for you!
  */
 class task_base
 {

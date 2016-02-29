@@ -15,7 +15,7 @@ namespace fs = boost::filesystem;
 #include "spdlog/sinks/null_sink.h"
 #include "../config/worker_config.h"
 #include "../tasks/task_base.h"
-#include "../tasks/fake_task.h"
+#include "../tasks/root_task.h"
 #include "../tasks/external_task.h"
 #include "../fileman/file_manager_base.h"
 #include "../sandbox/sandbox_base.h"
@@ -35,6 +35,11 @@ namespace fs = boost::filesystem;
  * Job is unit which is received from broker and should be evaluated.
  * Job is built from configuration in which all information should be provided.
  * Job building results in task tree and task queue in which task should be evaluated.
+ * @note During construction job_metadata structure is given. This structure is editable and
+ * there is posibility it can be changed by whoever constructed a job class.
+ * In actual ReCodEx worker this situation can never happen. But be aware of this and keep it in mind in other coding.
+ * Also do not change job_metadata or task_metadata structure between construction of tasks and its execution.
+ * If you do it, you should watch your back, devil will be always very close!
  */
 class job
 {

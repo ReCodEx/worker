@@ -71,6 +71,9 @@ private:
 	 * Build job structure from given job-configuration.
 	 * Aka build working tree and its linear ordering, which will be executed.
 	 * It means load yaml config and call job constructor.
+	 * @note In this function job_metadata structure is constructed and
+	 * given to newly created instance of job class. This structure should remain only in this function and
+	 * should never be changed during job construction or execution otherwise may the Gods be with you!
 	 */
 	void build_job();
 

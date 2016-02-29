@@ -10,18 +10,18 @@
  * Can be used for root task or as logical parent for some group of tasks.
  * Run method have no function and is empty.
  */
-class fake_task : public task_base
+class root_task : public task_base
 {
 public:
-	fake_task() = delete;
+	root_task() = delete;
 	/**
 	 * Only send some fake information to task_base.
 	 */
-	fake_task(size_t id, std::shared_ptr<task_metadata> task_meta = std::make_shared<task_metadata>());
+	root_task(size_t id, std::shared_ptr<task_metadata> task_meta = std::make_shared<task_metadata>());
 	/**
 	 * Empty destructor.
 	 */
-	virtual ~fake_task();
+	virtual ~root_task();
 
 	/**
 	 * Empty function. Has to be stated for completion.

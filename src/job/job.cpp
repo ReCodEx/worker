@@ -76,7 +76,7 @@ void job::build_job()
 	// create fake task, which is logical root of evaluation
 	size_t id = 0;
 	std::map<std::string, size_t> eff_indegree;
-	root_task_ = std::make_shared<fake_task>(id++);
+	root_task_ = std::make_shared<root_task>(id++);
 	eff_indegree.insert(std::make_pair(root_task_->get_task_id(), 0));
 
 
