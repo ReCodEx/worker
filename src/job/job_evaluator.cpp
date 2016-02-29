@@ -225,7 +225,6 @@ void job_evaluator::cleanup_variables()
 
 void job_evaluator::prepare_evaluator()
 {
-	cleanup_variables();
 	init_submission_paths();
 	cleanup_submission();
 }
