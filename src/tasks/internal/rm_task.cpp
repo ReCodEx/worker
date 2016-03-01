@@ -7,16 +7,9 @@
 namespace fs = boost::filesystem;
 
 
-rm_task::rm_task(size_t id,
-	std::string task_id,
-	size_t priority,
-	bool fatal,
-	const std::string &cmd,
-	const std::vector<std::string> &arguments,
-	const std::vector<std::string> &dependencies)
-	: task_base(id, task_id, priority, fatal, dependencies, cmd, arguments)
+rm_task::rm_task(size_t id, std::shared_ptr<task_metadata> task_meta) : task_base(id, task_meta)
 {
-	if (arguments_.empty()) {
+	if (task_meta_->cmd_args.empty()) {
 		throw task_exception("At least one argument required.");
 	}
 }
@@ -31,7 +24,7 @@ std::shared_ptr<task_results> rm_task::run()
 {
 	// Try to delete all items
 	bool result = true;
-	for (auto &i : arguments_) {
+	for (auto &i : task_meta_->cmd_args) {
 		try {
 			fs::remove_all(i);
 		} catch (...) {

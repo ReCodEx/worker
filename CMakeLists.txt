@@ -146,8 +146,8 @@ set(SOURCE_FILES
 	${SANDBOX_DIR}/fake_sandbox.h
 	${SANDBOX_DIR}/fake_sandbox.cpp
 
-	${TASKS_DIR}/fake_task.h
-	${TASKS_DIR}/fake_task.cpp
+	${TASKS_DIR}/root_task.h
+	${TASKS_DIR}/root_task.cpp
 	${TASKS_DIR}/task_base.h
 	${TASKS_DIR}/task_base.cpp
 	${TASKS_DIR}/external_task.h

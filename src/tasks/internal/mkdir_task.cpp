@@ -7,16 +7,9 @@
 namespace fs = boost::filesystem;
 
 
-mkdir_task::mkdir_task(size_t id,
-	std::string task_id,
-	size_t priority,
-	bool fatal,
-	const std::string &cmd,
-	const std::vector<std::string> &arguments,
-	const std::vector<std::string> &dependencies)
-	: task_base(id, task_id, priority, fatal, dependencies, cmd, arguments)
+mkdir_task::mkdir_task(size_t id, std::shared_ptr<task_metadata> task_meta) : task_base(id, task_meta)
 {
-	if (arguments_.empty()) {
+	if (task_meta_->cmd_args.empty()) {
 		throw task_exception("At least one argument required.");
 	}
 }
@@ -30,14 +23,14 @@ mkdir_task::~mkdir_task()
 std::shared_ptr<task_results> mkdir_task::run()
 {
 	try {
-		for (auto &i : arguments_) {
+		for (auto &i : task_meta_->cmd_args) {
 			fs::create_directories(i);
 			fs::permissions(i, fs::add_perms | fs::group_write | fs::others_write);
 		}
 		return std::shared_ptr<task_results>(new task_results());
 	} catch (fs::filesystem_error &e) {
 		// Remove already created directories
-		for (auto &i : arguments_) {
+		for (auto &i : task_meta_->cmd_args) {
 			try {
 				fs::remove_all(i);
 			} catch (...) {

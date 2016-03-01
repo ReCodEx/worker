@@ -89,7 +89,7 @@ add_test_suite(job
 	${TASKS_DIR}/external_task.cpp
 	${TASKS_DIR}/task_base.cpp
 	${TASKS_DIR}/external_task.cpp
-	${TASKS_DIR}/fake_task.cpp
+	${TASKS_DIR}/root_task.cpp
 	${SRC_DIR}/archives/archivator.cpp
 	${SRC_DIR}/config/worker_config.cpp
 	${HELPERS_DIR}/config.cpp
@@ -103,7 +103,6 @@ add_test_suite(job
 
 add_test_suite(topological_sort
 	${TASKS_DIR}/task_base.cpp
-	${TASKS_DIR}/fake_task.cpp
 	${HELPERS_DIR}/topological_sort.cpp
 	topological_sort.cpp
 )
@@ -122,7 +121,7 @@ add_test_suite(job_receiver
 	${SRC_DIR}/archives/archivator.cpp
 	${TASKS_DIR}/task_base.cpp
 	${TASKS_DIR}/external_task.cpp
-	${TASKS_DIR}/fake_task.cpp
+	${TASKS_DIR}/root_task.cpp
 	${TASKS_DIR}/internal/cp_task.cpp
 	${TASKS_DIR}/internal/mkdir_task.cpp
 	${TASKS_DIR}/internal/rename_task.cpp
@@ -138,7 +137,6 @@ add_test_suite(job_receiver
 add_test_suite(tasks
 	${TASKS_DIR}/task_base.cpp
 	${TASKS_DIR}/external_task.cpp
-	${TASKS_DIR}/fake_task.cpp
 	${TASKS_DIR}/internal/cp_task.cpp
 	${TASKS_DIR}/internal/mkdir_task.cpp
 	${TASKS_DIR}/internal/rename_task.cpp

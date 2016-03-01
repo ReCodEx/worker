@@ -6,12 +6,17 @@
 #include <cstdlib>
 #include <memory>
 #include "../config/task_results.h"
+#include "../config/task_metadata.h"
 
 
 /**
  * Logical base of all possible tasks.
  * Its abstract class which cannot be instantiated.
  * But it stores some information about task which always have to be defined.
+ * @note Task can be created only with one constructor which receive pointer to task_metadata as parameter.
+ * Task_metadata structure is mutable, so it can be changed during task execution.
+ * This case should never happen in ReCodEx worker, but posibility is still here.
+ * Please keep this in mind if you're editing this code otherwise it can end up very bad for you!
  */
 class task_base
 {
@@ -23,20 +28,9 @@ public:
 	/**
 	 * Only possible way of construction which just store all given parameters into private variables.
 	 * @param id unique identificator of load order of tasks
-	 * @param task_id task identificator as written in job configuration
-	 * @param priority integer identificator of priority, smaller number, higher priority
-	 * @param fatal if true, than failure in this task will end all execution
-	 * @param dependencies array of names of task which has to be evaluated before this task
-	 * @param cmd command which will be executed in this task
-	 * @param arguments just command line arguments to executed command
+	 * @param task_meta variable containing further info about task
 	 */
-	task_base(size_t id,
-		std::string task_id,
-		size_t priority,
-		bool fatal,
-		const std::vector<std::string> &dependencies,
-		const std::string &cmd,
-		const std::vector<std::string> &arguments);
+	task_base(size_t id, std::shared_ptr<task_metadata> task_meta);
 	/**
 	 * Virtual destructor.
 	 */
@@ -101,21 +95,33 @@ public:
 	 */
 	const std::vector<std::string> &get_dependencies();
 
+	/**
+	 * Tells whether task can be safely executed or not.
+	 * @return true if task can be executed
+	 */
 	bool is_executable();
+	/**
+	 * To this particular task set execution bit on false.
+	 * @param set false if task cannot be safely executed
+	 */
 	void set_execution(bool set);
+	/**
+	 * Calls @a set_execution function on all children of this task.
+	 * @param set flag which will be passed to children
+	 */
 	void set_children_execution(bool set);
 
 protected:
+	/** Unique integer ID of task. */
 	size_t id_;
-	std::string task_id_;
-	size_t priority_;
-	bool fatal_failure_;
-	std::string cmd_;
-	std::vector<std::string> dependencies_;
-	std::vector<std::string> arguments_;
+	/** Information about this task loaded from configuration file. */
+	std::shared_ptr<task_metadata> task_meta_;
+	/** If true task can be executed safely, otherwise its not wise. */
 	bool execute_;
 
+	/** Weak pointers to parents of task. */
 	std::vector<std::weak_ptr<task_base>> parents_;
+	/** Pointers to children of task. */
 	std::vector<std::shared_ptr<task_base>> children_;
 };
 

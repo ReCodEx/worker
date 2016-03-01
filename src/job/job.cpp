@@ -76,7 +76,7 @@ void job::build_job()
 	// create fake task, which is logical root of evaluation
 	size_t id = 0;
 	std::map<std::string, size_t> eff_indegree;
-	root_task_ = std::make_shared<fake_task>(id++);
+	root_task_ = std::make_shared<root_task>(id++);
 	eff_indegree.insert(std::make_pair(root_task_->get_task_id(), 0));
 
 
@@ -105,7 +105,6 @@ void job::build_job()
 			// //////////////// //
 
 			auto sandbox = task_meta->sandbox;
-			std::shared_ptr<sandbox_limits> limits;
 			auto worker_limits = worker_config_->get_limits();
 
 			if (sandbox->name == "") {
@@ -113,11 +112,12 @@ void job::build_job()
 			}
 
 			// first we have to get propriate hwgroup limits
+			auto limits = std::make_shared<sandbox_limits>();
 			bool hw_found = false;
 			auto its = worker_config_->get_headers().equal_range("hwgroup");
 			for (auto it = its.first; it != its.second; ++it) {
-				auto hwit = sandbox->limits.find(it->second);
-				if (hwit != sandbox->limits.end()) {
+				auto hwit = sandbox->loaded_limits.find(it->second);
+				if (hwit != sandbox->loaded_limits.end()) {
 					limits = hwit->second;
 					hw_found = true;
 				}
@@ -165,18 +165,8 @@ void job::build_job()
 			limits->bound_dirs = new_bnd_dirs;
 
 			// ... and finally construct external task from given information
-			external_task::create_params data = {worker_config_->get_worker_id(),
-				id++,
-				task_meta->task_id,
-				task_meta->priority,
-				task_meta->fatal_failure,
-				task_meta->dependencies,
-				task_meta->binary,
-				task_meta->cmd_args,
-				sandbox->name,
-				*limits,
-				logger_,
-				working_directory_.string()};
+			external_task::create_params data = {
+				worker_config_->get_worker_id(), id++, task_meta, limits, logger_, working_directory_.string()};
 			std::shared_ptr<task_base> task = std::make_shared<external_task>(data);
 			unconnected_tasks.insert(std::make_pair(task_meta->task_id, task));
 			eff_indegree.insert(std::make_pair(task_meta->task_id, 0));
@@ -190,62 +180,19 @@ void job::build_job()
 			std::shared_ptr<task_base> task;
 
 			if (task_meta->binary == "cp") {
-				task = std::make_shared<cp_task>(id++,
-					task_meta->task_id,
-					task_meta->priority,
-					task_meta->fatal_failure,
-					task_meta->binary,
-					task_meta->cmd_args,
-					task_meta->dependencies);
+				task = std::make_shared<cp_task>(id++, task_meta);
 			} else if (task_meta->binary == "mkdir") {
-				task = std::make_shared<mkdir_task>(id++,
-					task_meta->task_id,
-					task_meta->priority,
-					task_meta->fatal_failure,
-					task_meta->binary,
-					task_meta->cmd_args,
-					task_meta->dependencies);
+				task = std::make_shared<mkdir_task>(id++, task_meta);
 			} else if (task_meta->binary == "rename") {
-				task = std::make_shared<rename_task>(id++,
-					task_meta->task_id,
-					task_meta->priority,
-					task_meta->fatal_failure,
-					task_meta->binary,
-					task_meta->cmd_args,
-					task_meta->dependencies);
+				task = std::make_shared<rename_task>(id++, task_meta);
 			} else if (task_meta->binary == "rm") {
-				task = std::make_shared<rm_task>(id++,
-					task_meta->task_id,
-					task_meta->priority,
-					task_meta->fatal_failure,
-					task_meta->binary,
-					task_meta->cmd_args,
-					task_meta->dependencies);
+				task = std::make_shared<rm_task>(id++, task_meta);
 			} else if (task_meta->binary == "archivate") {
-				task = std::make_shared<archivate_task>(id++,
-					task_meta->task_id,
-					task_meta->priority,
-					task_meta->fatal_failure,
-					task_meta->binary,
-					task_meta->cmd_args,
-					task_meta->dependencies);
+				task = std::make_shared<archivate_task>(id++, task_meta);
 			} else if (task_meta->binary == "extract") {
-				task = std::make_shared<extract_task>(id++,
-					task_meta->task_id,
-					task_meta->priority,
-					task_meta->fatal_failure,
-					task_meta->binary,
-					task_meta->cmd_args,
-					task_meta->dependencies);
+				task = std::make_shared<extract_task>(id++, task_meta);
 			} else if (task_meta->binary == "fetch") {
-				task = std::make_shared<fetch_task>(id++,
-					task_meta->task_id,
-					task_meta->priority,
-					task_meta->fatal_failure,
-					task_meta->binary,
-					task_meta->cmd_args,
-					task_meta->dependencies,
-					fileman_);
+				task = std::make_shared<fetch_task>(id++, task_meta, fileman_);
 			} else {
 				throw job_exception("Unknown internal task: " + task_meta->binary);
 			}

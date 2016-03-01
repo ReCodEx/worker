@@ -266,11 +266,11 @@ TEST(job_config_test, config_data)
 	ASSERT_EQ(task2->std_error, "01.err");
 	ASSERT_NE(task2->sandbox, nullptr);
 	ASSERT_EQ(task2->sandbox->name, "fake");
-	ASSERT_EQ(task2->sandbox->limits.size(), 2u);
-	EXPECT_NO_THROW(task2->sandbox->limits.at("group1"));
-	EXPECT_NO_THROW(task2->sandbox->limits.at("group2"));
+	ASSERT_EQ(task2->sandbox->loaded_limits.size(), 2u);
+	EXPECT_NO_THROW(task2->sandbox->loaded_limits.at("group1"));
+	EXPECT_NO_THROW(task2->sandbox->loaded_limits.at("group2"));
 
-	auto limit1 = task2->sandbox->limits.at("group1");
+	auto limit1 = task2->sandbox->loaded_limits.at("group1");
 	ASSERT_EQ(limit1->cpu_time, 5);
 	ASSERT_EQ(limit1->wall_time, 6);
 	ASSERT_EQ(limit1->extra_time, 7);
@@ -296,7 +296,7 @@ TEST(job_config_test, config_data)
 		std::tuple<std::string, std::string, sp>{"/tmp/recodex", "/recodex/tmp", static_cast<sp>(sp::RW | sp::NOEXEC)}};
 	ASSERT_EQ(limit1->bound_dirs, expected_bound_dirs);
 
-	auto limit2 = task2->sandbox->limits.at("group2");
+	auto limit2 = task2->sandbox->loaded_limits.at("group2");
 	ASSERT_EQ(limit2->cpu_time, FLT_MAX);
 	ASSERT_EQ(limit2->wall_time, FLT_MAX);
 	ASSERT_EQ(limit2->extra_time, FLT_MAX);

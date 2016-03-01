@@ -15,7 +15,7 @@ namespace fs = boost::filesystem;
 #include "spdlog/sinks/null_sink.h"
 #include "../config/worker_config.h"
 #include "../tasks/task_base.h"
-#include "../tasks/fake_task.h"
+#include "../tasks/root_task.h"
 #include "../tasks/external_task.h"
 #include "../fileman/file_manager_base.h"
 #include "../sandbox/sandbox_base.h"
@@ -35,6 +35,11 @@ namespace fs = boost::filesystem;
  * Job is unit which is received from broker and should be evaluated.
  * Job is built from configuration in which all information should be provided.
  * Job building results in task tree and task queue in which task should be evaluated.
+ * @note During construction job_metadata structure is given. This structure is editable and
+ * there is posibility it can be changed by whoever constructed a job class.
+ * In actual ReCodEx worker this situation can never happen. But be aware of this and keep it in mind in other coding.
+ * Also do not change job_metadata or task_metadata structure between construction of tasks and its execution.
+ * If you do it, you should watch your back, devil will be always very close!
  */
 class job
 {
@@ -59,6 +64,9 @@ public:
 		fs::path result_path,
 		std::shared_ptr<file_manager_base> fileman);
 
+	/**
+	 * Job cleanup (if needed) is executed.
+	 */
 	~job();
 
 	/**
@@ -101,12 +109,17 @@ private:
 	std::string parse_job_var(const std::string &src);
 
 	// PRIVATE DATA MEMBERS
+	/** Information about this job given on construction. */
 	std::shared_ptr<job_metadata> job_meta_;
+	/** Pointer on default worker config. */
 	std::shared_ptr<worker_config> worker_config_;
 	/** Directory, where tasks can create their own subfolders and temporary files. */
 	fs::path working_directory_;
+	/** Directory where source codes needed in job execution are stored. */
 	fs::path source_path_;
+	/** Directory where results and log of job are stored. */
 	fs::path result_path_;
+	/** File manager which will be used for fetch tasks. */
 	std::shared_ptr<file_manager_base> fileman_;
 
 	/** Variables which can be used in job configuration */

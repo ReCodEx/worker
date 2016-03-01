@@ -10,74 +10,111 @@
 #include "../src/tasks/internal/fetch_task.h"
 
 
+std::shared_ptr<task_metadata> get_task_meta()
+{
+	auto res = std::make_shared<task_metadata>();
+	res->task_id = "id2";
+	res->priority = 3;
+	res->fatal_failure = false;
+	res->dependencies = {"dep1", "dep2", "dep3"};
+	res->binary = "command";
+	res->cmd_args = {"arg1", "arg2"};
+	res->std_input = "";
+	res->std_output = "";
+	res->std_error = "";
+	res->sandbox = nullptr;
+	return res;
+}
+
+std::shared_ptr<task_metadata> get_three_args()
+{
+	auto res = get_task_meta();
+	res->cmd_args = {"one", "two", "three"};
+	return res;
+}
+
+std::shared_ptr<task_metadata> get_two_args()
+{
+	auto res = get_task_meta();
+	res->cmd_args = {"one", "two"};
+	return res;
+}
+
+std::shared_ptr<task_metadata> get_one_args()
+{
+	auto res = get_task_meta();
+	res->cmd_args = {"one"};
+	return res;
+}
+
+std::shared_ptr<task_metadata> get_zero_args()
+{
+	auto res = get_task_meta();
+	res->cmd_args = {};
+	return res;
+}
+
 TEST(Tasks, InternalArchivateTask)
 {
-	EXPECT_THROW(archivate_task(1, "2", 3, false, "", {"one", "two", "three"}, {}), task_exception);
-	EXPECT_THROW(archivate_task(1, "2", 3, false, "", {"one"}, {}), task_exception);
-	EXPECT_THROW(archivate_task(1, "2", 3, false, "", {}, {}), task_exception);
-	EXPECT_NO_THROW(archivate_task(1, "2", 3, false, "", {"one", "two"}, {}));
+	EXPECT_THROW(archivate_task(1, get_three_args()), task_exception);
+	EXPECT_THROW(archivate_task(1, get_one_args()), task_exception);
+	EXPECT_THROW(archivate_task(1, get_zero_args()), task_exception);
+	EXPECT_NO_THROW(archivate_task(1, get_two_args()));
 }
 
 TEST(Tasks, InternalCpTask)
 {
-	EXPECT_THROW(cp_task(1, "2", 3, false, "", {"one", "two", "three"}, {}), task_exception);
-	EXPECT_THROW(cp_task(1, "2", 3, false, "", {"one"}, {}), task_exception);
-	EXPECT_THROW(cp_task(1, "2", 3, false, "", {}, {}), task_exception);
-	EXPECT_NO_THROW(cp_task(1, "2", 3, false, "", {"one", "two"}, {}));
+	EXPECT_THROW(cp_task(1, get_three_args()), task_exception);
+	EXPECT_THROW(cp_task(1, get_one_args()), task_exception);
+	EXPECT_THROW(cp_task(1, get_zero_args()), task_exception);
+	EXPECT_NO_THROW(cp_task(1, get_two_args()));
 }
 
 TEST(Tasks, InternalExtractTask)
 {
-	EXPECT_THROW(extract_task(1, "2", 3, false, "", {"one", "two", "three"}, {}), task_exception);
-	EXPECT_THROW(extract_task(1, "2", 3, false, "", {"one"}, {}), task_exception);
-	EXPECT_THROW(extract_task(1, "2", 3, false, "", {}, {}), task_exception);
-	EXPECT_NO_THROW(extract_task(1, "2", 3, false, "", {"one", "two"}, {}));
+	EXPECT_THROW(extract_task(1, get_three_args()), task_exception);
+	EXPECT_THROW(extract_task(1, get_one_args()), task_exception);
+	EXPECT_THROW(extract_task(1, get_zero_args()), task_exception);
+	EXPECT_NO_THROW(extract_task(1, get_two_args()));
 }
 
 TEST(Tasks, InternalMkdirTask)
 {
-	EXPECT_NO_THROW(mkdir_task(1, "2", 3, false, "", {"one", "two", "three"}, {}));
-	EXPECT_NO_THROW(mkdir_task(1, "2", 3, false, "", {"one"}, {}));
-	EXPECT_THROW(mkdir_task(1, "2", 3, false, "", {}, {}), task_exception);
-	EXPECT_NO_THROW(mkdir_task(1, "2", 3, false, "", {"one", "two"}, {}));
+	EXPECT_NO_THROW(mkdir_task(1, get_three_args()));
+	EXPECT_NO_THROW(mkdir_task(1, get_one_args()));
+	EXPECT_THROW(mkdir_task(1, get_zero_args()), task_exception);
+	EXPECT_NO_THROW(mkdir_task(1, get_two_args()));
 }
 
 TEST(Tasks, InternalRenameTask)
 {
-	EXPECT_THROW(rename_task(1, "2", 3, false, "", {"one", "two", "three"}, {}), task_exception);
-	EXPECT_THROW(rename_task(1, "2", 3, false, "", {"one"}, {}), task_exception);
-	EXPECT_THROW(rename_task(1, "2", 3, false, "", {}, {}), task_exception);
-	EXPECT_NO_THROW(rename_task(1, "2", 3, false, "", {"one", "two"}, {}));
+	EXPECT_THROW(rename_task(1, get_three_args()), task_exception);
+	EXPECT_THROW(rename_task(1, get_one_args()), task_exception);
+	EXPECT_THROW(rename_task(1, get_zero_args()), task_exception);
+	EXPECT_NO_THROW(rename_task(1, get_two_args()));
 }
 
 TEST(Tasks, InternalRmTask)
 {
-	EXPECT_NO_THROW(rm_task(1, "2", 3, false, "", {"one", "two", "three"}, {}));
-	EXPECT_NO_THROW(rm_task(1, "2", 3, false, "", {"one"}, {}));
-	EXPECT_THROW(rm_task(1, "2", 3, false, "", {}, {}), task_exception);
-	EXPECT_NO_THROW(rm_task(1, "2", 3, false, "", {"one", "two"}, {}));
+	EXPECT_NO_THROW(rm_task(1, get_three_args()));
+	EXPECT_NO_THROW(rm_task(1, get_one_args()));
+	EXPECT_THROW(rm_task(1, get_zero_args()), task_exception);
+	EXPECT_NO_THROW(rm_task(1, get_two_args()));
 }
 
 TEST(Tasks, InternalFetchTask)
 {
-	EXPECT_THROW(fetch_task(1, "2", 3, false, "", {"one", "two", "three"}, {}, nullptr), task_exception);
-	EXPECT_THROW(fetch_task(1, "2", 3, false, "", {"one"}, {}, nullptr), task_exception);
-	EXPECT_THROW(fetch_task(1, "2", 3, false, "", {}, {}, nullptr), task_exception);
-	EXPECT_NO_THROW(fetch_task(1, "2", 3, false, "", {"one", "two"}, {}, nullptr));
+	EXPECT_THROW(fetch_task(1, get_three_args(), nullptr), task_exception);
+	EXPECT_THROW(fetch_task(1, get_one_args(), nullptr), task_exception);
+	EXPECT_THROW(fetch_task(1, get_zero_args(), nullptr), task_exception);
+	EXPECT_NO_THROW(fetch_task(1, get_two_args(), nullptr));
 }
 
 
 class test_task_base : public task_base
 {
 public:
-	test_task_base(size_t id,
-		std::string task_id,
-		size_t priority,
-		bool fatal,
-		const std::vector<std::string> &dependencies,
-		const std::string &cmd,
-		const std::vector<std::string> &arguments)
-		: task_base(id, task_id, priority, fatal, dependencies, cmd, arguments)
+	test_task_base(size_t id, std::shared_ptr<task_metadata> task_meta) : task_base(id, task_meta)
 	{
 	}
 	virtual ~test_task_base()
@@ -91,7 +128,7 @@ public:
 
 TEST(Tasks, TaskBase)
 {
-	test_task_base base(1, "id2", 3, false, {"dep1", "dep2", "dep3"}, "command", {"arg1", "arg2"});
+	test_task_base base(1, get_task_meta());
 	EXPECT_EQ(base.get_cmd(), "command");
 	std::vector<std::string> dep{"dep1", "dep2", "dep3"};
 	EXPECT_EQ(base.get_dependencies(), dep);
@@ -100,7 +137,7 @@ TEST(Tasks, TaskBase)
 	EXPECT_EQ(base.get_priority(), static_cast<size_t>(3));
 	EXPECT_EQ(base.get_task_id(), "id2");
 	EXPECT_TRUE(base.get_children().empty());
-	auto children = std::shared_ptr<task_base>(new test_task_base(2, "id3", 4, true, {}, "", {}));
+	auto children = std::shared_ptr<task_base>(new test_task_base(2, get_task_meta()));
 	base.add_children(children);
 	EXPECT_EQ(base.get_children()[0]->get_task_id(), children->get_task_id());
 }

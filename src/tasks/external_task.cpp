@@ -3,8 +3,7 @@
 #include "../sandbox/isolate_sandbox.h"
 
 external_task::external_task(const create_params &data)
-	: task_base(data.id, data.task_id, data.priority, data.fatal, data.dependencies, data.binary, data.arguments),
-	  worker_id_(data.worker_id), cmd_(data.binary), sandbox_id_(data.sandbox_id), limits_(data.limits),
+	: task_base(data.id, data.task_meta), worker_id_(data.worker_id), sandbox_(nullptr), limits_(data.limits),
 	  logger_(data.logger), temp_dir_(data.temp_dir)
 {
 	sandbox_check();
@@ -18,28 +17,30 @@ void external_task::sandbox_check()
 {
 	bool found = false;
 
-	if (sandbox_id_ == "fake") {
+	if (task_meta_->sandbox->name == "fake") {
 		found = true;
 	}
 #ifndef _WIN32
-	if (sandbox_id_ == "isolate") {
+	if (task_meta_->sandbox->name == "isolate") {
 		found = true;
 	}
 #endif
 
 	if (found == false) {
-		throw task_exception("Unknown sandbox type: " + sandbox_id_);
+		throw task_exception("Unknown sandbox type: " + task_meta_->sandbox->name);
 	}
+
+	// TODO: check of task_meta_.sandbox on nullptr
 }
 
 void external_task::sandbox_init()
 {
-	if (sandbox_id_ == "fake") {
+	if (task_meta_->sandbox->name == "fake") {
 		sandbox_ = std::make_shared<fake_sandbox>();
 	}
 #ifndef _WIN32
-	if (sandbox_id_ == "isolate") {
-		sandbox_ = std::make_shared<isolate_sandbox>(limits_, worker_id_, temp_dir_, logger_);
+	if (task_meta_->sandbox->name == "isolate") {
+		sandbox_ = std::make_shared<isolate_sandbox>(*limits_, worker_id_, temp_dir_, logger_);
 	}
 #endif
 }
@@ -59,14 +60,15 @@ std::shared_ptr<task_results> external_task::run()
 	}
 
 	auto res = std::shared_ptr<task_results>(new task_results());
-	res->sandbox_status = std::unique_ptr<sandbox_results>(new sandbox_results(sandbox_->run(cmd_, arguments_)));
+	res->sandbox_status =
+		std::unique_ptr<sandbox_results>(new sandbox_results(sandbox_->run(task_meta_->binary, task_meta_->cmd_args)));
 
 	sandbox_fini();
 
 	return res;
 }
 
-sandbox_limits external_task::get_limits()
+std::shared_ptr<sandbox_limits> external_task::get_limits()
 {
 	return limits_;
 }
