@@ -117,6 +117,7 @@ set(TASKS_DIR src/tasks)
 set(HELPERS_DIR src/helpers)
 set(CONFIG_DIR src/config)
 set(JOB_DIR src/job)
+set(COMMAND_DIR src/commands)
 
 # The worker executable
 set(SOURCE_FILES
@@ -193,6 +194,11 @@ set(SOURCE_FILES
 	${JOB_DIR}/job_evaluator.cpp
 	${JOB_DIR}/job_receiver.cpp
 	${JOB_DIR}/job_receiver.h
+
+	${COMMAND_DIR}/command_holder.h
+	${COMMAND_DIR}/broker_commands.h
+	${COMMAND_DIR}/jobs_server_commands.h
+	${COMMAND_DIR}/jobs_client_commands.h
 )
 
 

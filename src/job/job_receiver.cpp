@@ -36,12 +36,9 @@ void job_receiver::start_receiving()
 			logger_->info() << "Job-receiver: Job evaluating request received.";
 
 			eval_response response = evaluator_->evaluate(eval_request(message[1], message[2], message[3]));
-			std::string response_command("done");
+			std::vector<std::string> reply = { "done", response.job_id, response.result };
 
-			socket_.send(response_command.c_str(), response_command.size(), ZMQ_SNDMORE);
-			socket_.send(response.job_id.c_str(), response.job_id.size(), ZMQ_SNDMORE);
-			socket_.send(response.result.c_str(), response.result.size(), 0);
-
+			helpers::send_through_socket(socket_, reply);
 			logger_->info() << "Job-receiver: Job evaluated and respond sent.";
 		}
 	}

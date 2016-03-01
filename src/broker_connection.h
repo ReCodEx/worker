@@ -9,6 +9,9 @@
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/null_sink.h"
 #include "config/worker_config.h"
+#include "commands/command_holder.h"
+#include "commands/broker_commands.h"
+#include "commands/jobs_server_commands.h"
 
 /**
  * Contains types used by the proxy for polling
@@ -27,9 +30,11 @@ struct message_origin {
 template <typename proxy> class broker_connection
 {
 private:
-	const worker_config &config;
-	std::shared_ptr<proxy> socket;
+	const worker_config &config_;
+	std::shared_ptr<proxy> socket_;
 	std::shared_ptr<spdlog::logger> logger_;
+	std::shared_ptr<command_holder<proxy>> broker_cmds_;
+	std::shared_ptr<command_holder<proxy>> jobs_server_cmds_;
 
 public:
 	/**
@@ -40,7 +45,7 @@ public:
 	 */
 	broker_connection(
 		const worker_config &config, std::shared_ptr<proxy> socket, std::shared_ptr<spdlog::logger> logger = nullptr)
-		: config(config), socket(socket)
+		: config_(config), socket_(socket)
 	{
 		if (logger != nullptr) {
 			logger_ = logger;
@@ -49,6 +54,14 @@ public:
 			auto sink = std::make_shared<spdlog::sinks::null_sink_st>();
 			logger_ = std::make_shared<spdlog::logger>("cache_manager_nolog", sink);
 		}
+
+		// init broker commands
+		broker_cmds_ = std::make_shared<command_holder<proxy>>(socket_, logger_);
+		broker_cmds_->register_command("eval", broker_commands::process_eval<proxy>);
+
+		// init jobs server commands
+		jobs_server_cmds_ = std::make_shared<command_holder<proxy>>(socket_, logger_);
+		jobs_server_cmds_->register_command("done", jobs_server_commands::process_done<proxy>);
 	}
 
 	/**
@@ -56,10 +69,10 @@ public:
 	 */
 	void connect()
 	{
-		const worker_config::header_map_t &headers = config.get_headers();
+		const worker_config::header_map_t &headers = config_.get_headers();
 
-		logger_->debug() << "Connecting to " << config.get_broker_uri();
-		socket->connect(config.get_broker_uri());
+		logger_->debug() << "Connecting to " << config_.get_broker_uri();
+		socket_->connect(config_.get_broker_uri());
 
 		std::vector<std::string> msg = {"init"};
 
@@ -67,7 +80,7 @@ public:
 			msg.push_back(it.first + "=" + it.second);
 		}
 
-		socket->send_broker(msg);
+		socket_->send_broker(msg);
 	}
 
 	/**
@@ -81,34 +94,30 @@ public:
 			message_origin::set result;
 			bool terminate = false;
 
-			socket->poll(result, -1, &terminate);
+			socket_->poll(result, -1, &terminate);
 
 			if (terminate) {
 				break;
 			}
 
 			if (result.test(message_origin::BROKER)) {
-				socket->recv_broker(msg, &terminate);
+				socket_->recv_broker(msg, &terminate);
 
 				if (terminate) {
 					break;
 				}
 
-				if (msg.at(0) == "eval") {
-					socket->send_jobs(msg);
-				}
+				broker_cmds_->call_function(msg.at(0), msg);
 			}
 
 			if (result.test(message_origin::JOBS)) {
-				socket->recv_jobs(msg, &terminate);
+				socket_->recv_jobs(msg, &terminate);
 
 				if (terminate) {
 					break;
 				}
 
-				if (msg.at(0) == "done") {
-					socket->send_broker(msg);
-				}
+				jobs_server_cmds_->call_function(msg.at(0), msg);
 			}
 		}
 
