@@ -117,6 +117,7 @@ add_test_suite(job_receiver
 	${HELPERS_DIR}/config.cpp
 	${HELPERS_DIR}/filesystem.cpp
 	${HELPERS_DIR}/topological_sort.cpp
+	${HELPERS_DIR}/zmq_socket.cpp
 	${JOB_DIR}/job.cpp
 	${SRC_DIR}/archives/archivator.cpp
 	${TASKS_DIR}/task_base.cpp

@@ -4,10 +4,12 @@
 #include <iostream>
 #include <memory>
 #include <zmq.hpp>
+#include <string>
 
 #include "broker_connection.h"
+#include "helpers/zmq_socket.h"
 
-#define JOB_SOCKET_ID "jobs"
+static const std::string JOB_SOCKET_ID = "jobs";
 
 /**
  * A trivial wrapper for the ZeroMQ dealer socket used by broker_connection
@@ -19,46 +21,6 @@ private:
 	zmq::socket_t broker_;
 	zmq::socket_t jobs_;
 	zmq::pollitem_t items_[2];
-
-	bool send_through_socket(zmq::socket_t &socket, const std::vector<std::string> &msg)
-	{
-		for (auto it = std::begin(msg); it != std::end(msg); ++it) {
-			bool retval = socket.send(it->c_str(), it->size(), std::next(it) != std::end(msg) ? ZMQ_SNDMORE : 0) >= 0;
-
-			if (!retval) {
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	bool recv_from_socket(zmq::socket_t &socket, std::vector<std::string> &target, bool *terminate = nullptr)
-	{
-		zmq::message_t msg;
-		target.clear();
-
-		do {
-			bool retval;
-
-			try {
-				retval = socket.recv(&msg);
-			} catch (zmq::error_t) {
-				if (terminate != nullptr) {
-					*terminate = true;
-				}
-				retval = false;
-			}
-
-			if (!retval) {
-				return false;
-			}
-
-			target.emplace_back(static_cast<char *>(msg.data()), msg.size());
-		} while (msg.more());
-
-		return true;
-	}
 
 public:
 	/**
@@ -85,7 +47,7 @@ public:
 	void connect(const std::string &addr)
 	{
 		broker_.connect(addr);
-		jobs_.bind("inproc://" JOB_SOCKET_ID);
+		jobs_.bind("inproc://" + JOB_SOCKET_ID);
 	}
 
 	/**
@@ -118,7 +80,7 @@ public:
 	 */
 	bool send_broker(const std::vector<std::string> &msg)
 	{
-		return send_through_socket(broker_, msg);
+		return helpers::send_through_socket(broker_, msg);
 	}
 
 	/**
@@ -126,7 +88,7 @@ public:
 	 */
 	bool send_jobs(const std::vector<std::string> &msg)
 	{
-		return send_through_socket(jobs_, msg);
+		return helpers::send_through_socket(jobs_, msg);
 	}
 
 	/**
@@ -134,7 +96,7 @@ public:
 	 */
 	bool recv_broker(std::vector<std::string> &target, bool *terminate = nullptr)
 	{
-		return recv_from_socket(broker_, target, terminate);
+		return helpers::recv_from_socket(broker_, target, terminate);
 	}
 
 	/**
@@ -142,7 +104,7 @@ public:
 	 */
 	bool recv_jobs(std::vector<std::string> &target, bool *terminate = nullptr)
 	{
-		return recv_from_socket(jobs_, target, terminate);
+		return helpers::recv_from_socket(jobs_, target, terminate);
 	}
 };
 

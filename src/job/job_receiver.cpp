@@ -2,6 +2,7 @@
 #include "../connection_proxy.h"
 #include "../eval_request.h"
 #include "../eval_response.h"
+#include "../helpers/zmq_socket.h"
 
 job_receiver::job_receiver(
 	zmq::context_t &context, std::shared_ptr<job_evaluator> evaluator, std::shared_ptr<spdlog::logger> logger)
@@ -16,56 +17,32 @@ job_receiver::job_receiver(
 
 void job_receiver::start_receiving()
 {
-	socket_.connect("inproc://" JOB_SOCKET_ID);
+	socket_.connect("inproc://" + JOB_SOCKET_ID);
 
 	while (true) {
-		try {
-			zmq::message_t msg;
+		logger_->info() << "Job-receiver: Waiting for incomings requests...";
 
-			logger_->info() << "Job-receiver: Waiting for incomings requests...";
-			socket_.recv(&msg);
-			std::string type(static_cast<char *>(msg.data()), msg.size());
-
-			if (type == "eval") {
-				if (!msg.more()) {
-					continue;
-				}
-
-				socket_.recv(&msg);
-				std::string id(static_cast<char *>(msg.data()), msg.size());
-
-				if (!msg.more()) {
-					continue;
-				}
-
-				socket_.recv(&msg);
-				std::string job_url(static_cast<char *>(msg.data()), msg.size());
-
-				if (!msg.more()) {
-					continue;
-				}
-
-				socket_.recv(&msg);
-				std::string result_url(static_cast<char *>(msg.data()), msg.size());
-
-				logger_->info() << "Job-receiver: Job evaluating request received.";
-
-				eval_response response = evaluator_->evaluate(eval_request(id, job_url, result_url));
-				std::string response_command("eval_finished");
-
-				socket_.send(response_command.c_str(), response_command.size(), ZMQ_SNDMORE);
-				socket_.send(response.job_id.c_str(), response.job_id.size(), ZMQ_SNDMORE);
-				socket_.send(response.result.c_str(), response.result.size(), 0);
-
-				logger_->info() << "Job-receiver: Job evaluated and respond sent.";
+		std::vector<std::string> message;
+		bool terminate;
+		if (!helpers::recv_from_socket(socket_, message, &terminate)) {
+			if (terminate) {
+				break;
 			}
+			logger_->warn() << "Job-receiver: failed to receive message. Skipping...";
+			continue;
+		}
 
-			while (msg.more()) {
-				socket_.recv(&msg);
-			}
-		} catch (zmq::error_t &e) {
-			logger_->emerg() << "Job-receiver error: " << e.what();
-			break;
+		if (message.size() == 4 && message[0] == "eval") {
+			logger_->info() << "Job-receiver: Job evaluating request received.";
+
+			eval_response response = evaluator_->evaluate(eval_request(message[1], message[2], message[3]));
+			std::string response_command("done");
+
+			socket_.send(response_command.c_str(), response_command.size(), ZMQ_SNDMORE);
+			socket_.send(response.job_id.c_str(), response.job_id.size(), ZMQ_SNDMORE);
+			socket_.send(response.result.c_str(), response.result.size(), 0);
+
+			logger_->info() << "Job-receiver: Job evaluated and respond sent.";
 		}
 	}
 }

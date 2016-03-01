@@ -173,6 +173,8 @@ set(SOURCE_FILES
 	${HELPERS_DIR}/topological_sort.cpp
 	${HELPERS_DIR}/config.h
 	${HELPERS_DIR}/config.cpp
+	${HELPERS_DIR}/zmq_socket.h
+	${HELPERS_DIR}/zmq_socket.cpp
 
 	${CONFIG_DIR}/worker_config.cpp
 	${CONFIG_DIR}/worker_config.h

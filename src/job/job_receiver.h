@@ -3,6 +3,8 @@
 
 
 #include <zmq.hpp>
+#include <vector>
+#include <string>
 #include "job_evaluator.h"
 
 /**
@@ -15,7 +17,6 @@ private:
 	zmq::socket_t socket_;
 	std::shared_ptr<job_evaluator> evaluator_;
 	std::shared_ptr<spdlog::logger> logger_;
-
 public:
 	/**
 	 * Construct job receiver and fill it with given data.
