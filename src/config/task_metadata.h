@@ -31,7 +31,7 @@ public:
 
 	/** Unique identifier of task in job. */
 	std::string task_id;
-	/** Priority of task among all others. */
+	/** Priority of task among all others. Bigger priority number == greater priority. */
 	size_t priority;
 	/** If true than failure of task will end execution of whole job. */
 	bool fatal_failure;

@@ -387,12 +387,12 @@ TEST(job_test, correctly_built_queue)
 	ASSERT_EQ(tasks.size(), 8u); // +1 because of fake_task root
 	ASSERT_EQ(tasks.at(0)->get_task_id(), ""); // fake root
 	ASSERT_EQ(tasks.at(1)->get_task_id(), "A");
-	ASSERT_EQ(tasks.at(2)->get_task_id(), "D");
-	ASSERT_EQ(tasks.at(3)->get_task_id(), "E");
-	ASSERT_EQ(tasks.at(4)->get_task_id(), "B");
-	ASSERT_EQ(tasks.at(5)->get_task_id(), "F");
-	ASSERT_EQ(tasks.at(6)->get_task_id(), "C");
-	ASSERT_EQ(tasks.at(7)->get_task_id(), "G");
+	ASSERT_EQ(tasks.at(2)->get_task_id(), "B");
+	ASSERT_EQ(tasks.at(3)->get_task_id(), "D");
+	ASSERT_EQ(tasks.at(4)->get_task_id(), "C");
+	ASSERT_EQ(tasks.at(5)->get_task_id(), "G");
+	ASSERT_EQ(tasks.at(6)->get_task_id(), "F");
+	ASSERT_EQ(tasks.at(7)->get_task_id(), "E");
 
 	// cleanup after yourself
 	remove_all(dir_root);

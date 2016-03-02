@@ -19,6 +19,7 @@ private:
 	std::shared_ptr<job_evaluator> evaluator_;
 	std::shared_ptr<spdlog::logger> logger_;
 	std::shared_ptr<command_holder<job_client_context>> commands_;
+
 public:
 	/**
 	 * Construct job receiver and fill it with given data.

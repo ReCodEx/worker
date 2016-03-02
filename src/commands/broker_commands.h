@@ -3,15 +3,14 @@
 
 #include "command_holder.h"
 
-namespace broker_commands {
-
-template <typename context_t>
-void process_eval(const std::vector<std::string> &args, const command_context<context_t> &context)
+namespace broker_commands
 {
-	context.sockets->send_jobs(args);
-}
 
-
+	template <typename context_t>
+	void process_eval(const std::vector<std::string> &args, const command_context<context_t> &context)
+	{
+		context.sockets->send_jobs(args);
+	}
 }
 
 #endif // CODEX_WORKER_BROKER_COMMANDS_H

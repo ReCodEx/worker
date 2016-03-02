@@ -13,6 +13,7 @@ namespace helpers
 	 * Topological sort of tasks starting from root.
 	 * Result order is saved in result variable, which is cleared before computation.
 	 * Priorities and configuration file order are taken into account.
+	 * Bigger number of priority means greater priority and therefore appropriate task will be prefered.
 	 * @note Algorithm itself taken from: http://stackoverflow.com/a/11236027
 	 * @param root
 	 * @param effective_indegree

@@ -11,14 +11,15 @@
 #include "../job/job_evaluator.h"
 
 /** Broker connection commands specific context */
-template <typename proxy>
-class broker_connection_context {
+template <typename proxy> class broker_connection_context
+{
 public:
 	std::shared_ptr<proxy> sockets;
 };
 
 /** Job client commands specific context */
-class job_client_context {
+class job_client_context
+{
 public:
 	std::shared_ptr<job_evaluator> evaluator;
 	zmq::socket_t &socket;
@@ -28,8 +29,7 @@ public:
 template <typename context_t> class command_context : public context_t
 {
 public:
-	command_context(
-		const context_t &dependent_context, std::shared_ptr<spdlog::logger> logger)
+	command_context(const context_t &dependent_context, std::shared_ptr<spdlog::logger> logger)
 		: context_t(dependent_context), logger(logger)
 	{
 		if (this->logger == nullptr) {
@@ -40,7 +40,7 @@ public:
 			this->logger->set_level(spdlog::level::off);
 		}
 	}
-	//std::shared_ptr<context_t> dependent_context;
+	// std::shared_ptr<context_t> dependent_context;
 	std::shared_ptr<spdlog::logger> logger;
 };
 
@@ -50,8 +50,7 @@ template <typename context_t> class command_holder
 {
 public:
 	typedef std::function<void(const std::vector<std::string> &, const command_context<context_t> &)> callback_fn;
-	command_holder(const context_t &dependent_context,
-		std::shared_ptr<spdlog::logger> logger = nullptr)
+	command_holder(const context_t &dependent_context, std::shared_ptr<spdlog::logger> logger = nullptr)
 		: context_(dependent_context, logger)
 	{
 	}

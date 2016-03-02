@@ -173,13 +173,14 @@ class task_compare
 public:
 	/**
 	 * Greater than operator on task_base objects.
+	 * Its supposed that bigger number of priority is greater priority, so this tasks will be prefered.
 	 * @param a first parameter
 	 * @param b second parameter
 	 * @return true if parameter a is greater than b
 	 */
 	bool operator()(std::shared_ptr<task_base> a, std::shared_ptr<task_base> b)
 	{
-		if (a->get_priority() > b->get_priority()) {
+		if (a->get_priority() < b->get_priority()) {
 			return true;
 		} else if (a->get_priority() == b->get_priority() && a->get_id() > b->get_id()) {
 			return true;

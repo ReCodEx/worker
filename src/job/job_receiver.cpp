@@ -17,7 +17,7 @@ job_receiver::job_receiver(
 	}
 
 	// init depandent command structure
-	job_client_context dependent_context = { evaluator_, socket_ };
+	job_client_context dependent_context = {evaluator_, socket_};
 
 	// init command structure
 	commands_ = std::make_shared<command_holder<job_client_context>>(dependent_context, logger_);
