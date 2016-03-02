@@ -3,6 +3,8 @@
 #include "../eval_request.h"
 #include "../eval_response.h"
 #include "../helpers/zmq_socket.h"
+#include "../commands/jobs_client_commands.h"
+
 
 job_receiver::job_receiver(
 	zmq::context_t &context, std::shared_ptr<job_evaluator> evaluator, std::shared_ptr<spdlog::logger> logger)
@@ -13,6 +15,13 @@ job_receiver::job_receiver(
 		auto sink = std::make_shared<spdlog::sinks::null_sink_st>();
 		logger_ = std::make_shared<spdlog::logger>("job_receiver_nolog", sink);
 	}
+
+	// init depandent command structure
+	job_client_context dependent_context = { evaluator_, socket_ };
+
+	// init command structure
+	commands_ = std::make_shared<command_holder<job_client_context>>(dependent_context, logger_);
+	commands_->register_command("eval", jobs_client_commands::process_eval<job_client_context>);
 }
 
 void job_receiver::start_receiving()
@@ -32,14 +41,9 @@ void job_receiver::start_receiving()
 			continue;
 		}
 
-		if (message.size() == 4 && message[0] == "eval") {
-			logger_->info() << "Job-receiver: Job evaluating request received.";
-
-			eval_response response = evaluator_->evaluate(eval_request(message[1], message[2], message[3]));
-			std::vector<std::string> reply = { "done", response.job_id, response.result };
-
-			helpers::send_through_socket(socket_, reply);
-			logger_->info() << "Job-receiver: Job evaluated and respond sent.";
+		// Invoke command callback
+		if (!message.empty()) {
+			commands_->call_function(message[0], message);
 		}
 	}
 }

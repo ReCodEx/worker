@@ -5,8 +5,8 @@
 
 namespace broker_commands {
 
-template <typename proxy>
-void process_eval(const std::vector<std::string> &args, const command_context<proxy> &context)
+template <typename context_t>
+void process_eval(const std::vector<std::string> &args, const command_context<context_t> &context)
 {
 	context.sockets->send_jobs(args);
 }

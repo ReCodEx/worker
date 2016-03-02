@@ -5,38 +5,54 @@
 #include <string>
 #include <functional>
 #include <map>
+#include <zmq.hpp>
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/null_sink.h"
+#include "../job/job_evaluator.h"
+
+/** Broker connection commands specific context */
+template <typename proxy>
+class broker_connection_context {
+public:
+	std::shared_ptr<proxy> sockets;
+};
+
+/** Job client commands specific context */
+class job_client_context {
+public:
+	std::shared_ptr<job_evaluator> evaluator;
+	zmq::socket_t &socket;
+};
 
 /** Context for commands in broker_connection.h */
-template <typename proxy> class command_context
+template <typename context_t> class command_context : public context_t
 {
 public:
 	command_context(
-		std::shared_ptr<proxy> sockets, std::shared_ptr<spdlog::logger> logger)
-		: sockets(sockets), logger(logger)
+		const context_t &dependent_context, std::shared_ptr<spdlog::logger> logger)
+		: context_t(dependent_context), logger(logger)
 	{
 		if (this->logger == nullptr) {
 			// Create logger manually to avoid global registration of logger
 			auto sink = std::make_shared<spdlog::sinks::null_sink_st>();
-			this->logger = std::make_shared<spdlog::logger>("broker_command_context_nolog", sink);
+			this->logger = std::make_shared<spdlog::logger>("command_context_nolog", sink);
 			// Set loglevel to 'off' cause no logging
 			this->logger->set_level(spdlog::level::off);
 		}
 	}
-	std::shared_ptr<proxy> sockets;
+	//std::shared_ptr<context_t> dependent_context;
 	std::shared_ptr<spdlog::logger> logger;
 };
 
 
 /** Command holder for broker_connection.h */
-template <typename proxy> class command_holder
+template <typename context_t> class command_holder
 {
 public:
-	typedef std::function<void(const std::vector<std::string> &, const command_context<proxy> &)> callback_fn;
-	command_holder(std::shared_ptr<proxy> sockets,
+	typedef std::function<void(const std::vector<std::string> &, const command_context<context_t> &)> callback_fn;
+	command_holder(const context_t &dependent_context,
 		std::shared_ptr<spdlog::logger> logger = nullptr)
-		: context_(sockets, logger)
+		: context_(dependent_context, logger)
 	{
 	}
 	void call_function(const std::string &command, const std::vector<std::string> &args)
@@ -56,7 +72,7 @@ protected:
 	std::map<std::string, callback_fn> functions_;
 
 private:
-	const command_context<proxy> context_;
+	const command_context<context_t> context_;
 };
 
 #endif // CODEX_WORKER_COMMANDS_BASE_H

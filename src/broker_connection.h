@@ -33,8 +33,8 @@ private:
 	const worker_config &config_;
 	std::shared_ptr<proxy> socket_;
 	std::shared_ptr<spdlog::logger> logger_;
-	std::shared_ptr<command_holder<proxy>> broker_cmds_;
-	std::shared_ptr<command_holder<proxy>> jobs_server_cmds_;
+	std::shared_ptr<command_holder<broker_connection_context<proxy>>> broker_cmds_;
+	std::shared_ptr<command_holder<broker_connection_context<proxy>>> jobs_server_cmds_;
 
 public:
 	/**
@@ -55,13 +55,16 @@ public:
 			logger_ = std::make_shared<spdlog::logger>("cache_manager_nolog", sink);
 		}
 
+		// prepare dependent context for commands (in this class)
+		broker_connection_context<proxy> dependent_context = { socket_ };
+
 		// init broker commands
-		broker_cmds_ = std::make_shared<command_holder<proxy>>(socket_, logger_);
-		broker_cmds_->register_command("eval", broker_commands::process_eval<proxy>);
+		broker_cmds_ = std::make_shared<command_holder<broker_connection_context<proxy>>>(dependent_context, logger_);
+		broker_cmds_->register_command("eval", broker_commands::process_eval<broker_connection_context<proxy>>);
 
 		// init jobs server commands
-		jobs_server_cmds_ = std::make_shared<command_holder<proxy>>(socket_, logger_);
-		jobs_server_cmds_->register_command("done", jobs_server_commands::process_done<proxy>);
+		jobs_server_cmds_ = std::make_shared<command_holder<broker_connection_context<proxy>>>(dependent_context, logger_);
+		jobs_server_cmds_->register_command("done", jobs_server_commands::process_done<broker_connection_context<proxy>>);
 	}
 
 	/**
