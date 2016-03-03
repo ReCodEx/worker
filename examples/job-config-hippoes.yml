@@ -105,7 +105,7 @@ tasks:
               - "${SOURCE_DIR}/plot.out"
               - "${SOURCE_DIR}/1.out"
     - task-id: "fetch_test_2"
-      priority: 10
+      priority: 4
       fatal-failure: false
       dependencies:
           - compilation
@@ -115,7 +115,7 @@ tasks:
               - "2.in"
               - "${SOURCE_DIR}/kuly.in"
     - task-id: "evaluation_test_2"
-      priority: 11
+      priority: 5
       fatal-failure: false
       dependencies:
           - fetch_test_2
@@ -135,7 +135,7 @@ tasks:
                       dst: ${EVAL_DIR}
                       mode: RW
     - task-id: "fetch_test_solution_2"
-      priority: 12
+      priority: 6
       fatal-failure: false
       dependencies:
           - evaluation_test_2
@@ -145,7 +145,7 @@ tasks:
               - "2.out"
               - "${SOURCE_DIR}/2.out"
     - task-id: "judging_test_2"
-      priority: 13
+      priority: 7
       fatal-failure: false
       dependencies:
           - fetch_test_solution_2
@@ -167,7 +167,7 @@ tasks:
                       dst: ${EVAL_DIR}
                       mode: RW
     - task-id: "rm_junk_test_2"
-      priority: 14
+      priority: 8
       fatal-failure: false
       dependencies:
           - judging_test_2
@@ -178,7 +178,7 @@ tasks:
               - "${SOURCE_DIR}/plot.out"
               - "${SOURCE_DIR}/2.out"
     - task-id: "fetch_test_3"
-      priority: 16
+      priority: 4
       fatal-failure: false
       dependencies:
           - compilation
@@ -188,7 +188,7 @@ tasks:
               - "3.in"
               - "${SOURCE_DIR}/kuly.in"
     - task-id: "evaluation_test_3"
-      priority: 17
+      priority: 5
       fatal-failure: false
       dependencies:
           - fetch_test_3
@@ -208,7 +208,7 @@ tasks:
                       dst: ${EVAL_DIR}
                       mode: RW
     - task-id: "fetch_test_solution_3"
-      priority: 18
+      priority: 6
       fatal-failure: false
       dependencies:
           - evaluation_test_3
@@ -218,7 +218,7 @@ tasks:
               - "3.out"
               - "${SOURCE_DIR}/3.out"
     - task-id: "judging_test_3"
-      priority: 19
+      priority: 7
       fatal-failure: false
       dependencies:
           - fetch_test_solution_3
@@ -240,7 +240,7 @@ tasks:
                       dst: ${EVAL_DIR}
                       mode: RW
     - task-id: "rm_junk_test_3"
-      priority: 20
+      priority: 8
       fatal-failure: false
       dependencies:
           - judging_test_3
@@ -251,7 +251,7 @@ tasks:
               - "${SOURCE_DIR}/plot.out"
               - "${SOURCE_DIR}/3.out"
     - task-id: "fetch_test_4"
-      priority: 22
+      priority: 4
       fatal-failure: false
       dependencies:
           - compilation
@@ -261,7 +261,7 @@ tasks:
               - "4.in"
               - "${SOURCE_DIR}/kuly.in"
     - task-id: "evaluation_test_4"
-      priority: 23
+      priority: 5
       fatal-failure: false
       dependencies:
           - fetch_test_4
@@ -281,7 +281,7 @@ tasks:
                       dst: ${EVAL_DIR}
                       mode: RW
     - task-id: "fetch_test_solution_4"
-      priority: 24
+      priority: 6
       fatal-failure: false
       dependencies:
           - evaluation_test_4
@@ -291,7 +291,7 @@ tasks:
               - "4.out"
               - "${SOURCE_DIR}/4.out"
     - task-id: "judging_test_4"
-      priority: 25
+      priority: 7
       fatal-failure: false
       dependencies:
           - fetch_test_solution_4
@@ -313,7 +313,7 @@ tasks:
                       dst: ${EVAL_DIR}
                       mode: RW
     - task-id: "rm_junk_test_4"
-      priority: 26
+      priority: 8
       fatal-failure: false
       dependencies:
           - judging_test_4
@@ -324,7 +324,7 @@ tasks:
               - "${SOURCE_DIR}/plot.out"
               - "${SOURCE_DIR}/4.out"
     - task-id: "fetch_test_5"
-      priority: 28
+      priority: 4
       fatal-failure: false
       dependencies:
           - compilation
@@ -334,7 +334,7 @@ tasks:
               - "5.in"
               - "${SOURCE_DIR}/kuly.in"
     - task-id: "evaluation_test_5"
-      priority: 29
+      priority: 5
       fatal-failure: false
       dependencies:
           - fetch_test_5
@@ -354,7 +354,7 @@ tasks:
                       dst: ${EVAL_DIR}
                       mode: RW
     - task-id: "fetch_test_solution_5"
-      priority: 30
+      priority: 6
       fatal-failure: false
       dependencies:
           - evaluation_test_5
@@ -364,7 +364,7 @@ tasks:
               - "5.out"
               - "${SOURCE_DIR}/5.out"
     - task-id: "judging_test_5"
-      priority: 31
+      priority: 7
       fatal-failure: false
       dependencies:
           - fetch_test_solution_5
@@ -386,7 +386,7 @@ tasks:
                       dst: ${EVAL_DIR}
                       mode: RW
     - task-id: "rm_junk_test_5"
-      priority: 32
+      priority: 8
       fatal-failure: false
       dependencies:
           - judging_test_5
@@ -397,7 +397,7 @@ tasks:
               - "${SOURCE_DIR}/plot.out"
               - "${SOURCE_DIR}/5.out"
     - task-id: "fetch_test_6"
-      priority: 34
+      priority: 4
       fatal-failure: false
       dependencies:
           - compilation
@@ -407,7 +407,7 @@ tasks:
               - "6.in"
               - "${SOURCE_DIR}/kuly.in"
     - task-id: "evaluation_test_6"
-      priority: 35
+      priority: 5
       fatal-failure: false
       dependencies:
           - fetch_test_6
@@ -427,7 +427,7 @@ tasks:
                       dst: ${EVAL_DIR}
                       mode: RW
     - task-id: "fetch_test_solution_6"
-      priority: 36
+      priority: 6
       fatal-failure: false
       dependencies:
           - evaluation_test_6
@@ -437,7 +437,7 @@ tasks:
               - "6.out"
               - "${SOURCE_DIR}/6.out"
     - task-id: "judging_test_6"
-      priority: 37
+      priority: 7
       fatal-failure: false
       dependencies:
           - fetch_test_solution_6
@@ -459,7 +459,7 @@ tasks:
                       dst: ${EVAL_DIR}
                       mode: RW
     - task-id: "rm_junk_test_6"
-      priority: 38
+      priority: 8
       fatal-failure: false
       dependencies:
           - judging_test_6

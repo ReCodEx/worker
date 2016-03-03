@@ -15,8 +15,8 @@
  * Broker connection commands specific context. For more info see @ref command_holder.
  * @warning This class must have proper copy constructor (at least automaticaly generated).
  */
-template <typename proxy>
-class broker_connection_context {
+template <typename proxy> class broker_connection_context
+{
 public:
 	/** Socket for communication. */
 	std::shared_ptr<proxy> sockets;
@@ -26,7 +26,8 @@ public:
  * Job client commands specific context. For more info see @ref command_holder.
  * @warning This class must have proper copy constructor (at least automaticaly generated).
  */
-class job_client_context {
+class job_client_context
+{
 public:
 	/** Pointer to instance of @ref job_evaluator class. */
 	std::shared_ptr<job_evaluator> evaluator;
@@ -49,8 +50,7 @@ public:
 	 *	copy constructor must be present for proper work.
 	 * @param logger System logger.
 	 */
-	command_context(
-		const context_t &dependent_context, std::shared_ptr<spdlog::logger> logger)
+	command_context(const context_t &dependent_context, std::shared_ptr<spdlog::logger> logger)
 		: context_t(dependent_context), logger(logger)
 	{
 		if (this->logger == nullptr) {
@@ -82,8 +82,7 @@ public:
 	/** Type of callback function for easier use. */
 	typedef std::function<void(const std::vector<std::string> &, const command_context<context_t> &)> callback_fn;
 	/** Constructor with initialization of dependent (templated) part of context and logger. */
-	command_holder(const context_t &dependent_context,
-		std::shared_ptr<spdlog::logger> logger = nullptr)
+	command_holder(const context_t &dependent_context, std::shared_ptr<spdlog::logger> logger = nullptr)
 		: context_(dependent_context, logger)
 	{
 	}

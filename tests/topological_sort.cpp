@@ -39,13 +39,13 @@ TEST(topological_sort_test, top_sort_1)
 	 *   / \
 	 *  B   C
 	 *
-	 * priority: A = 1; B = 3; C = 2
+	 * priority: A = 1; B = 2; C = 3
 	 *
 	 * expected = A, C, B
 	 */
 	shared_ptr<task_base> A = make_shared<test_task>(id++, std::make_shared<task_metadata>("A", 1));
-	shared_ptr<task_base> B = make_shared<test_task>(id++, std::make_shared<task_metadata>("B", 3));
-	shared_ptr<task_base> C = make_shared<test_task>(id++, std::make_shared<task_metadata>("C", 2));
+	shared_ptr<task_base> B = make_shared<test_task>(id++, std::make_shared<task_metadata>("B", 2));
+	shared_ptr<task_base> C = make_shared<test_task>(id++, std::make_shared<task_metadata>("C", 3));
 	A->add_children(B);
 	B->add_parent(A);
 	A->add_children(C);
@@ -68,15 +68,15 @@ TEST(topological_sort_test, top_sort_1)
 	 *       \
 	 *        D
 	 *
-	 * priority: A = 1; B = 3; C = 2, D = 4
+	 * priority: A = 1; B = 2; C = 3, D = 4
 	 *
-	 * expected = A, C, B, D
+	 * expected = A, C, D, B
 	 */
 	shared_ptr<task_base> D = make_shared<test_task>(id++, std::make_shared<task_metadata>("D", 4));
 	C->add_children(D);
 	D->add_parent(C);
 	eff_ind = {{"A", 0}, {"B", 1}, {"C", 1}, {"D", 1}};
-	expected = {A, C, B, D};
+	expected = {A, C, D, B};
 
 	// sort itself
 	helpers::topological_sort(A, eff_ind, result);
@@ -176,10 +176,11 @@ TEST(topological_sort_test, top_sort_3)
 	 *           E = 4, F = 4, G = 4,
 	 *           K = 5, L = 5, M = 5
 	 *
-	 * expected = A, B, C, D,
-	 *            H, I, J,
+	 * expected = A,
+	 *            K, L, M,
 	 *            E, F, G,
-	 *            K, L, M
+	 *            H, I, J,
+	 *            B, C, D
 	 */
 	shared_ptr<task_base> A = make_shared<test_task>(id++, std::make_shared<task_metadata>("A", 1));
 	shared_ptr<task_base> B = make_shared<test_task>(id++, std::make_shared<task_metadata>("B", 2));
@@ -231,7 +232,7 @@ TEST(topological_sort_test, top_sort_3)
 		{"K", 1},
 		{"L", 1},
 		{"M", 1}};
-	expected = {A, B, C, D, H, I, J, E, F, G, K, L, M};
+	expected = {A, K, L, M, E, F, G, H, I, J, B, C, D};
 
 	// sort itself
 	helpers::topological_sort(A, eff_ind, result);
@@ -261,7 +262,7 @@ TEST(topological_sort_test, top_sort_4)
 	 *
 	 * priority: A = 1, B = 4, C = 6, D = 2, E = 3, F = 5, G = 7
 	 *
-	 * expected = A, D, E, B, F, C, G
+	 * expected = A, B, D, C, G, F, E
 	 */
 	shared_ptr<task_base> A = make_shared<test_task>(id++, std::make_shared<task_metadata>("A", 1));
 	shared_ptr<task_base> B = make_shared<test_task>(id++, std::make_shared<task_metadata>("B", 4));
@@ -285,7 +286,7 @@ TEST(topological_sort_test, top_sort_4)
 	C->add_children(G);
 	G->add_parent(C);
 	eff_ind = {{"A", 0}, {"B", 1}, {"C", 2}, {"D", 1}, {"E", 1}, {"F", 1}, {"G", 1}};
-	expected = {A, D, E, B, F, C, G};
+	expected = {A, B, D, C, G, F, E};
 
 	// sort itself
 	helpers::topological_sort(A, eff_ind, result);

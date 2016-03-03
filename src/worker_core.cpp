@@ -2,13 +2,13 @@
 #define WIN32_LEAN_AND_MEAN
 #endif
 
-#include "isoeval_core.h"
+#include "worker_core.h"
 #include "fileman/cache_manager.h"
 #include "fileman/http_manager.h"
 #include "job/job_receiver.h"
 
 
-isoeval_core::isoeval_core(std::vector<std::string> args)
+worker_core::worker_core(std::vector<std::string> args)
 	: args_(args), config_filename_("config.yml"), working_directory_(fs::temp_directory_path() / "isoeval"),
 	  logger_(nullptr), remote_fm_(nullptr), cache_fm_(nullptr), job_receiver_(nullptr), broker_(nullptr)
 {
@@ -30,13 +30,13 @@ isoeval_core::isoeval_core(std::vector<std::string> args)
 	receiver_init();
 }
 
-isoeval_core::~isoeval_core()
+worker_core::~worker_core()
 {
 	// curl finalize
 	curl_fini();
 }
 
-void isoeval_core::run()
+void worker_core::run()
 {
 	// connect broker_connection to real broker server
 	broker_->connect();
@@ -58,7 +58,7 @@ void isoeval_core::run()
 	return;
 }
 
-void isoeval_core::parse_params()
+void worker_core::parse_params()
 {
 	using namespace boost::program_options;
 
@@ -89,7 +89,7 @@ void isoeval_core::parse_params()
 	return;
 }
 
-void isoeval_core::load_config()
+void worker_core::load_config()
 {
 	try {
 		YAML::Node config_yaml = YAML::LoadFile(config_filename_);
@@ -104,7 +104,7 @@ void isoeval_core::load_config()
 	return;
 }
 
-void isoeval_core::force_exit(std::string msg)
+void worker_core::force_exit(std::string msg)
 {
 	// write to log
 	if (msg != "") {
@@ -117,7 +117,7 @@ void isoeval_core::force_exit(std::string msg)
 	exit(1);
 }
 
-void isoeval_core::log_init()
+void worker_core::log_init()
 {
 	auto log_conf = config_->get_log_config();
 
@@ -160,7 +160,7 @@ void isoeval_core::log_init()
 	return;
 }
 
-void isoeval_core::curl_init()
+void worker_core::curl_init()
 {
 	// Globally init curl library
 
@@ -171,7 +171,7 @@ void isoeval_core::curl_init()
 	return;
 }
 
-void isoeval_core::curl_fini()
+void worker_core::curl_fini()
 {
 	// Clean after curl library
 	logger_->info() << "Cleanup after CURL...";
@@ -181,7 +181,7 @@ void isoeval_core::curl_fini()
 	return;
 }
 
-void isoeval_core::broker_init()
+void worker_core::broker_init()
 {
 	logger_->info() << "Initializing broker connection...";
 	auto broker_proxy = std::make_shared<connection_proxy>(zmq_context_);
@@ -192,7 +192,7 @@ void isoeval_core::broker_init()
 	return;
 }
 
-void isoeval_core::fileman_init()
+void worker_core::fileman_init()
 {
 	logger_->info() << "Initializing file managers...";
 	auto fileman_conf = config_->get_filemans_configs();
@@ -203,7 +203,7 @@ void isoeval_core::fileman_init()
 	return;
 }
 
-void isoeval_core::receiver_init()
+void worker_core::receiver_init()
 {
 	logger_->info() << "Initializing job receiver and evaluator...";
 	auto evaluator = std::make_shared<job_evaluator>(logger_, config_, remote_fm_, cache_fm_, working_directory_);
@@ -212,7 +212,7 @@ void isoeval_core::receiver_init()
 	return;
 }
 
-void isoeval_core::filesystem_init()
+void worker_core::filesystem_init()
 {
 	try {
 		fs::create_directories(working_directory_);

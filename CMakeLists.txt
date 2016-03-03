@@ -124,8 +124,8 @@ set(SOURCE_FILES
 	${SRC_DIR}/main.cpp
 	${SRC_DIR}/broker_connection.h
 	${SRC_DIR}/connection_proxy.h
-	${SRC_DIR}/isoeval_core.h
-	${SRC_DIR}/isoeval_core.cpp
+	${SRC_DIR}/worker_core.h
+	${SRC_DIR}/worker_core.cpp
 	${SRC_DIR}/eval_request.h
 	${SRC_DIR}/archives/archivator.h
 	${SRC_DIR}/archives/archivator.cpp

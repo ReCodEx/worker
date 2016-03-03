@@ -3,14 +3,21 @@
 
 #include "command_holder.h"
 
+<<<<<<< HEAD
 /**
  * Commands from broker.
  * Commands originated from broker. See @ref command_holder and @ref broker_connection.
  */
+namespace broker_commands {
+
+/** Eval command */
+template <typename context_t>
+void process_eval(const std::vector<std::string> &args, const command_context<context_t> &context)
+=======
 namespace broker_commands
+>>>>>>> 452a9f2179a0711b596a5565c6955d184acf5fd6
 {
 
-	/** Eval command */
 	template <typename context_t>
 	void process_eval(const std::vector<std::string> &args, const command_context<context_t> &context)
 	{
