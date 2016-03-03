@@ -32,26 +32,26 @@ namespace fs = boost::filesystem;
  * It handles all creation and destruction of all used parts.
  * And of course run all those parts.
  */
-class isoeval_core
+class worker_core
 {
 public:
-	isoeval_core() = delete;
-	isoeval_core(const isoeval_core &source) = delete;
-	isoeval_core &operator=(const isoeval_core &source) = delete;
-	isoeval_core(const isoeval_core &&source) = delete;
-	isoeval_core &operator=(const isoeval_core &&source) = delete;
+	worker_core() = delete;
+	worker_core(const worker_core &source) = delete;
+	worker_core &operator=(const worker_core &source) = delete;
+	worker_core(const worker_core &&source) = delete;
+	worker_core &operator=(const worker_core &&source) = delete;
 
 	/**
 	 * There is only one constructor, which should get cmd parameters.
 	 * Constructor initializes all variables and structures, parses cmd parameters and load configuration.
 	 * @param args Cmd line parameters
 	 */
-	isoeval_core(std::vector<std::string> args);
+	worker_core(std::vector<std::string> args);
 
 	/**
 	 * All structures which need to be explicitly destructed or unitialized should do it now.
 	 */
-	~isoeval_core();
+	~worker_core();
 
 	/**
 	 * Constructors initializes all things,	all we have to do now is launch all the fun.
