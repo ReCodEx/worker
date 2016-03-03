@@ -6,8 +6,13 @@
 #include "../eval_request.h"
 #include "../eval_response.h"
 
+/**
+ * Commands from worker "main" thread.
+ * Commands originated from this worker. See @ref command_holder, @ref broker_connection and @ref job_receiver.
+ */
 namespace jobs_client_commands {
 
+/** Eval command */
 template <typename context_t>
 void process_eval(const std::vector<std::string> &args, const command_context<context_t> &context)
 {
