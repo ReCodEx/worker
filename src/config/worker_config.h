@@ -58,6 +58,16 @@ public:
 	virtual const header_map_t &get_headers() const;
 
 	/**
+	 * Get the maximum number of pings in a row without response before the broker is considered disconnected
+	 */
+	virtual size_t get_max_broker_liveness() const;
+
+	/**
+	 * Get the interval between pings sent to the broker
+	 */
+	virtual std::chrono::milliseconds get_broker_ping_interval() const;
+
+	/**
 	 * Get path to the caching directory
 	 */
 	std::string get_cache_dir() const;
@@ -87,6 +97,10 @@ private:
 	std::string broker_uri_;
 	/** Header which are sent to broker and should specify worker abilities */
 	header_map_t headers_;
+	/** Maximum number of pings in a row without response before the broker is considered disconnected */
+	size_t max_broker_liveness_ = 4;
+	/** How often should the worker ping the broker */
+	std::chrono::milliseconds broker_ping_interval_ = std::chrono::milliseconds(1000);
 	/** The caching directory path */
 	std::string cache_dir_;
 	/** Configuration of logger */

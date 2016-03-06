@@ -14,6 +14,14 @@ worker_config::worker_config(const YAML::Node &config)
 			throw config_error("Item broker-uri not defined properly");
 		}
 
+		if (config["broker-ping-interval"] && config["broker-ping-interval"].IsScalar()) {
+			broker_ping_interval_ = std::chrono::milliseconds(config["broker-ping-interval"].as<size_t>());
+		}
+
+		if (config["max-broker-liveness"] && config["max-broker-liveness"].IsScalar()) {
+			max_broker_liveness_ = config["max-broker-liveness"].as<size_t>();
+		}
+
 		if (!config["headers"].IsMap()) {
 			throw config_error("Headers are not a map");
 		}
@@ -176,4 +184,14 @@ const sandbox_limits &worker_config::get_limits()
 std::string worker_config::get_cache_dir() const
 {
 	return cache_dir_;
+}
+
+size_t worker_config::get_max_broker_liveness() const
+{
+	return max_broker_liveness_;
+}
+
+std::chrono::milliseconds worker_config::get_broker_ping_interval() const
+{
+	return broker_ping_interval_;
 }

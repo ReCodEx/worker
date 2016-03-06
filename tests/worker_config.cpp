@@ -9,6 +9,8 @@ TEST(worker_config, load_yaml_basic)
 	auto yaml = YAML::Load("---\n"
 						   "worker-id: 8\n"
 						   "broker-uri: tcp://localhost:1234\n"
+						   "broker-ping-interval: 5487\n"
+						   "max-broker-liveness: 1245\n"
 						   "working-directory: /tmp/working_dir\n"
 						   "headers:\n"
 						   "    env:\n"
@@ -91,6 +93,8 @@ TEST(worker_config, load_yaml_basic)
 	ASSERT_EQ(expected_limits, config.get_limits());
 	ASSERT_EQ(expected_log, config.get_log_config());
 	ASSERT_EQ(expected_filemans, config.get_filemans_configs());
+	ASSERT_EQ(std::chrono::milliseconds(5487), config.get_broker_ping_interval());
+	ASSERT_EQ((size_t) 1245, config.get_max_broker_liveness());
 }
 
 /**
