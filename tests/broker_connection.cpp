@@ -27,7 +27,7 @@ class mock_connection_proxy
 {
 public:
 	MOCK_METHOD1(connect, void(const std::string &addr));
-	MOCK_METHOD4(poll, void(message_origin::set &, int, bool &, std::chrono::milliseconds &));
+	MOCK_METHOD4(poll, void(message_origin::set &, std::chrono::milliseconds, bool &, std::chrono::milliseconds &));
 	MOCK_METHOD1(send_broker, bool(const std::vector<std::string> &));
 	MOCK_METHOD2(recv_broker, bool(std::vector<std::string> &, bool *));
 	MOCK_METHOD1(send_jobs, bool(const std::vector<std::string> &));

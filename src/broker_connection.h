@@ -94,13 +94,23 @@ public:
 	 */
 	void receive_tasks()
 	{
+		const std::chrono::milliseconds ping_interval = config_.get_broker_ping_interval();
+		std::chrono::milliseconds poll_limit = ping_interval;
+
 		while (true) {
 			std::vector<std::string> msg;
 			message_origin::set result;
-			std::chrono::milliseconds elapsed_time;
+			std::chrono::milliseconds poll_duration;
 			bool terminate = false;
 
-			socket_->poll(result, -1, terminate, elapsed_time);
+			socket_->poll(result, poll_limit, terminate, poll_duration);
+
+			if (poll_duration >= poll_limit) {
+				socket_->send_broker(std::vector<std::string>{"ping"});
+				poll_limit = ping_interval;
+			} else {
+				poll_limit -= poll_duration;
+			}
 
 			if (terminate) {
 				break;
