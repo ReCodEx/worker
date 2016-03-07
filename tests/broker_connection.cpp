@@ -73,6 +73,9 @@ TEST(broker_connection, forwards_eval)
 	auto proxy = std::make_shared<StrictMock<mock_connection_proxy>>();
 	broker_connection<mock_connection_proxy> connection(config, proxy);
 
+	EXPECT_CALL(*proxy, send_broker(ElementsAre("ping")))
+		.WillRepeatedly(Return(true));
+
 	{
 		InSequence s;
 
