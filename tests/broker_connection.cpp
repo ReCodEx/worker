@@ -36,16 +36,16 @@ public:
 
 TEST(broker_connection, sends_init)
 {
-	mock_worker_config config;
+	auto config = std::make_shared<mock_worker_config>();
 	auto proxy = std::make_shared<StrictMock<mock_connection_proxy>>();
 	broker_connection<mock_connection_proxy> connection(config, proxy);
 
 	std::string addr("tcp://localhost:9876");
 	worker_config::header_map_t headers = {std::make_pair("env", "c"), std::make_pair("hwgroup", "group_1")};
 
-	EXPECT_CALL(config, get_broker_uri()).WillRepeatedly(Return(addr));
+	EXPECT_CALL(*config, get_broker_uri()).WillRepeatedly(Return(addr));
 
-	EXPECT_CALL(config, get_headers()).WillRepeatedly(ReturnRef(headers));
+	EXPECT_CALL(*config, get_headers()).WillRepeatedly(ReturnRef(headers));
 
 	{
 		InSequence s;
@@ -69,7 +69,7 @@ ACTION_P(SetFlag, flag)
 
 TEST(broker_connection, forwards_eval)
 {
-	mock_worker_config config;
+	auto config = std::make_shared<mock_worker_config>();
 	auto proxy = std::make_shared<StrictMock<mock_connection_proxy>>();
 	broker_connection<mock_connection_proxy> connection(config, proxy);
 

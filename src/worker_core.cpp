@@ -186,7 +186,7 @@ void worker_core::broker_init()
 	logger_->info() << "Initializing broker connection...";
 	auto broker_proxy = std::make_shared<connection_proxy>(zmq_context_);
 
-	broker_ = std::make_shared<broker_connection<connection_proxy>>(*config_, broker_proxy, logger_);
+	broker_ = std::make_shared<broker_connection<connection_proxy>>(config_, broker_proxy, logger_);
 	logger_->info() << "Broker connection initialized.";
 
 	return;

@@ -30,7 +30,7 @@ struct message_origin {
 template <typename proxy> class broker_connection
 {
 private:
-	const worker_config &config_;
+	std::shared_ptr<const worker_config> config_;
 	std::shared_ptr<proxy> socket_;
 	std::shared_ptr<spdlog::logger> logger_;
 	std::shared_ptr<command_holder<broker_connection_context<proxy>>> broker_cmds_;
@@ -44,7 +44,7 @@ public:
 	 * @param logger
 	 */
 	broker_connection(
-		const worker_config &config, std::shared_ptr<proxy> socket, std::shared_ptr<spdlog::logger> logger = nullptr)
+		std::shared_ptr<const worker_config> config, std::shared_ptr<proxy> socket, std::shared_ptr<spdlog::logger> logger = nullptr)
 		: config_(config), socket_(socket)
 	{
 		if (logger != nullptr) {
@@ -74,10 +74,10 @@ public:
 	 */
 	void connect()
 	{
-		const worker_config::header_map_t &headers = config_.get_headers();
+		const worker_config::header_map_t &headers = config_->get_headers();
 
-		logger_->debug() << "Connecting to " << config_.get_broker_uri();
-		socket_->connect(config_.get_broker_uri());
+		logger_->debug() << "Connecting to " << config_->get_broker_uri();
+		socket_->connect(config_->get_broker_uri());
 
 		std::vector<std::string> msg = {"init"};
 
@@ -94,7 +94,7 @@ public:
 	 */
 	void receive_tasks()
 	{
-		const std::chrono::milliseconds ping_interval = config_.get_broker_ping_interval();
+		const std::chrono::milliseconds ping_interval = config_->get_broker_ping_interval();
 		std::chrono::milliseconds poll_limit = ping_interval;
 
 		while (true) {
