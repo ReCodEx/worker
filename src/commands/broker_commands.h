@@ -26,7 +26,7 @@ namespace broker_commands
 			reply.push_back(it.first + "=" + it.second);
 		}
 
-		context.socket->send_broker(reply);
+		context.sockets->send_broker(reply);
 	}
 }
 
