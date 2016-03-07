@@ -107,6 +107,7 @@ public:
 			socket_->poll(result, poll_limit, terminate, poll_duration);
 
 			if (poll_duration >= poll_limit) {
+				logger_->debug() << "Sending a ping";
 				socket_->send_broker(std::vector<std::string>{"ping"});
 				poll_limit = ping_interval;
 			} else {
