@@ -16,6 +16,18 @@ namespace broker_commands
 	{
 		context.sockets->send_jobs(args);
 	}
+
+	template <typename context_t>
+	void process_intro(const std::vector<std::string> &args, const command_context<context_t> &context)
+	{
+		std::vector<std::string> reply = {"init"};
+
+		for (auto &it : context.config->get_headers()) {
+			reply.push_back(it.first + "=" + it.second);
+		}
+
+		context.socket->send_broker(reply);
+	}
 }
 
 #endif // CODEX_WORKER_BROKER_COMMANDS_H

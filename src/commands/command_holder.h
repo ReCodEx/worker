@@ -20,6 +20,7 @@ template <typename proxy> class broker_connection_context
 public:
 	/** Socket for communication. */
 	std::shared_ptr<proxy> sockets;
+	std::shared_ptr<const worker_config> config;
 };
 
 /**

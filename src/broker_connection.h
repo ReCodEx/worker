@@ -56,11 +56,12 @@ public:
 		}
 
 		// prepare dependent context for commands (in this class)
-		broker_connection_context<proxy> dependent_context = {socket_};
+		broker_connection_context<proxy> dependent_context = {socket_, config_};
 
 		// init broker commands
 		broker_cmds_ = std::make_shared<command_holder<broker_connection_context<proxy>>>(dependent_context, logger_);
 		broker_cmds_->register_command("eval", broker_commands::process_eval<broker_connection_context<proxy>>);
+		broker_cmds_->register_command("intro", broker_commands::process_intro<broker_connection_context<proxy>>);
 
 		// init jobs server commands
 		jobs_server_cmds_ =
