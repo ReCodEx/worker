@@ -53,17 +53,19 @@ public:
 	/**
 	 * Block execution until a message arrives to a socket
 	 */
-	void poll(message_origin::set &result, int timeout, bool *terminate = nullptr)
+	void poll(message_origin::set &result, int timeout, bool &terminate, std::chrono::milliseconds &elapsed_time)
 	{
 		result.reset();
 
 		try {
+			auto time_before_poll = std::chrono::system_clock::now();
 			zmq::poll(items_, 2, timeout);
+			auto time_after_poll = std::chrono::system_clock::now();
+
+			elapsed_time = std::chrono::duration_cast<std::chrono::milliseconds>(time_after_poll - time_before_poll);
 		} catch (zmq::error_t) {
-			if (terminate != nullptr) {
-				*terminate = true;
+				terminate = true;
 				return;
-			}
 		}
 
 		if (items_[0].revents & ZMQ_POLLIN) {

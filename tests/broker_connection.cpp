@@ -27,7 +27,7 @@ class mock_connection_proxy
 {
 public:
 	MOCK_METHOD1(connect, void(const std::string &addr));
-	MOCK_METHOD3(poll, void(message_origin::set &, int, bool *));
+	MOCK_METHOD4(poll, void(message_origin::set &, int, bool &, std::chrono::milliseconds &));
 	MOCK_METHOD1(send_broker, bool(const std::vector<std::string> &));
 	MOCK_METHOD2(recv_broker, bool(std::vector<std::string> &, bool *));
 	MOCK_METHOD1(send_jobs, bool(const std::vector<std::string> &));
@@ -76,7 +76,7 @@ TEST(broker_connection, forwards_eval)
 	{
 		InSequence s;
 
-		EXPECT_CALL(*proxy, poll(_, _, _)).WillOnce(DoAll(ClearFlags(), SetFlag(message_origin::BROKER)));
+		EXPECT_CALL(*proxy, poll(_, _, _, _)).WillOnce(DoAll(ClearFlags(), SetFlag(message_origin::BROKER)));
 
 		EXPECT_CALL(*proxy, recv_broker(_, _))
 			.Times(1)
@@ -95,7 +95,7 @@ TEST(broker_connection, forwards_eval)
 				"http://localhost:5487/results/10")))
 			.WillOnce(Return(true));
 
-		EXPECT_CALL(*proxy, poll(_, _, _)).WillRepeatedly(SetArgPointee<2>(true));
+		EXPECT_CALL(*proxy, poll(_, _, _, _)).WillRepeatedly(SetArgReferee<2>(true));
 	}
 
 	connection.receive_tasks();

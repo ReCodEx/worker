@@ -97,9 +97,10 @@ public:
 		while (true) {
 			std::vector<std::string> msg;
 			message_origin::set result;
+			std::chrono::milliseconds elapsed_time;
 			bool terminate = false;
 
-			socket_->poll(result, -1, &terminate);
+			socket_->poll(result, -1, terminate, elapsed_time);
 
 			if (terminate) {
 				break;
