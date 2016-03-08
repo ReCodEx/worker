@@ -39,19 +39,21 @@ TEST(worker_config, load_yaml_basic)
 						   "    parallel: 1\n"
 						   "    disk-size: 50\n"
 						   "    disk-files: 7\n"
-						   "bound-directories:\n"
-						   "    - src: /usr/local/bin\n"
-						   "      dst: localbin\n"
-						   "      mode: RW\n"
-						   "    - src: /usr/share\n"
-						   "      dst: share\n"
-						   "      mode: MAYBE\n"
+						   "    environ-variable:\n"
+						   "        ISOLATE_BOX: /box\n"
+						   "        ISOLATE_TMP: /tmp\n"
+						   "    bound-directories:\n"
+						   "        - src: /usr/local/bin\n"
+						   "          dst: localbin\n"
+						   "          mode: RW\n"
+						   "        - src: /usr/share\n"
+						   "          dst: share\n"
+						   "          mode: MAYBE\n"
 						   "...");
 
 	worker_config config(yaml);
 
-	worker_config::header_map_t expected_headers = {
-		{"env", "c"}, {"env", "python"}, {"threads", "10"}};
+	worker_config::header_map_t expected_headers = {{"env", "c"}, {"env", "python"}, {"threads", "10"}};
 
 	sandbox_limits expected_limits;
 	expected_limits.memory_usage = 60000;
@@ -64,6 +66,11 @@ TEST(worker_config, load_yaml_basic)
 	expected_limits.disk_files = 7;
 	expected_limits.bound_dirs = {std::tuple<std::string, std::string, sp>{"/usr/local/bin", "localbin", sp::RW},
 		std::tuple<std::string, std::string, sp>{"/usr/share", "share", sp::MAYBE}};
+	if (config.get_limits().environ_vars.at(0).first == "ISOLATE_TMP") {
+		expected_limits.environ_vars = {{"ISOLATE_TMP", "/tmp"}, {"ISOLATE_BOX", "/box"}};
+	} else {
+		expected_limits.environ_vars = {{"ISOLATE_BOX", "/box"}, {"ISOLATE_TMP", "/tmp"}};
+	}
 
 	log_config expected_log;
 	expected_log.log_path = "/var/log";

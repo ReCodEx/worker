@@ -73,7 +73,7 @@ void job::build_job()
 	}
 
 
-	// create fake task, which is logical root of evaluation
+	// create root task, which is logical root of evaluation
 	size_t id = 0;
 	std::map<std::string, size_t> eff_indegree;
 	root_task_ = std::make_shared<root_task>(id++);
@@ -145,6 +145,12 @@ void job::build_job()
 			if (limits->disk_files == SIZE_MAX) {
 				limits->disk_files = worker_limits.disk_files;
 			}
+
+			// union of bound directories and environs from worker configuration and job configuration
+			limits->environ_vars.insert(
+				limits->environ_vars.end(), worker_limits.environ_vars.begin(), worker_limits.environ_vars.end());
+			limits->bound_dirs.insert(
+				limits->bound_dirs.end(), worker_limits.bound_dirs.begin(), worker_limits.bound_dirs.end());
 
 			// go through variables parsing
 			limits->std_input = parse_job_var(task_meta->std_input);

@@ -239,6 +239,12 @@ TEST(job_test, load_of_worker_defaults)
 							   "          name: fake\n"
 							   "          limits:\n"
 							   "              - hw-group-id: group1\n"
+							   "                environ-variable:\n"
+							   "                    JOB_CONFIG: job_config\n"
+							   "                bound-directories:\n"
+							   "                    - src: /tmp/recodex/job_config\n"
+							   "                      dst: /recodex/job_config\n"
+							   "                      mode: RW\n"
 							   "...\n");
 	auto job_meta = helpers::build_job_metadata(job_yaml);
 	auto default_yaml = YAML::Load("worker-id: 8\n"
@@ -261,7 +267,13 @@ TEST(job_test, load_of_worker_defaults)
 								   "    memory: 60000\n"
 								   "    parallel: 1\n"
 								   "    disk-size: 50\n"
-								   "    disk-files: 7\n");
+								   "    disk-files: 7\n"
+								   "    environ-variable:\n"
+								   "        WORKER_CONFIG: worker_config\n"
+								   "    bound-directories:\n"
+								   "        - src: /tmp/recodex/worker_config\n"
+								   "          dst: /recodex/worker_config\n"
+								   "          mode: RW\n");
 	auto worker_conf = std::make_shared<worker_config>(default_yaml);
 	auto fileman = std::make_shared<cache_manager>();
 	create_directories(dir);
@@ -272,7 +284,7 @@ TEST(job_test, load_of_worker_defaults)
 	// construct and check
 	job result(job_meta, worker_conf, dir_root, dir, temp_directory_path(), fileman);
 
-	ASSERT_EQ(result.get_task_queue().size(), 2u); // 2 because of fake_task as root
+	ASSERT_EQ(result.get_task_queue().size(), 2u); // 2 because of root_task as root
 	auto task = result.get_task_queue().at(1);
 	auto ext_task = std::dynamic_pointer_cast<external_task>(task);
 	std::shared_ptr<sandbox_limits> limits = ext_task->get_limits();
@@ -284,6 +296,20 @@ TEST(job_test, load_of_worker_defaults)
 	ASSERT_EQ(limits->processes, 1u);
 	ASSERT_EQ(limits->disk_size, 50u);
 	ASSERT_EQ(limits->disk_files, 7u);
+
+	std::vector<std::pair<std::string, std::string>> expected_environs;
+	if (limits->environ_vars.at(0).first == "JOB_CONFIG") {
+		expected_environs = {{"JOB_CONFIG", "job_config"}, {"WORKER_CONFIG", "worker_config"}};
+	} else {
+		expected_environs = {{"WORKER_CONFIG", "worker_config"}, {"JOB_CONFIG", "job_config"}};
+	}
+	std::vector<std::tuple<std::string, std::string, sandbox_limits::dir_perm>> expected_dirs = {
+		std::tuple<std::string, std::string, sandbox_limits::dir_perm>{
+			"/tmp/recodex/job_config", "/recodex/job_config", sandbox_limits::dir_perm::RW},
+		std::tuple<std::string, std::string, sandbox_limits::dir_perm>{
+			"/tmp/recodex/worker_config", "/recodex/worker_config", sandbox_limits::dir_perm::RW}};
+	ASSERT_EQ(limits->environ_vars, expected_environs);
+	ASSERT_EQ(limits->bound_dirs, expected_dirs);
 
 	// cleanup after yourself
 	remove_all(dir_root);
