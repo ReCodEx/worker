@@ -54,13 +54,12 @@ public:
 	}
 
 	/**
-	 * Disconnect the broker socket and connect again
+	 * Disconnect the broker socket and connect again.
+	 * This results in dropping unsent messages.
 	 */
 	void reconnect_broker(const std::string &addr)
 	{
-		broker_.close();
-		broker_ = zmq::socket_t(*context_, ZMQ_DEALER);
-		broker_.setsockopt(ZMQ_LINGER, 0);
+		broker_.disconnect(addr);
 		broker_.connect(addr);
 	}
 
