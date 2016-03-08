@@ -12,6 +12,8 @@ worker_core::worker_core(std::vector<std::string> args)
 	: args_(args), config_filename_("config.yml"), working_directory_(fs::temp_directory_path() / "isoeval"),
 	  logger_(nullptr), remote_fm_(nullptr), cache_fm_(nullptr), job_receiver_(nullptr), broker_(nullptr)
 {
+	// Initialize the ZMQ context
+	zmq_context_ = new zmq::context_t(1);
 	// parse cmd parameters
 	parse_params();
 	// load configuration from yaml file

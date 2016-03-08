@@ -21,13 +21,15 @@ private:
 	zmq::socket_t broker_;
 	zmq::socket_t jobs_;
 	zmq::pollitem_t items_[2];
+	std::shared_ptr<zmq::context_t> context_;
 
 public:
 	/**
 	 * TODO: documentation
 	 * @param context
 	 */
-	connection_proxy(zmq::context_t &context) : broker_(context, ZMQ_DEALER), jobs_(context, ZMQ_PAIR)
+	connection_proxy(std::shared_ptr<zmq::context_t> context)
+		: broker_(*context, ZMQ_DEALER), jobs_(*context, ZMQ_PAIR), context_(context)
 	{
 		items_[0].socket = (void *) broker_;
 		items_[0].fd = 0;
@@ -54,10 +56,10 @@ public:
 	/**
 	 * Disconnect the broker socket and connect again
 	 */
-	void reconnect_broker(zmq::context_t &context, const std::string &addr)
+	void reconnect_broker(const std::string &addr)
 	{
 		broker_.close();
-		broker_ = zmq::socket_t(context, ZMQ_DEALER);
+		broker_ = zmq::socket_t(*context_, ZMQ_DEALER);
 		broker_.setsockopt(ZMQ_LINGER, 0);
 		broker_.connect(addr);
 	}

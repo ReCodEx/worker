@@ -143,7 +143,7 @@ private:
 	std::shared_ptr<broker_connection<connection_proxy>> broker_;
 
 	/** A ZeroMQ context */
-	zmq::context_t zmq_context_;
+	std::shared_ptr<zmq::context_t> zmq_context_;
 };
 
 #endif // CODEX_WORKER_ISOEVAL_CORE_HPP
