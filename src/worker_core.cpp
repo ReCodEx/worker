@@ -13,7 +13,7 @@ worker_core::worker_core(std::vector<std::string> args)
 	  logger_(nullptr), remote_fm_(nullptr), cache_fm_(nullptr), job_receiver_(nullptr), broker_(nullptr)
 {
 	// Initialize the ZMQ context
-	zmq_context_ = new zmq::context_t(1);
+	zmq_context_ = std::make_shared<zmq::context_t>(1);
 	// parse cmd parameters
 	parse_params();
 	// load configuration from yaml file

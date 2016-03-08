@@ -6,9 +6,10 @@
 #include "../commands/jobs_client_commands.h"
 
 
-job_receiver::job_receiver(
-	zmq::context_t &context, std::shared_ptr<job_evaluator> evaluator, std::shared_ptr<spdlog::logger> logger)
-	: socket_(context, ZMQ_PAIR), evaluator_(evaluator), logger_(logger)
+job_receiver::job_receiver(std::shared_ptr<zmq::context_t> context,
+	std::shared_ptr<job_evaluator> evaluator,
+	std::shared_ptr<spdlog::logger> logger)
+	: socket_(*context, ZMQ_PAIR), evaluator_(evaluator), logger_(logger)
 {
 	if (logger == nullptr) {
 		// Create logger manually to avoid global registration of logger

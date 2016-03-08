@@ -27,8 +27,9 @@ public:
 	 * @param evaluator evaluator which will evaluate received tasks
 	 * @param logger pointer to logging class
 	 */
-	job_receiver(
-		zmq::context_t &context, std::shared_ptr<job_evaluator> evaluator, std::shared_ptr<spdlog::logger> logger);
+	job_receiver(std::shared_ptr<zmq::context_t> context,
+		std::shared_ptr<job_evaluator> evaluator,
+		std::shared_ptr<spdlog::logger> logger);
 
 	/**
 	 * Receive jobs from an inproc socket and pass them to the evaluator

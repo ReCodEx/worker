@@ -22,8 +22,8 @@ public:
 
 TEST(job_receiver, basic)
 {
-	zmq::context_t context(1);
-	zmq::socket_t socket(context, ZMQ_PAIR);
+	auto context = std::make_shared<zmq::context_t>(1);
+	zmq::socket_t socket(*context, ZMQ_PAIR);
 	socket.bind("inproc://" + JOB_SOCKET_ID);
 
 	auto evaluator = std::make_shared<StrictMock<mock_job_evaluator>>();
@@ -69,14 +69,14 @@ TEST(job_receiver, basic)
 	ASSERT_EQ("OK", std::string((char *) msg.data(), msg.size()));
 	ASSERT_FALSE(msg.more());
 
-	context.close();
+	context->close();
 	r.join();
 }
 
 TEST(job_receiver, incomplete_msg)
 {
-	zmq::context_t context(1);
-	zmq::socket_t socket(context, ZMQ_PAIR);
+	auto context = std::make_shared<zmq::context_t>(1);
+	zmq::socket_t socket(*context, ZMQ_PAIR);
 	socket.bind("inproc://" + JOB_SOCKET_ID);
 
 	// We don't expect any calls
@@ -90,6 +90,6 @@ TEST(job_receiver, incomplete_msg)
 	socket.send("foo", 3, 0);
 
 	std::this_thread::sleep_for(std::chrono::milliseconds(1));
-	context.close();
+	context->close();
 	r.join();
 }
