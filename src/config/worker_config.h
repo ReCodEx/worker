@@ -58,6 +58,12 @@ public:
 	virtual const header_map_t &get_headers() const;
 
 	/**
+	 * Gets hwgroup string description.
+	 * @return
+	 */
+	const std::string &get_hwgroup() const;
+
+	/**
 	 * Get path to the caching directory
 	 */
 	std::string get_cache_dir() const;
@@ -87,6 +93,8 @@ private:
 	std::string broker_uri_;
 	/** Header which are sent to broker and should specify worker abilities */
 	header_map_t headers_;
+	/** Hwgroup which is sent to broker and is used in job configuration to select right limits */
+	std::string hwgroup_;
 	/** The caching directory path */
 	std::string cache_dir_;
 	/** Configuration of logger */

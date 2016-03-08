@@ -112,18 +112,12 @@ void job::build_job()
 			}
 
 			// first we have to get propriate hwgroup limits
-			auto limits = std::make_shared<sandbox_limits>();
-			bool hw_found = false;
-			auto its = worker_config_->get_headers().equal_range("hwgroup");
-			for (auto it = its.first; it != its.second; ++it) {
-				auto hwit = sandbox->loaded_limits.find(it->second);
-				if (hwit != sandbox->loaded_limits.end()) {
-					limits = hwit->second;
-					hw_found = true;
-				}
-			}
-			if (!hw_found) {
-				throw job_exception("Hwgroup with specified name not defined");
+			std::shared_ptr<sandbox_limits> limits;
+			auto hwit = sandbox->loaded_limits.find(worker_config_->get_hwgroup());
+			if (hwit != sandbox->loaded_limits.end()) {
+				limits = hwit->second;
+			} else {
+				throw job_exception("Worker hwgroup was not found in loaded limits");
 			}
 
 			// we have to load defaults from worker_config if necessary

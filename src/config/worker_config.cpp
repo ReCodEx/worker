@@ -38,6 +38,14 @@ worker_config::worker_config(const YAML::Node &config)
 			}
 		}
 
+		// load hwgroup
+		if (config["hwgroup"] && config["hwgroup"].IsScalar()) {
+			hwgroup_ = config["hwgroup"].as<std::string>();
+		} else {
+			throw config_error("Item hwgroup not defined properly");
+		}
+
+		// load file-cache item
 		if (config["file-cache"] && config["file-cache"].IsMap()) {
 			auto &cache = config["file-cache"];
 
@@ -156,6 +164,11 @@ std::string worker_config::get_broker_uri() const
 const worker_config::header_map_t &worker_config::get_headers() const
 {
 	return headers_;
+}
+
+const std::string &worker_config::get_hwgroup() const
+{
+	return hwgroup_;
 }
 
 const log_config &worker_config::get_log_config()
