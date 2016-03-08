@@ -35,6 +35,45 @@ private:
 	std::shared_ptr<spdlog::logger> logger_;
 	std::shared_ptr<command_holder<broker_connection_context<proxy>>> broker_cmds_;
 	std::shared_ptr<command_holder<broker_connection_context<proxy>>> jobs_server_cmds_;
+	std::chrono::seconds reconnect_delay = std::chrono::seconds(1);
+
+	/**
+	 * Send the init command to the broker
+	 */
+	void send_init() const
+	{
+		const worker_config::header_map_t &headers = config_->get_headers();
+		std::vector<std::string> msg = {"init"};
+
+		for (auto &it : headers) {
+			msg.push_back(it.first + "=" + it.second);
+		}
+
+		socket_->send_broker(msg);
+	}
+
+	/**
+	 * Reconnect to the broker and wait for a while before trying to contact it again
+	 */
+	void reconnect()
+	{
+		socket_->reconnect_broker(config_->get_broker_uri());
+		logger_->debug() << "Going to sleep for " + std::to_string(reconnect_delay.count()) + " seconds";
+		std::this_thread::sleep_for(reconnect_delay);
+
+		std::chrono::seconds max_reconnect_delay(32);
+		if (reconnect_delay < max_reconnect_delay) {
+			reconnect_delay *= 2;
+		}
+	}
+
+	/**
+	 * Reset the reconnection delay to its initial value
+	 */
+	void reset_reconnect_delay()
+	{
+		reconnect_delay = std::chrono::seconds(1);
+	}
 
 public:
 	/**
@@ -43,8 +82,9 @@ public:
 	 * @param socket
 	 * @param logger
 	 */
-	broker_connection(
-		std::shared_ptr<const worker_config> config, std::shared_ptr<proxy> socket, std::shared_ptr<spdlog::logger> logger = nullptr)
+	broker_connection(std::shared_ptr<const worker_config> config,
+		std::shared_ptr<proxy> socket,
+		std::shared_ptr<spdlog::logger> logger = nullptr)
 		: config_(config), socket_(socket)
 	{
 		if (logger != nullptr) {
@@ -71,22 +111,13 @@ public:
 	}
 
 	/**
-	 * Send the INIT command to the broker.
+	 * Connect to the broker and send it the INIT command
 	 */
 	void connect()
 	{
-		const worker_config::header_map_t &headers = config_->get_headers();
-
 		logger_->debug() << "Connecting to " << config_->get_broker_uri();
 		socket_->connect(config_->get_broker_uri());
-
-		std::vector<std::string> msg = {"init"};
-
-		for (auto &it : headers) {
-			msg.push_back(it.first + "=" + it.second);
-		}
-
-		socket_->send_broker(msg);
+		send_init();
 	}
 
 	/**
@@ -97,6 +128,7 @@ public:
 	{
 		const std::chrono::milliseconds ping_interval = config_->get_broker_ping_interval();
 		std::chrono::milliseconds poll_limit = ping_interval;
+		size_t broker_liveness = config_->get_max_broker_liveness();
 
 		while (true) {
 			std::vector<std::string> msg;
@@ -110,6 +142,14 @@ public:
 				logger_->debug() << "Sending a ping";
 				socket_->send_broker(std::vector<std::string>{"ping"});
 				poll_limit = ping_interval;
+
+				broker_liveness -= 1;
+				if (broker_liveness == 0) {
+					logger_->info() << "Broker connection expired - trying to reconnect";
+					reconnect();
+					send_init();
+					broker_liveness = config_->get_max_broker_liveness();
+				}
 			} else {
 				poll_limit -= poll_duration;
 			}
@@ -119,6 +159,9 @@ public:
 			}
 
 			if (result.test(message_origin::BROKER)) {
+				broker_liveness = config_->get_max_broker_liveness();
+				reset_reconnect_delay();
+
 				socket_->recv_broker(msg, &terminate);
 
 				if (terminate) {
