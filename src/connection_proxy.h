@@ -46,8 +46,20 @@ public:
 	 */
 	void connect(const std::string &addr)
 	{
+		broker_.setsockopt(ZMQ_LINGER, 0);
 		broker_.connect(addr);
 		jobs_.bind("inproc://" + JOB_SOCKET_ID);
+	}
+
+	/**
+	 * Disconnect the broker socket and connect again
+	 */
+	void reconnect_broker(zmq::context_t &context, const std::string &addr)
+	{
+		broker_.close();
+		broker_ = zmq::socket_t(context, ZMQ_DEALER);
+		broker_.setsockopt(ZMQ_LINGER, 0);
+		broker_.connect(addr);
 	}
 
 	/**
