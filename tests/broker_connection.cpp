@@ -129,8 +129,7 @@ TEST(broker_connection, sends_ping)
 		EXPECT_CALL(*proxy, poll(_, Le(std::chrono::milliseconds(500)), _, _))
 			.WillOnce(DoAll(ClearFlags(), SetArgReferee<3>(std::chrono::milliseconds(600))));
 
-		EXPECT_CALL(*proxy, poll(_, Le(std::chrono::milliseconds(1100)), _, _))
-			.WillRepeatedly(SetArgReferee<2>(true));
+		EXPECT_CALL(*proxy, poll(_, Le(std::chrono::milliseconds(1100)), _, _)).WillRepeatedly(SetArgReferee<2>(true));
 	}
 
 	connection.receive_tasks();

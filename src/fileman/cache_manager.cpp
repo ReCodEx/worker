@@ -6,14 +6,10 @@ cache_manager::cache_manager(std::shared_ptr<spdlog::logger> logger)
 {
 }
 
-cache_manager::cache_manager(const std::string &caching_dir, std::shared_ptr<spdlog::logger> logger)
+cache_manager::cache_manager(const std::string &caching_dir, std::shared_ptr<spdlog::logger> logger) : logger_(logger)
 {
-	if (logger != nullptr) {
-		logger_ = logger;
-	} else {
-		// Create logger manually to avoid global registration of logger
-		auto sink = std::make_shared<spdlog::sinks::null_sink_st>();
-		logger_ = std::make_shared<spdlog::logger>("cache_manager_nolog", sink);
+	if (logger_ == nullptr) {
+		logger_ = helpers::create_null_logger();
 	}
 
 	fs::path cache_path(caching_dir);

@@ -4,8 +4,7 @@
 #include <string>
 #include <memory>
 #include "file_manager_base.h"
-#include "spdlog/spdlog.h"
-#include "spdlog/sinks/null_sink.h"
+#include "../helpers/create_logger.h"
 
 #define BOOST_FILESYSTEM_NO_DEPRECATED
 #define BOOST_NO_CXX11_SCOPED_ENUMS

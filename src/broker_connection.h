@@ -6,8 +6,7 @@
 #include <memory>
 #include <bitset>
 
-#include "spdlog/spdlog.h"
-#include "spdlog/sinks/null_sink.h"
+#include "helpers/create_logger.h"
 #include "config/worker_config.h"
 #include "commands/command_holder.h"
 #include "commands/broker_commands.h"
@@ -85,14 +84,10 @@ public:
 	broker_connection(std::shared_ptr<const worker_config> config,
 		std::shared_ptr<proxy> socket,
 		std::shared_ptr<spdlog::logger> logger = nullptr)
-		: config_(config), socket_(socket)
+		: config_(config), socket_(socket), logger_(logger)
 	{
-		if (logger != nullptr) {
-			logger_ = logger;
-		} else {
-			// Create logger manually to avoid global registration of logger
-			auto sink = std::make_shared<spdlog::sinks::null_sink_st>();
-			logger_ = std::make_shared<spdlog::logger>("cache_manager_nolog", sink);
+		if (logger_ == nullptr) {
+			logger_ = helpers::create_null_logger();
 		}
 
 		// prepare dependent context for commands (in this class)

@@ -6,8 +6,7 @@
 #include <functional>
 #include <map>
 #include <zmq.hpp>
-#include "spdlog/spdlog.h"
-#include "spdlog/sinks/null_sink.h"
+#include "../helpers/create_logger.h"
 #include "../job/job_evaluator.h"
 
 
@@ -55,11 +54,7 @@ public:
 		: context_t(dependent_context), logger(logger)
 	{
 		if (this->logger == nullptr) {
-			// Create logger manually to avoid global registration of logger
-			auto sink = std::make_shared<spdlog::sinks::null_sink_st>();
-			this->logger = std::make_shared<spdlog::logger>("command_context_nolog", sink);
-			// Set loglevel to 'off' cause no logging
-			this->logger->set_level(spdlog::level::off);
+			logger = helpers::create_null_logger();
 		}
 	}
 	/** System logger. */

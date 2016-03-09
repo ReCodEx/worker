@@ -47,14 +47,10 @@ http_manager::http_manager(std::shared_ptr<spdlog::logger> logger) : logger_(log
 }
 
 http_manager::http_manager(const std::vector<fileman_config> &configs, std::shared_ptr<spdlog::logger> logger)
-	: configs_(configs)
+	: configs_(configs), logger_(logger)
 {
-	if (logger != nullptr) {
-		logger_ = logger;
-	} else {
-		// Create logger manually to avoid global registration of logger
-		auto sink = std::make_shared<spdlog::sinks::null_sink_st>();
-		logger_ = std::make_shared<spdlog::logger>("cache_manager_nolog", sink);
+	if (logger_ == nullptr) {
+		logger_ = helpers::create_null_logger();
 	}
 }
 

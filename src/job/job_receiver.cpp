@@ -11,10 +11,8 @@ job_receiver::job_receiver(std::shared_ptr<zmq::context_t> context,
 	std::shared_ptr<spdlog::logger> logger)
 	: socket_(*context, ZMQ_PAIR), evaluator_(evaluator), logger_(logger)
 {
-	if (logger == nullptr) {
-		// Create logger manually to avoid global registration of logger
-		auto sink = std::make_shared<spdlog::sinks::null_sink_st>();
-		logger_ = std::make_shared<spdlog::logger>("job_receiver_nolog", sink);
+	if (logger_ == nullptr) {
+		logger_ = helpers::create_null_logger();
 	}
 
 	// init depandent command structure

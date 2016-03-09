@@ -22,14 +22,10 @@ namespace fs = boost::filesystem;
 
 isolate_sandbox::isolate_sandbox(
 	sandbox_limits limits, size_t id, const std::string &temp_dir, std::shared_ptr<spdlog::logger> logger)
-	: limits_(limits), id_(id), isolate_binary_("isolate")
+	: limits_(limits), logger_(logger), id_(id), isolate_binary_("isolate")
 {
-	if (logger != nullptr) {
-		logger_ = logger;
-	} else {
-		// Create logger manually to avoid global registration of logger
-		auto sink = std::make_shared<spdlog::sinks::null_sink_st>();
-		logger_ = std::make_shared<spdlog::logger>("cache_manager_nolog", sink);
+	if (logger_ == nullptr) {
+		logger_ = helpers::create_null_logger();
 	}
 
 	// Set backup limit (for killing isolate if it hasn't finished yet)

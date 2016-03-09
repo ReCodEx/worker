@@ -176,6 +176,8 @@ set(SOURCE_FILES
 	${HELPERS_DIR}/config.cpp
 	${HELPERS_DIR}/zmq_socket.h
 	${HELPERS_DIR}/zmq_socket.cpp
+	${HELPERS_DIR}/create_logger.h
+	${HELPERS_DIR}/create_logger.cpp
 
 	${CONFIG_DIR}/worker_config.cpp
 	${CONFIG_DIR}/worker_config.h

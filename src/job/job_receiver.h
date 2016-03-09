@@ -7,6 +7,7 @@
 #include <string>
 #include "job_evaluator.h"
 #include "../commands/command_holder.h"
+#include "../helpers/create_logger.h"
 
 /**
  * Job receiver handles incoming requests from broker_connection and

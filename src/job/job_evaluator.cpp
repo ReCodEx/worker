@@ -13,10 +13,8 @@ job_evaluator::job_evaluator(std::shared_ptr<spdlog::logger> logger,
 	: working_directory_(working_directory), job_(nullptr), job_results_(), remote_fm_(remote_fm), cache_fm_(cache_fm),
 	  logger_(logger), config_(config)
 {
-	if (logger == nullptr) {
-		// Create logger manually to avoid global registration of logger
-		auto sink = std::make_shared<spdlog::sinks::null_sink_st>();
-		logger_ = std::make_shared<spdlog::logger>("job_evaluator_nolog", sink);
+	if (logger_ == nullptr) {
+		logger_ = helpers::create_null_logger();
 	}
 }
 
