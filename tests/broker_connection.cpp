@@ -16,8 +16,14 @@ using namespace testing;
 class mock_worker_config : public worker_config
 {
 public:
+	mock_worker_config()
+	{
+		ON_CALL(*this, get_broker_ping_interval()).WillByDefault(Return(std::chrono::milliseconds(1000)));
+	}
+
 	MOCK_CONST_METHOD0(get_broker_uri, std::string());
 	MOCK_CONST_METHOD0(get_headers, const worker_config::header_map_t &());
+	MOCK_CONST_METHOD0(get_broker_ping_interval, std::chrono::milliseconds());
 };
 
 /**
@@ -99,6 +105,32 @@ TEST(broker_connection, forwards_eval)
 			.WillOnce(Return(true));
 
 		EXPECT_CALL(*proxy, poll(_, _, _, _)).WillRepeatedly(SetArgReferee<2>(true));
+	}
+
+	connection.receive_tasks();
+}
+
+TEST(broker_connection, sends_ping)
+{
+	auto config = std::make_shared<NiceMock<mock_worker_config>>();
+	auto proxy = std::make_shared<StrictMock<mock_connection_proxy>>();
+	broker_connection<mock_connection_proxy> connection(config, proxy);
+
+	EXPECT_CALL(*config, get_broker_ping_interval()).WillRepeatedly(Return(std::chrono::milliseconds(1100)));
+
+	EXPECT_CALL(*proxy, send_broker(ElementsAre("ping"))).Times(AtLeast(1));
+
+	{
+		InSequence s;
+
+		EXPECT_CALL(*proxy, poll(_, Le(std::chrono::milliseconds(1100)), _, _))
+			.WillOnce(DoAll(ClearFlags(), SetArgReferee<3>(std::chrono::milliseconds(600))));
+
+		EXPECT_CALL(*proxy, poll(_, Le(std::chrono::milliseconds(500)), _, _))
+			.WillOnce(DoAll(ClearFlags(), SetArgReferee<3>(std::chrono::milliseconds(600))));
+
+		EXPECT_CALL(*proxy, poll(_, Le(std::chrono::milliseconds(1100)), _, _))
+			.WillRepeatedly(SetArgReferee<2>(true));
 	}
 
 	connection.receive_tasks();
