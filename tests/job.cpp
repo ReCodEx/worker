@@ -204,7 +204,16 @@ TEST(job_test, non_empty_details)
 								   "file-managers:\n"
 								   "    - hostname: http://localhost:80\n"
 								   "      username: 654321\n"
-								   "      password: 123456\n");
+								   "      password: 123456\n"
+								   "limits:\n"
+								   "    time: 15\n"
+								   "    wall-time: 16\n"
+								   "    extra-time: 12\n"
+								   "    stack-size: 150000\n"
+								   "    memory: 160000\n"
+								   "    parallel: 11\n"
+								   "    disk-size: 150\n"
+								   "    disk-files: 17\n");
 	auto worker_conf = std::make_shared<worker_config>(default_yaml);
 	auto fileman = std::make_shared<cache_manager>();
 	create_directories(dir);
@@ -310,6 +319,99 @@ TEST(job_test, load_of_worker_defaults)
 			"/tmp/recodex/worker_config", "/recodex/worker_config", sandbox_limits::dir_perm::RW}};
 	ASSERT_EQ(limits->environ_vars, expected_environs);
 	ASSERT_EQ(limits->bound_dirs, expected_dirs);
+
+	// cleanup after yourself
+	remove_all(dir_root);
+}
+
+TEST(job_test, exceeded_worker_defaults)
+{
+	// prepare all things which need to be prepared
+	path dir_root = temp_directory_path() / "isoeval";
+	path dir = dir_root / "job_test";
+
+	std::string str_job_config = "submission:\n"
+								 "    job-id: 5\n"
+								 "    language: cpp\n"
+								 "    file-collector: localhost\n"
+								 "tasks:\n"
+								 "    - task-id: eval\n"
+								 "      priority: 4\n"
+								 "      fatal-failure: false\n"
+								 "      cmd:\n"
+								 "          bin: recodex\n"
+								 "      sandbox:\n"
+								 "          name: fake\n"
+								 "          limits:\n"
+								 "              - hw-group-id: group1\n";
+
+	auto default_yaml = YAML::Load("worker-id: 8\n"
+								   "broker-uri: localhost\n"
+								   "headers:\n"
+								   "    env:\n"
+								   "        - c\n"
+								   "        - python\n"
+								   "    threads: 10\n"
+								   "hwgroup: group1\n"
+								   "file-managers:\n"
+								   "    - hostname: http://localhost:80\n"
+								   "      username: 654321\n"
+								   "      password: 123456\n"
+								   "limits:\n"
+								   "    time: 5\n"
+								   "    wall-time: 6\n"
+								   "    extra-time: 2\n"
+								   "    stack-size: 50000\n"
+								   "    memory: 60000\n"
+								   "    parallel: 1\n"
+								   "    disk-size: 50\n"
+								   "    disk-files: 7\n");
+	auto worker_conf = std::make_shared<worker_config>(default_yaml);
+	auto fileman = std::make_shared<cache_manager>();
+	create_directories(dir);
+	std::ofstream hello((dir / "hello").string());
+	hello << "hello" << std::endl;
+	hello.close();
+
+	// time exceeded worker defaults
+	auto job_yaml = YAML::Load(str_job_config + "                time: 6\n");
+	auto job_meta = helpers::build_job_metadata(job_yaml);
+	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), fileman), job_exception);
+
+	// wall-time exceeded worker defaults
+	job_yaml = YAML::Load(str_job_config + "                wall-time: 7\n");
+	job_meta = helpers::build_job_metadata(job_yaml);
+	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), fileman), job_exception);
+
+	// extra-time exceeded worker defaults
+	job_yaml = YAML::Load(str_job_config + "                extra-time: 3\n");
+	job_meta = helpers::build_job_metadata(job_yaml);
+	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), fileman), job_exception);
+
+	// stack-size exceeded worker defaults
+	job_yaml = YAML::Load(str_job_config + "                stack-size: 60000\n");
+	job_meta = helpers::build_job_metadata(job_yaml);
+	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), fileman), job_exception);
+
+	// memory exceeded worker defaults
+	job_yaml = YAML::Load(str_job_config + "                memory: 70000\n");
+	job_meta = helpers::build_job_metadata(job_yaml);
+	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), fileman), job_exception);
+
+	// parallel exceeded worker defaults
+	job_yaml = YAML::Load(str_job_config + "                parallel: 3\n");
+	job_meta = helpers::build_job_metadata(job_yaml);
+	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), fileman), job_exception);
+
+	// disk-size exceeded worker defaults
+	job_yaml = YAML::Load(str_job_config + "                disk-size: 60\n");
+	job_meta = helpers::build_job_metadata(job_yaml);
+	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), fileman), job_exception);
+
+	// disk-files exceeded worker defaults
+	job_yaml = YAML::Load(str_job_config + "                disk-files: 8\n");
+	job_meta = helpers::build_job_metadata(job_yaml);
+	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), fileman), job_exception);
 
 	// cleanup after yourself
 	remove_all(dir_root);
@@ -495,7 +597,16 @@ TEST(job_test, job_variables)
 								   "file-managers:\n"
 								   "    - hostname: http://localhost:80\n"
 								   "      username: 654321\n"
-								   "      password: 123456\n");
+								   "      password: 123456\n"
+								   "limits:\n"
+								   "    time: 15\n"
+								   "    wall-time: 16\n"
+								   "    extra-time: 12\n"
+								   "    stack-size: 150000\n"
+								   "    memory: 160000\n"
+								   "    parallel: 11\n"
+								   "    disk-size: 150\n"
+								   "    disk-files: 17\n");
 	auto worker_conf = std::make_shared<worker_config>(default_yaml);
 	auto fileman = std::make_shared<cache_manager>();
 	create_directories(dir);

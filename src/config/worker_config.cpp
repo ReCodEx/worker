@@ -147,7 +147,9 @@ worker_config::worker_config(const YAML::Node &config)
 				}
 			} // no throw... can be omitted
 
-		} // no throw... can be omitted
+		} else {
+			throw config_error("Map of limits not defined properly");
+		}
 
 	} catch (YAML::Exception &ex) {
 		throw config_error("Default worker configuration was not loaded: " + std::string(ex.what()));

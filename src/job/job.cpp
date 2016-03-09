@@ -105,7 +105,6 @@ void job::build_job()
 			// //////////////// //
 
 			auto sandbox = task_meta->sandbox;
-			auto worker_limits = worker_config_->get_limits();
 
 			if (sandbox->name == "") {
 				throw job_exception("Sandbox name cannot be empty");
@@ -120,37 +119,8 @@ void job::build_job()
 				throw job_exception("Worker hwgroup was not found in loaded limits");
 			}
 
-			// we have to load defaults from worker_config if necessary
-			if (limits->cpu_time == FLT_MAX) {
-				limits->cpu_time = worker_limits.cpu_time;
-			}
-			if (limits->wall_time == FLT_MAX) {
-				limits->wall_time = worker_limits.wall_time;
-			}
-			if (limits->extra_time == FLT_MAX) {
-				limits->extra_time = worker_limits.extra_time;
-			}
-			if (limits->stack_size == SIZE_MAX) {
-				limits->stack_size = worker_limits.stack_size;
-			}
-			if (limits->memory_usage == SIZE_MAX) {
-				limits->memory_usage = worker_limits.memory_usage;
-			}
-			if (limits->processes == SIZE_MAX) {
-				limits->processes = worker_limits.processes;
-			}
-			if (limits->disk_size == SIZE_MAX) {
-				limits->disk_size = worker_limits.disk_size;
-			}
-			if (limits->disk_files == SIZE_MAX) {
-				limits->disk_files = worker_limits.disk_files;
-			}
-
-			// union of bound directories and environs from worker configuration and job configuration
-			limits->environ_vars.insert(
-				limits->environ_vars.end(), worker_limits.environ_vars.begin(), worker_limits.environ_vars.end());
-			limits->bound_dirs.insert(
-				limits->bound_dirs.end(), worker_limits.bound_dirs.begin(), worker_limits.bound_dirs.end());
+			// check and maybe modify limits
+			process_task_limits(limits);
 
 			// go through variables parsing
 			limits->std_input = parse_job_var(task_meta->std_input);
@@ -237,6 +207,77 @@ void job::build_job()
 	}
 }
 
+void job::process_task_limits(std::shared_ptr<sandbox_limits> limits)
+{
+	auto worker_limits = worker_config_->get_limits();
+	std::string msg = " item is bigger than default worker value";
+
+	// we have to load defaults from worker_config if necessary
+	// and check for bigger limits than in worker_config
+	if (limits->cpu_time == FLT_MAX) {
+		limits->cpu_time = worker_limits.cpu_time;
+	} else {
+		if (limits->cpu_time > worker_limits.cpu_time) {
+			throw job_exception("time" + msg);
+		}
+	}
+	if (limits->wall_time == FLT_MAX) {
+		limits->wall_time = worker_limits.wall_time;
+	} else {
+		if (limits->wall_time > worker_limits.wall_time) {
+			throw job_exception("wall-time" + msg);
+		}
+	}
+	if (limits->extra_time == FLT_MAX) {
+		limits->extra_time = worker_limits.extra_time;
+	} else {
+		if (limits->extra_time > worker_limits.extra_time) {
+			throw job_exception("extra-time" + msg);
+		}
+	}
+	if (limits->stack_size == SIZE_MAX) {
+		limits->stack_size = worker_limits.stack_size;
+	} else {
+		if (limits->stack_size > worker_limits.stack_size) {
+			throw job_exception("stack-size" + msg);
+		}
+	}
+	if (limits->memory_usage == SIZE_MAX) {
+		limits->memory_usage = worker_limits.memory_usage;
+	} else {
+		if (limits->memory_usage > worker_limits.memory_usage) {
+			throw job_exception("memory" + msg);
+		}
+	}
+	if (limits->processes == SIZE_MAX) {
+		limits->processes = worker_limits.processes;
+	} else {
+		if (limits->processes > worker_limits.processes) {
+			throw job_exception("parallel" + msg);
+		}
+	}
+	if (limits->disk_size == SIZE_MAX) {
+		limits->disk_size = worker_limits.disk_size;
+	} else {
+		if (limits->disk_size > worker_limits.disk_size) {
+			throw job_exception("disk-size" + msg);
+		}
+	}
+	if (limits->disk_files == SIZE_MAX) {
+		limits->disk_files = worker_limits.disk_files;
+	} else {
+		if (limits->disk_files > worker_limits.disk_files) {
+			throw job_exception("disk-files" + msg);
+		}
+	}
+
+	// union of bound directories and environs from worker configuration and job configuration
+	limits->environ_vars.insert(
+		limits->environ_vars.end(), worker_limits.environ_vars.begin(), worker_limits.environ_vars.end());
+	limits->bound_dirs.insert(
+		limits->bound_dirs.end(), worker_limits.bound_dirs.begin(), worker_limits.bound_dirs.end());
+}
+
 std::vector<std::pair<std::string, std::shared_ptr<task_results>>> job::run()
 {
 	std::vector<std::pair<std::string, std::shared_ptr<task_results>>> results;
@@ -249,11 +290,10 @@ std::vector<std::pair<std::string, std::shared_ptr<task_results>>> job::run()
 		}
 
 		auto task_id = i->get_task_id();
-		logger_->info() << "Processing task \"" << task_id << "\"";
 		try {
 			if (i->is_executable()) {
 				auto res = i->run();
-				logger_->info() << "Task ran successfully";
+				logger_->info() << "Task \"" << task_id << "\" ran successfully";
 
 				// if task has some results than publish them in output
 				if (res != nullptr) {
@@ -261,7 +301,7 @@ std::vector<std::pair<std::string, std::shared_ptr<task_results>>> job::run()
 				}
 			} else {
 				// we have to pass information about non-execution to children
-				logger_->info() << "Task marked as not executable";
+				logger_->info() << "Task \"" << task_id << "\" marked as not executable, proceeding to next task";
 				i->set_children_execution(false);
 			}
 		} catch (std::exception &e) {
@@ -270,7 +310,7 @@ std::vector<std::pair<std::string, std::shared_ptr<task_results>>> job::run()
 			result->error_message = e.what();
 			results.push_back({task_id, result});
 
-			logger_->info() << "Task failed: " << e.what();
+			logger_->info() << "Task \"" << task_id << "\" failed: " << e.what();
 
 			if (i->get_fatal_failure()) {
 				logger_->info() << "Fatal failure bit set. Terminating of job execution...";
@@ -282,7 +322,6 @@ std::vector<std::pair<std::string, std::shared_ptr<task_results>>> job::run()
 				i->set_children_execution(false);
 			}
 		}
-		logger_->info() << "Processing of task \"" << task_id << "\" done";
 	}
 
 	return results;
