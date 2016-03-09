@@ -17,7 +17,7 @@ TEST(worker_config, load_yaml_basic)
 						   "        - c\n"
 						   "        - python\n"
 						   "    threads: 10\n"
-						   "    hwgroup: group_1\n"
+						   "hwgroup: group_1\n"
 						   "file-managers:\n"
 						   "    - hostname: http://localhost:80\n"
 						   "      username: 654321\n"
@@ -41,19 +41,21 @@ TEST(worker_config, load_yaml_basic)
 						   "    parallel: 1\n"
 						   "    disk-size: 50\n"
 						   "    disk-files: 7\n"
-						   "bound-directories:\n"
-						   "    - src: /usr/local/bin\n"
-						   "      dst: localbin\n"
-						   "      mode: RW\n"
-						   "    - src: /usr/share\n"
-						   "      dst: share\n"
-						   "      mode: MAYBE\n"
+						   "    environ-variable:\n"
+						   "        ISOLATE_BOX: /box\n"
+						   "        ISOLATE_TMP: /tmp\n"
+						   "    bound-directories:\n"
+						   "        - src: /usr/local/bin\n"
+						   "          dst: localbin\n"
+						   "          mode: RW\n"
+						   "        - src: /usr/share\n"
+						   "          dst: share\n"
+						   "          mode: MAYBE\n"
 						   "...");
 
 	worker_config config(yaml);
 
-	worker_config::header_map_t expected_headers = {
-		{"env", "c"}, {"env", "python"}, {"threads", "10"}, {"hwgroup", "group_1"}};
+	worker_config::header_map_t expected_headers = {{"env", "c"}, {"env", "python"}, {"threads", "10"}};
 
 	sandbox_limits expected_limits;
 	expected_limits.memory_usage = 60000;
@@ -66,6 +68,11 @@ TEST(worker_config, load_yaml_basic)
 	expected_limits.disk_files = 7;
 	expected_limits.bound_dirs = {std::tuple<std::string, std::string, sp>{"/usr/local/bin", "localbin", sp::RW},
 		std::tuple<std::string, std::string, sp>{"/usr/share", "share", sp::MAYBE}};
+	if (config.get_limits().environ_vars.at(0).first == "ISOLATE_TMP") {
+		expected_limits.environ_vars = {{"ISOLATE_TMP", "/tmp"}, {"ISOLATE_BOX", "/box"}};
+	} else {
+		expected_limits.environ_vars = {{"ISOLATE_BOX", "/box"}, {"ISOLATE_TMP", "/tmp"}};
+	}
 
 	log_config expected_log;
 	expected_log.log_path = "/var/log";
@@ -90,6 +97,7 @@ TEST(worker_config, load_yaml_basic)
 	ASSERT_EQ("/tmp/working_dir", config.get_working_directory());
 	ASSERT_STREQ("/tmp/isoeval/cache", config.get_cache_dir().c_str());
 	ASSERT_EQ(expected_headers, config.get_headers());
+	ASSERT_EQ("group_1", config.get_hwgroup());
 	ASSERT_EQ(expected_limits, config.get_limits());
 	ASSERT_EQ(expected_log, config.get_log_config());
 	ASSERT_EQ(expected_filemans, config.get_filemans_configs());
@@ -108,7 +116,7 @@ TEST(worker_config, invalid_header_value_1)
 						   "    env:\n"
 						   "        foo: c\n"
 						   "    threads: 10\n"
-						   "    hwgroup: group_1\n");
+						   "hwgroup: group_1\n");
 
 	ASSERT_THROW(worker_config config(yaml), config_error);
 }
@@ -124,7 +132,7 @@ TEST(worker_config, invalid_header_value_2)
 						   "    env:\n"
 						   "        - foo: c\n"
 						   "    threads: 10\n"
-						   "    hwgroup: group_1\n");
+						   "hwgroup: group_1\n");
 
 	ASSERT_THROW(worker_config config(yaml), config_error);
 }
@@ -141,7 +149,7 @@ TEST(worker_config, invalid_broker_uri)
 						   "    env:\n"
 						   "        - foo: c\n"
 						   "    threads: 10\n"
-						   "    hwgroup: group_1\n");
+						   "hwgroup: group_1\n");
 
 	ASSERT_THROW(worker_config config(yaml), config_error);
 }

@@ -95,6 +95,10 @@ private:
 	 * Build job from @a job_meta_. Should be called in constructor.
 	 */
 	void build_job();
+	/**
+	 * Check limits and in case of undefined values set worker defaults.
+	 */
+	void process_task_limits(std::shared_ptr<sandbox_limits> limits);
 
 	/**
 	 * Prepare variables which can be used in job configuration.

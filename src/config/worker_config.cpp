@@ -46,6 +46,14 @@ worker_config::worker_config(const YAML::Node &config)
 			}
 		}
 
+		// load hwgroup
+		if (config["hwgroup"] && config["hwgroup"].IsScalar()) {
+			hwgroup_ = config["hwgroup"].as<std::string>();
+		} else {
+			throw config_error("Item hwgroup not defined properly");
+		}
+
+		// load file-cache item
 		if (config["file-cache"] && config["file-cache"].IsMap()) {
 			auto &cache = config["file-cache"];
 
@@ -133,12 +141,22 @@ worker_config::worker_config(const YAML::Node &config)
 			if (limits["disk-files"] && limits["disk-files"].IsScalar()) {
 				limits_.disk_files = limits["disk-files"].as<size_t>();
 			} // no throw... can be omitted
-		} // no throw... can be omitted
 
-		try {
-			limits_.bound_dirs = helpers::get_bind_dirs(config);
-		} catch (helpers::config_exception &e) {
-			throw config_error(e.what());
+			try {
+				limits_.bound_dirs = helpers::get_bind_dirs(limits);
+			} catch (helpers::config_exception e) {
+				throw config_error(e.what());
+			}
+
+			if (limits["environ-variable"] && limits["environ-variable"].IsMap()) {
+				for (const auto &var : limits["environ-variable"]) {
+					limits_.environ_vars.push_back(
+						std::make_pair(var.first.as<std::string>(), var.second.as<std::string>()));
+				}
+			} // no throw... can be omitted
+
+		} else {
+			throw config_error("Map of limits not defined properly");
 		}
 
 	} catch (YAML::Exception &ex) {
@@ -164,6 +182,11 @@ std::string worker_config::get_broker_uri() const
 const worker_config::header_map_t &worker_config::get_headers() const
 {
 	return headers_;
+}
+
+const std::string &worker_config::get_hwgroup() const
+{
+	return hwgroup_;
 }
 
 const log_config &worker_config::get_log_config()

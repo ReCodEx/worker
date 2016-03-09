@@ -56,6 +56,11 @@ public:
 	 * @return
 	 */
 	virtual const header_map_t &get_headers() const;
+	/**
+	 * Gets hwgroup string description.
+	 * @return
+	 */
+	const std::string &get_hwgroup() const;
 
 	/**
 	 * Get the maximum number of pings in a row without response before the broker is considered disconnected
@@ -97,6 +102,8 @@ private:
 	std::string broker_uri_;
 	/** Header which are sent to broker and should specify worker abilities */
 	header_map_t headers_;
+	/** Hwgroup which is sent to broker and is used in job configuration to select right limits */
+	std::string hwgroup_;
 	/** Maximum number of pings in a row without response before the broker is considered disconnected */
 	size_t max_broker_liveness_ = 4;
 	/** How often should the worker ping the broker */
