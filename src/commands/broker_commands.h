@@ -20,7 +20,7 @@ namespace broker_commands
 	template <typename context_t>
 	void process_intro(const std::vector<std::string> &args, const command_context<context_t> &context)
 	{
-		std::vector<std::string> reply = {"init"};
+		std::vector<std::string> reply = {"init", context.config->get_hwgroup()};
 
 		for (auto &it : context.config->get_headers()) {
 			reply.push_back(it.first + "=" + it.second);

@@ -60,7 +60,7 @@ public:
 	 * Gets hwgroup string description.
 	 * @return
 	 */
-	const std::string &get_hwgroup() const;
+	virtual const std::string &get_hwgroup() const;
 
 	/**
 	 * Get the maximum number of pings in a row without response before the broker is considered disconnected

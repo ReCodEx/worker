@@ -42,7 +42,7 @@ private:
 	void send_init() const
 	{
 		const worker_config::header_map_t &headers = config_->get_headers();
-		std::vector<std::string> msg = {"init"};
+		std::vector<std::string> msg = {"init", config_->get_hwgroup()};
 
 		for (auto &it : headers) {
 			msg.push_back(it.first + "=" + it.second);

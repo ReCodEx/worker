@@ -24,6 +24,7 @@ public:
 	MOCK_CONST_METHOD0(get_broker_uri, std::string());
 	MOCK_CONST_METHOD0(get_headers, const worker_config::header_map_t &());
 	MOCK_CONST_METHOD0(get_broker_ping_interval, std::chrono::milliseconds());
+	MOCK_CONST_METHOD0(get_hwgroup, const std::string &());
 };
 
 /**
@@ -48,17 +49,20 @@ TEST(broker_connection, sends_init)
 	broker_connection<mock_connection_proxy> connection(config, proxy);
 
 	std::string addr("tcp://localhost:9876");
-	worker_config::header_map_t headers = {std::make_pair("env", "c"), std::make_pair("hwgroup", "group_1")};
+	worker_config::header_map_t headers = {std::make_pair("env", "c"), std::make_pair("threads", "2")};
 
 	EXPECT_CALL(*config, get_broker_uri()).WillRepeatedly(Return(addr));
 
 	EXPECT_CALL(*config, get_headers()).WillRepeatedly(ReturnRef(headers));
 
+	std::string hwgroup = "group_1";
+	EXPECT_CALL(*config, get_hwgroup()).WillRepeatedly(ReturnRef(hwgroup));
+
 	{
 		InSequence s;
 
 		EXPECT_CALL(*proxy, connect(StrEq(addr)));
-		EXPECT_CALL(*proxy, send_broker(ElementsAre("init", "env=c", "hwgroup=group_1"))).WillOnce(Return(true));
+		EXPECT_CALL(*proxy, send_broker(ElementsAre("init", hwgroup, "env=c", "threads=2"))).WillOnce(Return(true));
 	}
 
 	connection.connect();
