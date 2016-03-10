@@ -110,7 +110,7 @@ void job::build_job()
 				throw job_exception("Sandbox name cannot be empty");
 			}
 
-			// first we have to get propriate hwgroup limits
+			// first we have to get appropriate hwgroup limits
 			std::shared_ptr<sandbox_limits> limits;
 			auto hwit = sandbox->loaded_limits.find(worker_config_->get_hwgroup());
 			if (hwit != sandbox->loaded_limits.end()) {
