@@ -322,6 +322,9 @@ eval_response job_evaluator::evaluate(eval_request request)
 	std::cerr << "Archive url: " << archive_url_ << std::endl; // TODO: just for debugging purposes
 	std::cerr << "Result url: " << result_url_ << std::endl; // TODO: just for debugging purposes
 
+	// prepare result of response which will be sent to broker
+	std::string response_result = "OK";
+
 	prepare_evaluator();
 	try {
 		download_submission();
@@ -331,10 +334,11 @@ eval_response job_evaluator::evaluate(eval_request request)
 		push_result();
 	} catch (std::exception &e) {
 		logger_->warn() << "Job evaluator encountered error: " << e.what();
+		response_result = "ERR";
 	}
 	cleanup_evaluator();
 
 	logger_->info() << "Job (" + request.job_id + ") ended.";
 
-	return eval_response(request.job_id, "OK");
+	return eval_response(request.job_id, response_result);
 }

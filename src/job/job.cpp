@@ -209,6 +209,10 @@ void job::build_job()
 
 void job::process_task_limits(std::shared_ptr<sandbox_limits> limits)
 {
+	if (limits == nullptr) {
+		throw job_exception("Internal error. Nullptr dereference in process_task_limits.");
+	}
+
 	auto worker_limits = worker_config_->get_limits();
 	std::string msg = " item is bigger than default worker value";
 
