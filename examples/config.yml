@@ -5,6 +5,7 @@ headers:
     env:
         - c
         - python
+        - cpp
     threads: 2
 hwgroup: "group1"
 working-directory: /tmp/recodex
@@ -20,14 +21,14 @@ logger:
     max-size: 1048576  # 1 MB; max size of file before log rotation
     rotations: 3  # number of rotations kept
 limits:
-    time: 5  # in secs
-    wall-time: 6  # seconds
+    time: 30  # in secs
+    wall-time: 30  # seconds
     extra-time: 2  # seconds
     stack-size: 0  # normal in KB, but 0 means no special limit
-    memory: 50000  # in KB
-    parallel: 1  # time and memory limits are merged
-    disk-size: 50
-    disk-files: 5
+    memory: 900000  # in KB
+    parallel: 16  # time and memory limits are merged
+    disk-size: 100
+    disk-files: 10
     environ-variable:
         PATH: /usr/bin
     bound-directories:
