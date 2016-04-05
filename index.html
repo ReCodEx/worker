@@ -47,6 +47,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li class="current"><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -101,12 +102,26 @@ $(document).ready(function(){initNavTree('index.html','');});
 <div class="title">ReCodEx - Worker Documentation</div>  </div>
 </div><!--header-->
 <div class="contents">
-</div><!-- contents -->
+<div class="textblock"><p><a href="https://travis-ci.org/ReCodEx/worker">![Linux build Status](https://img.shields.io/travis/ReCodEx/worker/master.svg?label=Linux%20build)</a> <a href="https://ci.appveyor.com/project/ReCodEx/basicworker/branch/master">![Windows build status](https://img.shields.io/appveyor/ci/ReCodEx/BasicWorker/master.svg?label=Windows%20build)</a> <a href="http://badges.mit-license.org">![License](http://img.shields.io/:license-mit-blue.svg)</a> <a href="http://recodex.github.io/worker/">![Docs](https://img.shields.io/badge/docs-latest-brightgreen.svg)</a> <a href="https://github.com/ReCodEx/GlobalWiki/wiki">![Wiki](https://img.shields.io/badge/docs-wiki-orange.svg)</a></p>
+<p>A daemon that consumes assignments from the message queue, builds and runs them and then sends results back.</p>
+<h2>How to run it</h2>
+<h3>Linux</h3>
+<ul>
+<li>Install dependencies according to <a href="https://github.com/ReCodEx/GlobalWiki/wiki/System-configuration#common">common</a> and <a href="https://github.com/ReCodEx/GlobalWiki/wiki/System-configuration#worker">worker-specific</a> configuration</li>
+<li>Download dependencies using <code>git submodule update --init</code></li>
+<li>Build with cmake: <code>mkdir build &amp;&amp; cd build &amp;&amp; cmake .. &amp;&amp; make</code></li>
+<li>Run <code>./basic-worker</code> (or unit tests <code>./tests/run_tests</code>)</li>
+</ul>
+<h3>Windows</h3>
+<ul>
+<li>Look at description in our wiki over <a href="https://github.com/ReCodEx/GlobalWiki/wiki/System-configuration#windows-worker">here</a>. </li>
+</ul>
+</div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Fri Feb 19 2016 18:25:15 for ReCodEx - Worker by
+    <li class="footer">Generated on Tue Apr 5 2016 23:03:08 for ReCodEx - Worker by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.10 </li>
   </ul>

@@ -47,6 +47,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -117,24 +118,24 @@ $(document).ready(function(){initNavTree('classjob__receiver.html','');});
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a4f357cf6ce873d28471df4510de0d97c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classjob__receiver.html#a4f357cf6ce873d28471df4510de0d97c">job_receiver</a> (zmq::context_t &amp;context, std::shared_ptr&lt; <a class="el" href="classjob__evaluator.html">job_evaluator</a> &gt; evaluator, std::shared_ptr&lt; spdlog::logger &gt; logger)</td></tr>
-<tr class="separator:a4f357cf6ce873d28471df4510de0d97c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a318750ee459830694d259224c82035cc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classjob__receiver.html#a318750ee459830694d259224c82035cc">job_receiver</a> (std::shared_ptr&lt; zmq::context_t &gt; context, std::shared_ptr&lt; <a class="el" href="classjob__evaluator.html">job_evaluator</a> &gt; evaluator, std::shared_ptr&lt; spdlog::logger &gt; logger)</td></tr>
+<tr class="separator:a318750ee459830694d259224c82035cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adf9b34aa723447d9b1af2ea4bf792086"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classjob__receiver.html#adf9b34aa723447d9b1af2ea4bf792086">start_receiving</a> ()</td></tr>
 <tr class="separator:adf9b34aa723447d9b1af2ea4bf792086"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Job receiver handles incoming requests from <a class="el" href="classbroker__connection.html">broker_connection</a> and hand it over to job evaluator. It also sends back response from evaluator. </p>
 
-<p>Definition at line <a class="el" href="job__receiver_8h_source.html#l00012">12</a> of file <a class="el" href="job__receiver_8h_source.html">job_receiver.h</a>.</p>
+<p>Definition at line <a class="el" href="job__receiver_8h_source.html#l00016">16</a> of file <a class="el" href="job__receiver_8h_source.html">job_receiver.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a4f357cf6ce873d28471df4510de0d97c"></a>
+<a class="anchor" id="a318750ee459830694d259224c82035cc"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">job_receiver::job_receiver </td>
           <td>(</td>
-          <td class="paramtype">zmq::context_t &amp;&#160;</td>
+          <td class="paramtype">std::shared_ptr&lt; zmq::context_t &gt;&#160;</td>
           <td class="paramname"><em>context</em>, </td>
         </tr>
         <tr>
@@ -165,7 +166,7 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="job__receiver_8cpp_source.html#l00006">6</a> of file <a class="el" href="job__receiver_8cpp_source.html">job_receiver.cpp</a>.</p>
+<p>Definition at line <a class="el" href="job__receiver_8cpp_source.html#l00009">9</a> of file <a class="el" href="job__receiver_8cpp_source.html">job_receiver.cpp</a>.</p>
 
 </div>
 </div>
@@ -184,7 +185,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Receive jobs from an inproc socket and pass them to the evaluator Blocks execution until interrupted. </p>
 
-<p>Definition at line <a class="el" href="job__receiver_8cpp_source.html#l00017">17</a> of file <a class="el" href="job__receiver_8cpp_source.html">job_receiver.cpp</a>.</p>
+<p>Definition at line <a class="el" href="job__receiver_8cpp_source.html#l00026">26</a> of file <a class="el" href="job__receiver_8cpp_source.html">job_receiver.cpp</a>.</p>
 
 </div>
 </div>
@@ -198,7 +199,7 @@ Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classjob__receiver.html">job_receiver</a></li>
-    <li class="footer">Generated on Fri Feb 19 2016 18:25:15 for ReCodEx - Worker by
+    <li class="footer">Generated on Tue Apr 5 2016 23:03:08 for ReCodEx - Worker by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.10 </li>
   </ul>

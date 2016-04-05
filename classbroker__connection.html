@@ -47,6 +47,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -117,9 +118,8 @@ $(document).ready(function(){initNavTree('classbroker__connection.html','');});
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a3e0fbe31730ab1fe132472315b803bd9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3e0fbe31730ab1fe132472315b803bd9"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>broker_connection</b> (const <a class="el" href="classworker__config.html">worker_config</a> &amp;config, std::shared_ptr&lt; proxy &gt; socket, std::shared_ptr&lt; spdlog::logger &gt; logger=nullptr)</td></tr>
-<tr class="separator:a3e0fbe31730ab1fe132472315b803bd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d553e3557e41fc64dd18b2986e6e440"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbroker__connection.html#a0d553e3557e41fc64dd18b2986e6e440">broker_connection</a> (std::shared_ptr&lt; const <a class="el" href="classworker__config.html">worker_config</a> &gt; config, std::shared_ptr&lt; proxy &gt; socket, std::shared_ptr&lt; spdlog::logger &gt; logger=nullptr)</td></tr>
+<tr class="separator:a0d553e3557e41fc64dd18b2986e6e440"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae4d7e0e7dd09b8f28922bbcd5c732e9a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbroker__connection.html#ae4d7e0e7dd09b8f28922bbcd5c732e9a">connect</a> ()</td></tr>
 <tr class="separator:ae4d7e0e7dd09b8f28922bbcd5c732e9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acfc117a47909c2753d8a22d5a88328fd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbroker__connection.html#acfc117a47909c2753d8a22d5a88328fd">receive_tasks</a> ()</td></tr>
@@ -131,8 +131,61 @@ class broker_connection&lt; proxy &gt;</h3>
 
 <p>Represents a connection to the ReCodEx broker When a job is received from the broker, a job callback is invoked to process it. </p>
 
-<p>Definition at line <a class="el" href="broker__connection_8h_source.html#l00027">27</a> of file <a class="el" href="broker__connection_8h_source.html">broker_connection.h</a>.</p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
+<p>Definition at line <a class="el" href="broker__connection_8h_source.html#l00029">29</a> of file <a class="el" href="broker__connection_8h_source.html">broker_connection.h</a>.</p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="a0d553e3557e41fc64dd18b2986e6e440"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename proxy &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbroker__connection.html">broker_connection</a>&lt; proxy &gt;::<a class="el" href="classbroker__connection.html">broker_connection</a> </td>
+          <td>(</td>
+          <td class="paramtype">std::shared_ptr&lt; const <a class="el" href="classworker__config.html">worker_config</a> &gt;&#160;</td>
+          <td class="paramname"><em>config</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::shared_ptr&lt; proxy &gt;&#160;</td>
+          <td class="paramname"><em>socket</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::shared_ptr&lt; spdlog::logger &gt;&#160;</td>
+          <td class="paramname"><em>logger</em> = <code>nullptr</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>TODO: documentation </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">config</td><td></td></tr>
+    <tr><td class="paramname">socket</td><td></td></tr>
+    <tr><td class="paramname">logger</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="broker__connection_8h_source.html#l00084">84</a> of file <a class="el" href="broker__connection_8h_source.html">broker_connection.h</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
 <a class="anchor" id="ae4d7e0e7dd09b8f28922bbcd5c732e9a"></a>
 <div class="memitem">
 <div class="memproto">
@@ -155,9 +208,9 @@ template&lt;typename proxy &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Send the INIT command to the broker. </p>
+<p>Connect to the broker and send it the INIT command </p>
 
-<p>Definition at line <a class="el" href="broker__connection_8h_source.html#l00051">51</a> of file <a class="el" href="broker__connection_8h_source.html">broker_connection.h</a>.</p>
+<p>Definition at line <a class="el" href="broker__connection_8h_source.html#l00111">111</a> of file <a class="el" href="broker__connection_8h_source.html">broker_connection.h</a>.</p>
 
 </div>
 </div>
@@ -185,7 +238,7 @@ template&lt;typename proxy &gt; </div>
 </div><div class="memdoc">
 <p>Receive and process tasks Blocks execution until the underlying ZeroMQ context is terminated </p>
 
-<p>Definition at line <a class="el" href="broker__connection_8h_source.html#l00071">71</a> of file <a class="el" href="broker__connection_8h_source.html">broker_connection.h</a>.</p>
+<p>Definition at line <a class="el" href="broker__connection_8h_source.html#l00122">122</a> of file <a class="el" href="broker__connection_8h_source.html">broker_connection.h</a>.</p>
 
 </div>
 </div>
@@ -198,7 +251,7 @@ template&lt;typename proxy &gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classbroker__connection.html">broker_connection</a></li>
-    <li class="footer">Generated on Fri Feb 19 2016 18:25:15 for ReCodEx - Worker by
+    <li class="footer">Generated on Tue Apr 5 2016 23:03:08 for ReCodEx - Worker by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.10 </li>
   </ul>

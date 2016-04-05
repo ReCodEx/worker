@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['environ_5fvars',['environ_vars',['../structsandbox__limits.html#a94995f788d00615f2bb3b38c28ae51cc',1,'sandbox_limits']]],
-  ['error_5fmessage',['error_message',['../structtask__results.html#ab46a9b36f7309e33adfa6e67c9f34b72',1,'task_results']]],
-  ['exitcode',['exitcode',['../structsandbox__results.html#a7787eca1b2b3344f9f05cca3a6c240e3',1,'sandbox_results']]],
-  ['exitsig',['exitsig',['../structsandbox__results.html#a2873cd7462897601e0d44002c3706f4e',1,'sandbox_results']]],
-  ['extra_5ftime',['extra_time',['../structsandbox__limits.html#aacde065ad8899d9b194426bfa12267f8',1,'sandbox_limits']]]
+  ['failed',['failed',['../structtask__results.html#aeb49159a3adebca3d7eba2c0cca929aa',1,'task_results']]],
+  ['fatal_5ffailure',['fatal_failure',['../classtask__metadata.html#aea9356af8f010365de9b659c87c3c294',1,'task_metadata']]],
+  ['file_5fserver_5furl',['file_server_url',['../classjob__metadata.html#adc187f29aada602166249901c2c4ad1e',1,'job_metadata']]],
+  ['files_5fsize',['files_size',['../structsandbox__limits.html#a5b227e9e8fca4f0838f953351e1819a9',1,'sandbox_limits']]],
+  ['functions_5f',['functions_',['../classcommand__holder.html#a9f55d5617aa7c8de853a33bdb92de866',1,'command_holder']]]
 ];

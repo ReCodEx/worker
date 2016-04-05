@@ -1,6 +1,10 @@
 var searchData=
 [
-  ['task_5fbase',['task_base',['../classtask__base.html#a1ba57f10c2e3f26228925e76021a2e60',1,'task_base::task_base()=delete'],['../classtask__base.html#a4cb88a596ba8eb0b4bf7a7fa6f4565a2',1,'task_base::task_base(size_t id, std::string task_id, size_t priority, bool fatal, const std::vector&lt; std::string &gt; &amp;dependencies, const std::string &amp;cmd, const std::vector&lt; std::string &gt; &amp;arguments)']]],
-  ['task_5fexception',['task_exception',['../classtask__exception.html#a86104f1978568985b2d97bba773e3a1a',1,'task_exception::task_exception()'],['../classtask__exception.html#a3eb5106a22e13b973c7def7e9325a3f3',1,'task_exception::task_exception(const std::string &amp;what)']]],
-  ['task_5fresults',['task_results',['../structtask__results.html#a92ddd8e0ef081015c05545361d75cabd',1,'task_results']]]
+  ['sandbox_5fexception',['sandbox_exception',['../classsandbox__exception.html#a1507a282fcaf83441eee07fe8f43059d',1,'sandbox_exception::sandbox_exception()'],['../classsandbox__exception.html#aa83d8f93ee11454d0a7e777a0900d588',1,'sandbox_exception::sandbox_exception(const std::string &amp;what)']]],
+  ['sandbox_5fresults',['sandbox_results',['../structsandbox__results.html#a0341dd178471adca7955c2ab068e6574',1,'sandbox_results']]],
+  ['send_5fbroker',['send_broker',['../classconnection__proxy.html#a8a890560ac839683514323d24e7365b2',1,'connection_proxy']]],
+  ['send_5fjobs',['send_jobs',['../classconnection__proxy.html#a196e6c7adc01da90ae3efb142af83281',1,'connection_proxy']]],
+  ['set_5fchildren_5fexecution',['set_children_execution',['../classtask__base.html#ac2dd9519d27a2903276d86b4e38b2c12',1,'task_base']]],
+  ['set_5fexecution',['set_execution',['../classtask__base.html#abbe49db38ee7a6152681d2a46469dd31',1,'task_base']]],
+  ['start_5freceiving',['start_receiving',['../classjob__receiver.html#adf9b34aa723447d9b1af2ea4bf792086',1,'job_receiver']]]
 ];

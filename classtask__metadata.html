@@ -47,6 +47,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -106,50 +107,286 @@ $(document).ready(function(){initNavTree('classtask__metadata.html','');});
 
 <div class="header">
   <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="classtask__metadata-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">task_metadata Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="task__metadata_8h_source.html">task_metadata.h</a>&gt;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:aec7a1fe6cc56524fa19e8b8b333506cb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask__metadata.html#aec7a1fe6cc56524fa19e8b8b333506cb">task_metadata</a> (std::string <a class="el" href="classtask__metadata.html#a2db18235e5a3cd710b659b4c09d98d43">task_id</a>=&quot;&quot;, size_t <a class="el" href="classtask__metadata.html#a1be7d8f2b3e4b9fd4b6460ea7a5aac13">priority</a>=0, bool fatal=false, std::vector&lt; std::string &gt; deps={}, std::string cmd=&quot;&quot;, std::vector&lt; std::string &gt; args={}, std::string input=&quot;&quot;, std::string output=&quot;&quot;, std::string err=&quot;&quot;, std::shared_ptr&lt; <a class="el" href="classsandbox__config.html">sandbox_config</a> &gt; <a class="el" href="classtask__metadata.html#ae792d0fc6d3c11f55d8526920304aebd">sandbox</a>=nullptr)</td></tr>
+<tr class="separator:aec7a1fe6cc56524fa19e8b8b333506cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a2db18235e5a3cd710b659b4c09d98d43"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2db18235e5a3cd710b659b4c09d98d43"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>task_id</b> = &quot;&quot;</td></tr>
+<tr class="memitem:a2db18235e5a3cd710b659b4c09d98d43"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask__metadata.html#a2db18235e5a3cd710b659b4c09d98d43">task_id</a></td></tr>
 <tr class="separator:a2db18235e5a3cd710b659b4c09d98d43"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1be7d8f2b3e4b9fd4b6460ea7a5aac13"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1be7d8f2b3e4b9fd4b6460ea7a5aac13"></a>
-size_t&#160;</td><td class="memItemRight" valign="bottom"><b>priority</b> = 0</td></tr>
+<tr class="memitem:a1be7d8f2b3e4b9fd4b6460ea7a5aac13"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask__metadata.html#a1be7d8f2b3e4b9fd4b6460ea7a5aac13">priority</a></td></tr>
 <tr class="separator:a1be7d8f2b3e4b9fd4b6460ea7a5aac13"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aea9356af8f010365de9b659c87c3c294"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aea9356af8f010365de9b659c87c3c294"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>fatal_failure</b> = false</td></tr>
+<tr class="memitem:aea9356af8f010365de9b659c87c3c294"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask__metadata.html#aea9356af8f010365de9b659c87c3c294">fatal_failure</a></td></tr>
 <tr class="separator:aea9356af8f010365de9b659c87c3c294"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acdf173fb2eb8bda4ccaa777bbe881d47"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acdf173fb2eb8bda4ccaa777bbe881d47"></a>
-std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>dependencies</b></td></tr>
+<tr class="memitem:acdf173fb2eb8bda4ccaa777bbe881d47"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask__metadata.html#acdf173fb2eb8bda4ccaa777bbe881d47">dependencies</a></td></tr>
 <tr class="separator:acdf173fb2eb8bda4ccaa777bbe881d47"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a161f165391d64c738f0617eff701b0b3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a161f165391d64c738f0617eff701b0b3"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>binary</b> = &quot;&quot;</td></tr>
+<tr class="memitem:a161f165391d64c738f0617eff701b0b3"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask__metadata.html#a161f165391d64c738f0617eff701b0b3">binary</a></td></tr>
 <tr class="separator:a161f165391d64c738f0617eff701b0b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5b5f5ff2b34f9ad9678e0436b99ab3e8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5b5f5ff2b34f9ad9678e0436b99ab3e8"></a>
-std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>cmd_args</b></td></tr>
+<tr class="memitem:a5b5f5ff2b34f9ad9678e0436b99ab3e8"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask__metadata.html#a5b5f5ff2b34f9ad9678e0436b99ab3e8">cmd_args</a></td></tr>
 <tr class="separator:a5b5f5ff2b34f9ad9678e0436b99ab3e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4a4249794b7e817de4495e2eac09475b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4a4249794b7e817de4495e2eac09475b"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>std_input</b> = &quot;&quot;</td></tr>
+<tr class="memitem:a4a4249794b7e817de4495e2eac09475b"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask__metadata.html#a4a4249794b7e817de4495e2eac09475b">std_input</a></td></tr>
 <tr class="separator:a4a4249794b7e817de4495e2eac09475b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abeffba7e46bf35de04e6ff9deb14f8f9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abeffba7e46bf35de04e6ff9deb14f8f9"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>std_output</b> = &quot;&quot;</td></tr>
+<tr class="memitem:abeffba7e46bf35de04e6ff9deb14f8f9"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask__metadata.html#abeffba7e46bf35de04e6ff9deb14f8f9">std_output</a></td></tr>
 <tr class="separator:abeffba7e46bf35de04e6ff9deb14f8f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac396b59a82a231c89f3d6526ff83a939"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac396b59a82a231c89f3d6526ff83a939"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>std_error</b> = &quot;&quot;</td></tr>
+<tr class="memitem:ac396b59a82a231c89f3d6526ff83a939"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask__metadata.html#ac396b59a82a231c89f3d6526ff83a939">std_error</a></td></tr>
 <tr class="separator:ac396b59a82a231c89f3d6526ff83a939"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae792d0fc6d3c11f55d8526920304aebd"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae792d0fc6d3c11f55d8526920304aebd"></a>
-std::shared_ptr&lt; <a class="el" href="classsandbox__config.html">sandbox_config</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>sandbox</b> = nullptr</td></tr>
+<tr class="memitem:ae792d0fc6d3c11f55d8526920304aebd"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classsandbox__config.html">sandbox_config</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask__metadata.html#ae792d0fc6d3c11f55d8526920304aebd">sandbox</a></td></tr>
 <tr class="separator:ae792d0fc6d3c11f55d8526920304aebd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock">
+<div class="textblock"><p>Information about one task loaded from job configuration file. </p>
+
 <p>Definition at line <a class="el" href="task__metadata_8h_source.html#l00011">11</a> of file <a class="el" href="task__metadata_8h_source.html">task_metadata.h</a>.</p>
-</div><hr/>The documentation for this class was generated from the following file:<ul>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="aec7a1fe6cc56524fa19e8b8b333506cb"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">task_metadata::task_metadata </td>
+          <td>(</td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>task_id</em> = <code>&quot;&quot;</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>priority</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>fatal</em> = <code>false</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; std::string &gt;&#160;</td>
+          <td class="paramname"><em>deps</em> = <code>{}</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>cmd</em> = <code>&quot;&quot;</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; std::string &gt;&#160;</td>
+          <td class="paramname"><em>args</em> = <code>{}</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>input</em> = <code>&quot;&quot;</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>output</em> = <code>&quot;&quot;</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>err</em> = <code>&quot;&quot;</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classsandbox__config.html">sandbox_config</a> &gt;&#160;</td>
+          <td class="paramname"><em>sandbox</em> = <code>nullptr</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Just constructor which takes all internal variables. Stated for better construction of class. </p>
+
+<p>Definition at line <a class="el" href="task__metadata_8h_source.html#l00017">17</a> of file <a class="el" href="task__metadata_8h_source.html">task_metadata.h</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a class="anchor" id="a161f165391d64c738f0617eff701b0b3"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string task_metadata::binary</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Command which will be executed within this task. </p>
+
+<p>Definition at line <a class="el" href="task__metadata_8h_source.html#l00042">42</a> of file <a class="el" href="task__metadata_8h_source.html">task_metadata.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a5b5f5ff2b34f9ad9678e0436b99ab3e8"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;std::string&gt; task_metadata::cmd_args</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Arguments for executed command. </p>
+
+<p>Definition at line <a class="el" href="task__metadata_8h_source.html#l00044">44</a> of file <a class="el" href="task__metadata_8h_source.html">task_metadata.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="acdf173fb2eb8bda4ccaa777bbe881d47"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;std::string&gt; task_metadata::dependencies</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Dependent tasks which have to be executed before this one. </p>
+
+<p>Definition at line <a class="el" href="task__metadata_8h_source.html#l00039">39</a> of file <a class="el" href="task__metadata_8h_source.html">task_metadata.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aea9356af8f010365de9b659c87c3c294"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool task_metadata::fatal_failure</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>If true than failure of task will end execution of whole job. </p>
+
+<p>Definition at line <a class="el" href="task__metadata_8h_source.html#l00037">37</a> of file <a class="el" href="task__metadata_8h_source.html">task_metadata.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a1be7d8f2b3e4b9fd4b6460ea7a5aac13"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t task_metadata::priority</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Priority of task among all others. Bigger priority number == greater priority. </p>
+
+<p>Definition at line <a class="el" href="task__metadata_8h_source.html#l00035">35</a> of file <a class="el" href="task__metadata_8h_source.html">task_metadata.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ae792d0fc6d3c11f55d8526920304aebd"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt;<a class="el" href="classsandbox__config.html">sandbox_config</a>&gt; task_metadata::sandbox</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>If not null than this task is external and will be executed in given sandbox. </p>
+
+<p>Definition at line <a class="el" href="task__metadata_8h_source.html#l00054">54</a> of file <a class="el" href="task__metadata_8h_source.html">task_metadata.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ac396b59a82a231c89f3d6526ff83a939"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string task_metadata::std_error</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>If stated than error output will be redirected to this file. </p>
+
+<p>Definition at line <a class="el" href="task__metadata_8h_source.html#l00051">51</a> of file <a class="el" href="task__metadata_8h_source.html">task_metadata.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a4a4249794b7e817de4495e2eac09475b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string task_metadata::std_input</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>If stated than standard input will be redirected from this file. </p>
+
+<p>Definition at line <a class="el" href="task__metadata_8h_source.html#l00047">47</a> of file <a class="el" href="task__metadata_8h_source.html">task_metadata.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="abeffba7e46bf35de04e6ff9deb14f8f9"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string task_metadata::std_output</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>If stated than standard output will be redirected to this file. </p>
+
+<p>Definition at line <a class="el" href="task__metadata_8h_source.html#l00049">49</a> of file <a class="el" href="task__metadata_8h_source.html">task_metadata.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a2db18235e5a3cd710b659b4c09d98d43"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string task_metadata::task_id</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Unique identifier of task in job. </p>
+
+<p>Definition at line <a class="el" href="task__metadata_8h_source.html#l00033">33</a> of file <a class="el" href="task__metadata_8h_source.html">task_metadata.h</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
 <li>src/config/<a class="el" href="task__metadata_8h_source.html">task_metadata.h</a></li>
 </ul>
 </div><!-- contents -->
@@ -158,7 +395,7 @@ std::shared_ptr&lt; <a class="el" href="classsandbox__config.html">sandbox_confi
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classtask__metadata.html">task_metadata</a></li>
-    <li class="footer">Generated on Fri Feb 19 2016 18:25:15 for ReCodEx - Worker by
+    <li class="footer">Generated on Tue Apr 5 2016 23:03:08 for ReCodEx - Worker by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.10 </li>
   </ul>

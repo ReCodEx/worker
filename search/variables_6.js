@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['id',['id',['../structexternal__task_1_1create__params.html#a4d6b742ee125328a24ce8395e4554466',1,'external_task::create_params']]]
+  ['job_5fid',['job_id',['../classjob__metadata.html#ab4724eb5e4ce7e1a867319b94984b5ad',1,'job_metadata::job_id()'],['../structeval__request.html#ab89eb15d98dd038cf2533eab08527a5f',1,'eval_request::job_id()']]],
+  ['job_5furl',['job_url',['../structeval__request.html#a7c32dd4a546ed0ca1c14429025cd9bb9',1,'eval_request']]]
 ];

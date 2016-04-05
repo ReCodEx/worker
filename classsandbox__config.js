@@ -1,5 +1,5 @@
 var classsandbox__config =
 [
-    [ "limits", "classsandbox__config.html#a88bd54d1b856d18f75205a0d4e580cfb", null ],
+    [ "loaded_limits", "classsandbox__config.html#a9274506c60537a16e2c743bdbebb9ed7", null ],
     [ "name", "classsandbox__config.html#acec9f8b03881ca3c4bffc9b14fb4482a", null ]
 ];

@@ -47,6 +47,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -110,14 +111,14 @@ $(document).ready(function(){initNavTree('main_8cpp_source.html','');});
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#define WIN32_LEAN_AND_MEAN</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;</div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;isoeval_core.h&quot;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;worker_core.h&quot;</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;</div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;</div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keywordtype">int</span> main(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span> **argv)</div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;{</div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;    std::vector&lt;std::string&gt; args(argv, argv + argc);</div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;    <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;        <a class="code" href="classisoeval__core.html">isoeval_core</a> core(args);</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;        <a class="code" href="classworker__core.html">worker_core</a> core(args);</div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;        core.run();</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    } <span class="keywordflow">catch</span> (...) {</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;        std::cerr &lt;&lt; <span class="stringliteral">&quot;Something very bad happend!&quot;</span> &lt;&lt; std::endl;</div>
@@ -126,14 +127,14 @@ $(document).ready(function(){initNavTree('main_8cpp_source.html','');});
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keywordflow">return</span> 0;</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;}</div>
-<div class="ttc" id="classisoeval__core_html"><div class="ttname"><a href="classisoeval__core.html">isoeval_core</a></div><div class="ttdef"><b>Definition:</b> <a href="isoeval__core_8h_source.html#l00035">isoeval_core.h:35</a></div></div>
+<div class="ttc" id="classworker__core_html"><div class="ttname"><a href="classworker__core.html">worker_core</a></div><div class="ttdef"><b>Definition:</b> <a href="worker__core_8h_source.html#l00035">worker_core.h:35</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><b>main.cpp</b></li>
-    <li class="footer">Generated on Fri Feb 19 2016 18:25:15 for ReCodEx - Worker by
+    <li class="footer">Generated on Tue Apr 5 2016 23:03:08 for ReCodEx - Worker by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.10 </li>
   </ul>

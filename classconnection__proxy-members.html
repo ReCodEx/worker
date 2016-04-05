@@ -47,6 +47,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -112,19 +113,20 @@ $(document).ready(function(){initNavTree('classconnection__proxy.html','');});
 
 <p>This is the complete list of members for <a class="el" href="classconnection__proxy.html">connection_proxy</a>, including all inherited members.</p>
 <table class="directory">
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>connect</b>(const std::string &amp;addr) (defined in <a class="el" href="classconnection__proxy.html">connection_proxy</a>)</td><td class="entry"><a class="el" href="classconnection__proxy.html">connection_proxy</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0"><td class="entry"><b>connection_proxy</b>(zmq::context_t &amp;context) (defined in <a class="el" href="classconnection__proxy.html">connection_proxy</a>)</td><td class="entry"><a class="el" href="classconnection__proxy.html">connection_proxy</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classconnection__proxy.html#a48d3ffbc01b89c05d9fd1cd8fe98b27a">poll</a>(message_origin::set &amp;result, int timeout, bool *terminate=nullptr)</td><td class="entry"><a class="el" href="classconnection__proxy.html">connection_proxy</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="classconnection__proxy.html#a2b65c2ac81d37db281354a77ae5f0143">recv_broker</a>(std::vector&lt; std::string &gt; &amp;target, bool *terminate=nullptr)</td><td class="entry"><a class="el" href="classconnection__proxy.html">connection_proxy</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classconnection__proxy.html#a612fc5775fe3e1b378c866c3953350a3">recv_jobs</a>(std::vector&lt; std::string &gt; &amp;target, bool *terminate=nullptr)</td><td class="entry"><a class="el" href="classconnection__proxy.html">connection_proxy</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="classconnection__proxy.html#a8a890560ac839683514323d24e7365b2">send_broker</a>(const std::vector&lt; std::string &gt; &amp;msg)</td><td class="entry"><a class="el" href="classconnection__proxy.html">connection_proxy</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classconnection__proxy.html#a196e6c7adc01da90ae3efb142af83281">send_jobs</a>(const std::vector&lt; std::string &gt; &amp;msg)</td><td class="entry"><a class="el" href="classconnection__proxy.html">connection_proxy</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classconnection__proxy.html#ac8be635c4031d7909b5e07c209c73d21">connect</a>(const std::string &amp;addr)</td><td class="entry"><a class="el" href="classconnection__proxy.html">connection_proxy</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classconnection__proxy.html#a7f3d6338d13b4e13376192a81bc318d7">connection_proxy</a>(std::shared_ptr&lt; zmq::context_t &gt; context)</td><td class="entry"><a class="el" href="classconnection__proxy.html">connection_proxy</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classconnection__proxy.html#a229e4bce6726bbd0c386f339710c2ac7">poll</a>(message_origin::set &amp;result, std::chrono::milliseconds timeout, bool &amp;terminate, std::chrono::milliseconds &amp;elapsed_time)</td><td class="entry"><a class="el" href="classconnection__proxy.html">connection_proxy</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classconnection__proxy.html#ac2ee2ff18ecfeef6a06e0d1a11627e08">reconnect_broker</a>(const std::string &amp;addr)</td><td class="entry"><a class="el" href="classconnection__proxy.html">connection_proxy</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classconnection__proxy.html#a2b65c2ac81d37db281354a77ae5f0143">recv_broker</a>(std::vector&lt; std::string &gt; &amp;target, bool *terminate=nullptr)</td><td class="entry"><a class="el" href="classconnection__proxy.html">connection_proxy</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classconnection__proxy.html#a612fc5775fe3e1b378c866c3953350a3">recv_jobs</a>(std::vector&lt; std::string &gt; &amp;target, bool *terminate=nullptr)</td><td class="entry"><a class="el" href="classconnection__proxy.html">connection_proxy</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classconnection__proxy.html#a8a890560ac839683514323d24e7365b2">send_broker</a>(const std::vector&lt; std::string &gt; &amp;msg)</td><td class="entry"><a class="el" href="classconnection__proxy.html">connection_proxy</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classconnection__proxy.html#a196e6c7adc01da90ae3efb142af83281">send_jobs</a>(const std::vector&lt; std::string &gt; &amp;msg)</td><td class="entry"><a class="el" href="classconnection__proxy.html">connection_proxy</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
 </table></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Fri Feb 19 2016 18:25:15 for ReCodEx - Worker by
+    <li class="footer">Generated on Tue Apr 5 2016 23:03:08 for ReCodEx - Worker by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.10 </li>
   </ul>

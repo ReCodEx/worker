@@ -47,6 +47,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -119,6 +120,8 @@ $(document).ready(function(){initNavTree('classjob.html','');});
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a185f6c31b6291cbdefd40f62414c76c4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classjob.html#a185f6c31b6291cbdefd40f62414c76c4">job</a> (std::shared_ptr&lt; <a class="el" href="classjob__metadata.html">job_metadata</a> &gt; job_meta, std::shared_ptr&lt; <a class="el" href="classworker__config.html">worker_config</a> &gt; worker_conf, fs::path working_directory, fs::path source_path, fs::path result_path, std::shared_ptr&lt; <a class="el" href="classfile__manager__base.html">file_manager_base</a> &gt; fileman)</td></tr>
 <tr class="separator:a185f6c31b6291cbdefd40f62414c76c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d736078ab717304757ed7368b257da3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classjob.html#a9d736078ab717304757ed7368b257da3">~job</a> ()</td></tr>
+<tr class="separator:a9d736078ab717304757ed7368b257da3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0769f62cc7f246aa09f95d59d55fdb93"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::pair&lt; std::string, std::shared_ptr&lt; <a class="el" href="structtask__results.html">task_results</a> &gt; &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classjob.html#a0769f62cc7f246aa09f95d59d55fdb93">run</a> ()</td></tr>
 <tr class="separator:a0769f62cc7f246aa09f95d59d55fdb93"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2916a8dd8fcc38072e073db2617cc8a3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2916a8dd8fcc38072e073db2617cc8a3"></a>
@@ -126,9 +129,9 @@ const std::vector&lt; std::shared_ptr&lt; <a class="el" href="classtask__base.ht
 <tr class="separator:a2916a8dd8fcc38072e073db2617cc8a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Job is unit which is received from broker and should be evaluated. Job is built from configuration in which all information should be provided. Job building results in task tree and task queue in which task should be evaluated. </p>
+<div class="textblock"><p>Job is unit which is received from broker and should be evaluated. Job is built from configuration in which all information should be provided. Job building results in task tree and task queue in which task should be evaluated. </p><dl class="section note"><dt>Note</dt><dd>During construction <a class="el" href="classjob__metadata.html">job_metadata</a> structure is given. This structure is editable and there is posibility it can be changed by whoever constructed a job class. In actual ReCodEx worker this situation can never happen. But be aware of this and keep it in mind in other coding. Also do not change <a class="el" href="classjob__metadata.html">job_metadata</a> or <a class="el" href="classtask__metadata.html">task_metadata</a> structure between construction of tasks and its execution. If you do it, you should watch your back, devil will be always very close! </dd></dl>
 
-<p>Definition at line <a class="el" href="job_8h_source.html#l00039">39</a> of file <a class="el" href="job_8h_source.html">job.h</a>.</p>
+<p>Definition at line <a class="el" href="job_8h_source.html#l00044">44</a> of file <a class="el" href="job_8h_source.html">job.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a185f6c31b6291cbdefd40f62414c76c4"></a>
 <div class="memitem">
@@ -199,6 +202,24 @@ const std::vector&lt; std::shared_ptr&lt; <a class="el" href="classtask__base.ht
 
 </div>
 </div>
+<a class="anchor" id="a9d736078ab717304757ed7368b257da3"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">job::~job </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Job cleanup (if needed) is executed. </p>
+
+<p>Definition at line <a class="el" href="job_8cpp_source.html#l00035">35</a> of file <a class="el" href="job_8cpp_source.html">job.cpp</a>.</p>
+
+</div>
+</div>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a class="anchor" id="a0769f62cc7f246aa09f95d59d55fdb93"></a>
 <div class="memitem">
@@ -214,7 +235,7 @@ const std::vector&lt; std::shared_ptr&lt; <a class="el" href="classtask__base.ht
 </div><div class="memdoc">
 <p>Runs all task which are sorted in task queue and get results from all of them. Should not throw an exception. </p><dl class="section return"><dt>Returns</dt><dd>Vector with pairs task id - <a class="el" href="structtask__results.html">task_results</a>. Values are not <em>nullptr</em>. </dd></dl>
 
-<p>Definition at line <a class="el" href="job_8cpp_source.html#l00293">293</a> of file <a class="el" href="job_8cpp_source.html">job.cpp</a>.</p>
+<p>Definition at line <a class="el" href="job_8cpp_source.html#l00285">285</a> of file <a class="el" href="job_8cpp_source.html">job.cpp</a>.</p>
 
 </div>
 </div>
@@ -228,7 +249,7 @@ const std::vector&lt; std::shared_ptr&lt; <a class="el" href="classtask__base.ht
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classjob.html">job</a></li>
-    <li class="footer">Generated on Fri Feb 19 2016 18:25:15 for ReCodEx - Worker by
+    <li class="footer">Generated on Tue Apr 5 2016 23:03:08 for ReCodEx - Worker by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.10 </li>
   </ul>

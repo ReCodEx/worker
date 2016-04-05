@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['isoeval_5fcore',['isoeval_core',['../classisoeval__core.html#a23bfc98cbf314a0bbaf2434f0f3fd3e8',1,'isoeval_core']]],
-  ['isolate_5fsandbox',['isolate_sandbox',['../classisolate__sandbox.html#a5ffd7e43bbaeffd0c8e3dfdb78f91bff',1,'isolate_sandbox']]]
+  ['http_5fmanager',['http_manager',['../classhttp__manager.html#ae5e43e3b5c65ecea5c06f0ffbad13f09',1,'http_manager::http_manager(std::shared_ptr&lt; spdlog::logger &gt; logger=nullptr)'],['../classhttp__manager.html#a0c0347951a7d56548cf40856a1f38a4a',1,'http_manager::http_manager(const std::vector&lt; fileman_config &gt; &amp;configs, std::shared_ptr&lt; spdlog::logger &gt; logger=nullptr)']]]
 ];

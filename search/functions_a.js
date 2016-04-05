@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['poll',['poll',['../classconnection__proxy.html#a48d3ffbc01b89c05d9fd1cd8fe98b27a',1,'connection_proxy']]],
-  ['put_5ffile',['put_file',['../classcache__manager.html#ae141f07babca3847262fc3f12ad91492',1,'cache_manager::put_file()'],['../classfallback__file__manager.html#a737659f4087fca76b230b42867c4d018',1,'fallback_file_manager::put_file()'],['../classfile__manager__base.html#a9d16ccc1adfa7188fe778f5ecfba4a00',1,'file_manager_base::put_file()'],['../classhttp__manager.html#ac819b7f3a1c37f93ae1d4b52def2cdfc',1,'http_manager::put_file()'],['../classprefixed__file__manager.html#aa647ec2d4128d343e64fbc9adb29e974',1,'prefixed_file_manager::put_file()']]]
+  ['operator_21_3d',['operator!=',['../structfileman__config.html#a22a7ba3772a6a5824a517222cdee0c44',1,'fileman_config::operator!=()'],['../structlog__config.html#a088944cfa772f4f407ecd6141e232dc9',1,'log_config::operator!=()'],['../structsandbox__limits.html#afee236d8a808b17527d5f6963bc3d3d3',1,'sandbox_limits::operator!=()']]],
+  ['operator_28_29',['operator()',['../classtask__compare.html#a8438f8253fb67ce133befd5d6a35bd01',1,'task_compare']]],
+  ['operator_3d_3d',['operator==',['../structfileman__config.html#af0c0084550da0de1dbd436dd0b0f87a3',1,'fileman_config::operator==()'],['../structlog__config.html#a3cf20004492f7d7288c153385682ff1d',1,'log_config::operator==()'],['../structsandbox__limits.html#a4900353a62213795318a5aa2f6538849',1,'sandbox_limits::operator==()']]]
 ];

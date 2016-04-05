@@ -47,6 +47,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -112,38 +113,37 @@ $(document).ready(function(){initNavTree('http__manager_8h_source.html','');});
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;memory&gt;</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;file_manager_base.h&quot;</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &quot;spdlog/spdlog.h&quot;</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;spdlog/sinks/null_sink.h&quot;</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &quot;../config/fileman_config.h&quot;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &quot;../helpers/create_logger.h&quot;</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;../config/fileman_config.h&quot;</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;</div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;</div>
-<div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="classhttp__manager.html">   16</a></span>&#160;<span class="keyword">class </span><a class="code" href="classhttp__manager.html">http_manager</a> : <span class="keyword">public</span> <a class="code" href="classfile__manager__base.html">file_manager_base</a></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;{</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <a class="code" href="classhttp__manager.html#ae5e43e3b5c65ecea5c06f0ffbad13f09">http_manager</a>(std::shared_ptr&lt;spdlog::logger&gt; logger = <span class="keyword">nullptr</span>);</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <a class="code" href="classhttp__manager.html#ae5e43e3b5c65ecea5c06f0ffbad13f09">http_manager</a>(<span class="keyword">const</span> std::vector&lt;fileman_config&gt; &amp;configs, std::shared_ptr&lt;spdlog::logger&gt; logger = <span class="keyword">nullptr</span>);</div>
-<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="classhttp__manager.html#a487074895c7735b508b605ab469f10d1">   33</a></span>&#160;    <span class="keyword">virtual</span> <a class="code" href="classhttp__manager.html#a487074895c7735b508b605ab469f10d1">~http_manager</a>()</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    {</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    }</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classhttp__manager.html#a3f8c2026c090f733c60c577f9320bf0f">get_file</a>(<span class="keyword">const</span> std::string &amp;src_name, <span class="keyword">const</span> std::string &amp;dst_name);</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classhttp__manager.html#ac819b7f3a1c37f93ae1d4b52def2cdfc">put_file</a>(<span class="keyword">const</span> std::string &amp;src_name, <span class="keyword">const</span> std::string &amp;dst_url);</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keyword">const</span> <a class="code" href="structfileman__config.html">fileman_config</a> *<a class="code" href="classhttp__manager.html#a37c68ee3fa261c084565b6f9021238af">find_config</a>(<span class="keyword">const</span> std::string &amp;url) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keyword">const</span> std::vector&lt;fileman_config&gt; configs_;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    std::shared_ptr&lt;spdlog::logger&gt; logger_;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;};</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor">#endif // CODEX_WORKER_HTTP_MANAGER_H</span></div>
-<div class="ttc" id="classhttp__manager_html_a3f8c2026c090f733c60c577f9320bf0f"><div class="ttname"><a href="classhttp__manager.html#a3f8c2026c090f733c60c577f9320bf0f">http_manager::get_file</a></div><div class="ttdeci">virtual void get_file(const std::string &amp;src_name, const std::string &amp;dst_name)</div><div class="ttdef"><b>Definition:</b> <a href="http__manager_8cpp_source.html#l00061">http_manager.cpp:61</a></div></div>
+<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="classhttp__manager.html">   15</a></span>&#160;<span class="keyword">class </span><a class="code" href="classhttp__manager.html">http_manager</a> : <span class="keyword">public</span> <a class="code" href="classfile__manager__base.html">file_manager_base</a></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;{</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <a class="code" href="classhttp__manager.html#ae5e43e3b5c65ecea5c06f0ffbad13f09">http_manager</a>(std::shared_ptr&lt;spdlog::logger&gt; logger = <span class="keyword">nullptr</span>);</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <a class="code" href="classhttp__manager.html#ae5e43e3b5c65ecea5c06f0ffbad13f09">http_manager</a>(<span class="keyword">const</span> std::vector&lt;fileman_config&gt; &amp;configs, std::shared_ptr&lt;spdlog::logger&gt; logger = <span class="keyword">nullptr</span>);</div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="classhttp__manager.html#a487074895c7735b508b605ab469f10d1">   32</a></span>&#160;    <span class="keyword">virtual</span> <a class="code" href="classhttp__manager.html#a487074895c7735b508b605ab469f10d1">~http_manager</a>()</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    {</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    }</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classhttp__manager.html#a3f8c2026c090f733c60c577f9320bf0f">get_file</a>(<span class="keyword">const</span> std::string &amp;src_name, <span class="keyword">const</span> std::string &amp;dst_name);</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classhttp__manager.html#ac819b7f3a1c37f93ae1d4b52def2cdfc">put_file</a>(<span class="keyword">const</span> std::string &amp;src_name, <span class="keyword">const</span> std::string &amp;dst_url);</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keyword">const</span> <a class="code" href="structfileman__config.html">fileman_config</a> *<a class="code" href="classhttp__manager.html#a37c68ee3fa261c084565b6f9021238af">find_config</a>(<span class="keyword">const</span> std::string &amp;url) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keyword">const</span> std::vector&lt;fileman_config&gt; configs_;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    std::shared_ptr&lt;spdlog::logger&gt; logger_;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;};</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="preprocessor">#endif // CODEX_WORKER_HTTP_MANAGER_H</span></div>
+<div class="ttc" id="classhttp__manager_html_a3f8c2026c090f733c60c577f9320bf0f"><div class="ttname"><a href="classhttp__manager.html#a3f8c2026c090f733c60c577f9320bf0f">http_manager::get_file</a></div><div class="ttdeci">virtual void get_file(const std::string &amp;src_name, const std::string &amp;dst_name)</div><div class="ttdef"><b>Definition:</b> <a href="http__manager_8cpp_source.html#l00057">http_manager.cpp:57</a></div></div>
 <div class="ttc" id="structfileman__config_html"><div class="ttname"><a href="structfileman__config.html">fileman_config</a></div><div class="ttdef"><b>Definition:</b> <a href="fileman__config_8h_source.html#l00008">fileman_config.h:8</a></div></div>
 <div class="ttc" id="classfile__manager__base_html"><div class="ttname"><a href="classfile__manager__base.html">file_manager_base</a></div><div class="ttdef"><b>Definition:</b> <a href="file__manager__base_8h_source.html#l00014">file_manager_base.h:14</a></div></div>
-<div class="ttc" id="classhttp__manager_html"><div class="ttname"><a href="classhttp__manager.html">http_manager</a></div><div class="ttdef"><b>Definition:</b> <a href="http__manager_8h_source.html#l00016">http_manager.h:16</a></div></div>
-<div class="ttc" id="classhttp__manager_html_a37c68ee3fa261c084565b6f9021238af"><div class="ttname"><a href="classhttp__manager.html#a37c68ee3fa261c084565b6f9021238af">http_manager::find_config</a></div><div class="ttdeci">const fileman_config * find_config(const std::string &amp;url) const </div><div class="ttdef"><b>Definition:</b> <a href="http__manager_8cpp_source.html#l00216">http_manager.cpp:216</a></div></div>
-<div class="ttc" id="classhttp__manager_html_a487074895c7735b508b605ab469f10d1"><div class="ttname"><a href="classhttp__manager.html#a487074895c7735b508b605ab469f10d1">http_manager::~http_manager</a></div><div class="ttdeci">virtual ~http_manager()</div><div class="ttdef"><b>Definition:</b> <a href="http__manager_8h_source.html#l00033">http_manager.h:33</a></div></div>
-<div class="ttc" id="classhttp__manager_html_ac819b7f3a1c37f93ae1d4b52def2cdfc"><div class="ttname"><a href="classhttp__manager.html#ac819b7f3a1c37f93ae1d4b52def2cdfc">http_manager::put_file</a></div><div class="ttdeci">virtual void put_file(const std::string &amp;src_name, const std::string &amp;dst_url)</div><div class="ttdef"><b>Definition:</b> <a href="http__manager_8cpp_source.html#l00135">http_manager.cpp:135</a></div></div>
+<div class="ttc" id="classhttp__manager_html"><div class="ttname"><a href="classhttp__manager.html">http_manager</a></div><div class="ttdef"><b>Definition:</b> <a href="http__manager_8h_source.html#l00015">http_manager.h:15</a></div></div>
+<div class="ttc" id="classhttp__manager_html_a37c68ee3fa261c084565b6f9021238af"><div class="ttname"><a href="classhttp__manager.html#a37c68ee3fa261c084565b6f9021238af">http_manager::find_config</a></div><div class="ttdeci">const fileman_config * find_config(const std::string &amp;url) const </div><div class="ttdef"><b>Definition:</b> <a href="http__manager_8cpp_source.html#l00212">http_manager.cpp:212</a></div></div>
+<div class="ttc" id="classhttp__manager_html_a487074895c7735b508b605ab469f10d1"><div class="ttname"><a href="classhttp__manager.html#a487074895c7735b508b605ab469f10d1">http_manager::~http_manager</a></div><div class="ttdeci">virtual ~http_manager()</div><div class="ttdef"><b>Definition:</b> <a href="http__manager_8h_source.html#l00032">http_manager.h:32</a></div></div>
+<div class="ttc" id="classhttp__manager_html_ac819b7f3a1c37f93ae1d4b52def2cdfc"><div class="ttname"><a href="classhttp__manager.html#ac819b7f3a1c37f93ae1d4b52def2cdfc">http_manager::put_file</a></div><div class="ttdeci">virtual void put_file(const std::string &amp;src_name, const std::string &amp;dst_url)</div><div class="ttdef"><b>Definition:</b> <a href="http__manager_8cpp_source.html#l00131">http_manager.cpp:131</a></div></div>
 <div class="ttc" id="classhttp__manager_html_ae5e43e3b5c65ecea5c06f0ffbad13f09"><div class="ttname"><a href="classhttp__manager.html#ae5e43e3b5c65ecea5c06f0ffbad13f09">http_manager::http_manager</a></div><div class="ttdeci">http_manager(std::shared_ptr&lt; spdlog::logger &gt; logger=nullptr)</div><div class="ttdef"><b>Definition:</b> <a href="http__manager_8cpp_source.html#l00045">http_manager.cpp:45</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
@@ -151,7 +151,7 @@ $(document).ready(function(){initNavTree('http__manager_8h_source.html','');});
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_3615c181cde837682c06ec9b704aadef.html">fileman</a></li><li class="navelem"><b>http_manager.h</b></li>
-    <li class="footer">Generated on Fri Feb 19 2016 18:25:15 for ReCodEx - Worker by
+    <li class="footer">Generated on Tue Apr 5 2016 23:03:08 for ReCodEx - Worker by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.10 </li>
   </ul>

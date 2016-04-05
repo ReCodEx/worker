@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['operator_21_3d',['operator!=',['../structfileman__config.html#a22a7ba3772a6a5824a517222cdee0c44',1,'fileman_config::operator!=()'],['../structlog__config.html#a088944cfa772f4f407ecd6141e232dc9',1,'log_config::operator!=()'],['../structsandbox__limits.html#afee236d8a808b17527d5f6963bc3d3d3',1,'sandbox_limits::operator!=()']]],
-  ['operator_28_29',['operator()',['../classtask__compare.html#a8438f8253fb67ce133befd5d6a35bd01',1,'task_compare']]],
-  ['operator_3d_3d',['operator==',['../structfileman__config.html#af0c0084550da0de1dbd436dd0b0f87a3',1,'fileman_config::operator==()'],['../structlog__config.html#a3cf20004492f7d7288c153385682ff1d',1,'log_config::operator==()'],['../structsandbox__limits.html#a4900353a62213795318a5aa2f6538849',1,'sandbox_limits::operator==()']]]
+  ['job',['job',['../classjob.html#a185f6c31b6291cbdefd40f62414c76c4',1,'job']]],
+  ['job_5fevaluator',['job_evaluator',['../classjob__evaluator.html#a5495073884337a4916a0d9f8e378db54',1,'job_evaluator']]],
+  ['job_5fexception',['job_exception',['../classjob__exception.html#a1f4d940a9ff8d5bb65eeb7380e8223b4',1,'job_exception::job_exception()'],['../classjob__exception.html#aa0073dd9c3849cd645c39c6be37c8c15',1,'job_exception::job_exception(const std::string &amp;what)']]],
+  ['job_5freceiver',['job_receiver',['../classjob__receiver.html#a318750ee459830694d259224c82035cc',1,'job_receiver']]]
 ];

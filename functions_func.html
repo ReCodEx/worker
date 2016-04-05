@@ -47,6 +47,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -87,6 +88,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow4" class="tabs3">
     <ul class="tablist">
       <li><a href="#index_a"><span>a</span></a></li>
+      <li><a href="#index_b"><span>b</span></a></li>
       <li><a href="#index_c"><span>c</span></a></li>
       <li><a href="#index_d"><span>d</span></a></li>
       <li><a href="#index_e"><span>e</span></a></li>
@@ -149,9 +151,25 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 </ul>
 
 
+<h3><a class="anchor" id="index_b"></a>- b -</h3><ul>
+<li>broker_connection()
+: <a class="el" href="classbroker__connection.html#a0d553e3557e41fc64dd18b2986e6e440">broker_connection&lt; proxy &gt;</a>
+</li>
+</ul>
+
+
 <h3><a class="anchor" id="index_c"></a>- c -</h3><ul>
 <li>cache_manager()
 : <a class="el" href="classcache__manager.html#a576af82c157e7224a625417a4896f21a">cache_manager</a>
+</li>
+<li>call_function()
+: <a class="el" href="classcommand__holder.html#a1092d8e8cffd77403735c7f9fc54347c">command_holder&lt; context_t &gt;</a>
+</li>
+<li>command_context()
+: <a class="el" href="classcommand__context.html#a5fe58136d241caf7c49e6922c496b50e">command_context&lt; context_t &gt;</a>
+</li>
+<li>command_holder()
+: <a class="el" href="classcommand__holder.html#a02ecfd32aec1dc6d6b941ec14cb90af2">command_holder&lt; context_t &gt;</a>
 </li>
 <li>compress()
 : <a class="el" href="classarchivator.html#a3f3e53ee90262060eea1729c792612d1">archivator</a>
@@ -161,6 +179,10 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 </li>
 <li>connect()
 : <a class="el" href="classbroker__connection.html#ae4d7e0e7dd09b8f28922bbcd5c732e9a">broker_connection&lt; proxy &gt;</a>
+, <a class="el" href="classconnection__proxy.html#ac8be635c4031d7909b5e07c209c73d21">connection_proxy</a>
+</li>
+<li>connection_proxy()
+: <a class="el" href="classconnection__proxy.html#a7f3d6338d13b4e13376192a81bc318d7">connection_proxy</a>
 </li>
 </ul>
 
@@ -189,9 +211,6 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 <li>fake_sandbox()
 : <a class="el" href="classfake__sandbox.html#a55b019d3acbcabbabf51f7bbb9cd63da">fake_sandbox</a>
 </li>
-<li>fake_task()
-: <a class="el" href="classfake__task.html#aa54f815ae027ef2827e41a455755b4c6">fake_task</a>
-</li>
 <li>fallback_file_manager()
 : <a class="el" href="classfallback__file__manager.html#a2ba2da9c188eed71e57395e5f7bbfd84">fallback_file_manager</a>
 </li>
@@ -207,6 +226,9 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 <h3><a class="anchor" id="index_g"></a>- g -</h3><ul>
 <li>get_args()
 : <a class="el" href="classtask__base.html#a5326f936dec28e4adec302ea8f49bc90">task_base</a>
+</li>
+<li>get_broker_ping_interval()
+: <a class="el" href="classworker__config.html#a51d92f36e13c7351c7f00b1db867ac2b">worker_config</a>
 </li>
 <li>get_broker_uri()
 : <a class="el" href="classworker__config.html#a9146975c7b9fd483fe511bde77c2e783">worker_config</a>
@@ -245,6 +267,9 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 <li>get_headers()
 : <a class="el" href="classworker__config.html#ac30ea5854e1e411f6b8cc61e7ebd875f">worker_config</a>
 </li>
+<li>get_hwgroup()
+: <a class="el" href="classworker__config.html#a9918f15aeddbf1e06ae9b234a30f647c">worker_config</a>
+</li>
 <li>get_id()
 : <a class="el" href="classtask__base.html#a9e67d4dea49bcddc369ba09e86b05598">task_base</a>
 </li>
@@ -252,11 +277,14 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 : <a class="el" href="structlog__config.html#a500023888629f8a194fbfe0fc24da71d">log_config</a>
 </li>
 <li>get_limits()
-: <a class="el" href="classexternal__task.html#a60c7d449864ae5dfa2ac6d1f3b74fd8f">external_task</a>
+: <a class="el" href="classexternal__task.html#acf43ad39bcc74db7801818721e280bd3">external_task</a>
 , <a class="el" href="classworker__config.html#a08476c258b8ef482e3538addfb275085">worker_config</a>
 </li>
 <li>get_log_config()
 : <a class="el" href="classworker__config.html#a69340f2be1bc41d34822b9a2250f6ed6">worker_config</a>
+</li>
+<li>get_max_broker_liveness()
+: <a class="el" href="classworker__config.html#a546e388fe06e03bd79bb3b321faf9e0f">worker_config</a>
 </li>
 <li>get_priority()
 : <a class="el" href="classtask__base.html#a167f2266cdd153a4f11f519a29b5867e">task_base</a>
@@ -281,8 +309,8 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 
 
 <h3><a class="anchor" id="index_i"></a>- i -</h3><ul>
-<li>isoeval_core()
-: <a class="el" href="classisoeval__core.html#a23bfc98cbf314a0bbaf2434f0f3fd3e8">isoeval_core</a>
+<li>is_executable()
+: <a class="el" href="classtask__base.html#a6cfe410e96c6568fe226ef8aba51adde">task_base</a>
 </li>
 <li>isolate_sandbox()
 : <a class="el" href="classisolate__sandbox.html#a5ffd7e43bbaeffd0c8e3dfdb78f91bff">isolate_sandbox</a>
@@ -298,10 +326,10 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 : <a class="el" href="classjob__evaluator.html#a5495073884337a4916a0d9f8e378db54">job_evaluator</a>
 </li>
 <li>job_exception()
-: <a class="el" href="classjob__exception.html#a1f4d940a9ff8d5bb65eeb7380e8223b4">job_exception</a>
+: <a class="el" href="classjob__exception.html#aa0073dd9c3849cd645c39c6be37c8c15">job_exception</a>
 </li>
 <li>job_receiver()
-: <a class="el" href="classjob__receiver.html#a4f357cf6ce873d28471df4510de0d97c">job_receiver</a>
+: <a class="el" href="classjob__receiver.html#a318750ee459830694d259224c82035cc">job_receiver</a>
 </li>
 </ul>
 
@@ -325,7 +353,7 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 
 <h3><a class="anchor" id="index_p"></a>- p -</h3><ul>
 <li>poll()
-: <a class="el" href="classconnection__proxy.html#a48d3ffbc01b89c05d9fd1cd8fe98b27a">connection_proxy</a>
+: <a class="el" href="classconnection__proxy.html#a229e4bce6726bbd0c386f339710c2ac7">connection_proxy</a>
 </li>
 <li>put_file()
 : <a class="el" href="classcache__manager.html#ae141f07babca3847262fc3f12ad91492">cache_manager</a>
@@ -341,11 +369,20 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 <li>receive_tasks()
 : <a class="el" href="classbroker__connection.html#acfc117a47909c2753d8a22d5a88328fd">broker_connection&lt; proxy &gt;</a>
 </li>
+<li>reconnect_broker()
+: <a class="el" href="classconnection__proxy.html#ac2ee2ff18ecfeef6a06e0d1a11627e08">connection_proxy</a>
+</li>
 <li>recv_broker()
 : <a class="el" href="classconnection__proxy.html#a2b65c2ac81d37db281354a77ae5f0143">connection_proxy</a>
 </li>
 <li>recv_jobs()
 : <a class="el" href="classconnection__proxy.html#a612fc5775fe3e1b378c866c3953350a3">connection_proxy</a>
+</li>
+<li>register_command()
+: <a class="el" href="classcommand__holder.html#aa7e0a54372918a440bb934969ca68c37">command_holder&lt; context_t &gt;</a>
+</li>
+<li>root_task()
+: <a class="el" href="classroot__task.html#afd8e59588281ca82f4a8aa71012025a4">root_task</a>
 </li>
 <li>run()
 : <a class="el" href="classarchivate__task.html#ab1854685402fd6a52e541c0f7c2b29fb">archivate_task</a>
@@ -353,16 +390,16 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 , <a class="el" href="classexternal__task.html#ad4e5f9e133237885bff4f1db51dcd82d">external_task</a>
 , <a class="el" href="classextract__task.html#a247fac09e12f42eccff8e1c074bae66f">extract_task</a>
 , <a class="el" href="classfake__sandbox.html#a48af2a199166210d134543819311b687">fake_sandbox</a>
-, <a class="el" href="classfake__task.html#a22d52bb9810ca35804fd2c81bc92dc67">fake_task</a>
 , <a class="el" href="classfetch__task.html#a4058ae92f11c81d4182c594dfb7509be">fetch_task</a>
-, <a class="el" href="classisoeval__core.html#a48bc7c6e8b680e56ed62f819706515f0">isoeval_core</a>
 , <a class="el" href="classisolate__sandbox.html#a052ca2c887458fe48731b1d1c61f71f5">isolate_sandbox</a>
 , <a class="el" href="classjob.html#a0769f62cc7f246aa09f95d59d55fdb93">job</a>
 , <a class="el" href="classmkdir__task.html#ad1a4291f6e8d82bc7056fce1b968bbf4">mkdir_task</a>
 , <a class="el" href="classrename__task.html#a848d5769e0994dc41762256ed2f33b8a">rename_task</a>
 , <a class="el" href="classrm__task.html#a05e8a14e6dd4598b2fa67f134dd65e7e">rm_task</a>
+, <a class="el" href="classroot__task.html#ade778475dc3ac30b3f8ae9bece87000a">root_task</a>
 , <a class="el" href="classsandbox__base.html#a123cf7515a600fff855be71494637a18">sandbox_base</a>
 , <a class="el" href="classtask__base.html#a0f05e5664b3c2886b4555b01a6fe8ad0">task_base</a>
+, <a class="el" href="classworker__core.html#ab5ab9b5167f79d1c797ae345131a3439">worker_core</a>
 </li>
 </ul>
 
@@ -380,6 +417,12 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 <li>send_jobs()
 : <a class="el" href="classconnection__proxy.html#a196e6c7adc01da90ae3efb142af83281">connection_proxy</a>
 </li>
+<li>set_children_execution()
+: <a class="el" href="classtask__base.html#ac2dd9519d27a2903276d86b4e38b2c12">task_base</a>
+</li>
+<li>set_execution()
+: <a class="el" href="classtask__base.html#abbe49db38ee7a6152681d2a46469dd31">task_base</a>
+</li>
 <li>start_receiving()
 : <a class="el" href="classjob__receiver.html#adf9b34aa723447d9b1af2ea4bf792086">job_receiver</a>
 </li>
@@ -391,7 +434,10 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 : <a class="el" href="classtask__base.html#a1ba57f10c2e3f26228925e76021a2e60">task_base</a>
 </li>
 <li>task_exception()
-: <a class="el" href="classtask__exception.html#a86104f1978568985b2d97bba773e3a1a">task_exception</a>
+: <a class="el" href="classtask__exception.html#a3eb5106a22e13b973c7def7e9325a3f3">task_exception</a>
+</li>
+<li>task_metadata()
+: <a class="el" href="classtask__metadata.html#aec7a1fe6cc56524fa19e8b8b333506cb">task_metadata</a>
 </li>
 <li>task_results()
 : <a class="el" href="structtask__results.html#a92ddd8e0ef081015c05545361d75cabd">task_results</a>
@@ -410,6 +456,9 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 <li>worker_config()
 : <a class="el" href="classworker__config.html#a995e38f56bea88e411bab36fe21f859d">worker_config</a>
 </li>
+<li>worker_core()
+: <a class="el" href="classworker__core.html#a0c993791f7bb7d3c5dc24422665eddf5">worker_core</a>
+</li>
 </ul>
 
 
@@ -426,9 +475,6 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 <li>~fake_sandbox()
 : <a class="el" href="classfake__sandbox.html#a6800a5bbc96244e3209d5f32ffcc5eb9">fake_sandbox</a>
 </li>
-<li>~fake_task()
-: <a class="el" href="classfake__task.html#ae277a00e4162a5601741906318d65891">fake_task</a>
-</li>
 <li>~fallback_file_manager()
 : <a class="el" href="classfallback__file__manager.html#a62b6ff8b95f0a1b399b1fdd22eb853ae">fallback_file_manager</a>
 </li>
@@ -441,17 +487,20 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 <li>~http_manager()
 : <a class="el" href="classhttp__manager.html#a487074895c7735b508b605ab469f10d1">http_manager</a>
 </li>
-<li>~isoeval_core()
-: <a class="el" href="classisoeval__core.html#a7e38aab28a89b8c0ffc31c0b68ed8540">isoeval_core</a>
-</li>
 <li>~isolate_sandbox()
 : <a class="el" href="classisolate__sandbox.html#a5c02a48ccd5911b1a044be6d5e14d6ec">isolate_sandbox</a>
+</li>
+<li>~job()
+: <a class="el" href="classjob.html#a9d736078ab717304757ed7368b257da3">job</a>
 </li>
 <li>~job_evaluator()
 : <a class="el" href="classjob__evaluator.html#a95e5379fa71f9817f7bc7e8c2b3204cc">job_evaluator</a>
 </li>
 <li>~job_exception()
 : <a class="el" href="classjob__exception.html#a0f1286ac925b14397c68ace4b27b66d0">job_exception</a>
+</li>
+<li>~root_task()
+: <a class="el" href="classroot__task.html#aceb95644e748551579521bbfac5dcc7a">root_task</a>
 </li>
 <li>~sandbox_base()
 : <a class="el" href="classsandbox__base.html#a1beea2d7aaf69e778eaf785059eaa957">sandbox_base</a>
@@ -465,13 +514,16 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 <li>~task_exception()
 : <a class="el" href="classtask__exception.html#a310f2442d88d2a43d9c422b556268013">task_exception</a>
 </li>
+<li>~worker_core()
+: <a class="el" href="classworker__core.html#ae8a0df3dd8dea354cd8dab605749c6fa">worker_core</a>
+</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Fri Feb 19 2016 18:25:15 for ReCodEx - Worker by
+    <li class="footer">Generated on Tue Apr 5 2016 23:03:08 for ReCodEx - Worker by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.10 </li>
   </ul>

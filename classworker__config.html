@@ -47,6 +47,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -135,6 +136,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a9146975c7b9fd483fe511bde77c2e783"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac30ea5854e1e411f6b8cc61e7ebd875f"><td class="memItemLeft" align="right" valign="top">virtual const <a class="el" href="classworker__config.html#ae8122667dc3f6f5258dc8d93f53b3db2">header_map_t</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classworker__config.html#ac30ea5854e1e411f6b8cc61e7ebd875f">get_headers</a> () const </td></tr>
 <tr class="separator:ac30ea5854e1e411f6b8cc61e7ebd875f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9918f15aeddbf1e06ae9b234a30f647c"><td class="memItemLeft" align="right" valign="top">virtual const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classworker__config.html#a9918f15aeddbf1e06ae9b234a30f647c">get_hwgroup</a> () const </td></tr>
+<tr class="separator:a9918f15aeddbf1e06ae9b234a30f647c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a546e388fe06e03bd79bb3b321faf9e0f"><td class="memItemLeft" align="right" valign="top">virtual size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classworker__config.html#a546e388fe06e03bd79bb3b321faf9e0f">get_max_broker_liveness</a> () const </td></tr>
+<tr class="separator:a546e388fe06e03bd79bb3b321faf9e0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a51d92f36e13c7351c7f00b1db867ac2b"><td class="memItemLeft" align="right" valign="top">virtual std::chrono::milliseconds&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classworker__config.html#a51d92f36e13c7351c7f00b1db867ac2b">get_broker_ping_interval</a> () const </td></tr>
+<tr class="separator:a51d92f36e13c7351c7f00b1db867ac2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a41f855af50d15c24a8feacba73dd597b"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classworker__config.html#a41f855af50d15c24a8feacba73dd597b">get_cache_dir</a> () const </td></tr>
 <tr class="separator:a41f855af50d15c24a8feacba73dd597b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a69340f2be1bc41d34822b9a2250f6ed6"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structlog__config.html">log_config</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classworker__config.html#a69340f2be1bc41d34822b9a2250f6ed6">get_log_config</a> ()</td></tr>
@@ -203,6 +210,32 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="a51d92f36e13c7351c7f00b1db867ac2b"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::chrono::milliseconds worker_config::get_broker_ping_interval </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Get the interval between pings sent to the broker </p>
+
+<p>Definition at line <a class="el" href="worker__config_8cpp_source.html#l00217">217</a> of file <a class="el" href="worker__config_8cpp_source.html">worker_config.cpp</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a9146975c7b9fd483fe511bde77c2e783"></a>
 <div class="memitem">
 <div class="memproto">
@@ -225,7 +258,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Defines address on which broker run. </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
-<p>Definition at line <a class="el" href="worker__config_8cpp_source.html#l00151">151</a> of file <a class="el" href="worker__config_8cpp_source.html">worker_config.cpp</a>.</p>
+<p>Definition at line <a class="el" href="worker__config_8cpp_source.html#l00177">177</a> of file <a class="el" href="worker__config_8cpp_source.html">worker_config.cpp</a>.</p>
 
 </div>
 </div>
@@ -243,7 +276,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Get path to the caching directory </p>
 
-<p>Definition at line <a class="el" href="worker__config_8cpp_source.html#l00176">176</a> of file <a class="el" href="worker__config_8cpp_source.html">worker_config.cpp</a>.</p>
+<p>Definition at line <a class="el" href="worker__config_8cpp_source.html#l00207">207</a> of file <a class="el" href="worker__config_8cpp_source.html">worker_config.cpp</a>.</p>
 
 </div>
 </div>
@@ -261,7 +294,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Get wrapper for file manager configuration. </p><dl class="section return"><dt>Returns</dt><dd>constant reference to <a class="el" href="structfileman__config.html">fileman_config</a> structure </dd></dl>
 
-<p>Definition at line <a class="el" href="worker__config_8cpp_source.html#l00166">166</a> of file <a class="el" href="worker__config_8cpp_source.html">worker_config.cpp</a>.</p>
+<p>Definition at line <a class="el" href="worker__config_8cpp_source.html#l00197">197</a> of file <a class="el" href="worker__config_8cpp_source.html">worker_config.cpp</a>.</p>
 
 </div>
 </div>
@@ -287,7 +320,33 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Headers defined in configuration file, which will be sent to broker. </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
-<p>Definition at line <a class="el" href="worker__config_8cpp_source.html#l00156">156</a> of file <a class="el" href="worker__config_8cpp_source.html">worker_config.cpp</a>.</p>
+<p>Definition at line <a class="el" href="worker__config_8cpp_source.html#l00182">182</a> of file <a class="el" href="worker__config_8cpp_source.html">worker_config.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a9918f15aeddbf1e06ae9b234a30f647c"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::string &amp; worker_config::get_hwgroup </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Gets hwgroup string description. </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+<p>Definition at line <a class="el" href="worker__config_8cpp_source.html#l00187">187</a> of file <a class="el" href="worker__config_8cpp_source.html">worker_config.cpp</a>.</p>
 
 </div>
 </div>
@@ -305,7 +364,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Get default worker sandbox limits. Which will be used as defaults if not defined in job configuration. </p><dl class="section return"><dt>Returns</dt><dd>non editable reference to <a class="el" href="structsandbox__limits.html">sandbox_limits</a> structure </dd></dl>
 
-<p>Definition at line <a class="el" href="worker__config_8cpp_source.html#l00171">171</a> of file <a class="el" href="worker__config_8cpp_source.html">worker_config.cpp</a>.</p>
+<p>Definition at line <a class="el" href="worker__config_8cpp_source.html#l00202">202</a> of file <a class="el" href="worker__config_8cpp_source.html">worker_config.cpp</a>.</p>
 
 </div>
 </div>
@@ -323,7 +382,33 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Get wrapper for logger configuration. </p><dl class="section return"><dt>Returns</dt><dd>constant reference to <a class="el" href="structlog__config.html">log_config</a> structure </dd></dl>
 
-<p>Definition at line <a class="el" href="worker__config_8cpp_source.html#l00161">161</a> of file <a class="el" href="worker__config_8cpp_source.html">worker_config.cpp</a>.</p>
+<p>Definition at line <a class="el" href="worker__config_8cpp_source.html#l00192">192</a> of file <a class="el" href="worker__config_8cpp_source.html">worker_config.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a546e388fe06e03bd79bb3b321faf9e0f"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t worker_config::get_max_broker_liveness </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Get the maximum number of pings in a row without response before the broker is considered disconnected </p>
+
+<p>Definition at line <a class="el" href="worker__config_8cpp_source.html#l00212">212</a> of file <a class="el" href="worker__config_8cpp_source.html">worker_config.cpp</a>.</p>
 
 </div>
 </div>
@@ -341,7 +426,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Get worker ID which has to be unique at least in context of one machine. </p><dl class="section return"><dt>Returns</dt><dd>not integer but textual description for better debuggin and human readibility </dd></dl>
 
-<p>Definition at line <a class="el" href="worker__config_8cpp_source.html#l00141">141</a> of file <a class="el" href="worker__config_8cpp_source.html">worker_config.cpp</a>.</p>
+<p>Definition at line <a class="el" href="worker__config_8cpp_source.html#l00167">167</a> of file <a class="el" href="worker__config_8cpp_source.html">worker_config.cpp</a>.</p>
 
 </div>
 </div>
@@ -359,7 +444,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Working directory path defined in config file. </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
-<p>Definition at line <a class="el" href="worker__config_8cpp_source.html#l00146">146</a> of file <a class="el" href="worker__config_8cpp_source.html">worker_config.cpp</a>.</p>
+<p>Definition at line <a class="el" href="worker__config_8cpp_source.html#l00172">172</a> of file <a class="el" href="worker__config_8cpp_source.html">worker_config.cpp</a>.</p>
 
 </div>
 </div>
@@ -373,7 +458,7 @@ Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classworker__config.html">worker_config</a></li>
-    <li class="footer">Generated on Fri Feb 19 2016 18:25:15 for ReCodEx - Worker by
+    <li class="footer">Generated on Tue Apr 5 2016 23:03:08 for ReCodEx - Worker by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.10 </li>
   </ul>

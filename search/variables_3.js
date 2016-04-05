@@ -1,6 +1,10 @@
 var searchData=
 [
-  ['dependencies',['dependencies',['../structexternal__task_1_1create__params.html#acce140eeae4f4ea1e677ff26424989a7',1,'external_task::create_params']]],
-  ['disk_5ffiles',['disk_files',['../structsandbox__limits.html#aafc0a86e5ccdcd62416cbf72f1f5f89e',1,'sandbox_limits']]],
-  ['disk_5fsize',['disk_size',['../structsandbox__limits.html#a80cb7bb9e773dfdc015a1362c2da216b',1,'sandbox_limits']]]
+  ['environ_5fvars',['environ_vars',['../structsandbox__limits.html#a94995f788d00615f2bb3b38c28ae51cc',1,'sandbox_limits']]],
+  ['error_5fmessage',['error_message',['../structtask__results.html#ab46a9b36f7309e33adfa6e67c9f34b72',1,'task_results']]],
+  ['evaluator',['evaluator',['../classjob__client__context.html#a0c371945a1b60b4b8d76bd0217db413c',1,'job_client_context']]],
+  ['execute_5f',['execute_',['../classtask__base.html#ae7548cd8a69425da679097de10ba7d9f',1,'task_base']]],
+  ['exitcode',['exitcode',['../structsandbox__results.html#a7787eca1b2b3344f9f05cca3a6c240e3',1,'sandbox_results']]],
+  ['exitsig',['exitsig',['../structsandbox__results.html#a2873cd7462897601e0d44002c3706f4e',1,'sandbox_results']]],
+  ['extra_5ftime',['extra_time',['../structsandbox__limits.html#aacde065ad8899d9b194426bfa12267f8',1,'sandbox_limits']]]
 ];

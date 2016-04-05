@@ -47,6 +47,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -127,11 +128,11 @@ $(document).ready(function(){initNavTree('classtask__base.html','');});
 <area href="classcp__task.html" alt="cp_task" shape="rect" coords="104,112,198,136"/>
 <area href="classexternal__task.html" alt="external_task" shape="rect" coords="104,168,198,192"/>
 <area href="classextract__task.html" alt="extract_task" shape="rect" coords="104,224,198,248"/>
-<area href="classfake__task.html" alt="fake_task" shape="rect" coords="104,280,198,304"/>
-<area href="classfetch__task.html" alt="fetch_task" shape="rect" coords="104,336,198,360"/>
-<area href="classmkdir__task.html" alt="mkdir_task" shape="rect" coords="104,392,198,416"/>
-<area href="classrename__task.html" alt="rename_task" shape="rect" coords="104,448,198,472"/>
-<area href="classrm__task.html" alt="rm_task" shape="rect" coords="104,504,198,528"/>
+<area href="classfetch__task.html" alt="fetch_task" shape="rect" coords="104,280,198,304"/>
+<area href="classmkdir__task.html" alt="mkdir_task" shape="rect" coords="104,336,198,360"/>
+<area href="classrename__task.html" alt="rename_task" shape="rect" coords="104,392,198,416"/>
+<area href="classrm__task.html" alt="rm_task" shape="rect" coords="104,448,198,472"/>
+<area href="classroot__task.html" alt="root_task" shape="rect" coords="104,504,198,528"/>
 </map>
  </div></div>
 <table class="memberdecls">
@@ -139,8 +140,8 @@ $(document).ready(function(){initNavTree('classtask__base.html','');});
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a1ba57f10c2e3f26228925e76021a2e60"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask__base.html#a1ba57f10c2e3f26228925e76021a2e60">task_base</a> ()=delete</td></tr>
 <tr class="separator:a1ba57f10c2e3f26228925e76021a2e60"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4cb88a596ba8eb0b4bf7a7fa6f4565a2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask__base.html#a4cb88a596ba8eb0b4bf7a7fa6f4565a2">task_base</a> (size_t id, std::string task_id, size_t priority, bool fatal, const std::vector&lt; std::string &gt; &amp;dependencies, const std::string &amp;cmd, const std::vector&lt; std::string &gt; &amp;arguments)</td></tr>
-<tr class="separator:a4cb88a596ba8eb0b4bf7a7fa6f4565a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aefc90f725f80937a2d4f1878c0605043"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask__base.html#aefc90f725f80937a2d4f1878c0605043">task_base</a> (size_t id, std::shared_ptr&lt; <a class="el" href="classtask__metadata.html">task_metadata</a> &gt; task_meta)</td></tr>
+<tr class="separator:aefc90f725f80937a2d4f1878c0605043"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9511a486964147a1a57929b483142465"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask__base.html#a9511a486964147a1a57929b483142465">~task_base</a> ()</td></tr>
 <tr class="separator:a9511a486964147a1a57929b483142465"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0f05e5664b3c2886b4555b01a6fe8ad0"><td class="memItemLeft" align="right" valign="top">virtual std::shared_ptr&lt; <a class="el" href="structtask__results.html">task_results</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask__base.html#a0f05e5664b3c2886b4555b01a6fe8ad0">run</a> ()=0</td></tr>
@@ -165,53 +166,30 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a5326f936dec28e4adec302ea8f49bc90"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4b2101fa704a279fd0b547c16fc31420"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; std::string &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask__base.html#a4b2101fa704a279fd0b547c16fc31420">get_dependencies</a> ()</td></tr>
 <tr class="separator:a4b2101fa704a279fd0b547c16fc31420"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6cfe410e96c6568fe226ef8aba51adde"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6cfe410e96c6568fe226ef8aba51adde"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>is_executable</b> ()</td></tr>
+<tr class="memitem:a6cfe410e96c6568fe226ef8aba51adde"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask__base.html#a6cfe410e96c6568fe226ef8aba51adde">is_executable</a> ()</td></tr>
 <tr class="separator:a6cfe410e96c6568fe226ef8aba51adde"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abbe49db38ee7a6152681d2a46469dd31"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abbe49db38ee7a6152681d2a46469dd31"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>set_execution</b> (bool set)</td></tr>
+<tr class="memitem:abbe49db38ee7a6152681d2a46469dd31"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask__base.html#abbe49db38ee7a6152681d2a46469dd31">set_execution</a> (bool set)</td></tr>
 <tr class="separator:abbe49db38ee7a6152681d2a46469dd31"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac2dd9519d27a2903276d86b4e38b2c12"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac2dd9519d27a2903276d86b4e38b2c12"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>set_children_execution</b> (bool set)</td></tr>
+<tr class="memitem:ac2dd9519d27a2903276d86b4e38b2c12"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask__base.html#ac2dd9519d27a2903276d86b4e38b2c12">set_children_execution</a> (bool set)</td></tr>
 <tr class="separator:ac2dd9519d27a2903276d86b4e38b2c12"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:af23f4b4243c3b84f3ba7fc3f99abb097"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af23f4b4243c3b84f3ba7fc3f99abb097"></a>
-size_t&#160;</td><td class="memItemRight" valign="bottom"><b>id_</b></td></tr>
+<tr class="memitem:af23f4b4243c3b84f3ba7fc3f99abb097"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask__base.html#af23f4b4243c3b84f3ba7fc3f99abb097">id_</a></td></tr>
 <tr class="separator:af23f4b4243c3b84f3ba7fc3f99abb097"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad2a52b3f7fbd6fdf7f89a1b5d93bd28f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad2a52b3f7fbd6fdf7f89a1b5d93bd28f"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>task_id_</b></td></tr>
-<tr class="separator:ad2a52b3f7fbd6fdf7f89a1b5d93bd28f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a321c75da3556118c18d28e90e3b82d7c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a321c75da3556118c18d28e90e3b82d7c"></a>
-size_t&#160;</td><td class="memItemRight" valign="bottom"><b>priority_</b></td></tr>
-<tr class="separator:a321c75da3556118c18d28e90e3b82d7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a38a3829c5af04c5ae5e4d846d1677bb9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a38a3829c5af04c5ae5e4d846d1677bb9"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>fatal_failure_</b></td></tr>
-<tr class="separator:a38a3829c5af04c5ae5e4d846d1677bb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7088f23dbb7355fb5e8c1976335f6a01"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7088f23dbb7355fb5e8c1976335f6a01"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>cmd_</b></td></tr>
-<tr class="separator:a7088f23dbb7355fb5e8c1976335f6a01"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a15097110fc3074a8b9a54010329cb6ce"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a15097110fc3074a8b9a54010329cb6ce"></a>
-std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>dependencies_</b></td></tr>
-<tr class="separator:a15097110fc3074a8b9a54010329cb6ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a609c15e68c714761351eca04da9b19c8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a609c15e68c714761351eca04da9b19c8"></a>
-std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>arguments_</b></td></tr>
-<tr class="separator:a609c15e68c714761351eca04da9b19c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae7548cd8a69425da679097de10ba7d9f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae7548cd8a69425da679097de10ba7d9f"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>execute_</b></td></tr>
+<tr class="memitem:a7e920b4f1c80cc5098f3aeca734ccdb8"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classtask__metadata.html">task_metadata</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask__base.html#a7e920b4f1c80cc5098f3aeca734ccdb8">task_meta_</a></td></tr>
+<tr class="separator:a7e920b4f1c80cc5098f3aeca734ccdb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7548cd8a69425da679097de10ba7d9f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask__base.html#ae7548cd8a69425da679097de10ba7d9f">execute_</a></td></tr>
 <tr class="separator:ae7548cd8a69425da679097de10ba7d9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa12def1720a16db44aa9eec0b67a4beb"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa12def1720a16db44aa9eec0b67a4beb"></a>
-std::vector&lt; std::weak_ptr&lt; <a class="el" href="classtask__base.html">task_base</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>parents_</b></td></tr>
+<tr class="memitem:aa12def1720a16db44aa9eec0b67a4beb"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::weak_ptr&lt; <a class="el" href="classtask__base.html">task_base</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask__base.html#aa12def1720a16db44aa9eec0b67a4beb">parents_</a></td></tr>
 <tr class="separator:aa12def1720a16db44aa9eec0b67a4beb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac5c359cd76d67fe96e2e92d095f16821"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac5c359cd76d67fe96e2e92d095f16821"></a>
-std::vector&lt; std::shared_ptr&lt; <a class="el" href="classtask__base.html">task_base</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>children_</b></td></tr>
+<tr class="memitem:ac5c359cd76d67fe96e2e92d095f16821"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::shared_ptr&lt; <a class="el" href="classtask__base.html">task_base</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask__base.html#ac5c359cd76d67fe96e2e92d095f16821">children_</a></td></tr>
 <tr class="separator:ac5c359cd76d67fe96e2e92d095f16821"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Logical base of all possible tasks. Its abstract class which cannot be instantiated. But it stores some information about task which always have to be defined. </p>
+<div class="textblock"><p>Logical base of all possible tasks. Its abstract class which cannot be instantiated. But it stores some information about task which always have to be defined. </p><dl class="section note"><dt>Note</dt><dd>Task can be created only with one constructor which receive pointer to <a class="el" href="classtask__metadata.html">task_metadata</a> as parameter. Task_metadata structure is mutable, so it can be changed during task execution. This case should never happen in ReCodEx worker, but posibility is still here. Please keep this in mind if you're editing this code otherwise it can end up very bad for you! </dd></dl>
 
-<p>Definition at line <a class="el" href="task__base_8h_source.html#l00016">16</a> of file <a class="el" href="task__base_8h_source.html">task_base.h</a>.</p>
+<p>Definition at line <a class="el" href="task__base_8h_source.html#l00021">21</a> of file <a class="el" href="task__base_8h_source.html">task_base.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a1ba57f10c2e3f26228925e76021a2e60"></a>
 <div class="memitem">
@@ -237,7 +215,7 @@ std::vector&lt; std::shared_ptr&lt; <a class="el" href="classtask__base.html">ta
 
 </div>
 </div>
-<a class="anchor" id="a4cb88a596ba8eb0b4bf7a7fa6f4565a2"></a>
+<a class="anchor" id="aefc90f725f80937a2d4f1878c0605043"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -250,38 +228,8 @@ std::vector&lt; std::shared_ptr&lt; <a class="el" href="classtask__base.html">ta
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::string&#160;</td>
-          <td class="paramname"><em>task_id</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>priority</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>fatal</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::vector&lt; std::string &gt; &amp;&#160;</td>
-          <td class="paramname"><em>dependencies</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>cmd</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::vector&lt; std::string &gt; &amp;&#160;</td>
-          <td class="paramname"><em>arguments</em>&#160;</td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classtask__metadata.html">task_metadata</a> &gt;&#160;</td>
+          <td class="paramname"><em>task_meta</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -293,12 +241,7 @@ std::vector&lt; std::shared_ptr&lt; <a class="el" href="classtask__base.html">ta
 <p>Only possible way of construction which just store all given parameters into private variables. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">id</td><td>unique identificator of load order of tasks </td></tr>
-    <tr><td class="paramname">task_id</td><td>task identificator as written in job configuration </td></tr>
-    <tr><td class="paramname">priority</td><td>integer identificator of priority, smaller number, higher priority </td></tr>
-    <tr><td class="paramname">fatal</td><td>if true, than failure in this task will end all execution </td></tr>
-    <tr><td class="paramname">dependencies</td><td>array of names of task which has to be evaluated before this task </td></tr>
-    <tr><td class="paramname">cmd</td><td>command which will be executed in this task </td></tr>
-    <tr><td class="paramname">arguments</td><td>just command line arguments to executed command </td></tr>
+    <tr><td class="paramname">task_meta</td><td>variable containing further info about task </td></tr>
   </table>
   </dd>
 </dl>
@@ -329,7 +272,7 @@ std::vector&lt; std::shared_ptr&lt; <a class="el" href="classtask__base.html">ta
 </div><div class="memdoc">
 <p>Virtual destructor. </p>
 
-<p>Definition at line <a class="el" href="task__base_8cpp_source.html#l00015">15</a> of file <a class="el" href="task__base_8cpp_source.html">task_base.cpp</a>.</p>
+<p>Definition at line <a class="el" href="task__base_8cpp_source.html#l00008">8</a> of file <a class="el" href="task__base_8cpp_source.html">task_base.cpp</a>.</p>
 
 </div>
 </div>
@@ -354,7 +297,7 @@ std::vector&lt; std::shared_ptr&lt; <a class="el" href="classtask__base.html">ta
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="task__base_8cpp_source.html#l00019">19</a> of file <a class="el" href="task__base_8cpp_source.html">task_base.cpp</a>.</p>
+<p>Definition at line <a class="el" href="task__base_8cpp_source.html#l00012">12</a> of file <a class="el" href="task__base_8cpp_source.html">task_base.cpp</a>.</p>
 
 </div>
 </div>
@@ -378,7 +321,7 @@ std::vector&lt; std::shared_ptr&lt; <a class="el" href="classtask__base.html">ta
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="task__base_8cpp_source.html#l00034">34</a> of file <a class="el" href="task__base_8cpp_source.html">task_base.cpp</a>.</p>
+<p>Definition at line <a class="el" href="task__base_8cpp_source.html#l00027">27</a> of file <a class="el" href="task__base_8cpp_source.html">task_base.cpp</a>.</p>
 
 </div>
 </div>
@@ -396,7 +339,7 @@ std::vector&lt; std::shared_ptr&lt; <a class="el" href="classtask__base.html">ta
 </div><div class="memdoc">
 <p>Arguments which will be supplied to executed command. </p><dl class="section return"><dt>Returns</dt><dd>constant vector of texts </dd></dl>
 
-<p>Definition at line <a class="el" href="task__base_8cpp_source.html#l00069">69</a> of file <a class="el" href="task__base_8cpp_source.html">task_base.cpp</a>.</p>
+<p>Definition at line <a class="el" href="task__base_8cpp_source.html#l00062">62</a> of file <a class="el" href="task__base_8cpp_source.html">task_base.cpp</a>.</p>
 
 </div>
 </div>
@@ -414,7 +357,7 @@ std::vector&lt; std::shared_ptr&lt; <a class="el" href="classtask__base.html">ta
 </div><div class="memdoc">
 <p>Get all children of task. </p><dl class="section return"><dt>Returns</dt><dd>constant reference to vector of <a class="el" href="classtask__base.html">task_base</a> pointers </dd></dl>
 
-<p>Definition at line <a class="el" href="task__base_8cpp_source.html#l00029">29</a> of file <a class="el" href="task__base_8cpp_source.html">task_base.cpp</a>.</p>
+<p>Definition at line <a class="el" href="task__base_8cpp_source.html#l00022">22</a> of file <a class="el" href="task__base_8cpp_source.html">task_base.cpp</a>.</p>
 
 </div>
 </div>
@@ -432,7 +375,7 @@ std::vector&lt; std::shared_ptr&lt; <a class="el" href="classtask__base.html">ta
 </div><div class="memdoc">
 <p>Get command which will be executed within this task. </p><dl class="section return"><dt>Returns</dt><dd>textual description of command </dd></dl>
 
-<p>Definition at line <a class="el" href="task__base_8cpp_source.html#l00064">64</a> of file <a class="el" href="task__base_8cpp_source.html">task_base.cpp</a>.</p>
+<p>Definition at line <a class="el" href="task__base_8cpp_source.html#l00057">57</a> of file <a class="el" href="task__base_8cpp_source.html">task_base.cpp</a>.</p>
 
 </div>
 </div>
@@ -450,7 +393,7 @@ std::vector&lt; std::shared_ptr&lt; <a class="el" href="classtask__base.html">ta
 </div><div class="memdoc">
 <p>Return dependencies of this particular task. </p><dl class="section return"><dt>Returns</dt><dd>textual vector array of dependencies </dd></dl>
 
-<p>Definition at line <a class="el" href="task__base_8cpp_source.html#l00074">74</a> of file <a class="el" href="task__base_8cpp_source.html">task_base.cpp</a>.</p>
+<p>Definition at line <a class="el" href="task__base_8cpp_source.html#l00067">67</a> of file <a class="el" href="task__base_8cpp_source.html">task_base.cpp</a>.</p>
 
 </div>
 </div>
@@ -468,7 +411,7 @@ std::vector&lt; std::shared_ptr&lt; <a class="el" href="classtask__base.html">ta
 </div><div class="memdoc">
 <p>If true than failure of this task will cause immediate exit of job evaluation. </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
-<p>Definition at line <a class="el" href="task__base_8cpp_source.html#l00059">59</a> of file <a class="el" href="task__base_8cpp_source.html">task_base.cpp</a>.</p>
+<p>Definition at line <a class="el" href="task__base_8cpp_source.html#l00052">52</a> of file <a class="el" href="task__base_8cpp_source.html">task_base.cpp</a>.</p>
 
 </div>
 </div>
@@ -486,7 +429,7 @@ std::vector&lt; std::shared_ptr&lt; <a class="el" href="classtask__base.html">ta
 </div><div class="memdoc">
 <p>Get unique identification number. This number expresses order in job configuration. </p><dl class="section return"><dt>Returns</dt><dd>unsigned integer </dd></dl>
 
-<p>Definition at line <a class="el" href="task__base_8cpp_source.html#l00044">44</a> of file <a class="el" href="task__base_8cpp_source.html">task_base.cpp</a>.</p>
+<p>Definition at line <a class="el" href="task__base_8cpp_source.html#l00037">37</a> of file <a class="el" href="task__base_8cpp_source.html">task_base.cpp</a>.</p>
 
 </div>
 </div>
@@ -504,7 +447,7 @@ std::vector&lt; std::shared_ptr&lt; <a class="el" href="classtask__base.html">ta
 </div><div class="memdoc">
 <p>Get priority of this task. Lower number -&gt; higher priority. </p><dl class="section return"><dt>Returns</dt><dd>unsigned integer </dd></dl>
 
-<p>Definition at line <a class="el" href="task__base_8cpp_source.html#l00054">54</a> of file <a class="el" href="task__base_8cpp_source.html">task_base.cpp</a>.</p>
+<p>Definition at line <a class="el" href="task__base_8cpp_source.html#l00047">47</a> of file <a class="el" href="task__base_8cpp_source.html">task_base.cpp</a>.</p>
 
 </div>
 </div>
@@ -522,7 +465,25 @@ std::vector&lt; std::shared_ptr&lt; <a class="el" href="classtask__base.html">ta
 </div><div class="memdoc">
 <p>Unique task ID which was stated in job configuration. </p><dl class="section return"><dt>Returns</dt><dd>textual description of id </dd></dl>
 
-<p>Definition at line <a class="el" href="task__base_8cpp_source.html#l00049">49</a> of file <a class="el" href="task__base_8cpp_source.html">task_base.cpp</a>.</p>
+<p>Definition at line <a class="el" href="task__base_8cpp_source.html#l00042">42</a> of file <a class="el" href="task__base_8cpp_source.html">task_base.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a6cfe410e96c6568fe226ef8aba51adde"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool task_base::is_executable </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Tells whether task can be safely executed or not. </p><dl class="section return"><dt>Returns</dt><dd>true if task can be executed </dd></dl>
+
+<p>Definition at line <a class="el" href="task__base_8cpp_source.html#l00072">72</a> of file <a class="el" href="task__base_8cpp_source.html">task_base.cpp</a>.</p>
 
 </div>
 </div>
@@ -548,7 +509,171 @@ std::vector&lt; std::shared_ptr&lt; <a class="el" href="classtask__base.html">ta
 </div><div class="memdoc">
 <p>This method runs operation which this task is supposed to do. </p><dl class="section return"><dt>Returns</dt><dd>results to be pushed back </dd></dl>
 
-<p>Implemented in <a class="el" href="classexternal__task.html#ad4e5f9e133237885bff4f1db51dcd82d">external_task</a>, <a class="el" href="classfake__task.html#a22d52bb9810ca35804fd2c81bc92dc67">fake_task</a>, <a class="el" href="classfetch__task.html#a4058ae92f11c81d4182c594dfb7509be">fetch_task</a>, <a class="el" href="classrename__task.html#a848d5769e0994dc41762256ed2f33b8a">rename_task</a>, <a class="el" href="classarchivate__task.html#ab1854685402fd6a52e541c0f7c2b29fb">archivate_task</a>, <a class="el" href="classcp__task.html#a6e96ec0a3e717ec7325740008671ba4b">cp_task</a>, <a class="el" href="classextract__task.html#a247fac09e12f42eccff8e1c074bae66f">extract_task</a>, <a class="el" href="classmkdir__task.html#ad1a4291f6e8d82bc7056fce1b968bbf4">mkdir_task</a>, and <a class="el" href="classrm__task.html#a05e8a14e6dd4598b2fa67f134dd65e7e">rm_task</a>.</p>
+<p>Implemented in <a class="el" href="classexternal__task.html#ad4e5f9e133237885bff4f1db51dcd82d">external_task</a>, <a class="el" href="classroot__task.html#ade778475dc3ac30b3f8ae9bece87000a">root_task</a>, <a class="el" href="classfetch__task.html#a4058ae92f11c81d4182c594dfb7509be">fetch_task</a>, <a class="el" href="classrename__task.html#a848d5769e0994dc41762256ed2f33b8a">rename_task</a>, <a class="el" href="classarchivate__task.html#ab1854685402fd6a52e541c0f7c2b29fb">archivate_task</a>, <a class="el" href="classcp__task.html#a6e96ec0a3e717ec7325740008671ba4b">cp_task</a>, <a class="el" href="classextract__task.html#a247fac09e12f42eccff8e1c074bae66f">extract_task</a>, <a class="el" href="classmkdir__task.html#ad1a4291f6e8d82bc7056fce1b968bbf4">mkdir_task</a>, and <a class="el" href="classrm__task.html#a05e8a14e6dd4598b2fa67f134dd65e7e">rm_task</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ac2dd9519d27a2903276d86b4e38b2c12"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void task_base::set_children_execution </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>set</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Calls <em>set_execution</em> function on all children of this task. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">set</td><td>flag which will be passed to children </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="task__base_8cpp_source.html#l00083">83</a> of file <a class="el" href="task__base_8cpp_source.html">task_base.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="abbe49db38ee7a6152681d2a46469dd31"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void task_base::set_execution </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>set</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>To this particular task set execution bit on false. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">set</td><td>false if task cannot be safely executed </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="task__base_8cpp_source.html#l00077">77</a> of file <a class="el" href="task__base_8cpp_source.html">task_base.cpp</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a class="anchor" id="ac5c359cd76d67fe96e2e92d095f16821"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;std::shared_ptr&lt;<a class="el" href="classtask__base.html">task_base</a>&gt; &gt; task_base::children_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Pointers to children of task. </p>
+
+<p>Definition at line <a class="el" href="task__base_8h_source.html#l00125">125</a> of file <a class="el" href="task__base_8h_source.html">task_base.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ae7548cd8a69425da679097de10ba7d9f"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool task_base::execute_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>If true task can be executed safely, otherwise its not wise. </p>
+
+<p>Definition at line <a class="el" href="task__base_8h_source.html#l00120">120</a> of file <a class="el" href="task__base_8h_source.html">task_base.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="af23f4b4243c3b84f3ba7fc3f99abb097"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t task_base::id_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Unique integer ID of task. </p>
+
+<p>Definition at line <a class="el" href="task__base_8h_source.html#l00116">116</a> of file <a class="el" href="task__base_8h_source.html">task_base.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aa12def1720a16db44aa9eec0b67a4beb"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;std::weak_ptr&lt;<a class="el" href="classtask__base.html">task_base</a>&gt; &gt; task_base::parents_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Weak pointers to parents of task. </p>
+
+<p>Definition at line <a class="el" href="task__base_8h_source.html#l00123">123</a> of file <a class="el" href="task__base_8h_source.html">task_base.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a7e920b4f1c80cc5098f3aeca734ccdb8"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt;<a class="el" href="classtask__metadata.html">task_metadata</a>&gt; task_base::task_meta_</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Information about this task loaded from configuration file. </p>
+
+<p>Definition at line <a class="el" href="task__base_8h_source.html#l00118">118</a> of file <a class="el" href="task__base_8h_source.html">task_base.h</a>.</p>
 
 </div>
 </div>
@@ -562,7 +687,7 @@ std::vector&lt; std::shared_ptr&lt; <a class="el" href="classtask__base.html">ta
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classtask__base.html">task_base</a></li>
-    <li class="footer">Generated on Fri Feb 19 2016 18:25:15 for ReCodEx - Worker by
+    <li class="footer">Generated on Tue Apr 5 2016 23:03:08 for ReCodEx - Worker by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.10 </li>
   </ul>

@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['binary',['binary',['../structexternal__task_1_1create__params.html#ab7740c1dee7b84ef37bfe5af788bdbfb',1,'external_task::create_params']]],
-  ['bound_5fdirs',['bound_dirs',['../structsandbox__limits.html#ae4eb77c46e7465768dc3b94f97f79cd3',1,'sandbox_limits']]]
+  ['chdir',['chdir',['../structsandbox__limits.html#a25ac8f2afa3bff3ab96cbac7402b3de8',1,'sandbox_limits']]],
+  ['children_5f',['children_',['../classtask__base.html#ac5c359cd76d67fe96e2e92d095f16821',1,'task_base']]],
+  ['cmd_5fargs',['cmd_args',['../classtask__metadata.html#a5b5f5ff2b34f9ad9678e0436b99ab3e8',1,'task_metadata']]],
+  ['cpu_5ftime',['cpu_time',['../structsandbox__limits.html#a11ad687d4572255e3c370991e406a0fa',1,'sandbox_limits']]]
 ];

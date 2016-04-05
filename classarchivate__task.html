@@ -47,6 +47,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -128,16 +129,16 @@ $(document).ready(function(){initNavTree('classarchivate__task.html','');});
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a821c4b97368ee8abdaa78099986a881f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a821c4b97368ee8abdaa78099986a881f"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>archivate_task</b> (size_t id, std::string task_id, size_t priority, bool fatal, const std::string &amp;cmd, const std::vector&lt; std::string &gt; &amp;arguments, const std::vector&lt; std::string &gt; &amp;dependencies)</td></tr>
-<tr class="separator:a821c4b97368ee8abdaa78099986a881f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a85877a0da0187a819fdf971cf7cdda31"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a85877a0da0187a819fdf971cf7cdda31"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>archivate_task</b> (size_t id, std::shared_ptr&lt; <a class="el" href="classtask__metadata.html">task_metadata</a> &gt; task_meta)</td></tr>
+<tr class="separator:a85877a0da0187a819fdf971cf7cdda31"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab1854685402fd6a52e541c0f7c2b29fb"><td class="memItemLeft" align="right" valign="top">virtual std::shared_ptr&lt; <a class="el" href="structtask__results.html">task_results</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classarchivate__task.html#ab1854685402fd6a52e541c0f7c2b29fb">run</a> ()</td></tr>
 <tr class="separator:ab1854685402fd6a52e541c0f7c2b29fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classtask__base"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classtask__base')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classtask__base.html">task_base</a></td></tr>
 <tr class="memitem:a1ba57f10c2e3f26228925e76021a2e60 inherit pub_methods_classtask__base"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask__base.html#a1ba57f10c2e3f26228925e76021a2e60">task_base</a> ()=delete</td></tr>
 <tr class="separator:a1ba57f10c2e3f26228925e76021a2e60 inherit pub_methods_classtask__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4cb88a596ba8eb0b4bf7a7fa6f4565a2 inherit pub_methods_classtask__base"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask__base.html#a4cb88a596ba8eb0b4bf7a7fa6f4565a2">task_base</a> (size_t id, std::string task_id, size_t priority, bool fatal, const std::vector&lt; std::string &gt; &amp;dependencies, const std::string &amp;cmd, const std::vector&lt; std::string &gt; &amp;arguments)</td></tr>
-<tr class="separator:a4cb88a596ba8eb0b4bf7a7fa6f4565a2 inherit pub_methods_classtask__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aefc90f725f80937a2d4f1878c0605043 inherit pub_methods_classtask__base"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask__base.html#aefc90f725f80937a2d4f1878c0605043">task_base</a> (size_t id, std::shared_ptr&lt; <a class="el" href="classtask__metadata.html">task_metadata</a> &gt; task_meta)</td></tr>
+<tr class="separator:aefc90f725f80937a2d4f1878c0605043 inherit pub_methods_classtask__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9511a486964147a1a57929b483142465 inherit pub_methods_classtask__base"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask__base.html#a9511a486964147a1a57929b483142465">~task_base</a> ()</td></tr>
 <tr class="separator:a9511a486964147a1a57929b483142465 inherit pub_methods_classtask__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a416901241831f45d5932567afac4b1 inherit pub_methods_classtask__base"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask__base.html#a7a416901241831f45d5932567afac4b1">add_children</a> (std::shared_ptr&lt; <a class="el" href="classtask__base.html">task_base</a> &gt; add)</td></tr>
@@ -160,48 +161,25 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a5326f936dec28e4adec302ea8f49bc90 inherit pub_methods_classtask__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4b2101fa704a279fd0b547c16fc31420 inherit pub_methods_classtask__base"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; std::string &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask__base.html#a4b2101fa704a279fd0b547c16fc31420">get_dependencies</a> ()</td></tr>
 <tr class="separator:a4b2101fa704a279fd0b547c16fc31420 inherit pub_methods_classtask__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6cfe410e96c6568fe226ef8aba51adde inherit pub_methods_classtask__base"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6cfe410e96c6568fe226ef8aba51adde"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>is_executable</b> ()</td></tr>
+<tr class="memitem:a6cfe410e96c6568fe226ef8aba51adde inherit pub_methods_classtask__base"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask__base.html#a6cfe410e96c6568fe226ef8aba51adde">is_executable</a> ()</td></tr>
 <tr class="separator:a6cfe410e96c6568fe226ef8aba51adde inherit pub_methods_classtask__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abbe49db38ee7a6152681d2a46469dd31 inherit pub_methods_classtask__base"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abbe49db38ee7a6152681d2a46469dd31"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>set_execution</b> (bool set)</td></tr>
+<tr class="memitem:abbe49db38ee7a6152681d2a46469dd31 inherit pub_methods_classtask__base"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask__base.html#abbe49db38ee7a6152681d2a46469dd31">set_execution</a> (bool set)</td></tr>
 <tr class="separator:abbe49db38ee7a6152681d2a46469dd31 inherit pub_methods_classtask__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac2dd9519d27a2903276d86b4e38b2c12 inherit pub_methods_classtask__base"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac2dd9519d27a2903276d86b4e38b2c12"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>set_children_execution</b> (bool set)</td></tr>
+<tr class="memitem:ac2dd9519d27a2903276d86b4e38b2c12 inherit pub_methods_classtask__base"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask__base.html#ac2dd9519d27a2903276d86b4e38b2c12">set_children_execution</a> (bool set)</td></tr>
 <tr class="separator:ac2dd9519d27a2903276d86b4e38b2c12 inherit pub_methods_classtask__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
 <tr class="inherit_header pro_attribs_classtask__base"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classtask__base')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classtask__base.html">task_base</a></td></tr>
-<tr class="memitem:af23f4b4243c3b84f3ba7fc3f99abb097 inherit pro_attribs_classtask__base"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af23f4b4243c3b84f3ba7fc3f99abb097"></a>
-size_t&#160;</td><td class="memItemRight" valign="bottom"><b>id_</b></td></tr>
+<tr class="memitem:af23f4b4243c3b84f3ba7fc3f99abb097 inherit pro_attribs_classtask__base"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask__base.html#af23f4b4243c3b84f3ba7fc3f99abb097">id_</a></td></tr>
 <tr class="separator:af23f4b4243c3b84f3ba7fc3f99abb097 inherit pro_attribs_classtask__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad2a52b3f7fbd6fdf7f89a1b5d93bd28f inherit pro_attribs_classtask__base"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad2a52b3f7fbd6fdf7f89a1b5d93bd28f"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>task_id_</b></td></tr>
-<tr class="separator:ad2a52b3f7fbd6fdf7f89a1b5d93bd28f inherit pro_attribs_classtask__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a321c75da3556118c18d28e90e3b82d7c inherit pro_attribs_classtask__base"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a321c75da3556118c18d28e90e3b82d7c"></a>
-size_t&#160;</td><td class="memItemRight" valign="bottom"><b>priority_</b></td></tr>
-<tr class="separator:a321c75da3556118c18d28e90e3b82d7c inherit pro_attribs_classtask__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a38a3829c5af04c5ae5e4d846d1677bb9 inherit pro_attribs_classtask__base"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a38a3829c5af04c5ae5e4d846d1677bb9"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>fatal_failure_</b></td></tr>
-<tr class="separator:a38a3829c5af04c5ae5e4d846d1677bb9 inherit pro_attribs_classtask__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7088f23dbb7355fb5e8c1976335f6a01 inherit pro_attribs_classtask__base"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7088f23dbb7355fb5e8c1976335f6a01"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>cmd_</b></td></tr>
-<tr class="separator:a7088f23dbb7355fb5e8c1976335f6a01 inherit pro_attribs_classtask__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a15097110fc3074a8b9a54010329cb6ce inherit pro_attribs_classtask__base"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a15097110fc3074a8b9a54010329cb6ce"></a>
-std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>dependencies_</b></td></tr>
-<tr class="separator:a15097110fc3074a8b9a54010329cb6ce inherit pro_attribs_classtask__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a609c15e68c714761351eca04da9b19c8 inherit pro_attribs_classtask__base"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a609c15e68c714761351eca04da9b19c8"></a>
-std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>arguments_</b></td></tr>
-<tr class="separator:a609c15e68c714761351eca04da9b19c8 inherit pro_attribs_classtask__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae7548cd8a69425da679097de10ba7d9f inherit pro_attribs_classtask__base"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae7548cd8a69425da679097de10ba7d9f"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>execute_</b></td></tr>
+<tr class="memitem:a7e920b4f1c80cc5098f3aeca734ccdb8 inherit pro_attribs_classtask__base"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classtask__metadata.html">task_metadata</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask__base.html#a7e920b4f1c80cc5098f3aeca734ccdb8">task_meta_</a></td></tr>
+<tr class="separator:a7e920b4f1c80cc5098f3aeca734ccdb8 inherit pro_attribs_classtask__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7548cd8a69425da679097de10ba7d9f inherit pro_attribs_classtask__base"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask__base.html#ae7548cd8a69425da679097de10ba7d9f">execute_</a></td></tr>
 <tr class="separator:ae7548cd8a69425da679097de10ba7d9f inherit pro_attribs_classtask__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa12def1720a16db44aa9eec0b67a4beb inherit pro_attribs_classtask__base"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa12def1720a16db44aa9eec0b67a4beb"></a>
-std::vector&lt; std::weak_ptr&lt; <a class="el" href="classtask__base.html">task_base</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>parents_</b></td></tr>
+<tr class="memitem:aa12def1720a16db44aa9eec0b67a4beb inherit pro_attribs_classtask__base"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::weak_ptr&lt; <a class="el" href="classtask__base.html">task_base</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask__base.html#aa12def1720a16db44aa9eec0b67a4beb">parents_</a></td></tr>
 <tr class="separator:aa12def1720a16db44aa9eec0b67a4beb inherit pro_attribs_classtask__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac5c359cd76d67fe96e2e92d095f16821 inherit pro_attribs_classtask__base"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac5c359cd76d67fe96e2e92d095f16821"></a>
-std::vector&lt; std::shared_ptr&lt; <a class="el" href="classtask__base.html">task_base</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>children_</b></td></tr>
+<tr class="memitem:ac5c359cd76d67fe96e2e92d095f16821 inherit pro_attribs_classtask__base"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::shared_ptr&lt; <a class="el" href="classtask__base.html">task_base</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtask__base.html#ac5c359cd76d67fe96e2e92d095f16821">children_</a></td></tr>
 <tr class="separator:ac5c359cd76d67fe96e2e92d095f16821 inherit pro_attribs_classtask__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -233,7 +211,7 @@ std::vector&lt; std::shared_ptr&lt; <a class="el" href="classtask__base.html">ta
 
 <p>Implements <a class="el" href="classtask__base.html#a0f05e5664b3c2886b4555b01a6fe8ad0">task_base</a>.</p>
 
-<p>Definition at line <a class="el" href="archivate__task_8cpp_source.html#l00025">25</a> of file <a class="el" href="archivate__task_8cpp_source.html">archivate_task.cpp</a>.</p>
+<p>Definition at line <a class="el" href="archivate__task_8cpp_source.html#l00018">18</a> of file <a class="el" href="archivate__task_8cpp_source.html">archivate_task.cpp</a>.</p>
 
 </div>
 </div>
@@ -247,7 +225,7 @@ std::vector&lt; std::shared_ptr&lt; <a class="el" href="classtask__base.html">ta
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classarchivate__task.html">archivate_task</a></li>
-    <li class="footer">Generated on Fri Feb 19 2016 18:25:15 for ReCodEx - Worker by
+    <li class="footer">Generated on Tue Apr 5 2016 23:03:08 for ReCodEx - Worker by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.10 </li>
   </ul>

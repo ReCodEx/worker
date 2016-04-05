@@ -1,7 +1,7 @@
 var classtask__base =
 [
     [ "task_base", "classtask__base.html#a1ba57f10c2e3f26228925e76021a2e60", null ],
-    [ "task_base", "classtask__base.html#a4cb88a596ba8eb0b4bf7a7fa6f4565a2", null ],
+    [ "task_base", "classtask__base.html#aefc90f725f80937a2d4f1878c0605043", null ],
     [ "~task_base", "classtask__base.html#a9511a486964147a1a57929b483142465", null ],
     [ "add_children", "classtask__base.html#a7a416901241831f45d5932567afac4b1", null ],
     [ "add_parent", "classtask__base.html#aae582b590672663e85300ba463251f48", null ],
@@ -17,14 +17,9 @@ var classtask__base =
     [ "run", "classtask__base.html#a0f05e5664b3c2886b4555b01a6fe8ad0", null ],
     [ "set_children_execution", "classtask__base.html#ac2dd9519d27a2903276d86b4e38b2c12", null ],
     [ "set_execution", "classtask__base.html#abbe49db38ee7a6152681d2a46469dd31", null ],
-    [ "arguments_", "classtask__base.html#a609c15e68c714761351eca04da9b19c8", null ],
     [ "children_", "classtask__base.html#ac5c359cd76d67fe96e2e92d095f16821", null ],
-    [ "cmd_", "classtask__base.html#a7088f23dbb7355fb5e8c1976335f6a01", null ],
-    [ "dependencies_", "classtask__base.html#a15097110fc3074a8b9a54010329cb6ce", null ],
     [ "execute_", "classtask__base.html#ae7548cd8a69425da679097de10ba7d9f", null ],
-    [ "fatal_failure_", "classtask__base.html#a38a3829c5af04c5ae5e4d846d1677bb9", null ],
     [ "id_", "classtask__base.html#af23f4b4243c3b84f3ba7fc3f99abb097", null ],
     [ "parents_", "classtask__base.html#aa12def1720a16db44aa9eec0b67a4beb", null ],
-    [ "priority_", "classtask__base.html#a321c75da3556118c18d28e90e3b82d7c", null ],
-    [ "task_id_", "classtask__base.html#ad2a52b3f7fbd6fdf7f89a1b5d93bd28f", null ]
+    [ "task_meta_", "classtask__base.html#a7e920b4f1c80cc5098f3aeca734ccdb8", null ]
 ];

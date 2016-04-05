@@ -1,19 +1,14 @@
 var searchData=
 [
-  ['sandbox_5fbase',['sandbox_base',['../classsandbox__base.html',1,'']]],
-  ['sandbox_5fconfig',['sandbox_config',['../classsandbox__config.html',1,'']]],
-  ['sandbox_5fexception',['sandbox_exception',['../classsandbox__exception.html',1,'sandbox_exception'],['../classsandbox__exception.html#a1507a282fcaf83441eee07fe8f43059d',1,'sandbox_exception::sandbox_exception()'],['../classsandbox__exception.html#aa83d8f93ee11454d0a7e777a0900d588',1,'sandbox_exception::sandbox_exception(const std::string &amp;what)']]],
-  ['sandbox_5fid',['sandbox_id',['../structexternal__task_1_1create__params.html#ae2f8a04b97bc19de6bed8ae021df3626',1,'external_task::create_params']]],
-  ['sandbox_5flimits',['sandbox_limits',['../structsandbox__limits.html',1,'']]],
-  ['sandbox_5fresults',['sandbox_results',['../structsandbox__results.html',1,'sandbox_results'],['../structsandbox__results.html#a0341dd178471adca7955c2ab068e6574',1,'sandbox_results::sandbox_results()']]],
-  ['sandbox_5fstatus',['sandbox_status',['../structtask__results.html#a6b5d59f63c7e6ea5ad25d08749b7c687',1,'task_results']]],
-  ['send_5fbroker',['send_broker',['../classconnection__proxy.html#a8a890560ac839683514323d24e7365b2',1,'connection_proxy']]],
-  ['send_5fjobs',['send_jobs',['../classconnection__proxy.html#a196e6c7adc01da90ae3efb142af83281',1,'connection_proxy']]],
-  ['share_5fnet',['share_net',['../structsandbox__limits.html#a264791b4d550ac634119f2aadbc3c703',1,'sandbox_limits']]],
-  ['stack_5fsize',['stack_size',['../structsandbox__limits.html#a80ede75c661368810229428d9282671b',1,'sandbox_limits']]],
-  ['start_5freceiving',['start_receiving',['../classjob__receiver.html#adf9b34aa723447d9b1af2ea4bf792086',1,'job_receiver']]],
-  ['status',['status',['../structsandbox__results.html#a65ebbb4f9f61af42aa211941e8c215bb',1,'sandbox_results']]],
-  ['std_5ferror',['std_error',['../structsandbox__limits.html#ae60a235fff201710473a6ca2f8a0fb66',1,'sandbox_limits']]],
-  ['std_5finput',['std_input',['../structsandbox__limits.html#a40394dcdd65c6a731cefdd8353c9434e',1,'sandbox_limits']]],
-  ['std_5foutput',['std_output',['../structsandbox__limits.html#a999b6d914f0c366c54aeba52ef4f456c',1,'sandbox_limits']]]
+  ['receive_5ftasks',['receive_tasks',['../classbroker__connection.html#acfc117a47909c2753d8a22d5a88328fd',1,'broker_connection']]],
+  ['reconnect_5fbroker',['reconnect_broker',['../classconnection__proxy.html#ac2ee2ff18ecfeef6a06e0d1a11627e08',1,'connection_proxy']]],
+  ['recv_5fbroker',['recv_broker',['../classconnection__proxy.html#a2b65c2ac81d37db281354a77ae5f0143',1,'connection_proxy']]],
+  ['recv_5fjobs',['recv_jobs',['../classconnection__proxy.html#a612fc5775fe3e1b378c866c3953350a3',1,'connection_proxy']]],
+  ['register_5fcommand',['register_command',['../classcommand__holder.html#aa7e0a54372918a440bb934969ca68c37',1,'command_holder']]],
+  ['remote_5furl',['remote_url',['../structfileman__config.html#a0a6d93a55ebda962de59263ad5b3e8a4',1,'fileman_config']]],
+  ['rename_5ftask',['rename_task',['../classrename__task.html',1,'']]],
+  ['result_5furl',['result_url',['../structeval__request.html#a508a049fcedd45e4c865705e5f5c1d31',1,'eval_request']]],
+  ['rm_5ftask',['rm_task',['../classrm__task.html',1,'']]],
+  ['root_5ftask',['root_task',['../classroot__task.html',1,'root_task'],['../classroot__task.html#afd8e59588281ca82f4a8aa71012025a4',1,'root_task::root_task()']]],
+  ['run',['run',['../classjob.html#a0769f62cc7f246aa09f95d59d55fdb93',1,'job::run()'],['../classfake__sandbox.html#a48af2a199166210d134543819311b687',1,'fake_sandbox::run()'],['../classisolate__sandbox.html#a052ca2c887458fe48731b1d1c61f71f5',1,'isolate_sandbox::run()'],['../classsandbox__base.html#a123cf7515a600fff855be71494637a18',1,'sandbox_base::run()'],['../classexternal__task.html#ad4e5f9e133237885bff4f1db51dcd82d',1,'external_task::run()'],['../classarchivate__task.html#ab1854685402fd6a52e541c0f7c2b29fb',1,'archivate_task::run()'],['../classcp__task.html#a6e96ec0a3e717ec7325740008671ba4b',1,'cp_task::run()'],['../classextract__task.html#a247fac09e12f42eccff8e1c074bae66f',1,'extract_task::run()'],['../classfetch__task.html#a4058ae92f11c81d4182c594dfb7509be',1,'fetch_task::run()'],['../classmkdir__task.html#ad1a4291f6e8d82bc7056fce1b968bbf4',1,'mkdir_task::run()'],['../classrename__task.html#a848d5769e0994dc41762256ed2f33b8a',1,'rename_task::run()'],['../classrm__task.html#a05e8a14e6dd4598b2fa67f134dd65e7e',1,'rm_task::run()'],['../classroot__task.html#ade778475dc3ac30b3f8ae9bece87000a',1,'root_task::run()'],['../classtask__base.html#a0f05e5664b3c2886b4555b01a6fe8ad0',1,'task_base::run()'],['../classworker__core.html#ab5ab9b5167f79d1c797ae345131a3439',1,'worker_core::run()']]]
 ];

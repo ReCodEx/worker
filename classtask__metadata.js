@@ -1,5 +1,6 @@
 var classtask__metadata =
 [
+    [ "task_metadata", "classtask__metadata.html#aec7a1fe6cc56524fa19e8b8b333506cb", null ],
     [ "binary", "classtask__metadata.html#a161f165391d64c738f0617eff701b0b3", null ],
     [ "cmd_args", "classtask__metadata.html#a5b5f5ff2b34f9ad9678e0436b99ab3e8", null ],
     [ "dependencies", "classtask__metadata.html#acdf173fb2eb8bda4ccaa777bbe881d47", null ],

@@ -47,6 +47,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -113,53 +114,52 @@ $(document).ready(function(){initNavTree('isolate__sandbox_8h_source.html','');}
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;</div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;memory&gt;</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;vector&gt;</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;spdlog/spdlog.h&quot;</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &quot;spdlog/sinks/null_sink.h&quot;</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;sandbox_base.h&quot;</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;</div>
-<div class="line"><a name="l00017"></a><span class="lineno"><a class="line" href="classisolate__sandbox.html">   17</a></span>&#160;<span class="keyword">class </span><a class="code" href="classisolate__sandbox.html">isolate_sandbox</a> : <span class="keyword">public</span> <a class="code" href="classsandbox__base.html">sandbox_base</a></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;{</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <a class="code" href="classisolate__sandbox.html#a5ffd7e43bbaeffd0c8e3dfdb78f91bff">isolate_sandbox</a>(<a class="code" href="structsandbox__limits.html">sandbox_limits</a> limits,</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        <span class="keywordtype">size_t</span> <span class="keywordtype">id</span>,</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <span class="keyword">const</span> std::string &amp;temp_dir,</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        std::shared_ptr&lt;spdlog::logger&gt; logger = <span class="keyword">nullptr</span>);</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="classisolate__sandbox.html#a5c02a48ccd5911b1a044be6d5e14d6ec">~isolate_sandbox</a>();</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="structsandbox__results.html">sandbox_results</a> <a class="code" href="classisolate__sandbox.html#a052ca2c887458fe48731b1d1c61f71f5">run</a>(<span class="keyword">const</span> std::string &amp;binary, <span class="keyword">const</span> std::vector&lt;std::string&gt; &amp;arguments);</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <a class="code" href="structsandbox__limits.html">sandbox_limits</a> limits_;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    std::shared_ptr&lt;spdlog::logger&gt; logger_;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keywordtype">size_t</span> id_;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    std::string isolate_binary_;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    std::string temp_dir_;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    std::string meta_file_;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keywordtype">int</span> max_timeout_;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keywordtype">void</span> isolate_init();</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keywordtype">void</span> isolate_init_child(<span class="keywordtype">int</span> fd_0, <span class="keywordtype">int</span> fd_1);</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keywordtype">void</span> isolate_cleanup();</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keywordtype">void</span> isolate_run(<span class="keyword">const</span> std::string &amp;binary, <span class="keyword">const</span> std::vector&lt;std::string&gt; &amp;arguments);</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordtype">char</span> **isolate_run_args(<span class="keyword">const</span> std::string &amp;binary, <span class="keyword">const</span> std::vector&lt;std::string&gt; &amp;arguments);</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <a class="code" href="structsandbox__results.html">sandbox_results</a> process_meta_file();</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;};</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;../helpers/create_logger.h&quot;</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &quot;sandbox_base.h&quot;</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;</div>
+<div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="classisolate__sandbox.html">   16</a></span>&#160;<span class="keyword">class </span><a class="code" href="classisolate__sandbox.html">isolate_sandbox</a> : <span class="keyword">public</span> <a class="code" href="classsandbox__base.html">sandbox_base</a></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;{</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <a class="code" href="classisolate__sandbox.html#a5ffd7e43bbaeffd0c8e3dfdb78f91bff">isolate_sandbox</a>(<a class="code" href="structsandbox__limits.html">sandbox_limits</a> limits,</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        <span class="keywordtype">size_t</span> <span class="keywordtype">id</span>,</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        <span class="keyword">const</span> std::string &amp;temp_dir,</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        std::shared_ptr&lt;spdlog::logger&gt; logger = <span class="keyword">nullptr</span>);</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="classisolate__sandbox.html#a5c02a48ccd5911b1a044be6d5e14d6ec">~isolate_sandbox</a>();</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="structsandbox__results.html">sandbox_results</a> <a class="code" href="classisolate__sandbox.html#a052ca2c887458fe48731b1d1c61f71f5">run</a>(<span class="keyword">const</span> std::string &amp;binary, <span class="keyword">const</span> std::vector&lt;std::string&gt; &amp;arguments);</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <a class="code" href="structsandbox__limits.html">sandbox_limits</a> limits_;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    std::shared_ptr&lt;spdlog::logger&gt; logger_;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keywordtype">size_t</span> id_;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    std::string isolate_binary_;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    std::string temp_dir_;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    std::string meta_file_;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keywordtype">int</span> max_timeout_;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keywordtype">void</span> isolate_init();</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keywordtype">void</span> isolate_init_child(<span class="keywordtype">int</span> fd_0, <span class="keywordtype">int</span> fd_1);</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keywordtype">void</span> isolate_cleanup();</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keywordtype">void</span> isolate_run(<span class="keyword">const</span> std::string &amp;binary, <span class="keyword">const</span> std::vector&lt;std::string&gt; &amp;arguments);</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keywordtype">char</span> **isolate_run_args(<span class="keyword">const</span> std::string &amp;binary, <span class="keyword">const</span> std::vector&lt;std::string&gt; &amp;arguments);</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <a class="code" href="structsandbox__results.html">sandbox_results</a> process_meta_file();</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;};</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor">#endif // _WIN32</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor">#endif // CODEX_WORKER_FILE_ISOLATE_SANDBOX_H</span></div>
-<div class="ttc" id="classisolate__sandbox_html_a5c02a48ccd5911b1a044be6d5e14d6ec"><div class="ttname"><a href="classisolate__sandbox.html#a5c02a48ccd5911b1a044be6d5e14d6ec">isolate_sandbox::~isolate_sandbox</a></div><div class="ttdeci">virtual ~isolate_sandbox()</div><div class="ttdef"><b>Definition:</b> <a href="isolate__sandbox_8cpp_source.html#l00059">isolate_sandbox.cpp:59</a></div></div>
-<div class="ttc" id="classisolate__sandbox_html_a052ca2c887458fe48731b1d1c61f71f5"><div class="ttname"><a href="classisolate__sandbox.html#a052ca2c887458fe48731b1d1c61f71f5">isolate_sandbox::run</a></div><div class="ttdeci">virtual sandbox_results run(const std::string &amp;binary, const std::vector&lt; std::string &gt; &amp;arguments)</div><div class="ttdef"><b>Definition:</b> <a href="isolate__sandbox_8cpp_source.html#l00069">isolate_sandbox.cpp:69</a></div></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor">#endif // _WIN32</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor">#endif // CODEX_WORKER_FILE_ISOLATE_SANDBOX_H</span></div>
+<div class="ttc" id="classisolate__sandbox_html_a5c02a48ccd5911b1a044be6d5e14d6ec"><div class="ttname"><a href="classisolate__sandbox.html#a5c02a48ccd5911b1a044be6d5e14d6ec">isolate_sandbox::~isolate_sandbox</a></div><div class="ttdeci">virtual ~isolate_sandbox()</div><div class="ttdef"><b>Definition:</b> <a href="isolate__sandbox_8cpp_source.html#l00055">isolate_sandbox.cpp:55</a></div></div>
+<div class="ttc" id="classisolate__sandbox_html_a052ca2c887458fe48731b1d1c61f71f5"><div class="ttname"><a href="classisolate__sandbox.html#a052ca2c887458fe48731b1d1c61f71f5">isolate_sandbox::run</a></div><div class="ttdeci">virtual sandbox_results run(const std::string &amp;binary, const std::vector&lt; std::string &gt; &amp;arguments)</div><div class="ttdef"><b>Definition:</b> <a href="isolate__sandbox_8cpp_source.html#l00065">isolate_sandbox.cpp:65</a></div></div>
 <div class="ttc" id="classisolate__sandbox_html_a5ffd7e43bbaeffd0c8e3dfdb78f91bff"><div class="ttname"><a href="classisolate__sandbox.html#a5ffd7e43bbaeffd0c8e3dfdb78f91bff">isolate_sandbox::isolate_sandbox</a></div><div class="ttdeci">isolate_sandbox(sandbox_limits limits, size_t id, const std::string &amp;temp_dir, std::shared_ptr&lt; spdlog::logger &gt; logger=nullptr)</div><div class="ttdef"><b>Definition:</b> <a href="isolate__sandbox_8cpp_source.html#l00023">isolate_sandbox.cpp:23</a></div></div>
 <div class="ttc" id="classsandbox__base_html"><div class="ttname"><a href="classsandbox__base.html">sandbox_base</a></div><div class="ttdef"><b>Definition:</b> <a href="sandbox__base_8h_source.html#l00016">sandbox_base.h:16</a></div></div>
 <div class="ttc" id="structsandbox__limits_html"><div class="ttname"><a href="structsandbox__limits.html">sandbox_limits</a></div><div class="ttdef"><b>Definition:</b> <a href="sandbox__limits_8h_source.html#l00015">sandbox_limits.h:15</a></div></div>
 <div class="ttc" id="structsandbox__results_html"><div class="ttname"><a href="structsandbox__results.html">sandbox_results</a></div><div class="ttdef"><b>Definition:</b> <a href="task__results_8h_source.html#l00017">task_results.h:17</a></div></div>
-<div class="ttc" id="classisolate__sandbox_html"><div class="ttname"><a href="classisolate__sandbox.html">isolate_sandbox</a></div><div class="ttdef"><b>Definition:</b> <a href="isolate__sandbox_8h_source.html#l00017">isolate_sandbox.h:17</a></div></div>
+<div class="ttc" id="classisolate__sandbox_html"><div class="ttname"><a href="classisolate__sandbox.html">isolate_sandbox</a></div><div class="ttdef"><b>Definition:</b> <a href="isolate__sandbox_8h_source.html#l00016">isolate_sandbox.h:16</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_2666c81470adc64840ad535dbb7c3c8b.html">sandbox</a></li><li class="navelem"><b>isolate_sandbox.h</b></li>
-    <li class="footer">Generated on Fri Feb 19 2016 18:25:15 for ReCodEx - Worker by
+    <li class="footer">Generated on Tue Apr 5 2016 23:03:08 for ReCodEx - Worker by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.10 </li>
   </ul>
