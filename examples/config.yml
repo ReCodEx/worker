@@ -31,8 +31,4 @@ limits:
     disk-files: 10
     environ-variable:
         PATH: /usr/bin
-    bound-directories:
-        - src: /etc/alternatives
-          dst: /etc/alternatives
-          mode: RO
 ...
