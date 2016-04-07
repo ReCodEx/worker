@@ -164,12 +164,16 @@ worker_config::worker_config(const YAML::Node &config)
 	}
 }
 
-size_t worker_config::get_worker_id()
+worker_config::~worker_config()
+{
+}
+
+size_t worker_config::get_worker_id() const
 {
 	return worker_id_;
 }
 
-std::string worker_config::get_working_directory()
+std::string worker_config::get_working_directory() const
 {
 	return working_directory_;
 }
@@ -189,17 +193,17 @@ const std::string &worker_config::get_hwgroup() const
 	return hwgroup_;
 }
 
-const log_config &worker_config::get_log_config()
+const log_config &worker_config::get_log_config() const
 {
 	return log_config_;
 }
 
-const std::vector<fileman_config> &worker_config::get_filemans_configs()
+const std::vector<fileman_config> &worker_config::get_filemans_configs() const
 {
 	return filemans_configs_;
 }
 
-const sandbox_limits &worker_config::get_limits()
+const sandbox_limits &worker_config::get_limits() const
 {
 	return limits_;
 }

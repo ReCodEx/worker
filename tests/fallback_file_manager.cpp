@@ -6,15 +6,13 @@
 #include <utility>
 
 #include "../src/fileman/file_manager_base.h"
-#include "../src/fileman/http_manager.h"
-#include "../src/fileman/cache_manager.h"
 #include "../src/fileman/fallback_file_manager.h"
 
 using namespace testing;
 using namespace std;
 
 
-class mock_file_manager : public cache_manager
+class mock_file_manager : public file_manager_base
 {
 public:
 	mock_file_manager()

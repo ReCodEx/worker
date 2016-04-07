@@ -75,7 +75,6 @@ add_test_suite(cache_manager
 
 add_test_suite(fallback_file_manager
 	${FILEMAN_DIR}/fallback_file_manager.cpp
-	${FILEMAN_DIR}/cache_manager.cpp
 	fallback_file_manager.cpp
 	${HELPERS_DIR}/create_logger.cpp
 )
@@ -96,13 +95,17 @@ add_test_suite(job
 	${SRC_DIR}/archives/archivator.cpp
 	${SRC_DIR}/config/worker_config.cpp
 	${HELPERS_DIR}/config.cpp
-	${FILEMAN_DIR}/cache_manager.cpp
 	${SANDBOX_DIR}/fake_sandbox.cpp
 	${SANDBOX_DIR}/isolate_sandbox.cpp
 	${HELPERS_DIR}/topological_sort.cpp
 	${HELPERS_DIR}/create_logger.cpp
 	${JOB_DIR}/job.cpp
 	job.cpp
+)
+
+add_test_suite(build_job_metadata
+	${HELPERS_DIR}/config.cpp
+	build_job_metadata.cpp
 )
 
 add_test_suite(topological_sort

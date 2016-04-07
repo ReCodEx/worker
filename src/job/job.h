@@ -12,7 +12,7 @@
 namespace fs = boost::filesystem;
 
 #include "spdlog/spdlog.h"
-#include "spdlog/sinks/null_sink.h"
+#include "../helpers/create_logger.h"
 #include "../config/worker_config.h"
 #include "../tasks/task_base.h"
 #include "../tasks/root_task.h"

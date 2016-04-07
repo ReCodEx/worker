@@ -37,15 +37,20 @@ public:
 	worker_config(const YAML::Node &config);
 
 	/**
+	 * Virtual destructor to avoid memory leaks when dealocating childs.
+	 */
+	virtual ~worker_config();
+
+	/**
 	 * Get worker ID which has to be unique at least in context of one machine.
 	 * @return not integer but textual description for better debuggin and human readibility
 	 */
-	size_t get_worker_id();
+	virtual size_t get_worker_id() const;
 	/**
 	 * Working directory path defined in config file.
 	 * @return
 	 */
-	std::string get_working_directory();
+	virtual std::string get_working_directory() const;
 	/**
 	 * Defines address on which broker run.
 	 * @return
@@ -75,23 +80,23 @@ public:
 	/**
 	 * Get path to the caching directory
 	 */
-	std::string get_cache_dir() const;
+	virtual std::string get_cache_dir() const;
 
 	/**
 	 * Get wrapper for logger configuration.
 	 * @return constant reference to log_config structure
 	 */
-	const log_config &get_log_config();
+	virtual const log_config &get_log_config() const;
 	/**
 	 * Get wrapper for file manager configuration.
 	 * @return constant reference to fileman_config structure
 	 */
-	const std::vector<fileman_config> &get_filemans_configs();
+	virtual const std::vector<fileman_config> &get_filemans_configs() const;
 	/**
 	 * Get default worker sandbox limits. Which will be used as defaults if not defined in job configuration.
 	 * @return non editable reference to sandbox_limits structure
 	 */
-	const sandbox_limits &get_limits();
+	virtual const sandbox_limits &get_limits() const;
 
 private:
 	/** Unique worker number in context of one machine (0-100) */

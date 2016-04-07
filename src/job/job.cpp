@@ -335,8 +335,7 @@ void job::init_logger()
 {
 	if (!job_meta_->log) {
 		// logging is disabled in configuration
-		auto sink = std::make_shared<spdlog::sinks::null_sink_st>();
-		logger_ = std::make_shared<spdlog::logger>("job_manager_nolog", sink);
+		logger_ = helpers::create_null_logger();
 		return;
 	}
 

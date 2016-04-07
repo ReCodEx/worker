@@ -11,15 +11,59 @@ using namespace boost::filesystem;
 
 #include "../src/job/job.h"
 #include "../src/job/job_exception.h"
-#include "../src/fileman/cache_manager.h"
 #include "../src/helpers/config.h"
+
+#include "../src/fileman/file_manager_base.h"
+#include "../src/config/worker_config.h"
+
+
+class mock_file_manager : public file_manager_base
+{
+public:
+	mock_file_manager()
+	{
+	}
+	MOCK_CONST_METHOD0(get_caching_dir, std::string());
+	MOCK_METHOD2(put_file, void(const std::string &name, const std::string &dst_path));
+	MOCK_METHOD2(get_file, void(const std::string &src_name, const std::string &dst_path));
+};
+
+class mock_worker_config : public worker_config
+{
+public:
+	mock_worker_config()
+	{
+	}
+	virtual ~mock_worker_config() {}
+	MOCK_CONST_METHOD0(get_hwgroup, const std::string &());
+	MOCK_CONST_METHOD0(get_worker_id, size_t());
+	MOCK_CONST_METHOD0(get_limits, const sandbox_limits &());
+};
+
+sandbox_limits limits_init()
+{
+	sandbox_limits default_limits;
+	default_limits.cpu_time = 15;
+	default_limits.wall_time = 16;
+	default_limits.extra_time = 12;
+	default_limits.stack_size = 150000;
+	default_limits.memory_usage = 160000;
+	default_limits.processes = 11;
+	default_limits.disk_size = 150;
+	default_limits.disk_files = 17;
+	default_limits.environ_vars = {{"WORKER_CONFIG", "worker_config"}};
+	default_limits.bound_dirs = { std::tuple<std::string, std::string,
+		sandbox_limits::dir_perm>{"/tmp/recodex/worker_config", "/recodex/worker_config",
+		sandbox_limits::dir_perm::RW}};
+	return default_limits;
+}
 
 
 TEST(job_test, bad_parameters)
 {
 	std::shared_ptr<job_metadata> job_meta = std::make_shared<job_metadata>();
-	std::shared_ptr<worker_config> worker_conf = std::make_shared<worker_config>();
-	auto fileman = std::make_shared<cache_manager>();
+	std::shared_ptr<worker_config> worker_conf = std::make_shared<mock_worker_config>();
+	auto fileman = std::make_shared<mock_file_manager>();
 
 	// job_config not given
 	EXPECT_THROW(
@@ -54,8 +98,10 @@ TEST(job_test, bad_paths)
 	path dir_root = temp_directory_path() / "isoeval";
 	path dir = dir_root / "job_test";
 	auto job_meta = std::make_shared<job_metadata>();
-	auto worker_conf = std::make_shared<worker_config>();
-	auto fileman = std::make_shared<cache_manager>();
+	auto worker_conf = std::make_shared<mock_worker_config>();
+	auto fileman = std::make_shared<mock_file_manager>();
+
+	EXPECT_CALL((*worker_conf), get_worker_id()).WillRepeatedly(testing::Return(8));
 
 	// non-existing working directory
 	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), fileman), job_exception);
@@ -85,8 +131,10 @@ TEST(job_test, empty_submission_details)
 	path dir_root = temp_directory_path() / "isoeval";
 	path dir = dir_root / "job_test";
 	auto job_meta = std::make_shared<job_metadata>();
-	auto worker_conf = std::make_shared<worker_config>();
-	auto fileman = std::make_shared<cache_manager>();
+	auto worker_conf = std::make_shared<mock_worker_config>();
+	EXPECT_CALL((*worker_conf), get_worker_id()).WillRepeatedly(testing::Return(8));
+
+	auto fileman = std::make_shared<mock_file_manager>();
 	create_directories(dir);
 	std::ofstream hello((dir / "hello").string());
 	hello << "hello" << std::endl;
@@ -113,8 +161,13 @@ TEST(job_test, empty_tasks_details)
 	path dir_root = temp_directory_path() / "isoeval";
 	path dir = dir_root / "job_test";
 	auto job_meta = std::make_shared<job_metadata>();
-	auto worker_conf = std::make_shared<worker_config>();
-	auto fileman = std::make_shared<cache_manager>();
+	auto worker_conf = std::make_shared<mock_worker_config>();
+	EXPECT_CALL((*worker_conf), get_worker_id()).WillRepeatedly(testing::Return(8));
+
+	std::string hwgroup_ret = "group1";
+	EXPECT_CALL((*worker_conf), get_hwgroup()).WillRepeatedly(testing::ReturnRef(hwgroup_ret));
+
+	auto fileman = std::make_shared<mock_file_manager>();
 	create_directories(dir);
 	std::ofstream hello((dir / "hello").string());
 	hello << "hello" << std::endl;
@@ -193,29 +246,14 @@ TEST(job_test, non_empty_details)
 							   "              - hw-group-id: group2\n"
 							   "...\n");
 	auto job_meta = helpers::build_job_metadata(job_yaml);
-	auto default_yaml = YAML::Load("worker-id: 8\n"
-								   "broker-uri: localhost\n"
-								   "headers:\n"
-								   "    env:\n"
-								   "        - c\n"
-								   "        - python\n"
-								   "    threads: 10\n"
-								   "hwgroup: group1\n"
-								   "file-managers:\n"
-								   "    - hostname: http://localhost:80\n"
-								   "      username: 654321\n"
-								   "      password: 123456\n"
-								   "limits:\n"
-								   "    time: 15\n"
-								   "    wall-time: 16\n"
-								   "    extra-time: 12\n"
-								   "    stack-size: 150000\n"
-								   "    memory: 160000\n"
-								   "    parallel: 11\n"
-								   "    disk-size: 150\n"
-								   "    disk-files: 17\n");
-	auto worker_conf = std::make_shared<worker_config>(default_yaml);
-	auto fileman = std::make_shared<cache_manager>();
+	auto worker_conf = std::make_shared<mock_worker_config>();
+	auto default_limits = limits_init();
+	std::string group_name = "group2";
+	EXPECT_CALL((*worker_conf), get_hwgroup()).WillRepeatedly(testing::ReturnRef(group_name));
+	EXPECT_CALL((*worker_conf), get_worker_id()).WillRepeatedly(testing::Return(8));
+	EXPECT_CALL((*worker_conf), get_limits()).WillRepeatedly(testing::ReturnRef(default_limits));
+
+	auto fileman = std::make_shared<mock_file_manager>();
 	create_directories(dir);
 	std::ofstream hello((dir / "hello").string());
 	hello << "hello" << std::endl;
@@ -256,35 +294,14 @@ TEST(job_test, load_of_worker_defaults)
 							   "                      mode: RW\n"
 							   "...\n");
 	auto job_meta = helpers::build_job_metadata(job_yaml);
-	auto default_yaml = YAML::Load("worker-id: 8\n"
-								   "broker-uri: localhost\n"
-								   "headers:\n"
-								   "    env:\n"
-								   "        - c\n"
-								   "        - python\n"
-								   "    threads: 10\n"
-								   "hwgroup: group1\n"
-								   "file-managers:\n"
-								   "    - hostname: http://localhost:80\n"
-								   "      username: 654321\n"
-								   "      password: 123456\n"
-								   "limits:\n"
-								   "    time: 5\n"
-								   "    wall-time: 6\n"
-								   "    extra-time: 2\n"
-								   "    stack-size: 50000\n"
-								   "    memory: 60000\n"
-								   "    parallel: 1\n"
-								   "    disk-size: 50\n"
-								   "    disk-files: 7\n"
-								   "    environ-variable:\n"
-								   "        WORKER_CONFIG: worker_config\n"
-								   "    bound-directories:\n"
-								   "        - src: /tmp/recodex/worker_config\n"
-								   "          dst: /recodex/worker_config\n"
-								   "          mode: RW\n");
-	auto worker_conf = std::make_shared<worker_config>(default_yaml);
-	auto fileman = std::make_shared<cache_manager>();
+	auto worker_conf = std::make_shared<mock_worker_config>();
+	auto default_limits = limits_init();
+	std::string group_name = "group1";
+	EXPECT_CALL((*worker_conf), get_hwgroup()).WillRepeatedly(testing::ReturnRef(group_name));
+	EXPECT_CALL((*worker_conf), get_worker_id()).WillRepeatedly(testing::Return(8));
+	EXPECT_CALL((*worker_conf), get_limits()).WillRepeatedly(testing::ReturnRef(default_limits));
+
+	auto fileman = std::make_shared<mock_file_manager>();
 	create_directories(dir);
 	std::ofstream hello((dir / "hello").string());
 	hello << "hello" << std::endl;
@@ -297,14 +314,14 @@ TEST(job_test, load_of_worker_defaults)
 	auto task = result.get_task_queue().at(1);
 	auto ext_task = std::dynamic_pointer_cast<external_task>(task);
 	std::shared_ptr<sandbox_limits> limits = ext_task->get_limits();
-	ASSERT_EQ(limits->cpu_time, 5);
-	ASSERT_EQ(limits->wall_time, 6);
-	ASSERT_EQ(limits->extra_time, 2);
-	ASSERT_EQ(limits->stack_size, 50000u);
-	ASSERT_EQ(limits->memory_usage, 60000u);
-	ASSERT_EQ(limits->processes, 1u);
-	ASSERT_EQ(limits->disk_size, 50u);
-	ASSERT_EQ(limits->disk_files, 7u);
+	ASSERT_EQ(limits->cpu_time, 15);
+	ASSERT_EQ(limits->wall_time, 16);
+	ASSERT_EQ(limits->extra_time, 12);
+	ASSERT_EQ(limits->stack_size, 150000u);
+	ASSERT_EQ(limits->memory_usage, 160000u);
+	ASSERT_EQ(limits->processes, 11u);
+	ASSERT_EQ(limits->disk_size, 150u);
+	ASSERT_EQ(limits->disk_files, 17u);
 
 	std::vector<std::pair<std::string, std::string>> expected_environs;
 	if (limits->environ_vars.at(0).first == "JOB_CONFIG") {
@@ -345,71 +362,56 @@ TEST(job_test, exceeded_worker_defaults)
 								 "          limits:\n"
 								 "              - hw-group-id: group1\n";
 
-	auto default_yaml = YAML::Load("worker-id: 8\n"
-								   "broker-uri: localhost\n"
-								   "headers:\n"
-								   "    env:\n"
-								   "        - c\n"
-								   "        - python\n"
-								   "    threads: 10\n"
-								   "hwgroup: group1\n"
-								   "file-managers:\n"
-								   "    - hostname: http://localhost:80\n"
-								   "      username: 654321\n"
-								   "      password: 123456\n"
-								   "limits:\n"
-								   "    time: 5\n"
-								   "    wall-time: 6\n"
-								   "    extra-time: 2\n"
-								   "    stack-size: 50000\n"
-								   "    memory: 60000\n"
-								   "    parallel: 1\n"
-								   "    disk-size: 50\n"
-								   "    disk-files: 7\n");
-	auto worker_conf = std::make_shared<worker_config>(default_yaml);
-	auto fileman = std::make_shared<cache_manager>();
+	auto worker_conf = std::make_shared<mock_worker_config>();
+	auto default_limits = limits_init();
+	std::string group_name = "group1";
+	EXPECT_CALL((*worker_conf), get_hwgroup()).WillRepeatedly(testing::ReturnRef(group_name));
+	EXPECT_CALL((*worker_conf), get_worker_id()).WillRepeatedly(testing::Return(8));
+	EXPECT_CALL((*worker_conf), get_limits()).WillRepeatedly(testing::ReturnRef(default_limits));
+
+	auto fileman = std::make_shared<mock_file_manager>();
 	create_directories(dir);
 	std::ofstream hello((dir / "hello").string());
 	hello << "hello" << std::endl;
 	hello.close();
 
 	// time exceeded worker defaults
-	auto job_yaml = YAML::Load(str_job_config + "                time: 6\n");
+	auto job_yaml = YAML::Load(str_job_config + "                time: 26\n");
 	auto job_meta = helpers::build_job_metadata(job_yaml);
 	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), fileman), job_exception);
 
 	// wall-time exceeded worker defaults
-	job_yaml = YAML::Load(str_job_config + "                wall-time: 7\n");
+	job_yaml = YAML::Load(str_job_config + "                wall-time: 27\n");
 	job_meta = helpers::build_job_metadata(job_yaml);
 	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), fileman), job_exception);
 
 	// extra-time exceeded worker defaults
-	job_yaml = YAML::Load(str_job_config + "                extra-time: 3\n");
+	job_yaml = YAML::Load(str_job_config + "                extra-time: 23\n");
 	job_meta = helpers::build_job_metadata(job_yaml);
 	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), fileman), job_exception);
 
 	// stack-size exceeded worker defaults
-	job_yaml = YAML::Load(str_job_config + "                stack-size: 60000\n");
+	job_yaml = YAML::Load(str_job_config + "                stack-size: 260000\n");
 	job_meta = helpers::build_job_metadata(job_yaml);
 	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), fileman), job_exception);
 
 	// memory exceeded worker defaults
-	job_yaml = YAML::Load(str_job_config + "                memory: 70000\n");
+	job_yaml = YAML::Load(str_job_config + "                memory: 270000\n");
 	job_meta = helpers::build_job_metadata(job_yaml);
 	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), fileman), job_exception);
 
 	// parallel exceeded worker defaults
-	job_yaml = YAML::Load(str_job_config + "                parallel: 3\n");
+	job_yaml = YAML::Load(str_job_config + "                parallel: 23\n");
 	job_meta = helpers::build_job_metadata(job_yaml);
 	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), fileman), job_exception);
 
 	// disk-size exceeded worker defaults
-	job_yaml = YAML::Load(str_job_config + "                disk-size: 60\n");
+	job_yaml = YAML::Load(str_job_config + "                disk-size: 260\n");
 	job_meta = helpers::build_job_metadata(job_yaml);
 	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), fileman), job_exception);
 
 	// disk-files exceeded worker defaults
-	job_yaml = YAML::Load(str_job_config + "                disk-files: 8\n");
+	job_yaml = YAML::Load(str_job_config + "                disk-files: 28\n");
 	job_meta = helpers::build_job_metadata(job_yaml);
 	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), fileman), job_exception);
 
@@ -492,29 +494,14 @@ TEST(job_test, correctly_built_queue)
 							   "              - hello\n"
 							   "...\n");
 	auto job_meta = helpers::build_job_metadata(job_yaml);
-	auto default_yaml = YAML::Load("worker-id: 8\n"
-								   "broker-uri: localhost\n"
-								   "headers:\n"
-								   "    env:\n"
-								   "        - c\n"
-								   "        - python\n"
-								   "    threads: 10\n"
-								   "hwgroup: group1\n"
-								   "file-managers:\n"
-								   "    - hostname: http://localhost:80\n"
-								   "      username: 654321\n"
-								   "      password: 123456\n"
-								   "limits:\n"
-								   "    time: 5\n"
-								   "    wall-time: 6\n"
-								   "    extra-time: 2\n"
-								   "    stack-size: 50000\n"
-								   "    memory: 60000\n"
-								   "    parallel: 1\n"
-								   "    disk-size: 50\n"
-								   "    disk-files: 7\n");
-	auto worker_conf = std::make_shared<worker_config>(default_yaml);
-	auto fileman = std::make_shared<cache_manager>();
+	auto worker_conf = std::make_shared<mock_worker_config>();
+	auto default_limits = limits_init();
+	std::string group_name = "group1";
+	EXPECT_CALL((*worker_conf), get_hwgroup()).WillRepeatedly(testing::ReturnRef(group_name));
+	EXPECT_CALL((*worker_conf), get_worker_id()).WillRepeatedly(testing::Return(8));
+	EXPECT_CALL((*worker_conf), get_limits()).WillRepeatedly(testing::ReturnRef(default_limits));
+
+	auto fileman = std::make_shared<mock_file_manager>();
 	create_directories(dir);
 	std::ofstream hello((dir / "hello").string());
 	hello << "hello" << std::endl;
@@ -586,29 +573,15 @@ TEST(job_test, job_variables)
 													"              - hw-group-id: group2\n"
 													"...\n");
 	auto job_meta = helpers::build_job_metadata(job_yaml);
-	auto default_yaml = YAML::Load("worker-id: 8\n"
-								   "broker-uri: localhost\n"
-								   "headers:\n"
-								   "    env:\n"
-								   "        - c\n"
-								   "        - python\n"
-								   "    threads: 10\n"
-								   "hwgroup: group1\n"
-								   "file-managers:\n"
-								   "    - hostname: http://localhost:80\n"
-								   "      username: 654321\n"
-								   "      password: 123456\n"
-								   "limits:\n"
-								   "    time: 15\n"
-								   "    wall-time: 16\n"
-								   "    extra-time: 12\n"
-								   "    stack-size: 150000\n"
-								   "    memory: 160000\n"
-								   "    parallel: 11\n"
-								   "    disk-size: 150\n"
-								   "    disk-files: 17\n");
-	auto worker_conf = std::make_shared<worker_config>(default_yaml);
-	auto fileman = std::make_shared<cache_manager>();
+	auto worker_conf = std::make_shared<mock_worker_config>();
+	auto default_limits = limits_init();
+	default_limits.bound_dirs = {};
+	std::string group_name = "group1";
+	EXPECT_CALL((*worker_conf), get_hwgroup()).WillRepeatedly(testing::ReturnRef(group_name));
+	EXPECT_CALL((*worker_conf), get_worker_id()).WillRepeatedly(testing::Return(8));
+	EXPECT_CALL((*worker_conf), get_limits()).WillRepeatedly(testing::ReturnRef(default_limits));
+
+	auto fileman = std::make_shared<mock_file_manager>();
 	create_directories(dir);
 	create_directories(res_dir);
 	std::ofstream hello((dir / "hello").string());
