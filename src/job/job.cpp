@@ -123,9 +123,9 @@ void job::build_job()
 			process_task_limits(limits);
 
 			// go through variables parsing
-			limits->std_input = parse_job_var(task_meta->std_input);
-			limits->std_output = parse_job_var(task_meta->std_output);
-			limits->std_error = parse_job_var(task_meta->std_error);
+			limits->std_input = parse_job_var(limits->std_input);
+			limits->std_output = parse_job_var(limits->std_output);
+			limits->std_error = parse_job_var(limits->std_error);
 			limits->chdir = parse_job_var(limits->chdir);
 			std::vector<std::tuple<std::string, std::string, sandbox_limits::dir_perm>> new_bnd_dirs;
 			for (auto &bnd_dir : limits->bound_dirs) {

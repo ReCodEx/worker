@@ -19,9 +19,6 @@ std::shared_ptr<task_metadata> get_task_meta()
 	res->dependencies = {"dep1", "dep2", "dep3"};
 	res->binary = "command";
 	res->cmd_args = {"arg1", "arg2"};
-	res->std_input = "";
-	res->std_output = "";
-	res->std_error = "";
 	res->sandbox = nullptr;
 	return res;
 }

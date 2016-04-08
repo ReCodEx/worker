@@ -26,11 +26,11 @@ TEST(job_metadata, build_all_from_yaml)
 							   "          args:\n"
 							   "              - -v\n"
 							   "              - \"-f 01.in\"\n"
-							   "      stdin: before_stdin_${WORKER_ID}_after_stdin\n"
-							   "      stdout: before_stdout_${JOB_ID}_after_stdout\n"
-							   "      stderr: before_stderr_${RESULT_DIR}_after_stderr\n"
 							   "      sandbox:\n"
 							   "          name: fake\n"
+							   "          stdin: before_stdin_${WORKER_ID}_after_stdin\n"
+							   "          stdout: before_stdout_${JOB_ID}_after_stdout\n"
+							   "          stderr: before_stderr_${RESULT_DIR}_after_stderr\n"
 							   "          limits:\n"
 							   "              - hw-group-id: group1\n"
 							   "                time: 5\n"
@@ -66,9 +66,6 @@ TEST(job_metadata, build_all_from_yaml)
 	EXPECT_EQ(metadata->binary, "recodex");
 	auto args = std::vector<std::string> {"-v", "-f 01.in"};
 	EXPECT_EQ(metadata->cmd_args, args);
-	EXPECT_EQ(metadata->std_input, "before_stdin_${WORKER_ID}_after_stdin");
-	EXPECT_EQ(metadata->std_output, "before_stdout_${JOB_ID}_after_stdout");
-	EXPECT_EQ(metadata->std_error, "before_stderr_${RESULT_DIR}_after_stderr");
 
 	auto sandbox = metadata->sandbox;
 	EXPECT_NE(sandbox, nullptr);
@@ -86,6 +83,9 @@ TEST(job_metadata, build_all_from_yaml)
 	EXPECT_EQ(limits->disk_size, 50u);
 	EXPECT_EQ(limits->disk_files, 10u);
 	EXPECT_EQ(limits->chdir, "${EVAL_DIR}");
+	EXPECT_EQ(limits->std_input, "before_stdin_${WORKER_ID}_after_stdin");
+	EXPECT_EQ(limits->std_output, "before_stdout_${JOB_ID}_after_stdout");
+	EXPECT_EQ(limits->std_error, "before_stderr_${RESULT_DIR}_after_stderr");
 
 	EXPECT_EQ(limits->environ_vars.size(), 1u);
 	auto envs = std::pair<std::string, std::string> {"ISOLATE_TMP", "/tmp"};

@@ -70,9 +70,6 @@ std::shared_ptr<job_metadata> get_correct_meta()
 	task_meta->fatal_failure = false;
 	task_meta->binary = "recodex";
 	task_meta->cmd_args = std::vector<std::string> {"-v", "-f 01.in"};
-	task_meta->std_input = "01.in";
-	task_meta->std_output = "01.out";
-	task_meta->std_error = "01.err";
 	std::shared_ptr<sandbox_config> sandbox_conf = std::make_shared<sandbox_config>();
 	sandbox_conf->name = "fake";
 
@@ -87,6 +84,9 @@ std::shared_ptr<job_metadata> get_correct_meta()
 	limits->disk_size = 50;
 	limits->disk_files = 10;
 	limits->chdir = "/eval";
+	limits->std_input = "01.in";
+	limits->std_output = "01.out";
+	limits->std_error = "01.err";
 	limits->environ_vars = std::vector<std::pair<std::string, std::string>> {{"ISOLATE_BOX", "/box"}};
 	limits->bound_dirs = std::vector<mytuple> {
 		mytuple {"/tmp/recodex", "/recodex/tmp", sandbox_limits::dir_perm::RW}
@@ -287,6 +287,7 @@ TEST(job_test, non_empty_details)
 	// prepare all things which need to be prepared
 	path dir_root = temp_directory_path() / "isoeval";
 	path dir = dir_root / "job_test";
+
 	auto job_meta = get_correct_meta();
 	auto worker_conf = std::make_shared<mock_worker_config>();
 	auto fileman = std::make_shared<mock_file_manager>();
@@ -487,11 +488,12 @@ TEST(job_test, job_variables)
 
 	auto job_meta = get_correct_meta();
 	job_meta->tasks[0]->binary = "${EVAL_DIR}/recodex";
-	job_meta->tasks[0]->std_input = "before_stdin_${WORKER_ID}_after_stdin";
-	job_meta->tasks[0]->std_output = "before_stdout_${JOB_ID}_after_stdout";
-	job_meta->tasks[0]->std_error = "before_stderr_${RESULT_DIR}_after_stderr";
-	job_meta->tasks[0]->sandbox->loaded_limits["group1"]->chdir = "${EVAL_DIR}";
-	job_meta->tasks[0]->sandbox->loaded_limits["group1"]->bound_dirs = std::vector<mytuple> {
+	auto isolate_limits = job_meta->tasks[0]->sandbox->loaded_limits["group1"];
+	isolate_limits->chdir = "${EVAL_DIR}";
+	isolate_limits->std_input = "before_stdin_${WORKER_ID}_after_stdin";
+	isolate_limits->std_output = "before_stdout_${JOB_ID}_after_stdout";
+	isolate_limits->std_error = "before_stderr_${RESULT_DIR}_after_stderr";
+	isolate_limits->bound_dirs = std::vector<mytuple> {
 		mytuple {"${TEMP_DIR}" + std::string(1, path::preferred_separator) + "recodex",
 				 "${SOURCE_DIR}" + std::string(1, path::preferred_separator) + "tmp",
 				 sandbox_limits::dir_perm::RW}

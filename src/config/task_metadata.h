@@ -20,12 +20,9 @@ public:
 		std::vector<std::string> deps = {},
 		std::string cmd = "",
 		std::vector<std::string> args = {},
-		std::string input = "",
-		std::string output = "",
-		std::string err = "",
 		std::shared_ptr<sandbox_config> sandbox = nullptr)
 		: task_id(task_id), priority(priority), fatal_failure(fatal), dependencies(deps), binary(cmd), cmd_args(args),
-		  std_input(input), std_output(output), std_error(err), sandbox(sandbox)
+		  sandbox(sandbox)
 	{
 	}
 
@@ -42,13 +39,6 @@ public:
 	std::string binary;
 	/** Arguments for executed command. */
 	std::vector<std::string> cmd_args;
-
-	/** If stated than standard input will be redirected from this file. */
-	std::string std_input;
-	/** If stated than standard output will be redirected to this file. */
-	std::string std_output;
-	/** If stated than error output will be redirected to this file. */
-	std::string std_error;
 
 	/** If not null than this task is external and will be executed in given sandbox. */
 	std::shared_ptr<sandbox_config> sandbox;

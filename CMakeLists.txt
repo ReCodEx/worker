@@ -294,11 +294,13 @@ include (CPack)
 
 # ========== Formatting ==========
 file(GLOB_RECURSE ALL_SOURCE_FILES src/*.cpp src/*.h tests/*.cpp tests/*.h)
-add_custom_target(format
-	COMMAND clang-format --style=file -i ${ALL_SOURCE_FILES}
-	COMMENT "Running clang-format"
-	VERBATIM
-)
+if(UNIX)
+	add_custom_target(format
+		COMMAND clang-format --style=file -i ${ALL_SOURCE_FILES}
+		COMMENT "Running clang-format"
+		VERBATIM
+	)
+endif()
 
 # Count sum of lines in source files (for Martin)
 add_custom_target(lines
