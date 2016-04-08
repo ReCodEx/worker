@@ -87,16 +87,6 @@ std::shared_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 				task_meta->dependencies = ctask["dependencies"].as<std::vector<std::string>>();
 			}
 
-			if (ctask["stdin"] && ctask["stdin"].IsScalar()) {
-				task_meta->std_input = ctask["stdin"].as<std::string>();
-			} // can be ommited... no throw
-			if (ctask["stdout"] && ctask["stdout"].IsScalar()) {
-				task_meta->std_output = ctask["stdout"].as<std::string>();
-			} // can be ommited... no throw
-			if (ctask["stderr"] && ctask["stderr"].IsScalar()) {
-				task_meta->std_error = ctask["stderr"].as<std::string>();
-			} // can be ommited... no throw
-
 			// distinguish internal/external command and construct suitable object
 			if (ctask["sandbox"]) {
 
@@ -104,6 +94,9 @@ std::shared_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 				// external command //
 				// //////////////// //
 
+				std::string std_input;
+				std::string std_output;
+				std::string std_error;
 				std::shared_ptr<sandbox_config> sandbox = std::make_shared<sandbox_config>();
 
 				if (ctask["sandbox"]["name"] && ctask["sandbox"]["name"].IsScalar()) {
@@ -111,6 +104,16 @@ std::shared_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 				} else {
 					throw config_exception("Name of sandbox not given");
 				}
+
+				if (ctask["sandbox"]["stdin"] && ctask["sandbox"]["stdin"].IsScalar()) {
+					std_input = ctask["sandbox"]["stdin"].as<std::string>();
+				} // can be ommited... no throw
+				if (ctask["sandbox"]["stdout"] && ctask["sandbox"]["stdout"].IsScalar()) {
+					std_output = ctask["sandbox"]["stdout"].as<std::string>();
+				} // can be ommited... no throw
+				if (ctask["sandbox"]["stderr"] && ctask["sandbox"]["stderr"].IsScalar()) {
+					std_error = ctask["sandbox"]["stderr"].as<std::string>();
+				} // can be ommited... no throw
 
 				// load limits... if they are supplied
 				if (ctask["sandbox"]["limits"]) {
@@ -180,6 +183,10 @@ std::shared_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 									std::make_pair(var.first.as<std::string>(), var.second.as<std::string>()));
 							}
 						}
+
+						sl->std_input = std_input;
+						sl->std_output = std_output;
+						sl->std_error = std_error;
 
 						sandbox->loaded_limits.insert(std::make_pair(hwgroup, sl));
 					}

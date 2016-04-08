@@ -102,11 +102,11 @@ TEST(job_config_test, bad_format)
 					  "          args:\n"
 					  "              - -v\n"
 					  "              - \"-f 01.in\"\n"
-					  "      stdin: 01.in\n"
-					  "      stdout: 01.out\n"
-					  "      stderr: 01.err\n"
 					  "      sandbox:\n"
 					  "          name: fake\n"
+					  "          stdin: 01.in\n"
+					  "          stdout: 01.out\n"
+					  "          stderr: 01.err\n"
 					  "          limits:\n"
 					  "              - hw-group-id: group1\n"
 					  "                time: 5\n"
@@ -151,11 +151,11 @@ TEST(job_config_test, correct_format)
 						   "          args:\n"
 						   "              - -v\n"
 						   "              - \"-f 01.in\"\n"
-						   "      stdin: 01.in\n"
-						   "      stdout: 01.out\n"
-						   "      stderr: 01.err\n"
 						   "      sandbox:\n"
 						   "          name: fake\n"
+						   "          stdin: 01.in\n"
+						   "          stdout: 01.out\n"
+						   "          stderr: 01.err\n"
 						   "          limits:\n"
 						   "              - hw-group-id: group1\n"
 						   "                time: 5\n"
@@ -205,11 +205,11 @@ TEST(job_config_test, config_data)
 						   "          args:\n"
 						   "              - -v\n"
 						   "              - \"-f 01.in\"\n"
-						   "      stdin: 01.in\n"
-						   "      stdout: 01.out\n"
-						   "      stderr: 01.err\n"
 						   "      sandbox:\n"
 						   "          name: fake\n"
+						   "          stdin: 01.in\n"
+						   "          stdout: 01.out\n"
+						   "          stderr: 01.err\n"
 						   "          limits:\n"
 						   "              - hw-group-id: group1\n"
 						   "                time: 5\n"
@@ -247,9 +247,6 @@ TEST(job_config_test, config_data)
 	ASSERT_EQ(task1->binary, "cp");
 	ASSERT_EQ(task1->cmd_args[0], "hello.cpp");
 	ASSERT_EQ(task1->cmd_args[1], "hello_world.cpp");
-	ASSERT_EQ(task1->std_input, "");
-	ASSERT_EQ(task1->std_output, "");
-	ASSERT_EQ(task1->std_error, "");
 	ASSERT_EQ(task1->sandbox, nullptr);
 
 	auto task2 = result->tasks[1];
@@ -261,9 +258,6 @@ TEST(job_config_test, config_data)
 	ASSERT_EQ(task2->binary, "recodex");
 	ASSERT_EQ(task2->cmd_args[0], "-v");
 	ASSERT_EQ(task2->cmd_args[1], "-f 01.in");
-	ASSERT_EQ(task2->std_input, "01.in");
-	ASSERT_EQ(task2->std_output, "01.out");
-	ASSERT_EQ(task2->std_error, "01.err");
 	ASSERT_NE(task2->sandbox, nullptr);
 	ASSERT_EQ(task2->sandbox->name, "fake");
 	ASSERT_EQ(task2->sandbox->loaded_limits.size(), 2u);
@@ -280,6 +274,9 @@ TEST(job_config_test, config_data)
 	ASSERT_EQ(limit1->chdir, "/eval");
 	ASSERT_EQ(limit1->disk_size, 50u);
 	ASSERT_EQ(limit1->disk_files, 10u);
+	ASSERT_EQ(limit1->std_input, "01.in");
+	ASSERT_EQ(limit1->std_output, "01.out");
+	ASSERT_EQ(limit1->std_error, "01.err");
 
 	// Both combinations are valid (YAML doesn't sort them)
 	std::vector<std::pair<std::string, std::string>> expected_environ_1 = {
@@ -308,4 +305,7 @@ TEST(job_config_test, config_data)
 	ASSERT_EQ(limit2->disk_files, SIZE_MAX);
 	ASSERT_EQ(limit2->environ_vars.size(), 0u);
 	ASSERT_EQ(limit2->bound_dirs.size(), 0u);
+	ASSERT_EQ(limit2->std_input, "01.in");
+	ASSERT_EQ(limit2->std_output, "01.out");
+	ASSERT_EQ(limit2->std_error, "01.err");
 }
