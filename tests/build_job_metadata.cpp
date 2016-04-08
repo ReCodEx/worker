@@ -6,7 +6,7 @@
 using namespace testing;
 using namespace std;
 
-TEST(job_metadata, build_from_yaml)
+TEST(job_metadata, build_all_from_yaml)
 {
 	auto job_yaml = YAML::Load("---\n"
 							   "submission:\n"
@@ -96,3 +96,69 @@ TEST(job_metadata, build_from_yaml)
 		"path2/dir2", sandbox_limits::dir_perm::RW};
 	EXPECT_EQ(limits->bound_dirs[0], dirs);
 }
+
+TEST(job_metadata, queue_of_tasks)
+{
+	auto job_yaml = YAML::Load("---\n"
+							   "submission:\n"
+							   "    job-id: 5\n"
+							   "    language: cpp\n"
+							   "    file-collector: localhost\n"
+							   "tasks:\n"
+							   "    - task-id: A\n"
+							   "      priority: 1\n"
+							   "      fatal-failure: false\n"
+							   "      cmd:\n"
+							   "          bin: mkdir\n"
+							   "          args:\n"
+							   "              - hello\n"
+							   "    - task-id: B\n"
+							   "      priority: 4\n"
+							   "      fatal-failure: true\n"
+							   "      dependencies:\n"
+							   "          - A\n"
+							   "      cmd:\n"
+							   "          bin: mkdir\n"
+							   "          args:\n"
+							   "              - hello\n"
+							   "    - task-id: C\n"
+							   "      priority: 6\n"
+							   "      fatal-failure: false\n"
+							   "      dependencies:\n"
+							   "          - B\n"
+							   "          - D\n"
+							   "      cmd:\n"
+							   "          bin: mkdir\n"
+							   "          args:\n"
+							   "              - hello\n"
+							   "...\n");
+	auto job_meta = helpers::build_job_metadata(job_yaml);
+
+	auto tasks = job_meta->tasks;
+	EXPECT_EQ(tasks.size(), 3u);
+	EXPECT_EQ(tasks[0]->task_id, "A");
+	EXPECT_EQ(tasks[0]->priority, 1u);
+	EXPECT_EQ(tasks[0]->fatal_failure, false);
+	EXPECT_EQ(tasks[0]->binary, "mkdir");
+	auto args0 = std::vector<std::string> {"hello"};
+	EXPECT_EQ(tasks[0]->cmd_args, args0);
+
+	EXPECT_EQ(tasks[1]->task_id, "B");
+	EXPECT_EQ(tasks[1]->priority, 4u);
+	EXPECT_EQ(tasks[1]->fatal_failure, true);
+	auto deps1 = std::vector<std::string> {"A"};
+	EXPECT_EQ(tasks[1]->dependencies, deps1);
+	EXPECT_EQ(tasks[1]->binary, "mkdir");
+	auto args1 = std::vector<std::string> {"hello"};
+	EXPECT_EQ(tasks[1]->cmd_args, args1);
+
+	EXPECT_EQ(tasks[2]->task_id, "C");
+	EXPECT_EQ(tasks[2]->priority, 6u);
+	EXPECT_EQ(tasks[2]->fatal_failure, false);
+	auto deps2 = std::vector<std::string> {"B", "D"};
+	EXPECT_EQ(tasks[2]->dependencies, deps2);
+	EXPECT_EQ(tasks[2]->binary, "mkdir");
+	auto args2 = std::vector<std::string> {"hello"};
+	EXPECT_EQ(tasks[2]->cmd_args, args2);
+}
+
