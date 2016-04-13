@@ -6,17 +6,17 @@ job::job(std::shared_ptr<job_metadata> job_meta,
 	fs::path working_directory,
 	fs::path source_path,
 	fs::path result_path,
-	std::shared_ptr<file_manager_base> fileman)
+	std::shared_ptr<task_factory_base> factory)
 	: job_meta_(job_meta), worker_config_(worker_conf), working_directory_(working_directory),
-	  source_path_(source_path), result_path_(result_path), fileman_(fileman)
+	  source_path_(source_path), result_path_(result_path), factory_(factory)
 {
 	// check construction parameters if they are in right format
 	if (job_meta_ == nullptr) {
 		throw job_exception("Job configuration cannot be null");
 	} else if (worker_config_ == nullptr) {
 		throw job_exception("Worker configuration cannot be null");
-	} else if (fileman_ == nullptr) {
-		throw job_exception("File manager cannot be null");
+	} else if (factory_ == nullptr) {
+		throw job_exception("Task factory pointer cannot be null");
 	}
 
 	// check injected directories
@@ -76,7 +76,7 @@ void job::build_job()
 	// create root task, which is logical root of evaluation
 	size_t id = 0;
 	std::map<std::string, size_t> eff_indegree;
-	root_task_ = std::make_shared<root_task>(id++);
+	root_task_ = factory_->create_internal_task(id++);
 	eff_indegree.insert(std::make_pair(root_task_->get_task_id(), 0));
 
 
@@ -96,6 +96,8 @@ void job::build_job()
 		for (size_t i = 0; i < task_meta->cmd_args.size(); ++i) {
 			task_meta->cmd_args.at(i) = parse_job_var(task_meta->cmd_args.at(i));
 		}
+
+		std::shared_ptr<task_base> task;
 
 		// distinguish internal/external command and construct suitable object
 		if (task_meta->sandbox != nullptr) {
@@ -135,11 +137,10 @@ void job::build_job()
 			limits->bound_dirs = new_bnd_dirs;
 
 			// ... and finally construct external task from given information
-			external_task::create_params data = {
+			create_params data = {
 				worker_config_->get_worker_id(), id++, task_meta, limits, logger_, working_directory_.string()};
-			std::shared_ptr<task_base> task = std::make_shared<external_task>(data);
-			unconnected_tasks.insert(std::make_pair(task_meta->task_id, task));
-			eff_indegree.insert(std::make_pair(task_meta->task_id, 0));
+
+			task = factory_->create_sandboxed_task(data);
 
 		} else {
 
@@ -147,29 +148,16 @@ void job::build_job()
 			// internal command //
 			// //////////////// //
 
-			std::shared_ptr<task_base> task;
+			task = factory_->create_internal_task(id++, task_meta);
 
-			if (task_meta->binary == "cp") {
-				task = std::make_shared<cp_task>(id++, task_meta);
-			} else if (task_meta->binary == "mkdir") {
-				task = std::make_shared<mkdir_task>(id++, task_meta);
-			} else if (task_meta->binary == "rename") {
-				task = std::make_shared<rename_task>(id++, task_meta);
-			} else if (task_meta->binary == "rm") {
-				task = std::make_shared<rm_task>(id++, task_meta);
-			} else if (task_meta->binary == "archivate") {
-				task = std::make_shared<archivate_task>(id++, task_meta);
-			} else if (task_meta->binary == "extract") {
-				task = std::make_shared<extract_task>(id++, task_meta);
-			} else if (task_meta->binary == "fetch") {
-				task = std::make_shared<fetch_task>(id++, task_meta, fileman_);
-			} else {
+			if (task == nullptr) {
 				throw job_exception("Unknown internal task: " + task_meta->binary);
 			}
-
-			unconnected_tasks.insert(std::make_pair(task_meta->task_id, task));
-			eff_indegree.insert(std::make_pair(task_meta->task_id, 0));
 		}
+
+		// add newly created task to container ready for connect with other tasks
+		unconnected_tasks.insert(std::make_pair(task_meta->task_id, task));
+		eff_indegree.insert(std::make_pair(task_meta->task_id, 0));
 	}
 
 
@@ -359,8 +347,7 @@ void job::init_logger()
 		logger_ = file_logger;
 	} catch (spdlog::spdlog_ex) {
 		// Suppose not happen. But in case, create only empty logger.
-		auto sink = std::make_shared<spdlog::sinks::null_sink_st>();
-		logger_ = std::make_shared<spdlog::logger>("job_manager_nolog", sink);
+		logger_ = helpers::create_null_logger();
 	}
 }
 

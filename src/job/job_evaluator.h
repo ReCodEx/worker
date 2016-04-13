@@ -15,6 +15,7 @@ namespace fs = boost::filesystem;
 #include "job.h"
 #include "../config/worker_config.h"
 #include "../fileman/file_manager_base.h"
+#include "../tasks/task_factory.h"
 #include "../eval_request.h"
 #include "../eval_response.h"
 #include "../archives/archivator.h"

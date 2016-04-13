@@ -61,10 +61,10 @@ TEST(job_metadata, build_all_from_yaml)
 	EXPECT_EQ(metadata->task_id, "eval");
 	EXPECT_EQ(metadata->priority, 4u);
 	EXPECT_EQ(metadata->fatal_failure, false);
-	auto deps = std::vector<std::string> {"fetch_test_1", "fetch_test_2"};
+	auto deps = std::vector<std::string>{"fetch_test_1", "fetch_test_2"};
 	EXPECT_EQ(metadata->dependencies, deps);
 	EXPECT_EQ(metadata->binary, "recodex");
-	auto args = std::vector<std::string> {"-v", "-f 01.in"};
+	auto args = std::vector<std::string>{"-v", "-f 01.in"};
 	EXPECT_EQ(metadata->cmd_args, args);
 
 	auto sandbox = metadata->sandbox;
@@ -88,12 +88,12 @@ TEST(job_metadata, build_all_from_yaml)
 	EXPECT_EQ(limits->std_error, "before_stderr_${RESULT_DIR}_after_stderr");
 
 	EXPECT_EQ(limits->environ_vars.size(), 1u);
-	auto envs = std::pair<std::string, std::string> {"ISOLATE_TMP", "/tmp"};
+	auto envs = std::pair<std::string, std::string>{"ISOLATE_TMP", "/tmp"};
 	EXPECT_EQ(limits->environ_vars[0], envs);
 
 	EXPECT_EQ(limits->bound_dirs.size(), 1u);
-	auto dirs = std::tuple<std::string, std::string, sandbox_limits::dir_perm> {"path1/dir1",
-		"path2/dir2", sandbox_limits::dir_perm::RW};
+	auto dirs = std::tuple<std::string, std::string, sandbox_limits::dir_perm>{
+		"path1/dir1", "path2/dir2", sandbox_limits::dir_perm::RW};
 	EXPECT_EQ(limits->bound_dirs[0], dirs);
 }
 
@@ -140,25 +140,24 @@ TEST(job_metadata, queue_of_tasks)
 	EXPECT_EQ(tasks[0]->priority, 1u);
 	EXPECT_EQ(tasks[0]->fatal_failure, false);
 	EXPECT_EQ(tasks[0]->binary, "mkdir");
-	auto args0 = std::vector<std::string> {"hello"};
+	auto args0 = std::vector<std::string>{"hello"};
 	EXPECT_EQ(tasks[0]->cmd_args, args0);
 
 	EXPECT_EQ(tasks[1]->task_id, "B");
 	EXPECT_EQ(tasks[1]->priority, 4u);
 	EXPECT_EQ(tasks[1]->fatal_failure, true);
-	auto deps1 = std::vector<std::string> {"A"};
+	auto deps1 = std::vector<std::string>{"A"};
 	EXPECT_EQ(tasks[1]->dependencies, deps1);
 	EXPECT_EQ(tasks[1]->binary, "mkdir");
-	auto args1 = std::vector<std::string> {"hello"};
+	auto args1 = std::vector<std::string>{"hello"};
 	EXPECT_EQ(tasks[1]->cmd_args, args1);
 
 	EXPECT_EQ(tasks[2]->task_id, "C");
 	EXPECT_EQ(tasks[2]->priority, 6u);
 	EXPECT_EQ(tasks[2]->fatal_failure, false);
-	auto deps2 = std::vector<std::string> {"B", "D"};
+	auto deps2 = std::vector<std::string>{"B", "D"};
 	EXPECT_EQ(tasks[2]->dependencies, deps2);
 	EXPECT_EQ(tasks[2]->binary, "mkdir");
-	auto args2 = std::vector<std::string> {"hello"};
+	auto args2 = std::vector<std::string>{"hello"};
 	EXPECT_EQ(tasks[2]->cmd_args, args2);
 }
-

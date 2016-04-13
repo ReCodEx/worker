@@ -112,12 +112,14 @@ void job_evaluator::build_job()
 		throw job_exception("Job configuration loading problem: " + std::string(e.what()));
 	}
 
-	// construct manager which is used in job
+	// construct manager which is used in task factory
 	auto task_fileman = std::make_shared<fallback_file_manager>(
 		cache_fm_, std::make_shared<prefixed_file_manager>(remote_fm_, job_meta->file_server_url + "/"));
 
+	auto factory = std::make_shared<task_factory>(task_fileman);
+
 	// ... and construct job itself
-	job_ = std::make_shared<job>(job_meta, config_, job_temp_dir_, source_path_, results_path_, task_fileman);
+	job_ = std::make_shared<job>(job_meta, config_, job_temp_dir_, source_path_, results_path_, factory);
 
 	logger_->info() << "Job building done.";
 	return;

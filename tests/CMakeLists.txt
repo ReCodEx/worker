@@ -80,25 +80,15 @@ add_test_suite(fallback_file_manager
 )
 
 add_test_suite(job
-	${TASKS_DIR}/internal/cp_task.cpp
-	${TASKS_DIR}/internal/mkdir_task.cpp
-	${TASKS_DIR}/internal/rename_task.cpp
-	${TASKS_DIR}/internal/rm_task.cpp
-	${TASKS_DIR}/internal/archivate_task.cpp
-	${TASKS_DIR}/internal/extract_task.cpp
-	${TASKS_DIR}/internal/fetch_task.cpp
-	${TASKS_DIR}/task_base.cpp
 	${TASKS_DIR}/external_task.cpp
 	${TASKS_DIR}/task_base.cpp
-	${TASKS_DIR}/external_task.cpp
-	${TASKS_DIR}/root_task.cpp
 	${SRC_DIR}/archives/archivator.cpp
 	${SRC_DIR}/config/worker_config.cpp
-	${HELPERS_DIR}/config.cpp
 	${SANDBOX_DIR}/fake_sandbox.cpp
 	${SANDBOX_DIR}/isolate_sandbox.cpp
 	${HELPERS_DIR}/topological_sort.cpp
 	${HELPERS_DIR}/create_logger.cpp
+	${HELPERS_DIR}/config.cpp
 	${JOB_DIR}/job.cpp
 	job.cpp
 )
@@ -128,8 +118,9 @@ add_test_suite(job_receiver
 	${HELPERS_DIR}/create_logger.cpp
 	${JOB_DIR}/job.cpp
 	${SRC_DIR}/archives/archivator.cpp
-	${TASKS_DIR}/task_base.cpp
+	${TASKS_DIR}/task_factory.cpp
 	${TASKS_DIR}/external_task.cpp
+	${TASKS_DIR}/task_base.cpp
 	${TASKS_DIR}/root_task.cpp
 	${TASKS_DIR}/internal/cp_task.cpp
 	${TASKS_DIR}/internal/mkdir_task.cpp

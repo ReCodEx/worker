@@ -147,6 +147,10 @@ set(SOURCE_FILES
 	${SANDBOX_DIR}/fake_sandbox.h
 	${SANDBOX_DIR}/fake_sandbox.cpp
 
+	${TASKS_DIR}/task_factory_base.h
+	${TASKS_DIR}/create_params.h
+	${TASKS_DIR}/task_factory.h
+	${TASKS_DIR}/task_factory.cpp
 	${TASKS_DIR}/root_task.h
 	${TASKS_DIR}/root_task.cpp
 	${TASKS_DIR}/task_base.h

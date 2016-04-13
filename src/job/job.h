@@ -14,19 +14,10 @@ namespace fs = boost::filesystem;
 #include "spdlog/spdlog.h"
 #include "../helpers/create_logger.h"
 #include "../config/worker_config.h"
-#include "../tasks/task_base.h"
-#include "../tasks/root_task.h"
-#include "../tasks/external_task.h"
-#include "../fileman/file_manager_base.h"
+#include "../tasks/task_factory_base.h"
 #include "../sandbox/sandbox_base.h"
-#include "../tasks/internal/cp_task.h"
-#include "../tasks/internal/mkdir_task.h"
-#include "../tasks/internal/rename_task.h"
-#include "../tasks/internal/rm_task.h"
-#include "../tasks/internal/archivate_task.h"
-#include "../tasks/internal/extract_task.h"
-#include "../tasks/internal/fetch_task.h"
 #include "../helpers/topological_sort.h"
+#include "../helpers/create_logger.h"
 #include "../config/job_metadata.h"
 #include "../config/task_metadata.h"
 
@@ -62,7 +53,7 @@ public:
 		fs::path working_directory,
 		fs::path source_path,
 		fs::path result_path,
-		std::shared_ptr<file_manager_base> fileman);
+		std::shared_ptr<task_factory_base> factory);
 
 	/**
 	 * Job cleanup (if needed) is executed.
@@ -123,8 +114,8 @@ private:
 	fs::path source_path_;
 	/** Directory where results and log of job are stored. */
 	fs::path result_path_;
-	/** File manager which will be used for fetch tasks. */
-	std::shared_ptr<file_manager_base> fileman_;
+	/** Factory for creating tasks. */
+	std::shared_ptr<task_factory_base> factory_;
 
 	/** Variables which can be used in job configuration */
 	std::map<std::string, std::string> job_variables_;
