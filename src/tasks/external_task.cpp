@@ -17,6 +17,10 @@ void external_task::sandbox_check()
 {
 	bool found = false;
 
+	if (task_meta_->sandbox == nullptr) {
+		throw task_exception("No sandbox configuration provided.");
+	}
+
 	if (task_meta_->sandbox->name == "fake") {
 		found = true;
 	}
@@ -29,8 +33,6 @@ void external_task::sandbox_check()
 	if (found == false) {
 		throw task_exception("Unknown sandbox type: " + task_meta_->sandbox->name);
 	}
-
-	// TODO: check of task_meta_.sandbox on nullptr
 }
 
 void external_task::sandbox_init()

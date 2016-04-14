@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
+#include <memory>
 
 #include "../src/tasks/internal/archivate_task.h"
 #include "../src/tasks/internal/cp_task.h"
@@ -8,6 +9,11 @@
 #include "../src/tasks/internal/rename_task.h"
 #include "../src/tasks/internal/rm_task.h"
 #include "../src/tasks/internal/fetch_task.h"
+#include "../src/tasks/external_task.h"
+#include "../src/tasks/root_task.h"
+#include "../src/tasks/task_factory.h"
+#include "../src/tasks/create_params.h"
+#include "../src/config/sandbox_config.h"
 
 
 std::shared_ptr<task_metadata> get_task_meta()
@@ -137,4 +143,74 @@ TEST(Tasks, TaskBase)
 	auto children = std::shared_ptr<task_base>(new test_task_base(2, get_task_meta()));
 	base.add_children(children);
 	EXPECT_EQ(base.get_children()[0]->get_task_id(), children->get_task_id());
+}
+
+TEST(Tasks, TaskFactory)
+{
+	task_factory factory(nullptr);
+	auto meta = get_task_meta();
+	std::shared_ptr<task_base> task;
+
+	// archivate task
+	meta->binary = "archivate";
+	task = factory.create_internal_task(0, meta);
+	EXPECT_NE(std::dynamic_pointer_cast<archivate_task>(task), nullptr);
+
+	// cp task
+	meta->binary = "cp";
+	task = factory.create_internal_task(0, meta);
+	EXPECT_NE(std::dynamic_pointer_cast<cp_task>(task), nullptr);
+
+	// extract task
+	meta->binary = "extract";
+	task = factory.create_internal_task(0, meta);
+	EXPECT_NE(std::dynamic_pointer_cast<extract_task>(task), nullptr);
+
+	// fetch task
+	meta->binary = "fetch";
+	task = factory.create_internal_task(0, meta);
+	EXPECT_NE(std::dynamic_pointer_cast<fetch_task>(task), nullptr);
+
+	// mkdir task
+	meta->binary = "mkdir";
+	task = factory.create_internal_task(0, meta);
+	EXPECT_NE(std::dynamic_pointer_cast<mkdir_task>(task), nullptr);
+
+	// rename task
+	meta->binary = "rename";
+	task = factory.create_internal_task(0, meta);
+	EXPECT_NE(std::dynamic_pointer_cast<rename_task>(task), nullptr);
+
+	// rm task
+	meta->binary = "rm";
+	task = factory.create_internal_task(0, meta);
+	EXPECT_NE(std::dynamic_pointer_cast<rm_task>(task), nullptr);
+
+	// root task
+	// - with explicit nullptr argument
+	meta->binary = "archivate";
+	task = factory.create_internal_task(0, nullptr);
+	EXPECT_NE(std::dynamic_pointer_cast<root_task>(task), nullptr);
+	// - without explicit meta argument
+	task = factory.create_internal_task(0);
+	EXPECT_NE(std::dynamic_pointer_cast<root_task>(task), nullptr);
+
+	// unknown internal task
+	meta->binary = "unknown_internal_bianry";
+	task = factory.create_internal_task(0, meta);
+	EXPECT_EQ(task, nullptr);
+
+	// external task
+	meta->binary = "external_command";
+	create_params params = {8, 1, meta, nullptr, nullptr, ""};
+	EXPECT_THROW(factory.create_sandboxed_task(params), task_exception); // Sandbox is nullptr
+	meta->sandbox = std::make_shared<sandbox_config>();
+	meta->sandbox->name = "whatever_sandbox";
+	EXPECT_THROW(factory.create_sandboxed_task(params), task_exception); // Unknown sandbox type
+// Isolate only supported on linux platform
+#ifndef _WIN32
+	meta->sandbox->name = "isolate";
+	task = factory.create_sandboxed_task(params);
+	EXPECT_NE(std::dynamic_pointer_cast<external_task>(task), nullptr);
+#endif
 }

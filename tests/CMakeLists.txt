@@ -133,6 +133,8 @@ add_test_suite(job_receiver
 
 add_test_suite(tasks
 	${TASKS_DIR}/task_base.cpp
+	${TASKS_DIR}/task_factory.cpp
+	${TASKS_DIR}/root_task.cpp
 	${TASKS_DIR}/external_task.cpp
 	${TASKS_DIR}/internal/cp_task.cpp
 	${TASKS_DIR}/internal/mkdir_task.cpp

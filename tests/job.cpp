@@ -22,6 +22,7 @@ using namespace testing;
 
 typedef std::tuple<std::string, std::string, sandbox_limits::dir_perm> mytuple;
 
+
 class mock_factory : public task_factory_base
 {
 public:
@@ -73,6 +74,7 @@ public:
 
 bool operator==(const create_params &a, const create_params &b)
 {
+	// compare all but job logger
 	return a.id == b.id && a.limits == b.limits && a.task_meta == b.task_meta && a.temp_dir == b.temp_dir &&
 		a.worker_id == b.worker_id;
 }
@@ -297,48 +299,28 @@ TEST(job_test, empty_tasks_details)
 	auto empty_task = std::make_shared<mock_task>();
 
 	// empty task-id
-	{
-		InSequence s;
-		EXPECT_CALL((*factory), create_internal_task(0, _)).WillOnce(Return(empty_task));
-		EXPECT_CALL((*factory), create_internal_task(_, task)).WillRepeatedly(Return(empty_task));
-	}
+	EXPECT_CALL((*factory), create_internal_task(0, _)).WillOnce(Return(empty_task));
 	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory), job_exception);
 
 	// empty task priority
-	{
-		InSequence s;
-		EXPECT_CALL((*factory), create_internal_task(0, _)).WillOnce(Return(empty_task));
-		EXPECT_CALL((*factory), create_internal_task(_, task)).WillRepeatedly(Return(empty_task));
-	}
+	EXPECT_CALL((*factory), create_internal_task(0, _)).WillOnce(Return(empty_task));
 	task->task_id = "hello-task";
 	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory), job_exception);
 
 	// empty task binary
-	{
-		InSequence s;
-		EXPECT_CALL((*factory), create_internal_task(0, _)).WillOnce(Return(empty_task));
-		EXPECT_CALL((*factory), create_internal_task(_, task)).WillRepeatedly(Return(empty_task));
-	}
+	EXPECT_CALL((*factory), create_internal_task(0, _)).WillOnce(Return(empty_task));
 	task->priority = 1;
 	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory), job_exception);
 
 	// empty sandbox name
-	{
-		InSequence s;
-		EXPECT_CALL((*factory), create_internal_task(0, _)).WillOnce(Return(empty_task));
-		EXPECT_CALL((*factory), create_internal_task(_, task)).WillRepeatedly(Return(empty_task));
-	}
+	EXPECT_CALL((*factory), create_internal_task(0, _)).WillOnce(Return(empty_task));
 	task->binary = "hello";
 	auto sandbox = std::make_shared<sandbox_config>();
 	task->sandbox = sandbox;
 	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory), job_exception);
 
 	// non-defined hwgroup name
-	{
-		InSequence s;
-		EXPECT_CALL((*factory), create_internal_task(0, _)).WillOnce(Return(empty_task));
-		EXPECT_CALL((*factory), create_internal_task(_, task)).WillRepeatedly(Return(empty_task));
-	}
+	EXPECT_CALL((*factory), create_internal_task(0, _)).WillOnce(Return(empty_task));
 	sandbox->name = "fake";
 	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory), job_exception);
 
@@ -557,8 +539,10 @@ TEST(job_test, correctly_built_queue)
 	}
 	{
 		InSequence s;
+		// expect root task to be created
 		EXPECT_CALL((*factory), create_internal_task(0, _)).WillOnce(Return(empty_task));
 		for (int i = 1; i < 8; i++) {
+			// expect tasks A to G to be created
 			EXPECT_CALL((*factory), create_internal_task(i, job_meta->tasks[i - 1]))
 				.WillOnce(Return(mock_tasks[i - 1]));
 		}
