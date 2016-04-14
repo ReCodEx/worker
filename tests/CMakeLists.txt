@@ -126,7 +126,6 @@ add_test_suite(job_receiver
 	${TASKS_DIR}/internal/archivate_task.cpp
 	${TASKS_DIR}/internal/extract_task.cpp
 	${TASKS_DIR}/internal/fetch_task.cpp
-	${SANDBOX_DIR}/fake_sandbox.cpp
 	${SANDBOX_DIR}/isolate_sandbox.cpp
 	job_receiver.cpp
 )
@@ -144,7 +143,6 @@ add_test_suite(tasks
 	${TASKS_DIR}/internal/extract_task.cpp
 	${TASKS_DIR}/internal/fetch_task.cpp
 	${SRC_DIR}/archives/archivator.cpp
-	${SANDBOX_DIR}/fake_sandbox.cpp
 	${SANDBOX_DIR}/isolate_sandbox.cpp
 	${HELPERS_DIR}/create_logger.cpp
 	tasks.cpp

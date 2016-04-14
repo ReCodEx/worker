@@ -144,8 +144,6 @@ set(SOURCE_FILES
 	${SANDBOX_DIR}/sandbox_base.h
 	${SANDBOX_DIR}/isolate_sandbox.h
 	${SANDBOX_DIR}/isolate_sandbox.cpp
-	${SANDBOX_DIR}/fake_sandbox.h
-	${SANDBOX_DIR}/fake_sandbox.cpp
 
 	${TASKS_DIR}/task_factory_base.h
 	${TASKS_DIR}/create_params.h

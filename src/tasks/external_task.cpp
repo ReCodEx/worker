@@ -1,5 +1,4 @@
 #include "external_task.h"
-#include "../sandbox/fake_sandbox.h"
 #include "../sandbox/isolate_sandbox.h"
 
 external_task::external_task(const create_params &data)
@@ -21,9 +20,6 @@ void external_task::sandbox_check()
 		throw task_exception("No sandbox configuration provided.");
 	}
 
-	if (task_meta_->sandbox->name == "fake") {
-		found = true;
-	}
 #ifndef _WIN32
 	if (task_meta_->sandbox->name == "isolate") {
 		found = true;
@@ -37,9 +33,6 @@ void external_task::sandbox_check()
 
 void external_task::sandbox_init()
 {
-	if (task_meta_->sandbox->name == "fake") {
-		sandbox_ = std::make_shared<fake_sandbox>();
-	}
 #ifndef _WIN32
 	if (task_meta_->sandbox->name == "isolate") {
 		sandbox_ = std::make_shared<isolate_sandbox>(*limits_, worker_id_, temp_dir_, logger_);
