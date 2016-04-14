@@ -80,12 +80,9 @@ add_test_suite(fallback_file_manager
 )
 
 add_test_suite(job
-	${TASKS_DIR}/external_task.cpp
 	${TASKS_DIR}/task_base.cpp
 	${SRC_DIR}/archives/archivator.cpp
 	${SRC_DIR}/config/worker_config.cpp
-	${SANDBOX_DIR}/fake_sandbox.cpp
-	${SANDBOX_DIR}/isolate_sandbox.cpp
 	${HELPERS_DIR}/topological_sort.cpp
 	${HELPERS_DIR}/create_logger.cpp
 	${HELPERS_DIR}/config.cpp

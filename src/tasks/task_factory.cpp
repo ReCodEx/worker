@@ -2,7 +2,8 @@
 
 
 task_factory::task_factory(std::shared_ptr<file_manager_base> fileman) : fileman_(fileman)
-{}
+{
+}
 
 std::shared_ptr<task_base> task_factory::create_internal_task(size_t id, std::shared_ptr<task_metadata> task_meta)
 {

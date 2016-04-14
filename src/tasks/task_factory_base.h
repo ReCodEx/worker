@@ -7,12 +7,14 @@
 #include "../fileman/file_manager_base.h"
 
 
-
-class task_factory_base {
+class task_factory_base
+{
 public:
-	virtual ~task_factory_base() {}
-	virtual std::shared_ptr<task_base> create_internal_task(size_t id,
-		std::shared_ptr<task_metadata> task_meta = nullptr) = 0;
+	virtual ~task_factory_base()
+	{
+	}
+	virtual std::shared_ptr<task_base> create_internal_task(
+		size_t id, std::shared_ptr<task_metadata> task_meta = nullptr) = 0;
 	virtual std::shared_ptr<task_base> create_sandboxed_task(const create_params &data) = 0;
 };
 
