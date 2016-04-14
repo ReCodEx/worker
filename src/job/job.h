@@ -88,8 +88,19 @@ private:
 	void build_job();
 	/**
 	 * Check limits and in case of undefined values set worker defaults.
+	 * @param limits limits which will be checked
 	 */
 	void process_task_limits(std::shared_ptr<sandbox_limits> limits);
+	/**
+	 * Given unconnected tasks will be connected according to their dependencies.
+	 * If they do not have dependency, they will be assigned to given root task.
+	 * @param root only task which wont have any parent
+	 * @param unconn_tasks given unconnected tasks which will be connected
+	 * @param eff_indegree efficient indegree for all tasks
+	 */
+	void connect_tasks(std::shared_ptr<task_base> root,
+		std::map<std::string, std::shared_ptr<task_base>> &unconn_tasks,
+		std::map<std::string, size_t> &eff_indegree);
 
 	/**
 	 * Prepare variables which can be used in job configuration.

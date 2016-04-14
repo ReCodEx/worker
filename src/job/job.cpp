@@ -162,29 +162,7 @@ void job::build_job()
 
 
 	// constructed tasks in map have to have tree structure, so... make it and connect them
-	for (auto &elem : unconnected_tasks) {
-		const std::vector<std::string> &depend = elem.second->get_dependencies();
-
-		// connect all suitable task underneath root
-		if (depend.size() == 0) {
-			root_task_->add_children(elem.second);
-			elem.second->add_parent(root_task_);
-			eff_indegree.at(elem.first) = 1;
-		} else {
-			// write indegrees to every task
-			eff_indegree.at(elem.first) = depend.size();
-		}
-
-		for (size_t i = 0; i < depend.size(); ++i) {
-			try {
-				auto ptr = unconnected_tasks.at(depend.at(i));
-				ptr->add_children(elem.second);
-				elem.second->add_parent(ptr);
-			} catch (std::out_of_range) {
-				throw job_exception("Non existing task-id (" + depend.at(i) + ") in dependency list");
-			}
-		}
-	}
+	connect_tasks(root_task_, unconnected_tasks, eff_indegree);
 
 
 	// all should be done now... just linear ordering is missing...
@@ -268,6 +246,35 @@ void job::process_task_limits(std::shared_ptr<sandbox_limits> limits)
 		limits->environ_vars.end(), worker_limits.environ_vars.begin(), worker_limits.environ_vars.end());
 	limits->bound_dirs.insert(
 		limits->bound_dirs.end(), worker_limits.bound_dirs.begin(), worker_limits.bound_dirs.end());
+}
+
+void job::connect_tasks(std::shared_ptr<task_base> root,
+	std::map<std::string, std::shared_ptr<task_base>> &unconn_tasks,
+	std::map<std::string, size_t> &eff_indegree)
+{
+	for (auto &elem : unconn_tasks) {
+		const std::vector<std::string> &depend = elem.second->get_dependencies();
+
+		// connect all suitable task underneath root
+		if (depend.size() == 0) {
+			root->add_children(elem.second);
+			elem.second->add_parent(root);
+			eff_indegree.at(elem.first) = 1;
+		} else {
+			// write indegrees to every task
+			eff_indegree.at(elem.first) = depend.size();
+		}
+
+		for (size_t i = 0; i < depend.size(); ++i) {
+			try {
+				auto ptr = unconn_tasks.at(depend.at(i));
+				ptr->add_children(elem.second);
+				elem.second->add_parent(ptr);
+			} catch (std::out_of_range) {
+				throw job_exception("Non existing task-id (" + depend.at(i) + ") in dependency list");
+			}
+		}
+	}
 }
 
 std::vector<std::pair<std::string, std::shared_ptr<task_results>>> job::run()
