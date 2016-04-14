@@ -16,17 +16,16 @@ namespace fs = boost::filesystem;
 #include "../config/worker_config.h"
 #include "../fileman/file_manager_base.h"
 #include "../tasks/task_factory.h"
-#include "../eval_request.h"
-#include "../eval_response.h"
 #include "../archives/archivator.h"
 #include "../helpers/filesystem.h"
+#include "job_evaluator_base.h"
 
 
 /**
  * Class which handles receiving job from broker_connection, construction of working tree and its evaluation.
  * Above stated run in loop, so this class is in program constructed only once.
  */
-class job_evaluator
+class job_evaluator : public job_evaluator_base
 {
 public:
 	job_evaluator() = delete;

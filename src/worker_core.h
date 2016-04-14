@@ -25,6 +25,7 @@ namespace fs = boost::filesystem;
 #include "fileman/fallback_file_manager.h"
 #include "fileman/file_manager_base.h"
 #include "job/job_receiver.h"
+#include "job/job_evaluator.h"
 
 
 /**

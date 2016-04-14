@@ -5,7 +5,7 @@
 #include <zmq.hpp>
 #include <vector>
 #include <string>
-#include "job_evaluator.h"
+#include "job_evaluator_base.h"
 #include "../commands/command_holder.h"
 #include "../helpers/create_logger.h"
 
@@ -17,7 +17,7 @@ class job_receiver
 {
 private:
 	zmq::socket_t socket_;
-	std::shared_ptr<job_evaluator> evaluator_;
+	std::shared_ptr<job_evaluator_base> evaluator_;
 	std::shared_ptr<spdlog::logger> logger_;
 	std::shared_ptr<command_holder<job_client_context>> commands_;
 
@@ -29,7 +29,7 @@ public:
 	 * @param logger pointer to logging class
 	 */
 	job_receiver(std::shared_ptr<zmq::context_t> context,
-		std::shared_ptr<job_evaluator> evaluator,
+		std::shared_ptr<job_evaluator_base> evaluator,
 		std::shared_ptr<spdlog::logger> logger);
 
 	/**

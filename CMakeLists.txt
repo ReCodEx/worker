@@ -194,6 +194,7 @@ set(SOURCE_FILES
 	${JOB_DIR}/job.h
 	${JOB_DIR}/job_exception.h
 	${JOB_DIR}/job.cpp
+	${JOB_DIR}/job_evaluator_base.h
 	${JOB_DIR}/job_evaluator.h
 	${JOB_DIR}/job_evaluator.cpp
 	${JOB_DIR}/job_receiver.cpp

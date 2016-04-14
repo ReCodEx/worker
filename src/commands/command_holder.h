@@ -7,7 +7,8 @@
 #include <map>
 #include <zmq.hpp>
 #include "../helpers/create_logger.h"
-#include "../job/job_evaluator.h"
+#include "../job/job_evaluator_base.h"
+#include "../config/worker_config.h"
 
 
 /**
@@ -30,7 +31,7 @@ class job_client_context
 {
 public:
 	/** Pointer to instance of @ref job_evaluator class. */
-	std::shared_ptr<job_evaluator> evaluator;
+	std::shared_ptr<job_evaluator_base> evaluator;
 	/** Reference to ZeroMQ socket for communicating with main thread of worker. */
 	zmq::socket_t &socket;
 };

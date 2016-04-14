@@ -102,31 +102,9 @@ add_test_suite(topological_sort
 )
 
 add_test_suite(job_receiver
-	${JOB_DIR}/job.cpp
-	${JOB_DIR}/job_evaluator.cpp
 	${JOB_DIR}/job_receiver.cpp
-	${CONFIG_DIR}/worker_config.cpp
-	${FILEMAN_DIR}/prefixed_file_manager.cpp
-	${FILEMAN_DIR}/fallback_file_manager.cpp
-	${HELPERS_DIR}/config.cpp
-	${HELPERS_DIR}/filesystem.cpp
-	${HELPERS_DIR}/topological_sort.cpp
 	${HELPERS_DIR}/zmq_socket.cpp
 	${HELPERS_DIR}/create_logger.cpp
-	${JOB_DIR}/job.cpp
-	${SRC_DIR}/archives/archivator.cpp
-	${TASKS_DIR}/task_factory.cpp
-	${TASKS_DIR}/external_task.cpp
-	${TASKS_DIR}/task_base.cpp
-	${TASKS_DIR}/root_task.cpp
-	${TASKS_DIR}/internal/cp_task.cpp
-	${TASKS_DIR}/internal/mkdir_task.cpp
-	${TASKS_DIR}/internal/rename_task.cpp
-	${TASKS_DIR}/internal/rm_task.cpp
-	${TASKS_DIR}/internal/archivate_task.cpp
-	${TASKS_DIR}/internal/extract_task.cpp
-	${TASKS_DIR}/internal/fetch_task.cpp
-	${SANDBOX_DIR}/isolate_sandbox.cpp
 	job_receiver.cpp
 )
 
