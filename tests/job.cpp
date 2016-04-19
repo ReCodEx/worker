@@ -182,29 +182,40 @@ TEST(job_test, bad_parameters)
 	auto factory = std::make_shared<mock_factory>();
 
 	// job_config not given
-	EXPECT_THROW(
-		job(nullptr, worker_conf, temp_directory_path(), temp_directory_path(), temp_directory_path(), factory),
+	EXPECT_THROW(job(nullptr,
+					 worker_conf,
+					 temp_directory_path(),
+					 temp_directory_path(),
+					 temp_directory_path(),
+					 factory,
+					 nullptr),
 		job_exception);
 
 	// worker_config not given
-	EXPECT_THROW(job(job_meta, nullptr, temp_directory_path(), temp_directory_path(), temp_directory_path(), factory),
+	EXPECT_THROW(
+		job(job_meta, nullptr, temp_directory_path(), temp_directory_path(), temp_directory_path(), factory, nullptr),
 		job_exception);
 
 	// working dir not exists
-	EXPECT_THROW(
-		job(job_meta, worker_conf, "/recodex", temp_directory_path(), temp_directory_path(), factory), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, "/recodex", temp_directory_path(), temp_directory_path(), factory, nullptr),
+		job_exception);
 
 	// source path not exists
-	EXPECT_THROW(
-		job(job_meta, worker_conf, temp_directory_path(), "/recodex", temp_directory_path(), factory), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, temp_directory_path(), "/recodex", temp_directory_path(), factory, nullptr),
+		job_exception);
 
 	// result path not exists
-	EXPECT_THROW(
-		job(job_meta, worker_conf, temp_directory_path(), temp_directory_path(), "/recodex", factory), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, temp_directory_path(), temp_directory_path(), "/recodex", factory, nullptr),
+		job_exception);
 
 	// factory not given
-	EXPECT_THROW(
-		job(job_meta, worker_conf, temp_directory_path(), temp_directory_path(), temp_directory_path(), nullptr),
+	EXPECT_THROW(job(job_meta,
+					 worker_conf,
+					 temp_directory_path(),
+					 temp_directory_path(),
+					 temp_directory_path(),
+					 nullptr,
+					 nullptr),
 		job_exception);
 }
 
@@ -221,22 +232,22 @@ TEST(job_test, bad_paths)
 	EXPECT_CALL((*worker_conf), get_worker_id()).WillRepeatedly(Return(8));
 
 	// non-existing working directory
-	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory, nullptr), job_exception);
 
 	// non-existing source code folder
 	create_directories(dir_root);
-	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory, nullptr), job_exception);
 
 	// source code path with no source codes in it
 	create_directories(dir);
-	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory, nullptr), job_exception);
 
 	// source code directory is not a directory
 	dir = dir / "hello";
 	std::ofstream hello(dir.string());
 	hello << "hello" << std::endl;
 	hello.close();
-	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory, nullptr), job_exception);
 
 	// cleanup after yourself
 	remove_all(dir_root);
@@ -258,15 +269,15 @@ TEST(job_test, empty_submission_details)
 	hello.close();
 
 	// job-id is empty
-	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory, nullptr), job_exception);
 
 	// language is empty
 	job_meta->job_id = "hello-job";
-	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory, nullptr), job_exception);
 
 	// file-server-url is empty
 	job_meta->language = "cpp";
-	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory, nullptr), job_exception);
 
 	// cleanup after yourself
 	remove_all(dir_root);
@@ -300,29 +311,29 @@ TEST(job_test, empty_tasks_details)
 
 	// empty task-id
 	EXPECT_CALL((*factory), create_internal_task(0, _)).WillOnce(Return(empty_task));
-	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory, nullptr), job_exception);
 
 	// empty task priority
 	EXPECT_CALL((*factory), create_internal_task(0, _)).WillOnce(Return(empty_task));
 	task->task_id = "hello-task";
-	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory, nullptr), job_exception);
 
 	// empty task binary
 	EXPECT_CALL((*factory), create_internal_task(0, _)).WillOnce(Return(empty_task));
 	task->priority = 1;
-	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory, nullptr), job_exception);
 
 	// empty sandbox name
 	EXPECT_CALL((*factory), create_internal_task(0, _)).WillOnce(Return(empty_task));
 	task->binary = "hello";
 	auto sandbox = std::make_shared<sandbox_config>();
 	task->sandbox = sandbox;
-	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory, nullptr), job_exception);
 
 	// non-defined hwgroup name
 	EXPECT_CALL((*factory), create_internal_task(0, _)).WillOnce(Return(empty_task));
 	sandbox->name = "fake";
-	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory, nullptr), job_exception);
 
 	// cleanup after yourself
 	remove_all(dir_root);
@@ -358,7 +369,7 @@ TEST(job_test, non_empty_details)
 	hello.close();
 
 	// given correct (non empty) job/tasks details
-	EXPECT_NO_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory));
+	EXPECT_NO_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory, nullptr));
 
 	// cleanup after yourself
 	remove_all(dir_root);
@@ -400,7 +411,7 @@ TEST(job_test, load_of_worker_defaults)
 	}
 
 	// construct and check
-	job result(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory);
+	job result(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory, nullptr);
 
 	ASSERT_EQ(result.get_task_queue().size(), 2u); // 2 because of root_task as root
 
@@ -458,49 +469,49 @@ TEST(job_test, exceeded_worker_defaults)
 	// time exceeded worker defaults
 	EXPECT_CALL((*factory), create_internal_task(0, _)).WillOnce(Return(empty_task));
 	job_meta->tasks[0]->sandbox->loaded_limits["group1"]->cpu_time = 26;
-	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory, nullptr), job_exception);
 
 	// wall-time exceeded worker defaults
 	EXPECT_CALL((*factory), create_internal_task(0, _)).WillOnce(Return(empty_task));
 	job_meta->tasks[0]->sandbox->loaded_limits["group1"]->cpu_time = 6;
 	job_meta->tasks[0]->sandbox->loaded_limits["group1"]->wall_time = 27;
-	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory, nullptr), job_exception);
 
 	// extra-time exceeded worker defaults
 	EXPECT_CALL((*factory), create_internal_task(0, _)).WillOnce(Return(empty_task));
 	job_meta->tasks[0]->sandbox->loaded_limits["group1"]->wall_time = 2;
 	job_meta->tasks[0]->sandbox->loaded_limits["group1"]->extra_time = 23;
-	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory, nullptr), job_exception);
 
 	// stack-size exceeded worker defaults
 	EXPECT_CALL((*factory), create_internal_task(0, _)).WillOnce(Return(empty_task));
 	job_meta->tasks[0]->sandbox->loaded_limits["group1"]->extra_time = 3;
 	job_meta->tasks[0]->sandbox->loaded_limits["group1"]->stack_size = 260000;
-	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory, nullptr), job_exception);
 
 	// memory exceeded worker defaults
 	EXPECT_CALL((*factory), create_internal_task(0, _)).WillOnce(Return(empty_task));
 	job_meta->tasks[0]->sandbox->loaded_limits["group1"]->stack_size = 260;
 	job_meta->tasks[0]->sandbox->loaded_limits["group1"]->memory_usage = 270000;
-	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory, nullptr), job_exception);
 
 	// parallel exceeded worker defaults
 	EXPECT_CALL((*factory), create_internal_task(0, _)).WillOnce(Return(empty_task));
 	job_meta->tasks[0]->sandbox->loaded_limits["group1"]->memory_usage = 260;
 	job_meta->tasks[0]->sandbox->loaded_limits["group1"]->processes = 23;
-	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory, nullptr), job_exception);
 
 	// disk-size exceeded worker defaults
 	EXPECT_CALL((*factory), create_internal_task(0, _)).WillOnce(Return(empty_task));
 	job_meta->tasks[0]->sandbox->loaded_limits["group1"]->processes = 1;
 	job_meta->tasks[0]->sandbox->loaded_limits["group1"]->disk_size = 260;
-	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory, nullptr), job_exception);
 
 	// disk-files exceeded worker defaults
 	EXPECT_CALL((*factory), create_internal_task(0, _)).WillOnce(Return(empty_task));
 	job_meta->tasks[0]->sandbox->loaded_limits["group1"]->disk_size = 2;
 	job_meta->tasks[0]->sandbox->loaded_limits["group1"]->disk_files = 28;
-	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory), job_exception);
+	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory, nullptr), job_exception);
 
 	// cleanup after yourself
 	remove_all(dir_root);
@@ -554,7 +565,7 @@ TEST(job_test, correctly_built_queue)
 	hello.close();
 
 	// construct and check
-	job result(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory);
+	job result(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory, nullptr);
 
 	auto tasks = result.get_task_queue();
 	ASSERT_EQ(tasks.size(), 8u); // +1 because of fake_task root
@@ -619,7 +630,7 @@ TEST(job_test, job_variables)
 	}
 
 	// construct and check
-	job j(job_meta, worker_conf, dir_root, dir, res_dir, factory);
+	job j(job_meta, worker_conf, dir_root, dir, res_dir, factory, nullptr);
 	ASSERT_EQ(j.get_task_queue().size(), 2u);
 
 

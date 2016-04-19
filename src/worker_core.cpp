@@ -208,7 +208,8 @@ void worker_core::fileman_init()
 void worker_core::receiver_init()
 {
 	logger_->info() << "Initializing job receiver and evaluator...";
-	auto evaluator = std::make_shared<job_evaluator>(logger_, config_, remote_fm_, cache_fm_, working_directory_);
+	auto evaluator =
+		std::make_shared<job_evaluator>(logger_, config_, remote_fm_, cache_fm_, working_directory_, nullptr);
 	job_receiver_ = std::make_shared<job_receiver>(zmq_context_, evaluator, logger_);
 	logger_->info() << "Job receiver and evaluator initialized.";
 	return;

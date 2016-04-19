@@ -6,9 +6,10 @@ job::job(std::shared_ptr<job_metadata> job_meta,
 	fs::path working_directory,
 	fs::path source_path,
 	fs::path result_path,
-	std::shared_ptr<task_factory_base> factory)
+	std::shared_ptr<task_factory_base> factory,
+	std::shared_ptr<progress_callback_base> progr_callback)
 	: job_meta_(job_meta), worker_config_(worker_conf), working_directory_(working_directory),
-	  source_path_(source_path), result_path_(result_path), factory_(factory)
+	  source_path_(source_path), result_path_(result_path), factory_(factory), progress_callback_(progr_callback)
 {
 	// check construction parameters if they are in right format
 	if (job_meta_ == nullptr) {
@@ -280,6 +281,7 @@ void job::connect_tasks(std::shared_ptr<task_base> root,
 std::vector<std::pair<std::string, std::shared_ptr<task_results>>> job::run()
 {
 	std::vector<std::pair<std::string, std::shared_ptr<task_results>>> results;
+	progress_callback_->job_started(job_meta_->job_id);
 
 	// simply run all tasks in given topological order
 	for (auto &i : task_queue_) {
@@ -293,6 +295,7 @@ std::vector<std::pair<std::string, std::shared_ptr<task_results>>> job::run()
 			if (i->is_executable()) {
 				auto res = i->run();
 				logger_->info() << "Task \"" << task_id << "\" ran successfully";
+				progress_callback_->task_completed(job_meta_->job_id, task_id);
 
 				// if task has some results than publish them in output
 				if (res != nullptr) {
@@ -310,6 +313,7 @@ std::vector<std::pair<std::string, std::shared_ptr<task_results>>> job::run()
 			results.push_back({task_id, result});
 
 			logger_->info() << "Task \"" << task_id << "\" failed: " << e.what();
+			progress_callback_->task_failed(job_meta_->job_id, task_id);
 
 			if (i->get_fatal_failure()) {
 				logger_->info() << "Fatal failure bit set. Terminating of job execution...";
@@ -323,6 +327,7 @@ std::vector<std::pair<std::string, std::shared_ptr<task_results>>> job::run()
 		}
 	}
 
+	progress_callback_->job_ended(job_meta_->job_id);
 	return results;
 }
 
@@ -355,6 +360,13 @@ void job::init_logger()
 	} catch (spdlog::spdlog_ex) {
 		// Suppose not happen. But in case, create only empty logger.
 		logger_ = helpers::create_null_logger();
+	}
+}
+
+void job::init_progress_callback()
+{
+	if (progress_callback_ == nullptr) {
+		progress_callback_ = std::make_shared<empty_progress_callback>();
 	}
 }
 

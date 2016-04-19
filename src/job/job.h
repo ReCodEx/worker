@@ -20,6 +20,7 @@ namespace fs = boost::filesystem;
 #include "../helpers/create_logger.h"
 #include "../config/job_metadata.h"
 #include "../config/task_metadata.h"
+#include "progress_callback_base.h"
 
 
 /**
@@ -53,7 +54,8 @@ public:
 		fs::path working_directory,
 		fs::path source_path,
 		fs::path result_path,
-		std::shared_ptr<task_factory_base> factory);
+		std::shared_ptr<task_factory_base> factory,
+		std::shared_ptr<progress_callback_base> progr_callback);
 
 	/**
 	 * Job cleanup (if needed) is executed.
@@ -78,6 +80,10 @@ private:
 	 * Init system logger for job. Resulting log will be send with other results to frontend.
 	 */
 	void init_logger();
+	/**
+	 * If given progress callback is nullptr, then make it empty callback so we can call it freely.
+	 */
+	void init_progress_callback();
 	/**
 	 * Cleanup after job evaluation, should be enough to delete all created files
 	 */
@@ -127,6 +133,8 @@ private:
 	fs::path result_path_;
 	/** Factory for creating tasks. */
 	std::shared_ptr<task_factory_base> factory_;
+	/** Progress callback which is called on some important points */
+	std::shared_ptr<progress_callback_base> progress_callback_;
 
 	/** Variables which can be used in job configuration */
 	std::map<std::string, std::string> job_variables_;

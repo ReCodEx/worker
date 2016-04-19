@@ -9,17 +9,27 @@ job_evaluator::job_evaluator(std::shared_ptr<spdlog::logger> logger,
 	std::shared_ptr<worker_config> config,
 	std::shared_ptr<file_manager_base> remote_fm,
 	std::shared_ptr<file_manager_base> cache_fm,
-	fs::path working_directory)
+	fs::path working_directory,
+	std::shared_ptr<progress_callback_base> progr_callback)
 	: working_directory_(working_directory), job_(nullptr), job_results_(), remote_fm_(remote_fm), cache_fm_(cache_fm),
-	  logger_(logger), config_(config)
+	  logger_(logger), config_(config), progress_callback_(progr_callback)
 {
 	if (logger_ == nullptr) {
 		logger_ = helpers::create_null_logger();
 	}
+
+	init_progress_callback();
 }
 
 job_evaluator::~job_evaluator()
 {
+}
+
+void job_evaluator::init_progress_callback()
+{
+	if (progress_callback_ == nullptr) {
+		progress_callback_ = std::make_shared<empty_progress_callback>();
+	}
 }
 
 void job_evaluator::download_submission()
@@ -119,7 +129,8 @@ void job_evaluator::build_job()
 	auto factory = std::make_shared<task_factory>(task_fileman);
 
 	// ... and construct job itself
-	job_ = std::make_shared<job>(job_meta, config_, job_temp_dir_, source_path_, results_path_, factory);
+	job_ = std::make_shared<job>(
+		job_meta, config_, job_temp_dir_, source_path_, results_path_, factory, progress_callback_);
 
 	logger_->info() << "Job building done.";
 	return;

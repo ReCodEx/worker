@@ -44,7 +44,8 @@ public:
 		std::shared_ptr<worker_config> config,
 		std::shared_ptr<file_manager_base> remote_fm,
 		std::shared_ptr<file_manager_base> cache_fm,
-		fs::path working_directory);
+		fs::path working_directory,
+		std::shared_ptr<progress_callback_base> progr_callback);
 	/**
 	 * Theoretically not needed, but stated for completion.
 	 */
@@ -118,6 +119,12 @@ private:
 	 */
 	void init_submission_paths();
 
+	/**
+	 * Initialize progress callback.
+	 * If given callback is nullptr, then construct empty one which can be called without doubts.
+	 */
+	void init_progress_callback();
+
 
 	// PRIVATE DATA MEMBERS
 	/** Working directory of this whole program */
@@ -156,6 +163,8 @@ private:
 	std::shared_ptr<spdlog::logger> logger_;
 	/** Default configuration of worker */
 	std::shared_ptr<worker_config> config_;
+	/** Progress callback which is used to signal progress to whoever wants */
+	std::shared_ptr<progress_callback_base> progress_callback_;
 };
 
 #endif // CODEX_WORKER_JOB_EVALUATOR_HPP

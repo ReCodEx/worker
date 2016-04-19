@@ -199,6 +199,7 @@ set(SOURCE_FILES
 	${JOB_DIR}/job_evaluator.cpp
 	${JOB_DIR}/job_receiver.cpp
 	${JOB_DIR}/job_receiver.h
+	${JOB_DIR}/progress_callback_base.h
 
 	${COMMAND_DIR}/command_holder.h
 	${COMMAND_DIR}/broker_commands.h
