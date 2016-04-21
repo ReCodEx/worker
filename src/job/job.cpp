@@ -20,6 +20,9 @@ job::job(std::shared_ptr<job_metadata> job_meta,
 		throw job_exception("Task factory pointer cannot be null");
 	}
 
+	// if progress callback is null, we have to use default one
+	init_progress_callback();
+
 	// check injected directories
 	check_job_dirs();
 

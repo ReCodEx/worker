@@ -49,6 +49,7 @@ void job_evaluator::download_submission()
 	remote_fm_->get_file(archive_url.string(), (archive_path_ / archive_name_).string());
 
 	logger_->info() << "Submission archive downloaded succesfully.";
+	progress_callback_->submission_downloaded(job_id_);
 	return;
 }
 
@@ -319,6 +320,7 @@ void job_evaluator::push_result()
 	remote_fm_->put_file(archive_path.string(), result_url_);
 
 	logger_->info() << "Job results uploaded succesfully.";
+	progress_callback_->job_results_uploaded(job_id_);
 	return;
 }
 
