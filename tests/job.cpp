@@ -66,10 +66,26 @@ public:
 	virtual ~mock_task()
 	{
 	}
-	virtual std::shared_ptr<task_results> run()
+
+	MOCK_METHOD0(run, std::shared_ptr<task_results>());
+};
+
+class mock_progress_callback : public progress_callback_base
+{
+public:
+	mock_progress_callback()
 	{
-		return nullptr;
 	}
+	virtual ~mock_progress_callback()
+	{
+	}
+
+	MOCK_METHOD1(submission_downloaded, void(const std::string &));
+	MOCK_METHOD1(job_results_uploaded, void(const std::string &));
+	MOCK_METHOD1(job_started, void(const std::string &));
+	MOCK_METHOD1(job_ended, void(const std::string &));
+	MOCK_METHOD2(task_completed, void(const std::string &, const std::string &));
+	MOCK_METHOD2(task_failed, void(const std::string &, const std::string &));
 };
 
 bool operator==(const create_params &a, const create_params &b)
@@ -517,7 +533,6 @@ TEST(job_test, exceeded_worker_defaults)
 	remove_all(dir_root);
 }
 
-
 TEST(job_test, correctly_built_queue)
 {
 	// prepare all things which need to be prepared
@@ -577,6 +592,82 @@ TEST(job_test, correctly_built_queue)
 	ASSERT_EQ(tasks.at(5)->get_task_id(), "G");
 	ASSERT_EQ(tasks.at(6)->get_task_id(), "F");
 	ASSERT_EQ(tasks.at(7)->get_task_id(), "E");
+
+	// cleanup after yourself
+	remove_all(dir_root);
+}
+
+TEST(job_test, correctly_executed_job)
+{
+	// prepare all things which need to be prepared
+	path dir_root = temp_directory_path() / "isoeval";
+	path dir = dir_root / "job_test";
+
+	auto job_meta = get_correct_meta();
+
+	job_meta->tasks.clear();
+	job_meta->tasks.push_back(get_simple_task("A", 1, {}));
+	job_meta->tasks.push_back(get_simple_task("B", 4, {"A"}));
+	job_meta->tasks.push_back(get_simple_task("C", 6, {"B", "D"}));
+	job_meta->tasks.push_back(get_simple_task("D", 2, {"A"}));
+	job_meta->tasks.push_back(get_simple_task("E", 3, {"D"}));
+	job_meta->tasks.push_back(get_simple_task("F", 5, {"D"}));
+	job_meta->tasks.push_back(get_simple_task("G", 7, {"C"}));
+
+	size_t tasks_count = job_meta->tasks.size() + 1;
+
+	auto worker_conf = std::make_shared<mock_worker_config>();
+	auto default_limits = get_default_limits();
+	std::string group_name = "group1";
+	EXPECT_CALL((*worker_conf), get_hwgroup()).WillRepeatedly(ReturnRef(group_name));
+	EXPECT_CALL((*worker_conf), get_worker_id()).WillRepeatedly(Return(8));
+	EXPECT_CALL((*worker_conf), get_limits()).WillRepeatedly(ReturnRef(default_limits));
+
+	auto progress_callback = std::make_shared<mock_progress_callback>();
+	auto factory = std::make_shared<mock_factory>();
+	std::vector<std::shared_ptr<mock_task>> mock_tasks;
+	auto empty_task = std::make_shared<mock_task>();
+	auto empty_results = std::make_shared<task_results>();
+	for (size_t i = 1; i < tasks_count; i++) {
+		mock_tasks.push_back(std::make_shared<mock_task>(i, job_meta->tasks[i - 1]));
+	}
+	{
+		InSequence s;
+		// expect root task to be created
+		EXPECT_CALL((*factory), create_internal_task(0, _)).WillOnce(Return(empty_task));
+
+		for (size_t i = 1; i < tasks_count; i++) {
+			// expect tasks A to G to be created
+			EXPECT_CALL((*factory), create_internal_task(i, job_meta->tasks[i - 1]))
+				.WillOnce(Return(mock_tasks[i - 1]));
+		}
+
+		// progress callback calling expectations
+		EXPECT_CALL(*progress_callback, job_started(_)).Times(1);
+		EXPECT_CALL(*progress_callback, task_completed(_, _)).Times(tasks_count);
+		EXPECT_CALL(*progress_callback, job_ended(_)).Times(1);
+	}
+	{ // ! out of sequence calling
+
+		// expect root task will be executed once
+		EXPECT_CALL(*empty_task, run()).WillOnce(Return(empty_results));
+
+		for (size_t i = 1; i < tasks_count; i++) {
+			// expect tasks A to G will be executed each at once
+			EXPECT_CALL(*mock_tasks[i - 1], run()).WillOnce(Return(empty_results));
+		}
+	}
+
+	create_directories(dir);
+	std::ofstream hello((dir / "hello").string());
+	hello << "hello" << std::endl;
+	hello.close();
+
+	// construct
+	job result(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory, progress_callback);
+
+	// and run it!...
+	result.run();
 
 	// cleanup after yourself
 	remove_all(dir_root);

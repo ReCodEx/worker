@@ -20,28 +20,28 @@ public:
 	 * Indicates that submission was successfully downloaded from fileserver.
 	 * @param job_id unique identification of downloaded job
 	 */
-	virtual void submission_downloaded(std::string job_id) = 0;
+	virtual void submission_downloaded(const std::string &job_id) = 0;
 	/**
 	 * After calling this, results should be visible for end users.
 	 * @param job_id unique identification of job which results were uploaded
 	 */
-	virtual void job_results_uploaded(std::string job_id) = 0;
+	virtual void job_results_uploaded(const std::string &job_id) = 0;
 	/**
 	 * Indicates job was started and all execution machinery was setup and is ready to roll.
 	 * @param job_id unique identification of soon to be evaluated job
 	 */
-	virtual void job_started(std::string job_id) = 0;
+	virtual void job_started(const std::string &job_id) = 0;
 	/**
 	 * Calling this function should indicate that all was evaluated, just results have to be bubble through.
 	 * @param job_id unique identifier of executed job
 	 */
-	virtual void job_ended(std::string job_id) = 0;
+	virtual void job_ended(const std::string &job_id) = 0;
 	/**
 	 * Tells that task with given particular ID was just successfully completed.
 	 * @param job_id unique identification of job
 	 * @param task_id unique identification of successfully completed task
 	 */
-	virtual void task_completed(std::string job_id, std::string task_id) = 0;
+	virtual void task_completed(const std::string &job_id, const std::string &task_id) = 0;
 	/**
 	 * Indicates that task with given ID failed in execution.
 	 * Information whether task was esential (fatal-failure) is not given.
@@ -49,7 +49,7 @@ public:
 	 * @param job_id unique identification of job
 	 * @param task_id unique identification of failed task
 	 */
-	virtual void task_failed(std::string job_id, std::string task_id) = 0;
+	virtual void task_failed(const std::string &job_id, const std::string &task_id) = 0;
 };
 
 /**
@@ -71,36 +71,28 @@ public:
 	 * Empty indication.
 	 * @param job_id
 	 */
-	virtual void submission_downloaded(std::string job_id)
+	virtual void submission_downloaded(const std::string &job_id)
 	{
 	}
 	/**
 	 * Empty indication.
 	 * @param job_id
 	 */
-	virtual void job_results_uploaded(std::string job_id)
+	virtual void job_results_uploaded(const std::string &job_id)
 	{
 	}
 	/**
 	 * Empty indication.
 	 * @param job_id
 	 */
-	virtual void job_started(std::string job_id)
+	virtual void job_started(const std::string &job_id)
 	{
 	}
 	/**
 	 * Empty indication.
 	 * @param job_id
 	 */
-	virtual void job_ended(std::string job_id)
-	{
-	}
-	/**
-	 * Empty indication.
-	 * @param job_id
-	 * @param task_id
-	 */
-	virtual void task_completed(std::string job_id, std::string task_id)
+	virtual void job_ended(const std::string &job_id)
 	{
 	}
 	/**
@@ -108,7 +100,15 @@ public:
 	 * @param job_id
 	 * @param task_id
 	 */
-	virtual void task_failed(std::string job_id, std::string task_id)
+	virtual void task_completed(const std::string &job_id, const std::string &task_id)
+	{
+	}
+	/**
+	 * Empty indication.
+	 * @param job_id
+	 * @param task_id
+	 */
+	virtual void task_failed(const std::string &job_id, const std::string &task_id)
 	{
 	}
 };
