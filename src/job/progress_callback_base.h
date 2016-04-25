@@ -5,6 +5,7 @@
 /**
  * Callback which is used in @ref job_evaluator and @ref job itself to indicate its state.
  * Can be used to inform user about evaluating particular submissions/jobs.
+ * @note All methods should be exceptionless, otherwise behavior is undefined.
  */
 class progress_callback_base
 {
@@ -19,27 +20,32 @@ public:
 	/**
 	 * Indicates that submission was successfully downloaded from fileserver.
 	 * @param job_id unique identification of downloaded job
+	 * @note Implementation should not throw an exception.
 	 */
 	virtual void submission_downloaded(const std::string &job_id) = 0;
 	/**
 	 * After calling this, results should be visible for end users.
 	 * @param job_id unique identification of job which results were uploaded
+	 * @note Implementation should not throw an exception.
 	 */
 	virtual void job_results_uploaded(const std::string &job_id) = 0;
 	/**
 	 * Indicates job was started and all execution machinery was setup and is ready to roll.
 	 * @param job_id unique identification of soon to be evaluated job
+	 * @note Implementation should not throw an exception.
 	 */
 	virtual void job_started(const std::string &job_id) = 0;
 	/**
 	 * Calling this function should indicate that all was evaluated, just results have to be bubble through.
 	 * @param job_id unique identifier of executed job
+	 * @note Implementation should not throw an exception.
 	 */
 	virtual void job_ended(const std::string &job_id) = 0;
 	/**
 	 * Tells that task with given particular ID was just successfully completed.
 	 * @param job_id unique identification of job
 	 * @param task_id unique identification of successfully completed task
+	 * @note Implementation should not throw an exception.
 	 */
 	virtual void task_completed(const std::string &job_id, const std::string &task_id) = 0;
 	/**
@@ -48,6 +54,7 @@ public:
 	 * This should be detected through job_ended callback.
 	 * @param job_id unique identification of job
 	 * @param task_id unique identification of failed task
+	 * @note Implementation should not throw an exception.
 	 */
 	virtual void task_failed(const std::string &job_id, const std::string &task_id) = 0;
 };
