@@ -110,7 +110,8 @@ public:
 	}
 
 	/**
-	 * Receive data from the broker
+	 * Receive data from the broker.
+	 * This method should only be called after a successful poll call (only poll measures elapsed time).
 	 */
 	bool recv_broker(std::vector<std::string> &target, bool *terminate = nullptr)
 	{
@@ -118,7 +119,8 @@ public:
 	}
 
 	/**
-	 * Receive data from the job socket
+	 * Receive data from the job socket.
+	 * This method should only be called after a successful poll call (only poll measures elapsed time).
 	 */
 	bool recv_jobs(std::vector<std::string> &target, bool *terminate = nullptr)
 	{
