@@ -6,6 +6,7 @@
 #include "fileman/cache_manager.h"
 #include "fileman/http_manager.h"
 #include "job/job_receiver.h"
+#include "job/progress_callback.h"
 
 
 worker_core::worker_core(std::vector<std::string> args)
@@ -208,8 +209,9 @@ void worker_core::fileman_init()
 void worker_core::receiver_init()
 {
 	logger_->info() << "Initializing job receiver and evaluator...";
+	auto progr_callback = std::make_shared<progress_callback>(zmq_context_, logger_);
 	auto evaluator =
-		std::make_shared<job_evaluator>(logger_, config_, remote_fm_, cache_fm_, working_directory_, nullptr);
+		std::make_shared<job_evaluator>(logger_, config_, remote_fm_, cache_fm_, working_directory_, progr_callback);
 	job_receiver_ = std::make_shared<job_receiver>(zmq_context_, evaluator, logger_);
 	logger_->info() << "Job receiver and evaluator initialized.";
 	return;

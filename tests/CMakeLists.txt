@@ -134,6 +134,13 @@ add_test_suite(job_config
 	job_config.cpp
 )
 
+add_test_suite(progress_callback
+	${JOB_DIR}/progress_callback.cpp
+	${HELPERS_DIR}/zmq_socket.cpp
+	${HELPERS_DIR}/create_logger.cpp
+	progress_callback.cpp
+)
+
 # Tests that depend on external resources
 if(UNIX)
 	set(LIBS

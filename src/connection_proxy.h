@@ -10,6 +10,7 @@
 #include "helpers/zmq_socket.h"
 
 static const std::string JOB_SOCKET_ID = "jobs";
+static const std::string PROGRESS_SOCKET_ID = "progress";
 
 /**
  * A trivial wrapper for the ZeroMQ dealer socket used by broker_connection
