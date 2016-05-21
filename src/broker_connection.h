@@ -16,9 +16,9 @@
  * Contains types used by the proxy for polling
  */
 struct message_origin {
-	enum type { BROKER = 0, JOBS = 1 };
+	enum type { BROKER = 0, JOBS = 1, PROGRESS = 2 };
 
-	typedef std::bitset<2> set;
+	typedef std::bitset<3> set;
 };
 
 /**
@@ -174,6 +174,16 @@ public:
 				}
 
 				jobs_server_cmds_->call_function(msg.at(0), msg);
+			}
+
+			if (result.test(message_origin::PROGRESS)) {
+				socket_->recv_progress(msg, &terminate);
+
+				if (terminate) {
+					break;
+				}
+
+				socket_->send_broker(msg);
 			}
 		}
 

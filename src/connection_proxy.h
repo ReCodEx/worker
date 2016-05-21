@@ -19,9 +19,11 @@ static const std::string PROGRESS_SOCKET_ID = "progress";
 class connection_proxy
 {
 private:
+	static const size_t socket_count_ = 3;
 	zmq::socket_t broker_;
 	zmq::socket_t jobs_;
-	zmq::pollitem_t items_[2];
+	zmq::socket_t progress_;
+	zmq::pollitem_t items_[socket_count_];
 	std::shared_ptr<zmq::context_t> context_;
 
 public:
@@ -30,7 +32,7 @@ public:
 	 * @param context
 	 */
 	connection_proxy(std::shared_ptr<zmq::context_t> context)
-		: broker_(*context, ZMQ_DEALER), jobs_(*context, ZMQ_PAIR), context_(context)
+		: broker_(*context, ZMQ_DEALER), jobs_(*context, ZMQ_PAIR), progress_(*context, ZMQ_PAIR), context_(context)
 	{
 		items_[0].socket = (void *) broker_;
 		items_[0].fd = 0;
@@ -41,6 +43,11 @@ public:
 		items_[1].fd = 0;
 		items_[1].events = ZMQ_POLLIN;
 		items_[1].revents = 0;
+
+		items_[2].socket = (void *) progress_;
+		items_[2].fd = 0;
+		items_[2].events = ZMQ_POLLIN;
+		items_[2].revents = 0;
 	}
 
 	/**
@@ -52,6 +59,7 @@ public:
 		broker_.setsockopt(ZMQ_LINGER, 0);
 		broker_.connect(addr);
 		jobs_.bind("inproc://" + JOB_SOCKET_ID);
+		progress_.bind("inproc://" + PROGRESS_SOCKET_ID);
 	}
 
 	/**
@@ -76,7 +84,7 @@ public:
 
 		try {
 			auto time_before_poll = std::chrono::system_clock::now();
-			zmq::poll(items_, 2, timeout.count());
+			zmq::poll(items_, socket_count_, timeout.count());
 			auto time_after_poll = std::chrono::system_clock::now();
 
 			elapsed_time = std::chrono::duration_cast<std::chrono::milliseconds>(time_after_poll - time_before_poll);
@@ -91,6 +99,10 @@ public:
 
 		if (items_[1].revents & ZMQ_POLLIN) {
 			result.set(message_origin::JOBS, true);
+		}
+
+		if (items_[2].revents & ZMQ_POLLIN) {
+			result.set(message_origin::PROGRESS, true);
 		}
 	}
 
@@ -126,6 +138,15 @@ public:
 	bool recv_jobs(std::vector<std::string> &target, bool *terminate = nullptr)
 	{
 		return helpers::recv_from_socket(jobs_, target, terminate);
+	}
+
+	/**
+	 * Receive data from the progress socket.
+	 * This method should only be called after a successful poll call (only poll measures elapsed time).
+	 */
+	bool recv_progress(std::vector<std::string> &target, bool *terminate = nullptr)
+	{
+		return helpers::recv_from_socket(progress_, target, terminate);
 	}
 };
 

@@ -40,6 +40,7 @@ public:
 	MOCK_METHOD2(recv_broker, bool(std::vector<std::string> &, bool *));
 	MOCK_METHOD1(send_jobs, bool(const std::vector<std::string> &));
 	MOCK_METHOD2(recv_jobs, bool(std::vector<std::string> &, bool *));
+	MOCK_METHOD2(recv_progress, bool(std::vector<std::string> &, bool *));
 };
 
 TEST(broker_connection, sends_init)
