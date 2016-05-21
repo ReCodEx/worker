@@ -1,14 +1,14 @@
 #ifndef CODEX_WORKER_COMMANDS_BASE_H
 #define CODEX_WORKER_COMMANDS_BASE_H
 
-#include <memory>
-#include <string>
-#include <functional>
-#include <map>
-#include <zmq.hpp>
+#include "../config/worker_config.h"
 #include "../helpers/create_logger.h"
 #include "../job/job_evaluator_base.h"
-#include "../config/worker_config.h"
+#include <functional>
+#include <map>
+#include <memory>
+#include <string>
+#include <zmq.hpp>
 
 
 /**

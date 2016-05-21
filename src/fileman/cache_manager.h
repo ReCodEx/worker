@@ -1,10 +1,10 @@
 #ifndef CODEX_WORKER_CACHE_MANAGER_H
 #define CODEX_WORKER_CACHE_MANAGER_H
 
-#include <string>
-#include <memory>
-#include "file_manager_base.h"
 #include "../helpers/create_logger.h"
+#include "file_manager_base.h"
+#include <memory>
+#include <string>
 
 #define BOOST_FILESYSTEM_NO_DEPRECATED
 #define BOOST_NO_CXX11_SCOPED_ENUMS

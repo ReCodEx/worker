@@ -1,10 +1,8 @@
 #ifndef CODEX_WORKER_TASK_FACTORY_H
 #define CODEX_WORKER_TASK_FACTORY_H
 
-#include <memory>
-#include "task_factory_base.h"
+#include "../fileman/file_manager_base.h"
 #include "external_task.h"
-#include "root_task.h"
 #include "internal/archivate_task.h"
 #include "internal/cp_task.h"
 #include "internal/extract_task.h"
@@ -12,7 +10,9 @@
 #include "internal/mkdir_task.h"
 #include "internal/rename_task.h"
 #include "internal/rm_task.h"
-#include "../fileman/file_manager_base.h"
+#include "root_task.h"
+#include "task_factory_base.h"
+#include <memory>
 
 
 /**

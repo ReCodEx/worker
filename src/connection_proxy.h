@@ -3,8 +3,8 @@
 
 #include <iostream>
 #include <memory>
-#include <zmq.hpp>
 #include <string>
+#include <zmq.hpp>
 
 #include "broker_connection.h"
 #include "helpers/zmq_socket.h"

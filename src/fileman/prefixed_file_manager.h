@@ -1,8 +1,8 @@
 #ifndef CODEX_WORKER_PREFIXED_FILE_MANAGER_H
 #define CODEX_WORKER_PREFIXED_FILE_MANAGER_H
 
-#include <memory>
 #include "file_manager_base.h"
+#include <memory>
 
 class prefixed_file_manager : public file_manager_base
 {

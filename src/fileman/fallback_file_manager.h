@@ -1,8 +1,8 @@
 #ifndef CODEX_WORKER_FILE_MANAGER_H
 #define CODEX_WORKER_FILE_MANAGER_H
 
-#include "file_manager_base.h"
 #include "cache_manager.h"
+#include "file_manager_base.h"
 #include "http_manager.h"
 #include <utility>
 

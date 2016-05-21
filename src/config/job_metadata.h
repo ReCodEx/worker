@@ -1,8 +1,8 @@
 #ifndef CODEX_WORKER_JOB_CONFIG_H
 #define CODEX_WORKER_JOB_CONFIG_H
 
-#include <yaml-cpp/node/node.h>
 #include "task_metadata.h"
+#include <yaml-cpp/node/node.h>
 
 
 /**

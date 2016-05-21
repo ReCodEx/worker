@@ -1,8 +1,8 @@
 #ifndef CODEX_WORKER_TASK_RESULTS_H
 #define CODEX_WORKER_TASK_RESULTS_H
 
-#include <string>
 #include <memory>
+#include <string>
 
 /**
  * Return error codes of sandbox. Code names corresponds isolate's meta file error codes.

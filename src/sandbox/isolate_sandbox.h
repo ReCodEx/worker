@@ -3,10 +3,10 @@
 
 #ifndef _WIN32
 
-#include <memory>
-#include <vector>
 #include "../helpers/create_logger.h"
 #include "sandbox_base.h"
+#include <memory>
+#include <vector>
 
 /**
  * Class implementing operations with Isolate sandbox.

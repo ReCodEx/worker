@@ -1,7 +1,7 @@
-#include <gtest/gtest.h>
-#include <gmock/gmock.h>
-#include <iostream>
 #include <fstream>
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
+#include <iostream>
 #include <type_traits>
 
 #define BOOST_FILESYSTEM_NO_DEPRECATED
@@ -9,13 +9,13 @@
 #include <boost/filesystem.hpp>
 using namespace boost::filesystem;
 
+#include "../src/helpers/config.h"
 #include "../src/job/job.h"
 #include "../src/job/job_exception.h"
-#include "../src/helpers/config.h"
 
-#include "../src/tasks/task_factory_base.h"
-#include "../src/tasks/external_task.h"
 #include "../src/config/worker_config.h"
+#include "../src/tasks/external_task.h"
+#include "../src/tasks/task_factory_base.h"
 
 using namespace testing;
 

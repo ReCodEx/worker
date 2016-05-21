@@ -1,9 +1,9 @@
 #include "job_receiver.h"
+#include "../commands/jobs_client_commands.h"
 #include "../connection_proxy.h"
 #include "../eval_request.h"
 #include "../eval_response.h"
 #include "../helpers/zmq_socket.h"
-#include "../commands/jobs_client_commands.h"
 
 
 job_receiver::job_receiver(std::shared_ptr<zmq::context_t> context,

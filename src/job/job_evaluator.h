@@ -1,23 +1,23 @@
 #ifndef CODEX_WORKER_JOB_EVALUATOR_HPP
 #define CODEX_WORKER_JOB_EVALUATOR_HPP
 
-#include <memory>
-#include <fstream>
-#include <vector>
-#include <utility>
 #include "../helpers/create_logger.h"
+#include <fstream>
+#include <memory>
+#include <utility>
+#include <vector>
 
 #define BOOST_FILESYSTEM_NO_DEPRECATED
 #define BOOST_NO_CXX11_SCOPED_ENUMS
 #include <boost/filesystem.hpp>
 namespace fs = boost::filesystem;
 
-#include "job.h"
+#include "../archives/archivator.h"
 #include "../config/worker_config.h"
 #include "../fileman/file_manager_base.h"
-#include "../tasks/task_factory.h"
-#include "../archives/archivator.h"
 #include "../helpers/filesystem.h"
+#include "../tasks/task_factory.h"
+#include "job.h"
 #include "job_evaluator_base.h"
 
 

@@ -1,19 +1,19 @@
-#include <gtest/gtest.h>
 #include <gmock/gmock.h>
+#include <gtest/gtest.h>
 #include <memory>
 
+#include "../src/config/sandbox_config.h"
+#include "../src/tasks/create_params.h"
+#include "../src/tasks/external_task.h"
 #include "../src/tasks/internal/archivate_task.h"
 #include "../src/tasks/internal/cp_task.h"
 #include "../src/tasks/internal/extract_task.h"
+#include "../src/tasks/internal/fetch_task.h"
 #include "../src/tasks/internal/mkdir_task.h"
 #include "../src/tasks/internal/rename_task.h"
 #include "../src/tasks/internal/rm_task.h"
-#include "../src/tasks/internal/fetch_task.h"
-#include "../src/tasks/external_task.h"
 #include "../src/tasks/root_task.h"
 #include "../src/tasks/task_factory.h"
-#include "../src/tasks/create_params.h"
-#include "../src/config/sandbox_config.h"
 
 
 std::shared_ptr<task_metadata> get_task_meta()

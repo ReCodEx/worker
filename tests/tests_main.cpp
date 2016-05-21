@@ -1,5 +1,5 @@
-#include "gtest/gtest.h"
 #include "spdlog/spdlog.h"
+#include "gtest/gtest.h"
 #include <curl/curl.h>
 
 #define BOOST_FILESYSTEM_NO_DEPRECATED

@@ -1,12 +1,12 @@
 #ifndef CODEX_WORKER_TASK_BASE_HPP
 #define CODEX_WORKER_TASK_BASE_HPP
 
-#include <vector>
-#include <string>
+#include "../config/task_metadata.h"
+#include "../config/task_results.h"
 #include <cstdlib>
 #include <memory>
-#include "../config/task_results.h"
-#include "../config/task_metadata.h"
+#include <string>
+#include <vector>
 
 
 /**

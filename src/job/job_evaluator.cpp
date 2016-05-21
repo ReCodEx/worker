@@ -1,9 +1,9 @@
 #include "job_evaluator.h"
-#include "job_exception.h"
 #include "../config/job_metadata.h"
 #include "../fileman/fallback_file_manager.h"
 #include "../fileman/prefixed_file_manager.h"
 #include "../helpers/config.h"
+#include "job_exception.h"
 
 job_evaluator::job_evaluator(std::shared_ptr<spdlog::logger> logger,
 	std::shared_ptr<worker_config> config,

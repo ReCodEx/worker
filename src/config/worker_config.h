@@ -3,8 +3,8 @@
 
 
 #include <iostream>
-#include <string>
 #include <map>
+#include <string>
 #include <yaml-cpp/yaml.h>
 
 #define BOOST_FILESYSTEM_NO_DEPRECATED
@@ -12,9 +12,9 @@
 #include <boost/filesystem.hpp>
 namespace fs = boost::filesystem;
 
-#include "log_config.h"
-#include "fileman_config.h"
 #include "../sandbox/sandbox_base.h"
+#include "fileman_config.h"
+#include "log_config.h"
 
 
 /**

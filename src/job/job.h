@@ -1,26 +1,26 @@
 #ifndef CODEX_WORKER_JOB_HPP
 #define CODEX_WORKER_JOB_HPP
 
-#include <vector>
+#include <memory>
 #include <queue>
 #include <utility>
-#include <memory>
+#include <vector>
 
 #define BOOST_FILESYSTEM_NO_DEPRECATED
 #define BOOST_NO_CXX11_SCOPED_ENUMS
 #include <boost/filesystem.hpp>
 namespace fs = boost::filesystem;
 
-#include "spdlog/spdlog.h"
-#include "../helpers/create_logger.h"
-#include "../config/worker_config.h"
-#include "../tasks/task_factory_base.h"
-#include "../sandbox/sandbox_base.h"
-#include "../helpers/topological_sort.h"
-#include "../helpers/create_logger.h"
 #include "../config/job_metadata.h"
 #include "../config/task_metadata.h"
+#include "../config/worker_config.h"
+#include "../helpers/create_logger.h"
+#include "../helpers/create_logger.h"
+#include "../helpers/topological_sort.h"
+#include "../sandbox/sandbox_base.h"
+#include "../tasks/task_factory_base.h"
 #include "progress_callback_base.h"
+#include "spdlog/spdlog.h"
 
 
 /**

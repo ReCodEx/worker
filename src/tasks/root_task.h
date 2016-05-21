@@ -1,8 +1,8 @@
 #ifndef CODEX_WORKER_FAKE_TASK_HPP
 #define CODEX_WORKER_FAKE_TASK_HPP
 
-#include <memory>
 #include "task_base.h"
+#include <memory>
 
 
 /**

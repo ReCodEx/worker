@@ -1,7 +1,7 @@
-#include <gtest/gtest.h>
-#include <gmock/gmock.h>
-#include <iostream>
 #include <fstream>
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
+#include <iostream>
 
 #define BOOST_FILESYSTEM_NO_DEPRECATED
 #define BOOST_NO_CXX11_SCOPED_ENUMS

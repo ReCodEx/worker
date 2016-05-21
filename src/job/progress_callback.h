@@ -2,11 +2,11 @@
 #define CODEX_WORKER_PROGRESS_CALLBACK_H
 
 
-#include <zmq.hpp>
-#include <vector>
-#include <string>
 #include <memory>
 #include <spdlog/spdlog.h>
+#include <string>
+#include <vector>
+#include <zmq.hpp>
 
 #include "progress_callback_base.h"
 

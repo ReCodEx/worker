@@ -1,10 +1,10 @@
 #ifndef CODEX_WORKER_HELPERS_TOPOLOGICAL_SORT_HPP
 #define CODEX_WORKER_HELPERS_TOPOLOGICAL_SORT_HPP
 
+#include "../tasks/task_base.h"
 #include <map>
 #include <queue>
 #include <set>
-#include "../tasks/task_base.h"
 
 
 namespace helpers
