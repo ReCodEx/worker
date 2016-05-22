@@ -1,8 +1,8 @@
 #ifndef CODEX_WORKER_TASK_METADATA_H
 #define CODEX_WORKER_TASK_METADATA_H
 
-#include "sandbox_config.h"
 #include "sandbox_limits.h"
+#include "sandbox_config.h"
 
 
 /**

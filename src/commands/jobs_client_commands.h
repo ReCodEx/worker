@@ -1,10 +1,10 @@
 #ifndef CODEX_WORKER_JOBS_CLIENT_COMMANDS_H
 #define CODEX_WORKER_JOBS_CLIENT_COMMANDS_H
 
+#include "command_holder.h"
+#include "../helpers/zmq_socket.h"
 #include "../eval_request.h"
 #include "../eval_response.h"
-#include "../helpers/zmq_socket.h"
-#include "command_holder.h"
 
 /**
  * Commands from worker "main" thread.

@@ -1,16 +1,16 @@
 #ifndef CODEX_WORKER_BROKER_CONNECTION_H
 #define CODEX_WORKER_BROKER_CONNECTION_H
 
-#include <bitset>
+#include <zmq.hpp>
 #include <map>
 #include <memory>
-#include <zmq.hpp>
+#include <bitset>
 
-#include "commands/broker_commands.h"
-#include "commands/command_holder.h"
-#include "commands/jobs_server_commands.h"
-#include "config/worker_config.h"
 #include "helpers/create_logger.h"
+#include "config/worker_config.h"
+#include "commands/command_holder.h"
+#include "commands/broker_commands.h"
+#include "commands/jobs_server_commands.h"
 
 /**
  * Contains types used by the proxy for polling

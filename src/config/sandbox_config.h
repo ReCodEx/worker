@@ -1,9 +1,8 @@
 #ifndef CODEX_WORKER_SANDBOX_CONFIG_H
 #define CODEX_WORKER_SANDBOX_CONFIG_H
 
-#include "sandbox_limits.h"
 #include <map>
-#include <memory>
+#include "sandbox_limits.h"
 
 
 /**

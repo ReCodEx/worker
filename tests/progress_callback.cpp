@@ -1,7 +1,7 @@
-#include <gmock/gmock.h>
 #include <gtest/gtest.h>
-#include <thread>
+#include <gmock/gmock.h>
 #include <zmq.hpp>
+#include <thread>
 
 #include "../src/connection_proxy.h"
 #include "../src/job/progress_callback.h"

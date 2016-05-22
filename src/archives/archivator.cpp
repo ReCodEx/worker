@@ -1,8 +1,8 @@
 #include "archivator.h"
+#include <map>
 #include <algorithm>
 #include <fstream>
 #include <iostream>
-#include <map>
 
 
 void archivator::compress(const std::string &dir, const std::string &destination)

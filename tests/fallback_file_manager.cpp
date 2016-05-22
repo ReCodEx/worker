@@ -1,12 +1,12 @@
-#include <gmock/gmock.h>
 #include <gtest/gtest.h>
+#include <gmock/gmock.h>
 #include <iostream>
-#include <memory>
 #include <string>
+#include <memory>
 #include <utility>
 
-#include "../src/fileman/fallback_file_manager.h"
 #include "../src/fileman/file_manager_base.h"
+#include "../src/fileman/fallback_file_manager.h"
 
 using namespace testing;
 using namespace std;

@@ -1,6 +1,6 @@
-#include <fstream>
-#include <gmock/gmock.h>
 #include <gtest/gtest.h>
+#include <gmock/gmock.h>
+#include <fstream>
 
 #include "../src/archives/archivator.h"
 

@@ -1,10 +1,10 @@
 #ifndef CODEX_WORKER_HELPERS_CONFIG_H
 #define CODEX_WORKER_HELPERS_CONFIG_H
 
-#include "../config/job_metadata.h"
-#include "../config/task_metadata.h"
 #include <memory>
 #include <yaml-cpp/yaml.h>
+#include "../config/job_metadata.h"
+#include "../config/task_metadata.h"
 
 
 namespace helpers

@@ -1,10 +1,10 @@
 #ifndef CODEX_WORKER_TASK_FACTORY_BASE_H
 #define CODEX_WORKER_TASK_FACTORY_BASE_H
 
-#include "../fileman/file_manager_base.h"
-#include "create_params.h"
-#include "task_base.h"
 #include <memory>
+#include "task_base.h"
+#include "create_params.h"
+#include "../fileman/file_manager_base.h"
 
 
 /**

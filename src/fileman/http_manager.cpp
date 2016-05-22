@@ -1,7 +1,7 @@
 #include "http_manager.h"
+#include <stdio.h>
 #include <curl/curl.h>
 #include <regex>
-#include <stdio.h>
 
 #define BOOST_FILESYSTEM_NO_DEPRECATED
 #define BOOST_NO_CXX11_SCOPED_ENUMS

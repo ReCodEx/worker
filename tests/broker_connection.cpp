@@ -2,11 +2,11 @@
 #define WIN32_LEAN_AND_MEAN
 #endif
 
-#include <gmock/gmock.h>
 #include <gtest/gtest.h>
+#include <gmock/gmock.h>
 
-#include "../src/broker_connection.h"
 #include "../src/config/worker_config.h"
+#include "../src/broker_connection.h"
 
 using namespace testing;
 

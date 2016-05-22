@@ -1,13 +1,13 @@
-#include <chrono>
-#include <gmock/gmock.h>
 #include <gtest/gtest.h>
-#include <thread>
+#include <gmock/gmock.h>
 #include <zmq.hpp>
+#include <thread>
+#include <chrono>
 
-#include "../src/connection_proxy.h"
-#include "../src/eval_request.h"
-#include "../src/job/job_evaluator_base.h"
 #include "../src/job/job_receiver.h"
+#include "../src/eval_request.h"
+#include "../src/connection_proxy.h"
+#include "../src/job/job_evaluator_base.h"
 
 using namespace testing;
 

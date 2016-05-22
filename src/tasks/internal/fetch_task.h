@@ -1,8 +1,8 @@
 #ifndef CODEX_WORKER_INTERNAL_FETCH_TASK_H
 #define CODEX_WORKER_INTERNAL_FETCH_TASK_H
 
-#include "../../fileman/file_manager_base.h"
 #include "../task_base.h"
+#include "../../fileman/file_manager_base.h"
 #include <memory>
 
 

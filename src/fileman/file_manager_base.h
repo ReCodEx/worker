@@ -1,8 +1,8 @@
 #ifndef CODEX_WORKER_FILE_MANAGER_BASE_H
 #define CODEX_WORKER_FILE_MANAGER_BASE_H
 
-#include <exception>
 #include <string>
+#include <exception>
 
 
 /**

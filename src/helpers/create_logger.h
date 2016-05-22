@@ -2,11 +2,8 @@
 #define CODEX_WORKER_CREATE_LOGGER_H
 
 #include <memory>
-
-// clang-format off
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/null_sink.h>
-// clang-format on
 
 namespace helpers
 {
