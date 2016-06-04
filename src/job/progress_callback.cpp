@@ -1,6 +1,6 @@
 #include "progress_callback.h"
 #include "../helpers/zmq_socket.h"
-#include "../helpers/create_logger.h"
+#include "../helpers/logger.h"
 #include "../connection_proxy.h"
 
 

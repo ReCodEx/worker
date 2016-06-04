@@ -58,7 +58,7 @@ add_test_suite(broker_connection
 	broker_connection.cpp
 	${SRC_DIR}/config/worker_config.cpp
 	${HELPERS_DIR}/config.cpp
-	${HELPERS_DIR}/create_logger.cpp
+	${HELPERS_DIR}/logger.cpp
 )
 
 add_test_suite(worker_config
@@ -70,13 +70,13 @@ add_test_suite(worker_config
 add_test_suite(cache_manager
 	cache_manager.cpp
 	${FILEMAN_DIR}/cache_manager.cpp
-	${HELPERS_DIR}/create_logger.cpp
+	${HELPERS_DIR}/logger.cpp
 )
 
 add_test_suite(fallback_file_manager
 	${FILEMAN_DIR}/fallback_file_manager.cpp
 	fallback_file_manager.cpp
-	${HELPERS_DIR}/create_logger.cpp
+	${HELPERS_DIR}/logger.cpp
 )
 
 add_test_suite(job
@@ -84,7 +84,7 @@ add_test_suite(job
 	${SRC_DIR}/archives/archivator.cpp
 	${SRC_DIR}/config/worker_config.cpp
 	${HELPERS_DIR}/topological_sort.cpp
-	${HELPERS_DIR}/create_logger.cpp
+	${HELPERS_DIR}/logger.cpp
 	${HELPERS_DIR}/config.cpp
 	${JOB_DIR}/job.cpp
 	job.cpp
@@ -104,7 +104,7 @@ add_test_suite(topological_sort
 add_test_suite(job_receiver
 	${JOB_DIR}/job_receiver.cpp
 	${HELPERS_DIR}/zmq_socket.cpp
-	${HELPERS_DIR}/create_logger.cpp
+	${HELPERS_DIR}/logger.cpp
 	job_receiver.cpp
 )
 
@@ -122,7 +122,7 @@ add_test_suite(tasks
 	${TASKS_DIR}/internal/fetch_task.cpp
 	${SRC_DIR}/archives/archivator.cpp
 	${SANDBOX_DIR}/isolate_sandbox.cpp
-	${HELPERS_DIR}/create_logger.cpp
+	${HELPERS_DIR}/logger.cpp
 	tasks.cpp
 )
 
@@ -137,7 +137,7 @@ add_test_suite(job_config
 add_test_suite(progress_callback
 	${JOB_DIR}/progress_callback.cpp
 	${HELPERS_DIR}/zmq_socket.cpp
-	${HELPERS_DIR}/create_logger.cpp
+	${HELPERS_DIR}/logger.cpp
 	progress_callback.cpp
 )
 
@@ -170,7 +170,7 @@ add_test_suite(tool_isolate_sandbox
 	tests_main.cpp
 	isolate_sandbox.cpp
 	${SANDBOX_DIR}/isolate_sandbox.cpp
-	${HELPERS_DIR}/create_logger.cpp
+	${HELPERS_DIR}/logger.cpp
 )
 
 add_test_suite(tool_archivator
@@ -184,5 +184,5 @@ add_test_suite(tool_http_manager
 	tests_main.cpp
 	http_manager.cpp
 	${FILEMAN_DIR}/http_manager.cpp
-	${HELPERS_DIR}/create_logger.cpp
+	${HELPERS_DIR}/logger.cpp
 )

@@ -12,14 +12,13 @@
 namespace fs = boost::filesystem;
 
 #include "spdlog/spdlog.h"
-#include "../helpers/create_logger.h"
-#include "../config/worker_config.h"
-#include "../tasks/task_factory_base.h"
-#include "../sandbox/sandbox_base.h"
+#include "../helpers/logger.h"
 #include "../helpers/topological_sort.h"
-#include "../helpers/create_logger.h"
+#include "../config/worker_config.h"
 #include "../config/job_metadata.h"
 #include "../config/task_metadata.h"
+#include "../tasks/task_factory_base.h"
+#include "../sandbox/sandbox_base.h"
 #include "progress_callback_base.h"
 
 

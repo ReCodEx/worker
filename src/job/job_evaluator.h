@@ -5,7 +5,7 @@
 #include <fstream>
 #include <vector>
 #include <utility>
-#include "../helpers/create_logger.h"
+#include "../helpers/logger.h"
 
 #define BOOST_FILESYSTEM_NO_DEPRECATED
 #define BOOST_NO_CXX11_SCOPED_ENUMS

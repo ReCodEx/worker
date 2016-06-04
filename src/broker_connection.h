@@ -6,7 +6,7 @@
 #include <memory>
 #include <bitset>
 
-#include "helpers/create_logger.h"
+#include "helpers/logger.h"
 #include "config/worker_config.h"
 #include "commands/command_holder.h"
 #include "commands/broker_commands.h"
@@ -57,7 +57,7 @@ private:
 	void reconnect()
 	{
 		socket_->reconnect_broker(config_->get_broker_uri());
-		logger_->debug() << "Going to sleep for " + std::to_string(reconnect_delay.count()) + " seconds";
+		logger_->info() << "Going to sleep for " + std::to_string(reconnect_delay.count()) + " seconds";
 		std::this_thread::sleep_for(reconnect_delay);
 
 		std::chrono::seconds max_reconnect_delay(32);
@@ -110,7 +110,7 @@ public:
 	 */
 	void connect()
 	{
-		logger_->debug() << "Connecting to " << config_->get_broker_uri();
+		logger_->info() << "Connecting to " << config_->get_broker_uri();
 		socket_->connect(config_->get_broker_uri());
 		send_init();
 	}
@@ -134,7 +134,7 @@ public:
 			socket_->poll(result, poll_limit, terminate, poll_duration);
 
 			if (poll_duration >= poll_limit) {
-				logger_->debug() << "Sending a ping";
+				//logger_->debug() << "Sending a ping";
 				socket_->send_broker(std::vector<std::string>{"ping"});
 				poll_limit = ping_interval;
 

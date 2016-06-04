@@ -231,7 +231,7 @@ void job_evaluator::cleanup_variables()
 		job_ = nullptr;
 		result_ = 0;
 	} catch (std::exception &e) {
-		logger_->warn() << "Error in deinicialization of evaluator: " << e.what();
+		logger_->error() << "Error in deinicialization of evaluator: " << e.what();
 	}
 }
 
@@ -253,7 +253,7 @@ void job_evaluator::push_result()
 
 	// just checkout for errors
 	if (job_ == nullptr) {
-		logger_->warn() << "Pointer to job is null.";
+		logger_->error() << "Pointer to job is null.";
 		return;
 	}
 
@@ -311,7 +311,7 @@ void job_evaluator::push_result()
 	try {
 		archivator::compress(results_path_.string(), archive_path.string());
 	} catch (archive_exception &e) {
-		logger_->warn() << "Results file not archived properly: " << e.what();
+		logger_->error() << "Results file not archived properly: " << e.what();
 		return;
 	}
 	logger_->info() << "Compression done.";
@@ -348,7 +348,7 @@ eval_response job_evaluator::evaluate(eval_request request)
 		run_job();
 		push_result();
 	} catch (std::exception &e) {
-		logger_->warn() << "Job evaluator encountered error: " << e.what();
+		logger_->error() << "Job evaluator encountered error: " << e.what();
 		response_result = "ERR";
 	}
 	cleanup_evaluator();

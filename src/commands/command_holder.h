@@ -6,7 +6,7 @@
 #include <functional>
 #include <map>
 #include <zmq.hpp>
-#include "../helpers/create_logger.h"
+#include "../helpers/logger.h"
 #include "../job/job_evaluator_base.h"
 #include "../config/worker_config.h"
 
