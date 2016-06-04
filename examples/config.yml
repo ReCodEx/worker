@@ -27,8 +27,8 @@ limits:
     stack-size: 0  # normal in KB, but 0 means no special limit
     memory: 900000  # in KB
     parallel: 16  # time and memory limits are merged
-    disk-size: 100
-    disk-files: 10
+    disk-size: 1048576
+    disk-files: 100
     environ-variable:
         PATH: /usr/bin
 ...
