@@ -59,9 +59,8 @@ if(YAMLCPP_INCLUDE_DIR AND YAMLCPP_LIBRARY)
 endif()
 
 
-# -- ZeroMQ on Appveyor
+# -- ZeroMQ on Windows
 if(MSVC)	
-	# ZeroMQ on Appveyor...
 	find_path(ZEROMQ_INCLUDE NAMES zmq.h PATHS ${ZMQ_INCLUDE_DIR})
 	find_library(ZEROMQ_LIB NAMES libzmq PATHS ${ZMQ_LIBRARY_DIR})
 	
@@ -263,10 +262,10 @@ if(UNIX)
 
 	install(CODE "execute_process(COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/install/postinst)")
 elseif(MSVC)
-	install(TARGETS recodex-worker DESTINATION recodex/worker/bin COMPONENT binaries)
-	install(DIRECTORY build/Release/ DESTINATION recodex/worker/bin COMPONENT binaries FILES_MATCHING PATTERN "*.dll")
-	install(FILES build/curl-ca-bundle.crt DESTINATION recodex/worker/bin COMPONENT binaries)
-	install(FILES examples/config.yml DESTINATION recodex/worker/conf COMPONENT config RENAME config-1.yml)
+	install(TARGETS recodex-worker DESTINATION worker/bin COMPONENT binaries)
+	install(DIRECTORY build/Release/ DESTINATION worker/bin COMPONENT binaries FILES_MATCHING PATTERN "*.dll")
+	install(FILES build/curl-ca-bundle.crt DESTINATION worker/bin COMPONENT binaries)
+	install(FILES examples/config.yml DESTINATION worker/conf COMPONENT config RENAME config-1.yml)
 else()
 	install(TARGETS recodex-worker DESTINATION recodex/worker/bin COMPONENT binaries)
 	install(FILES examples/config.yml DESTINATION recodex/worker/conf COMPONENT config RENAME config-1.yml)
@@ -296,6 +295,7 @@ if(UNIX)
 	set(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${RECODEX_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}-${CPACK_RPM_PACKAGE_ARCHITECTURE}")
 elseif(MSVC)
 	set(CPACK_GENERATOR "NSIS")
+	set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/License.txt")
 endif()
 include (CPack)
 

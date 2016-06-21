@@ -19,6 +19,8 @@ add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 # installation
 if(UNIX)
 	install(TARGETS recodex-judge-filter DESTINATION /usr/bin COMPONENT binaries)
+elseif(MSVC)
+	install(TARGETS recodex-judge-filter DESTINATION worker/bin COMPONENT binaries)
 else()
 	install(TARGETS recodex-judge-filter DESTINATION recodex/worker/bin COMPONENT binaries)
 endif()
