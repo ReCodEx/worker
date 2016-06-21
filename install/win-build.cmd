@@ -1,8 +1,8 @@
 :: ***************************************************************************
 ::              Windows compilation script for ReCodEx worker
 :: ***************************************************************************
-:: Configuration: Release; Platform: x64
-:: Should be run from: VS2015 x64 Native Tools Command Prompt
+:: Configuration: Release; Platform: x86
+:: Should be run from 32bit version of Developer Command Prompt for VS2015
 :: Usage: win-build.cmd
 ::   -build - builds recodex-worker
 ::   -clean - cleans built application and all temporary files
@@ -100,15 +100,15 @@ echo Downloading NuGet packages...
 :: move downloaded libraries to better folders
 echo Moving downloaded libraries...
 move %BOOST_DIR%\lib\native\include %BOOST_DIR%
-move %LIBS_DIR%\boost_system-vc140\lib\native\address-model-64\lib\*.lib %BOOST_DIR%\lib
-move %LIBS_DIR%\boost_filesystem-vc140\lib\native\address-model-64\lib\*.lib %BOOST_DIR%\lib
-move %LIBS_DIR%\boost_program_options-vc140\lib\native\address-model-64\lib\*.lib %BOOST_DIR%\lib
+move %LIBS_DIR%\boost_system-vc140\lib\native\address-model-32\lib\*.lib %BOOST_DIR%\lib
+move %LIBS_DIR%\boost_filesystem-vc140\lib\native\address-model-32\lib\*.lib %BOOST_DIR%\lib
+move %LIBS_DIR%\boost_program_options-vc140\lib\native\address-model-32\lib\*.lib %BOOST_DIR%\lib
 if not exist %CURL_DIR%\lib ( mkdir %CURL_DIR%\lib )
 move %LIBS_DIR%\rmt_curl\build\native\include %CURL_DIR%
-move %LIBS_DIR%\rmt_curl\build\native\lib\v140\x64\Release\dynamic\*.lib %CURL_DIR%\lib 
+move %LIBS_DIR%\rmt_curl\build\native\lib\v140\Win32\Release\dynamic\*.lib %CURL_DIR%\lib 
 if not exist %ZMQ_DIR%\lib ( mkdir %ZMQ_DIR%\lib )
 move %LIBS_DIR%\fix8.dependencies.zmq\build\native\include %ZMQ_DIR%
-move %LIBS_DIR%\fix8.dependencies.zmq\build\native\lib\x64\v140\Release\Desktop\*.lib %ZMQ_DIR%\lib 
+move %LIBS_DIR%\fix8.dependencies.zmq\build\native\lib\Win32\v140\Release\Desktop\*.lib %ZMQ_DIR%\lib 
 
 :: download certificate bundle
 echo Downloading certificate bundle...
@@ -119,7 +119,7 @@ if not exist %CA_BUNDLE_PATH% (
 :: run cmake and generate nmake file in build directory
 echo Running cmake...
 cd %BUILD_DIR%
-cmake -G "Visual Studio 14 2015 Win64" -DBOOST_ROOT=%BOOST_DIR% -DCURL_LIBRARY=%CURL_DIR%\lib\libcurl.lib -DCURL_INCLUDE_DIR=%CURL_DIR%\include -DZMQ_LIBRARY_DIR=%ZMQ_DIR%\lib -DZMQ_INCLUDE_DIR=%ZMQ_DIR%\include %DEFAULT_DIR% || goto error
+cmake -G "Visual Studio 14 2015" -DBOOST_ROOT=%BOOST_DIR% -DCURL_LIBRARY=%CURL_DIR%\lib\libcurl.lib -DCURL_INCLUDE_DIR=%CURL_DIR%\include -DZMQ_LIBRARY_DIR=%ZMQ_DIR%\lib -DZMQ_INCLUDE_DIR=%ZMQ_DIR%\include %DEFAULT_DIR% || goto error
 
 :: run generated makefile in build directory
 echo Compiling all targets...
@@ -127,10 +127,10 @@ cd %BUILD_DIR%
 cmake --build . --config Release --target ALL_BUILD || goto error
 
 :: copy dll libraries to build directory
-copy /Y %LIBS_DIR%\fix8.dependencies.zmq\build\native\bin\x64\v140\Release\Desktop\*.dll %BIN_DIR%
-copy /Y %LIBS_DIR%\rmt_curl\build\native\bin\v140\x64\Release\dynamic\*.dll %BIN_DIR%
-copy /Y %LIBS_DIR%\rmt_libssh2\build\native\bin\v140\x64\Release\dynamic\*.dll %BIN_DIR%
-copy /Y %LIBS_DIR%\rmt_zlib\build\native\bin\v140\x64\Release\dynamic\*.dll %BIN_DIR%
+copy /Y %LIBS_DIR%\fix8.dependencies.zmq\build\native\bin\Win32\v140\Release\Desktop\*.dll %BIN_DIR%
+copy /Y %LIBS_DIR%\rmt_curl\build\native\bin\v140\Win32\Release\dynamic\*.dll %BIN_DIR%
+copy /Y %LIBS_DIR%\rmt_libssh2\build\native\bin\v140\Win32\Release\dynamic\*.dll %BIN_DIR%
+copy /Y %LIBS_DIR%\rmt_zlib\build\native\bin\v140\Win32\Release\dynamic\*.dll %BIN_DIR%
 
 
 :exit

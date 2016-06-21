@@ -68,6 +68,7 @@ install:
     Start-FileDownload 'http://curl.haxx.se/ca/cacert.pem'
 
     mv cacert.pem curl-ca-bundle.crt
+cache: C:\projects\codex_worker\CMakeCache.txt
 before_build:
 - cmd: >-
     cd c:\projects\codex_worker
