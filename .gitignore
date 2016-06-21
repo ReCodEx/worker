@@ -7,4 +7,5 @@ codex_worker
 CMakeLists.txt.user
 doc/
 build/
-
+libs/
+tests/Testing/

@@ -1,4 +1,4 @@
-project(codex_worker_tests)
+project(recodex-worker_tests)
 
 set(TESTS_NAME run_tests)
 set(TOOL_TESTS_NAME run_tool_tests)
@@ -28,14 +28,7 @@ if(UNIX)
 		archive
 	)
 elseif(MSVC)
-	set(LIBS ${BASE_LIBS} archive_static)
-
-	if(APPVEYOR_COMPILE)
-		set(LIBS ${LIBS}
-			${Boost_LIBRARIES}
-			${ZEROMQ_LIB}
-		)
-	endif()
+	set(LIBS ${BASE_LIBS} archive_static ${Boost_LIBRARIES} ${ZEROMQ_LIB})
 endif()
 
 function(add_test_suite name)
@@ -150,20 +143,15 @@ if(UNIX)
 		-lzmq
 		-lboost_system -lboost_filesystem -lboost_program_options
 		archive
-		)
+	)
 elseif(MSVC)
 	set(LIBS gtest gmock
 		yaml-cpp
 		archive_static
+		${CURL_LIBRARIES}
+		${Boost_LIBRARIES}
+		${ZEROMQ_LIB}
 	)
-
-	if(APPVEYOR_COMPILE)
-		set(LIBS ${LIBS}
-			${CURL_LIBRARIES}
-			${Boost_LIBRARIES}
-			${ZEROMQ_LIB}
-		)
-	endif()
 endif()
 
 add_test_suite(tool_isolate_sandbox
