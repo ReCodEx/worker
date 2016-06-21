@@ -5,8 +5,8 @@
 :: Should be run from 32bit version of Developer Command Prompt for VS2015
 :: Usage: win-build.cmd
 ::   -build - builds recodex-worker
-::   -clean - cleans built application and all temporary files
-::   -test - run tests, should be run after build
+::   -clean - cleans built application and all temporary/downloaded files
+::   -test - run tests
 ::   -package - creates Windows installer using NSIS
 
 
@@ -34,43 +34,62 @@ SET CA_BUNDLE_PATH=%BUILD_DIR%\%CA_BUNDLE%
 
 :: parameter was provided
 if NOT [%1]==[] (
-	if "%1"=="-clean" (
-		:: *** CLEANUP ***
-		echo Cleaning...
-		rmdir /S /Q %BUILD_DIR%
-		rmdir /S /Q %LIBS_DIR%
-		goto exit
-	)
-	if "%1"=="-test" (
-		:: *** TEST ***
-		echo Running tests...
-		:: set path variable to location with dlls
-		SET "PATH=%PATH%;%BIN_DIR%"
-		
-		:: execute tests
-		cd %TESTS_BUILD_DIR%
-		copy %CA_BUNDLE_PATH% %TESTS_BUILD_DIR%\%CA_BUNDLE%
-		ctest -C Release --output-on-failure
-		goto exit
-	)
-	if "%1"=="-package" (
-		:: *** PACKAGE ***
-		echo Creating package...
-		cd %BUILD_DIR%
-		cmake --build . --config Release --target PACKAGE
-		goto exit
-	)
-	if "%1"=="-build" (
-		goto build
-	)
+	if "%1"=="-clean" ( call :cleanup & goto exit )
+	if "%1"=="-test" ( call :build & call :test & goto exit )
+	if "%1"=="-package" ( call :build & call :package & goto exit )
+	if "%1"=="-build" ( call :build & goto exit )
 	
 	echo Unknown option...
 	goto exit
 )
 
+:: no parameter was provided, default is building source code
+call :build
+goto exit
 
-:build
+
+:exit
+:: at the end return to directory where we started
+cd %CURRENT_DIR%
+goto :EOF
+
+:error
+cd %CURRENT_DIR%
+echo Failed!
+exit /b 1
+
+
+:: *******************************
+:: *** Definition of functions ***
+:: *******************************
+
+:: *** CLEANUP ***
+:cleanup
+echo Cleaning...
+rmdir /S /Q %BUILD_DIR%
+rmdir /S /Q %LIBS_DIR%
+goto :EOF
+
+:: *** TEST ***
+:test
+echo Running tests...
+:: set path variable to location with dlls
+SET "PATH=%PATH%;%BIN_DIR%"
+:: execute tests
+cd %TESTS_BUILD_DIR%
+copy %CA_BUNDLE_PATH% %TESTS_BUILD_DIR%\%CA_BUNDLE%
+ctest -C Release --output-on-failure
+goto :EOF
+
+:: *** PACKAGE ***
+:package
+echo Creating package...
+cd %BUILD_DIR%
+cmake --build . --config Release --target PACKAGE
+goto :EOF
+
 :: *** COMPILATION ***
+:build
 :: download git submodules if necessary
 cd %DEFAULT_DIR%
 git submodule update --init
@@ -97,7 +116,7 @@ echo Downloading NuGet packages...
 %NUGET% install rmt_curl -ExcludeVersion
 %NUGET% install fix8.dependencies.zmq -ExcludeVersion
 
-:: move downloaded libraries to better folders
+:: move downloaded libraries to folders with more logical structure
 echo Moving downloaded libraries...
 move %BOOST_DIR%\lib\native\include %BOOST_DIR%
 move %LIBS_DIR%\boost_system-vc140\lib\native\address-model-32\lib\*.lib %BOOST_DIR%\lib
@@ -132,13 +151,4 @@ copy /Y %LIBS_DIR%\rmt_curl\build\native\bin\v140\Win32\Release\dynamic\*.dll %B
 copy /Y %LIBS_DIR%\rmt_libssh2\build\native\bin\v140\Win32\Release\dynamic\*.dll %BIN_DIR%
 copy /Y %LIBS_DIR%\rmt_zlib\build\native\bin\v140\Win32\Release\dynamic\*.dll %BIN_DIR%
 
-
-:exit
-:: at the end return to directory where we started
-cd %CURRENT_DIR%
-
 goto :EOF
-:error
-cd %CURRENT_DIR%
-echo Failed!
-exit /b %errorlevel%
