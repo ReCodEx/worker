@@ -84,7 +84,7 @@ public:
 
 		try {
 			auto time_before_poll = std::chrono::system_clock::now();
-			zmq::poll(items_, socket_count_, (long)timeout.count());
+			zmq::poll(items_, socket_count_, (long) timeout.count());
 			auto time_after_poll = std::chrono::system_clock::now();
 
 			elapsed_time = std::chrono::duration_cast<std::chrono::milliseconds>(time_after_poll - time_before_poll);
