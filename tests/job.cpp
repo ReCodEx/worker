@@ -19,9 +19,7 @@ using namespace boost::filesystem;
 
 using namespace testing;
 
-
 typedef std::tuple<std::string, std::string, sandbox_limits::dir_perm> mytuple;
-
 
 class mock_factory : public task_factory_base
 {
@@ -86,6 +84,7 @@ public:
 	MOCK_METHOD1(job_ended, void(const std::string &));
 	MOCK_METHOD2(task_completed, void(const std::string &, const std::string &));
 	MOCK_METHOD2(task_failed, void(const std::string &, const std::string &));
+	MOCK_METHOD2(task_skipped, void(const std::string &, const std::string &));
 };
 
 bool operator==(const create_params &a, const create_params &b)
@@ -130,7 +129,8 @@ std::shared_ptr<job_metadata> get_correct_meta()
 	std::shared_ptr<sandbox_config> sandbox_conf = std::make_shared<sandbox_config>();
 	sandbox_conf->name = "fake";
 
-	// sandbox limits here are different than workers, so we can't call get_default_limits()
+	// sandbox limits here are different than workers, so we can't call
+	// get_default_limits()
 	std::shared_ptr<sandbox_limits> limits = std::make_shared<sandbox_limits>();
 	limits->cpu_time = 5;
 	limits->wall_time = 6;
@@ -190,7 +190,6 @@ std::shared_ptr<task_metadata> get_simple_task(
 	return task;
 }
 
-
 TEST(job_test, bad_parameters)
 {
 	std::shared_ptr<job_metadata> job_meta = std::make_shared<job_metadata>();
@@ -234,7 +233,6 @@ TEST(job_test, bad_parameters)
 					 nullptr),
 		job_exception);
 }
-
 
 TEST(job_test, bad_paths)
 {
@@ -390,7 +388,6 @@ TEST(job_test, non_empty_details)
 	// cleanup after yourself
 	remove_all(dir_root);
 }
-
 
 TEST(job_test, load_of_worker_defaults)
 {
@@ -605,14 +602,29 @@ TEST(job_test, correctly_executed_job)
 
 	auto job_meta = get_correct_meta();
 
+	/*
+	 * TASK TREE:
+	 *
+	 *      A
+	 *     / \
+	 *    B   D _
+	 *     \ /  \\
+	 *      C   E F
+	 *             \
+	 *              G
+	 *
+	 * Calling order: A, B, D, C, E, F, G
+	 *
+	 * progress_callback: F will fail, G will be skipped
+	 */
 	job_meta->tasks.clear();
 	job_meta->tasks.push_back(get_simple_task("A", 1, {}));
 	job_meta->tasks.push_back(get_simple_task("B", 4, {"A"}));
 	job_meta->tasks.push_back(get_simple_task("C", 6, {"B", "D"}));
 	job_meta->tasks.push_back(get_simple_task("D", 2, {"A"}));
-	job_meta->tasks.push_back(get_simple_task("E", 3, {"D"}));
-	job_meta->tasks.push_back(get_simple_task("F", 5, {"D"}));
-	job_meta->tasks.push_back(get_simple_task("G", 7, {"C"}));
+	job_meta->tasks.push_back(get_simple_task("E", 5, {"D"}));
+	job_meta->tasks.push_back(get_simple_task("F", 3, {"D"}));
+	job_meta->tasks.push_back(get_simple_task("G", 7, {"F"}));
 
 	size_t tasks_count = job_meta->tasks.size() + 1;
 
@@ -644,7 +656,9 @@ TEST(job_test, correctly_executed_job)
 
 		// progress callback calling expectations
 		EXPECT_CALL(*progress_callback, job_started(_)).Times(1);
-		EXPECT_CALL(*progress_callback, task_completed(_, _)).Times(tasks_count);
+		EXPECT_CALL(*progress_callback, task_completed(_, _)).Times(tasks_count - 2);
+		EXPECT_CALL(*progress_callback, task_failed(_, _)).Times(1);
+		EXPECT_CALL(*progress_callback, task_skipped(_, _)).Times(1);
 		EXPECT_CALL(*progress_callback, job_ended(_)).Times(1);
 	}
 	{ // ! out of sequence calling
@@ -652,10 +666,12 @@ TEST(job_test, correctly_executed_job)
 		// expect root task will be executed once
 		EXPECT_CALL(*empty_task, run()).WillOnce(Return(empty_results));
 
-		for (size_t i = 1; i < tasks_count; i++) {
+		for (size_t i = 1; i < tasks_count - 2; i++) {
 			// expect tasks A to G will be executed each at once
 			EXPECT_CALL(*mock_tasks[i - 1], run()).WillOnce(Return(empty_results));
 		}
+		// task F will fail
+		EXPECT_CALL(*mock_tasks[tasks_count - 3], run()).WillOnce(Throw(task_exception()));
 	}
 
 	create_directories(dir);
@@ -723,7 +739,6 @@ TEST(job_test, job_variables)
 	// construct and check
 	job j(job_meta, worker_conf, dir_root, dir, res_dir, factory, nullptr);
 	ASSERT_EQ(j.get_task_queue().size(), 2u);
-
 
 	std::shared_ptr<sandbox_limits> limits = params.limits;
 	ASSERT_EQ(params.task_meta->binary, path("/evaluate/recodex").string());

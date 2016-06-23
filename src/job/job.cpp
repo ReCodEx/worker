@@ -76,13 +76,11 @@ void job::build_job()
 		throw job_exception("File server URL cannot be empty");
 	}
 
-
 	// create root task, which is logical root of evaluation
 	size_t id = 0;
 	std::map<std::string, size_t> eff_indegree;
 	root_task_ = factory_->create_internal_task(id++);
 	eff_indegree.insert(std::make_pair(root_task_->get_task_id(), 0));
-
 
 	// construct all tasks with their ids and check if they have all datas, but do not connect them
 	std::map<std::string, std::shared_ptr<task_base>> unconnected_tasks;
@@ -164,10 +162,8 @@ void job::build_job()
 		eff_indegree.insert(std::make_pair(task_meta->task_id, 0));
 	}
 
-
 	// constructed tasks in map have to have tree structure, so... make it and connect them
 	connect_tasks(root_task_, unconnected_tasks, eff_indegree);
-
 
 	// all should be done now... just linear ordering is missing...
 	try {
@@ -186,8 +182,7 @@ void job::process_task_limits(std::shared_ptr<sandbox_limits> limits)
 	auto worker_limits = worker_config_->get_limits();
 	std::string msg = " item is bigger than default worker value";
 
-	// we have to load defaults from worker_config if necessary
-	// and check for bigger limits than in worker_config
+	// we have to load defaults from worker_config if necessary and check for bigger limits than in worker_config
 	if (limits->cpu_time == FLT_MAX) {
 		limits->cpu_time = worker_limits.cpu_time;
 	} else {
@@ -307,6 +302,7 @@ std::vector<std::pair<std::string, std::shared_ptr<task_results>>> job::run()
 			} else {
 				// we have to pass information about non-execution to children
 				logger_->info() << "Task \"" << task_id << "\" marked as not executable, proceeding to next task";
+				progress_callback_->task_skipped(job_meta_->job_id, task_id);
 				i->set_children_execution(false);
 			}
 		} catch (std::exception &e) {

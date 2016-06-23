@@ -3,7 +3,6 @@
 #include "../helpers/logger.h"
 #include "../connection_proxy.h"
 
-
 progress_callback::progress_callback(std::shared_ptr<zmq::context_t> context, std::shared_ptr<spdlog::logger> logger)
 	: socket_(*context, ZMQ_PAIR), command_("progress"), connected_(false), logger_(logger)
 {
@@ -92,6 +91,18 @@ void progress_callback::task_failed(const std::string &job_id, const std::string
 		helpers::send_through_socket(socket_, msg);
 	} catch (...) {
 		logger_->warn() << "progress_callback: call of task_failed failed";
+		logger_->warn() << "    -> job_id: " << job_id << "; task_id: " << task_id;
+	}
+}
+
+void progress_callback::task_skipped(const std::string &job_id, const std::string &task_id)
+{
+	try {
+		connect();
+		std::vector<std::string> msg = {command_, job_id, "TASK", task_id, "SKIPPED"};
+		helpers::send_through_socket(socket_, msg);
+	} catch (...) {
+		logger_->warn() << "progress_callback: call of task_skipped failed";
 		logger_->warn() << "    -> job_id: " << job_id << "; task_id: " << task_id;
 	}
 }

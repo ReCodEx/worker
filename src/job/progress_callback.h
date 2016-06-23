@@ -1,7 +1,6 @@
 #ifndef CODEX_WORKER_PROGRESS_CALLBACK_H
 #define CODEX_WORKER_PROGRESS_CALLBACK_H
 
-
 #include <zmq.hpp>
 #include <vector>
 #include <string>
@@ -9,7 +8,6 @@
 #include <spdlog/spdlog.h>
 
 #include "progress_callback_base.h"
-
 
 /**
  * Progress callback implementation which is connected to ZMQ inproc socket.
@@ -93,7 +91,14 @@ public:
 	 * @note No throw implementation.
 	 */
 	virtual void task_failed(const std::string &job_id, const std::string &task_id);
+	/**
+	 * Parental task of given one failed and this one was skipped.
+	 * Sends message through zmqsocket to broker_connection.
+	 * @param job_id unique identification of job
+	 * @param task_id unique identification of skipped task
+	 * @note No throw implementation.
+	 */
+	virtual void task_skipped(const std::string &job_id, const std::string &task_id);
 };
-
 
 #endif // CODEX_WORKER_PROGRESS_CALLBACK_H

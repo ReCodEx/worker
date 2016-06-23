@@ -1,7 +1,6 @@
 #ifndef CODEX_WORKER_PROGRESS_CALLBACK_BASE_H
 #define CODEX_WORKER_PROGRESS_CALLBACK_BASE_H
 
-
 /**
  * Callback which is used in @ref job_evaluator and @ref job itself to indicate its state.
  * Can be used to inform user about evaluating particular submissions/jobs.
@@ -30,13 +29,15 @@ public:
 	 */
 	virtual void job_results_uploaded(const std::string &job_id) = 0;
 	/**
-	 * Indicates job was started and all execution machinery was setup and is ready to roll.
+	 * Indicates job was started and all execution machinery was setup and is
+	 * ready to roll.
 	 * @param job_id unique identification of soon to be evaluated job
 	 * @note Implementation should not throw an exception.
 	 */
 	virtual void job_started(const std::string &job_id) = 0;
 	/**
-	 * Calling this function should indicate that all was evaluated, just results have to be bubble through.
+	 * Calling this function should indicate that all was evaluated, just results
+	 * have to be bubble through.
 	 * @param job_id unique identifier of executed job
 	 * @note Implementation should not throw an exception.
 	 */
@@ -57,6 +58,13 @@ public:
 	 * @note Implementation should not throw an exception.
 	 */
 	virtual void task_failed(const std::string &job_id, const std::string &task_id) = 0;
+	/**
+	 * Parental task of given one failed and this one was skipped.
+	 * @param job_id unique identification of job
+	 * @param task_id unique identification of skipped task
+	 * @note Implementation should not throw an exception.
+	 */
+	virtual void task_skipped(const std::string &job_id, const std::string &task_id) = 0;
 };
 
 /**
@@ -118,7 +126,14 @@ public:
 	virtual void task_failed(const std::string &job_id, const std::string &task_id)
 	{
 	}
+	/**
+	 * Empty indication.
+	 * @param job_id
+	 * @param task_id
+	 */
+	virtual void task_skipped(const std::string &job_id, const std::string &task_id)
+	{
+	}
 };
-
 
 #endif // CODEX_WORKER_PROGRESS_CALLBACK_BASE_H
