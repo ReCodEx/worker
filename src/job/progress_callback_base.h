@@ -29,15 +29,13 @@ public:
 	 */
 	virtual void job_results_uploaded(const std::string &job_id) = 0;
 	/**
-	 * Indicates job was started and all execution machinery was setup and is
-	 * ready to roll.
+	 * Indicates job was started and all execution machinery was setup and is ready to roll.
 	 * @param job_id unique identification of soon to be evaluated job
 	 * @note Implementation should not throw an exception.
 	 */
 	virtual void job_started(const std::string &job_id) = 0;
 	/**
-	 * Calling this function should indicate that all was evaluated, just results
-	 * have to be bubble through.
+	 * Calling this function should indicate that all was evaluated, just results have to be bubble through.
 	 * @param job_id unique identifier of executed job
 	 * @note Implementation should not throw an exception.
 	 */

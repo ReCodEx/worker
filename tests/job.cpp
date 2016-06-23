@@ -129,8 +129,7 @@ std::shared_ptr<job_metadata> get_correct_meta()
 	std::shared_ptr<sandbox_config> sandbox_conf = std::make_shared<sandbox_config>();
 	sandbox_conf->name = "fake";
 
-	// sandbox limits here are different than workers, so we can't call
-	// get_default_limits()
+	// sandbox limits here are different than workers, so we can't call get_default_limits()
 	std::shared_ptr<sandbox_limits> limits = std::make_shared<sandbox_limits>();
 	limits->cpu_time = 5;
 	limits->wall_time = 6;
