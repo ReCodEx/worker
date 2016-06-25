@@ -7,18 +7,9 @@
 #include "../src/job/job_receiver.h"
 #include "../src/eval_request.h"
 #include "../src/connection_proxy.h"
-#include "../src/job/job_evaluator_base.h"
+#include "mocks.h"
 
 using namespace testing;
-
-class mock_job_evaluator : public job_evaluator_base
-{
-public:
-	mock_job_evaluator()
-	{
-	}
-	MOCK_METHOD1(evaluate, eval_response(eval_request));
-};
 
 
 TEST(job_receiver, basic)

@@ -17,75 +17,13 @@ using namespace boost::filesystem;
 #include "../src/tasks/external_task.h"
 #include "../src/config/worker_config.h"
 
+#include "mocks.h"
+
+
 using namespace testing;
 
 typedef std::tuple<std::string, std::string, sandbox_limits::dir_perm> mytuple;
 
-class mock_factory : public task_factory_base
-{
-public:
-	mock_factory()
-	{
-	}
-	virtual ~mock_factory()
-	{
-	}
-	MOCK_METHOD2(create_internal_task, std::shared_ptr<task_base>(size_t, std::shared_ptr<task_metadata>));
-	MOCK_METHOD1(create_sandboxed_task, std::shared_ptr<task_base>(const create_params &));
-};
-
-class mock_worker_config : public worker_config
-{
-public:
-	mock_worker_config()
-	{
-	}
-	virtual ~mock_worker_config()
-	{
-	}
-	MOCK_CONST_METHOD0(get_hwgroup, const std::string &());
-	MOCK_CONST_METHOD0(get_worker_id, size_t());
-	MOCK_CONST_METHOD0(get_limits, const sandbox_limits &());
-};
-
-class mock_task : public task_base
-{
-public:
-	mock_task(size_t id, std::string str_id = "") : task_base(id, std::make_shared<task_metadata>())
-	{
-		this->task_meta_->task_id = str_id;
-	}
-	mock_task(size_t id, std::shared_ptr<task_metadata> meta) : task_base(id, meta)
-	{
-	}
-	mock_task() : mock_task(0)
-	{
-	}
-	virtual ~mock_task()
-	{
-	}
-
-	MOCK_METHOD0(run, std::shared_ptr<task_results>());
-};
-
-class mock_progress_callback : public progress_callback_base
-{
-public:
-	mock_progress_callback()
-	{
-	}
-	virtual ~mock_progress_callback()
-	{
-	}
-
-	MOCK_METHOD1(submission_downloaded, void(const std::string &));
-	MOCK_METHOD1(job_results_uploaded, void(const std::string &));
-	MOCK_METHOD1(job_started, void(const std::string &));
-	MOCK_METHOD1(job_ended, void(const std::string &));
-	MOCK_METHOD2(task_completed, void(const std::string &, const std::string &));
-	MOCK_METHOD2(task_failed, void(const std::string &, const std::string &));
-	MOCK_METHOD2(task_skipped, void(const std::string &, const std::string &));
-};
 
 bool operator==(const create_params &a, const create_params &b)
 {
@@ -193,7 +131,7 @@ TEST(job_test, bad_parameters)
 {
 	std::shared_ptr<job_metadata> job_meta = std::make_shared<job_metadata>();
 	std::shared_ptr<worker_config> worker_conf = std::make_shared<mock_worker_config>();
-	auto factory = std::make_shared<mock_factory>();
+	auto factory = std::make_shared<mock_task_factory>();
 
 	// job_config not given
 	EXPECT_THROW(job(nullptr,
@@ -240,7 +178,7 @@ TEST(job_test, bad_paths)
 	path dir = dir_root / "job_test";
 	auto job_meta = std::make_shared<job_metadata>();
 	auto worker_conf = std::make_shared<mock_worker_config>();
-	auto factory = std::make_shared<mock_factory>();
+	auto factory = std::make_shared<mock_task_factory>();
 
 	EXPECT_CALL((*worker_conf), get_worker_id()).WillRepeatedly(Return(8));
 
@@ -275,7 +213,7 @@ TEST(job_test, empty_submission_details)
 	auto worker_conf = std::make_shared<mock_worker_config>();
 	EXPECT_CALL((*worker_conf), get_worker_id()).WillRepeatedly(Return(8));
 
-	auto factory = std::make_shared<mock_factory>();
+	auto factory = std::make_shared<mock_task_factory>();
 	create_directories(dir);
 	std::ofstream hello((dir / "hello").string());
 	hello << "hello" << std::endl;
@@ -303,7 +241,7 @@ TEST(job_test, empty_tasks_details)
 	path dir = dir_root / "job_test";
 	auto job_meta = std::make_shared<job_metadata>();
 	auto worker_conf = std::make_shared<mock_worker_config>();
-	auto factory = std::make_shared<mock_factory>();
+	auto factory = std::make_shared<mock_task_factory>();
 
 	EXPECT_CALL((*worker_conf), get_worker_id()).WillRepeatedly(Return(8));
 	std::string hwgroup_ret = "group1";
@@ -360,7 +298,7 @@ TEST(job_test, non_empty_details)
 
 	auto job_meta = get_correct_meta();
 	auto worker_conf = std::make_shared<mock_worker_config>();
-	auto factory = std::make_shared<mock_factory>();
+	auto factory = std::make_shared<mock_task_factory>();
 	auto default_limits = get_default_limits();
 
 	std::string group_name = "group1";
@@ -403,7 +341,7 @@ TEST(job_test, load_of_worker_defaults)
 	EXPECT_CALL((*worker_conf), get_worker_id()).WillRepeatedly(Return(8));
 	EXPECT_CALL((*worker_conf), get_limits()).WillRepeatedly(ReturnRef(default_limits));
 
-	auto factory = std::make_shared<mock_factory>();
+	auto factory = std::make_shared<mock_task_factory>();
 	create_directories(dir);
 	std::ofstream hello((dir / "hello").string());
 	hello << "hello" << std::endl;
@@ -462,7 +400,7 @@ TEST(job_test, exceeded_worker_defaults)
 	path dir_root = temp_directory_path() / "isoeval";
 	path dir = dir_root / "job_test";
 	auto worker_conf = std::make_shared<mock_worker_config>();
-	auto factory = std::make_shared<mock_factory>();
+	auto factory = std::make_shared<mock_task_factory>();
 
 	auto default_limits = get_default_limits();
 	std::string group_name = "group1";
@@ -553,7 +491,7 @@ TEST(job_test, correctly_built_queue)
 	EXPECT_CALL((*worker_conf), get_worker_id()).WillRepeatedly(Return(8));
 	EXPECT_CALL((*worker_conf), get_limits()).WillRepeatedly(ReturnRef(default_limits));
 
-	auto factory = std::make_shared<mock_factory>();
+	auto factory = std::make_shared<mock_task_factory>();
 	std::vector<std::shared_ptr<mock_task>> mock_tasks;
 	auto empty_task = std::make_shared<mock_task>();
 	for (int i = 1; i < 8; i++) {
@@ -635,7 +573,7 @@ TEST(job_test, correctly_executed_job)
 	EXPECT_CALL((*worker_conf), get_limits()).WillRepeatedly(ReturnRef(default_limits));
 
 	auto progress_callback = std::make_shared<mock_progress_callback>();
-	auto factory = std::make_shared<mock_factory>();
+	auto factory = std::make_shared<mock_task_factory>();
 	std::vector<std::shared_ptr<mock_task>> mock_tasks;
 	auto empty_task = std::make_shared<mock_task>();
 	auto empty_results = std::make_shared<task_results>();
@@ -695,7 +633,7 @@ TEST(job_test, job_variables)
 	path dir = dir_root / "job_test";
 	path res_dir = dir_root / "job_test_results";
 	auto worker_conf = std::make_shared<mock_worker_config>();
-	auto factory = std::make_shared<mock_factory>();
+	auto factory = std::make_shared<mock_task_factory>();
 
 	auto job_meta = get_correct_meta();
 	job_meta->tasks[0]->binary = "${EVAL_DIR}/recodex";

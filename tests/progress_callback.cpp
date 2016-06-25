@@ -26,6 +26,7 @@ TEST(progress_callback, basic)
 		callback.job_started(job_id);
 		callback.task_completed(job_id, task_id);
 		callback.task_failed(job_id, task_id);
+		callback.task_skipped(job_id, task_id);
 		callback.job_ended(job_id);
 		callback.job_results_uploaded(job_id);
 	});
@@ -50,6 +51,11 @@ TEST(progress_callback, basic)
 
 	// receive message task failed
 	expected = {command, job_id, "TASK", task_id, "FAILED"};
+	helpers::recv_from_socket(socket, result, &terminate);
+	ASSERT_EQ(result, expected);
+
+	// receive message task skipped
+	expected = {command, job_id, "TASK", task_id, "SKIPPED"};
 	helpers::recv_from_socket(socket, result, &terminate);
 	ASSERT_EQ(result, expected);
 

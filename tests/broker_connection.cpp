@@ -7,41 +7,10 @@
 
 #include "../src/config/worker_config.h"
 #include "../src/broker_connection.h"
+#include "mocks.h"
 
 using namespace testing;
 
-/**
- * A mock configuration object
- */
-class mock_worker_config : public worker_config
-{
-public:
-	mock_worker_config()
-	{
-		ON_CALL(*this, get_broker_ping_interval()).WillByDefault(Return(std::chrono::milliseconds(1000)));
-	}
-
-	MOCK_CONST_METHOD0(get_broker_uri, std::string());
-	MOCK_CONST_METHOD0(get_headers, const worker_config::header_map_t &());
-	MOCK_CONST_METHOD0(get_broker_ping_interval, std::chrono::milliseconds());
-	MOCK_CONST_METHOD0(get_hwgroup, const std::string &());
-};
-
-/**
- * A mock ZeroMQ proxy connection
- */
-class mock_connection_proxy
-{
-public:
-	MOCK_METHOD1(connect, void(const std::string &addr));
-	MOCK_METHOD1(reconnect_broker, void(const std::string &addr));
-	MOCK_METHOD4(poll, void(message_origin::set &, std::chrono::milliseconds, bool &, std::chrono::milliseconds &));
-	MOCK_METHOD1(send_broker, bool(const std::vector<std::string> &));
-	MOCK_METHOD2(recv_broker, bool(std::vector<std::string> &, bool *));
-	MOCK_METHOD1(send_jobs, bool(const std::vector<std::string> &));
-	MOCK_METHOD2(recv_jobs, bool(std::vector<std::string> &, bool *));
-	MOCK_METHOD2(recv_progress, bool(std::vector<std::string> &, bool *));
-};
 
 TEST(broker_connection, sends_init)
 {

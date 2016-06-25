@@ -48,6 +48,7 @@ endfunction()
 
 # Unit and integration tests
 add_test_suite(broker_connection
+	mocks.h
 	broker_connection.cpp
 	${SRC_DIR}/config/worker_config.cpp
 	${HELPERS_DIR}/config.cpp
@@ -55,24 +56,28 @@ add_test_suite(broker_connection
 )
 
 add_test_suite(worker_config
+	mocks.h
 	${SRC_DIR}/config/worker_config.cpp
 	worker_config.cpp
 	${HELPERS_DIR}/config.cpp
 )
 
 add_test_suite(cache_manager
+	mocks.h
 	cache_manager.cpp
 	${FILEMAN_DIR}/cache_manager.cpp
 	${HELPERS_DIR}/logger.cpp
 )
 
 add_test_suite(fallback_file_manager
+	mocks.h
 	${FILEMAN_DIR}/fallback_file_manager.cpp
 	fallback_file_manager.cpp
 	${HELPERS_DIR}/logger.cpp
 )
 
 add_test_suite(job
+	mocks.h
 	${TASKS_DIR}/task_base.cpp
 	${SRC_DIR}/archives/archivator.cpp
 	${SRC_DIR}/config/worker_config.cpp
@@ -84,17 +89,20 @@ add_test_suite(job
 )
 
 add_test_suite(build_job_metadata
+	mocks.h
 	${HELPERS_DIR}/config.cpp
 	build_job_metadata.cpp
 )
 
 add_test_suite(topological_sort
+	mocks.h
 	${TASKS_DIR}/task_base.cpp
 	${HELPERS_DIR}/topological_sort.cpp
 	topological_sort.cpp
 )
 
 add_test_suite(job_receiver
+	mocks.h
 	${JOB_DIR}/job_receiver.cpp
 	${HELPERS_DIR}/zmq_socket.cpp
 	${HELPERS_DIR}/logger.cpp
@@ -102,6 +110,7 @@ add_test_suite(job_receiver
 )
 
 add_test_suite(tasks
+	mocks.h
 	${TASKS_DIR}/task_base.cpp
 	${TASKS_DIR}/task_factory.cpp
 	${TASKS_DIR}/root_task.cpp
@@ -120,6 +129,7 @@ add_test_suite(tasks
 )
 
 add_test_suite(job_config
+	mocks.h
 	${HELPERS_DIR}/topological_sort.cpp
 	${HELPERS_DIR}/filesystem.cpp
 	${HELPERS_DIR}/config.cpp
@@ -128,6 +138,7 @@ add_test_suite(job_config
 )
 
 add_test_suite(progress_callback
+	mocks.h
 	${JOB_DIR}/progress_callback.cpp
 	${HELPERS_DIR}/zmq_socket.cpp
 	${HELPERS_DIR}/logger.cpp
@@ -155,6 +166,7 @@ elseif(MSVC)
 endif()
 
 add_test_suite(tool_isolate_sandbox
+	mocks.h
 	tests_main.cpp
 	isolate_sandbox.cpp
 	${SANDBOX_DIR}/isolate_sandbox.cpp
@@ -162,6 +174,7 @@ add_test_suite(tool_isolate_sandbox
 )
 
 add_test_suite(tool_archivator
+	mocks.h
 	tests_main.cpp
 	${SRC_DIR}/archives/archivator.cpp
 	archivator.cpp
@@ -169,6 +182,7 @@ add_test_suite(tool_archivator
 )
 
 add_test_suite(tool_http_manager
+	mocks.h
 	tests_main.cpp
 	http_manager.cpp
 	${FILEMAN_DIR}/http_manager.cpp
