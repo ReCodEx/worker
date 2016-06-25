@@ -1,5 +1,5 @@
-#ifndef CODEX_WORKER_JOBS_CLIENT_COMMANDS_H
-#define CODEX_WORKER_JOBS_CLIENT_COMMANDS_H
+#ifndef RECODEX_WORKER_JOBS_CLIENT_COMMANDS_H
+#define RECODEX_WORKER_JOBS_CLIENT_COMMANDS_H
 
 #include "command_holder.h"
 #include "../helpers/zmq_socket.h"
@@ -31,4 +31,4 @@ namespace jobs_client_commands
 	}
 }
 
-#endif // CODEX_WORKER_JOBS_CLIENT_COMMANDS_H
+#endif // RECODEX_WORKER_JOBS_CLIENT_COMMANDS_H

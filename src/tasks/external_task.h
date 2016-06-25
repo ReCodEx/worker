@@ -1,5 +1,5 @@
-#ifndef CODEX_WORKER_EXTERNAL_TASK_HPP
-#define CODEX_WORKER_EXTERNAL_TASK_HPP
+#ifndef RECODEX_WORKER_EXTERNAL_TASK_HPP
+#define RECODEX_WORKER_EXTERNAL_TASK_HPP
 
 #include "spdlog/spdlog.h"
 #include <memory>
@@ -69,4 +69,4 @@ private:
 	std::string temp_dir_;
 };
 
-#endif // CODEX_WORKER_EXTERNAL_TASK_HPP
+#endif // RECODEX_WORKER_EXTERNAL_TASK_HPP

@@ -1,5 +1,5 @@
-#ifndef CODEX_WORKER_JOB_REQUEST_H
-#define CODEX_WORKER_JOB_REQUEST_H
+#ifndef RECODEX_WORKER_JOB_REQUEST_H
+#define RECODEX_WORKER_JOB_REQUEST_H
 
 #include <string>
 
@@ -26,4 +26,4 @@ struct eval_request {
 	}
 };
 
-#endif // CODEX_WORKER_JOB_REQUEST_H
+#endif // RECODEX_WORKER_JOB_REQUEST_H

@@ -1,5 +1,5 @@
-#ifndef CODEX_WORKER_COMMANDS_BASE_H
-#define CODEX_WORKER_COMMANDS_BASE_H
+#ifndef RECODEX_WORKER_COMMANDS_BASE_H
+#define RECODEX_WORKER_COMMANDS_BASE_H
 
 #include <memory>
 #include <string>
@@ -116,4 +116,4 @@ private:
 	const command_context<context_t> context_;
 };
 
-#endif // CODEX_WORKER_COMMANDS_BASE_H
+#endif // RECODEX_WORKER_COMMANDS_BASE_H

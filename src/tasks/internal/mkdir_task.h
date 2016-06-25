@@ -1,5 +1,5 @@
-#ifndef CODEX_WORKER_INTERNAL_MKDIR_TASK_H
-#define CODEX_WORKER_INTERNAL_MKDIR_TASK_H
+#ifndef RECODEX_WORKER_INTERNAL_MKDIR_TASK_H
+#define RECODEX_WORKER_INTERNAL_MKDIR_TASK_H
 
 #include "../task_base.h"
 
@@ -15,4 +15,4 @@ public:
 	virtual std::shared_ptr<task_results> run();
 };
 
-#endif // CODEX_WORKER_INTERNAL_MKDIR_TASK_H
+#endif // RECODEX_WORKER_INTERNAL_MKDIR_TASK_H

@@ -1,5 +1,5 @@
-#ifndef CODEX_WORKER_FILE_MANAGER_BASE_H
-#define CODEX_WORKER_FILE_MANAGER_BASE_H
+#ifndef RECODEX_WORKER_FILE_MANAGER_BASE_H
+#define RECODEX_WORKER_FILE_MANAGER_BASE_H
 
 #include <string>
 #include <exception>
@@ -75,4 +75,4 @@ protected:
 	std::string what_;
 };
 
-#endif // CODEX_WORKER_FILE_MANAGER_BASE_H
+#endif // RECODEX_WORKER_FILE_MANAGER_BASE_H

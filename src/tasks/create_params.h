@@ -1,5 +1,5 @@
-#ifndef CODEX_WORKER_CREATE_PARAMS_H
-#define CODEX_WORKER_CREATE_PARAMS_H
+#ifndef RECODEX_WORKER_CREATE_PARAMS_H
+#define RECODEX_WORKER_CREATE_PARAMS_H
 
 #include <memory>
 #include <spdlog/spdlog.h>
@@ -23,4 +23,4 @@ struct create_params {
 };
 
 
-#endif // CODEX_WORKER_CREATE_PARAMS_H
+#endif // RECODEX_WORKER_CREATE_PARAMS_H

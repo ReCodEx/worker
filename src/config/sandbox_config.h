@@ -1,5 +1,5 @@
-#ifndef CODEX_WORKER_SANDBOX_CONFIG_H
-#define CODEX_WORKER_SANDBOX_CONFIG_H
+#ifndef RECODEX_WORKER_SANDBOX_CONFIG_H
+#define RECODEX_WORKER_SANDBOX_CONFIG_H
 
 #include <map>
 #include "sandbox_limits.h"
@@ -17,4 +17,4 @@ public:
 	std::map<std::string, std::shared_ptr<sandbox_limits>> loaded_limits;
 };
 
-#endif // CODEX_WORKER_SANDBOX_CONFIG_H
+#endif // RECODEX_WORKER_SANDBOX_CONFIG_H

@@ -1,5 +1,5 @@
-#ifndef CODEX_WORKER_TASK_METADATA_H
-#define CODEX_WORKER_TASK_METADATA_H
+#ifndef RECODEX_WORKER_TASK_METADATA_H
+#define RECODEX_WORKER_TASK_METADATA_H
 
 #include "sandbox_limits.h"
 #include "sandbox_config.h"
@@ -45,4 +45,4 @@ public:
 };
 
 
-#endif // CODEX_WORKER_TASK_METADATA_H
+#endif // RECODEX_WORKER_TASK_METADATA_H

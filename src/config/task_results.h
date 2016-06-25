@@ -1,5 +1,5 @@
-#ifndef CODEX_WORKER_TASK_RESULTS_H
-#define CODEX_WORKER_TASK_RESULTS_H
+#ifndef RECODEX_WORKER_TASK_RESULTS_H
+#define RECODEX_WORKER_TASK_RESULTS_H
 
 #include <string>
 #include <memory>
@@ -106,4 +106,4 @@ struct task_results {
 };
 
 
-#endif // CODEX_WORKER_TASK_RESULTS_H
+#endif // RECODEX_WORKER_TASK_RESULTS_H

@@ -1,5 +1,5 @@
-#ifndef CODEX_WORKER_INTERNAL_FETCH_TASK_H
-#define CODEX_WORKER_INTERNAL_FETCH_TASK_H
+#ifndef RECODEX_WORKER_INTERNAL_FETCH_TASK_H
+#define RECODEX_WORKER_INTERNAL_FETCH_TASK_H
 
 #include "../task_base.h"
 #include "../../fileman/file_manager_base.h"
@@ -20,4 +20,4 @@ private:
 	std::shared_ptr<file_manager_base> filemanager_;
 };
 
-#endif // CODEX_WORKER_INTERNAL_FETCH_TASK_H
+#endif // RECODEX_WORKER_INTERNAL_FETCH_TASK_H

@@ -1,5 +1,5 @@
-#ifndef CODEX_WORKER_JOB_EVALUATOR_HPP
-#define CODEX_WORKER_JOB_EVALUATOR_HPP
+#ifndef RECODEX_WORKER_JOB_EVALUATOR_HPP
+#define RECODEX_WORKER_JOB_EVALUATOR_HPP
 
 #include <memory>
 #include <fstream>
@@ -167,4 +167,4 @@ private:
 	std::shared_ptr<progress_callback_base> progress_callback_;
 };
 
-#endif // CODEX_WORKER_JOB_EVALUATOR_HPP
+#endif // RECODEX_WORKER_JOB_EVALUATOR_HPP

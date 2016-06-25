@@ -1,5 +1,5 @@
-#ifndef CODEX_WORKER_FILE_MANAGER_H
-#define CODEX_WORKER_FILE_MANAGER_H
+#ifndef RECODEX_WORKER_FILE_MANAGER_H
+#define RECODEX_WORKER_FILE_MANAGER_H
 
 #include "file_manager_base.h"
 #include "cache_manager.h"
@@ -56,4 +56,4 @@ private:
 	file_manager_ptr secondary_manager_;
 };
 
-#endif // CODEX_WORKER_FILE_MANAGER_H
+#endif // RECODEX_WORKER_FILE_MANAGER_H

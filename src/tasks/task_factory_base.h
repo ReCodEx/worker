@@ -1,5 +1,5 @@
-#ifndef CODEX_WORKER_TASK_FACTORY_BASE_H
-#define CODEX_WORKER_TASK_FACTORY_BASE_H
+#ifndef RECODEX_WORKER_TASK_FACTORY_BASE_H
+#define RECODEX_WORKER_TASK_FACTORY_BASE_H
 
 #include <memory>
 #include "task_base.h"
@@ -40,4 +40,4 @@ public:
 };
 
 
-#endif // CODEX_WORKER_TASK_FACTORY_BASE_H
+#endif // RECODEX_WORKER_TASK_FACTORY_BASE_H

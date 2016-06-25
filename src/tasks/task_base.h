@@ -1,5 +1,5 @@
-#ifndef CODEX_WORKER_TASK_BASE_HPP
-#define CODEX_WORKER_TASK_BASE_HPP
+#ifndef RECODEX_WORKER_TASK_BASE_HPP
+#define RECODEX_WORKER_TASK_BASE_HPP
 
 #include <vector>
 #include <string>
@@ -190,4 +190,4 @@ public:
 	}
 };
 
-#endif // CODEX_WORKER_TASK_BASE_HPP
+#endif // RECODEX_WORKER_TASK_BASE_HPP

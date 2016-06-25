@@ -1,5 +1,5 @@
-#ifndef CODEX_WORKER_PROGRESS_CALLBACK_BASE_H
-#define CODEX_WORKER_PROGRESS_CALLBACK_BASE_H
+#ifndef RECODEX_WORKER_PROGRESS_CALLBACK_BASE_H
+#define RECODEX_WORKER_PROGRESS_CALLBACK_BASE_H
 
 /**
  * Callback which is used in @ref job_evaluator and @ref job itself to indicate its state.
@@ -134,4 +134,4 @@ public:
 	}
 };
 
-#endif // CODEX_WORKER_PROGRESS_CALLBACK_BASE_H
+#endif // RECODEX_WORKER_PROGRESS_CALLBACK_BASE_H

@@ -1,5 +1,5 @@
-#ifndef CODEX_WORKER_FILE_SANDBOX_BASE_H
-#define CODEX_WORKER_FILE_SANDBOX_BASE_H
+#ifndef RECODEX_WORKER_FILE_SANDBOX_BASE_H
+#define RECODEX_WORKER_FILE_SANDBOX_BASE_H
 
 #include <memory>
 #include <string>
@@ -79,4 +79,4 @@ protected:
 	std::string what_;
 };
 
-#endif // CODEX_WORKER_FILE_SANDBOX_BASE_H
+#endif // RECODEX_WORKER_FILE_SANDBOX_BASE_H

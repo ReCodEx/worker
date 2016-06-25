@@ -1,5 +1,5 @@
-#ifndef CODEX_WORKER_HELPERS_CONFIG_H
-#define CODEX_WORKER_HELPERS_CONFIG_H
+#ifndef RECODEX_WORKER_HELPERS_CONFIG_H
+#define RECODEX_WORKER_HELPERS_CONFIG_H
 
 #include <memory>
 #include <yaml-cpp/yaml.h>
@@ -48,4 +48,4 @@ namespace helpers
 }
 
 
-#endif // CODEX_WORKER_HELPERS_CONFIG_H
+#endif // RECODEX_WORKER_HELPERS_CONFIG_H

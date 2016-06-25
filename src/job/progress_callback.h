@@ -1,5 +1,5 @@
-#ifndef CODEX_WORKER_PROGRESS_CALLBACK_H
-#define CODEX_WORKER_PROGRESS_CALLBACK_H
+#ifndef RECODEX_WORKER_PROGRESS_CALLBACK_H
+#define RECODEX_WORKER_PROGRESS_CALLBACK_H
 
 #include <zmq.hpp>
 #include <vector>
@@ -101,4 +101,4 @@ public:
 	virtual void task_skipped(const std::string &job_id, const std::string &task_id);
 };
 
-#endif // CODEX_WORKER_PROGRESS_CALLBACK_H
+#endif // RECODEX_WORKER_PROGRESS_CALLBACK_H

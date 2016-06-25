@@ -1,5 +1,5 @@
-#ifndef CODEX_WORKER_CACHE_MANAGER_H
-#define CODEX_WORKER_CACHE_MANAGER_H
+#ifndef RECODEX_WORKER_CACHE_MANAGER_H
+#define RECODEX_WORKER_CACHE_MANAGER_H
 
 #include <string>
 #include <memory>
@@ -60,4 +60,4 @@ private:
 	std::shared_ptr<spdlog::logger> logger_;
 };
 
-#endif // CODEX_WORKER_CACHE_MANAGER_H
+#endif // RECODEX_WORKER_CACHE_MANAGER_H

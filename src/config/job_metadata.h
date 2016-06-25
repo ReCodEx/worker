@@ -1,5 +1,5 @@
-#ifndef CODEX_WORKER_JOB_CONFIG_H
-#define CODEX_WORKER_JOB_CONFIG_H
+#ifndef RECODEX_WORKER_JOB_CONFIG_H
+#define RECODEX_WORKER_JOB_CONFIG_H
 
 #include <yaml-cpp/node/node.h>
 #include "task_metadata.h"
@@ -24,4 +24,4 @@ public:
 	std::vector<std::shared_ptr<task_metadata>> tasks;
 };
 
-#endif // CODEX_WORKER_JOB_CONFIG_H
+#endif // RECODEX_WORKER_JOB_CONFIG_H

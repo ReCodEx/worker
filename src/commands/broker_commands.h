@@ -1,5 +1,5 @@
-#ifndef CODEX_WORKER_BROKER_COMMANDS_H
-#define CODEX_WORKER_BROKER_COMMANDS_H
+#ifndef RECODEX_WORKER_BROKER_COMMANDS_H
+#define RECODEX_WORKER_BROKER_COMMANDS_H
 
 #include "command_holder.h"
 
@@ -30,4 +30,4 @@ namespace broker_commands
 	}
 }
 
-#endif // CODEX_WORKER_BROKER_COMMANDS_H
+#endif // RECODEX_WORKER_BROKER_COMMANDS_H

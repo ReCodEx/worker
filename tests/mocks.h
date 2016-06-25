@@ -3,8 +3,8 @@
  *   it's a junkyard of mocked classes which can be used in test cases.
  */
 
-#ifndef CODEX_WORKER_TESTS_MOCKS_H
-#define CODEX_WORKER_TESTS_MOCKS_H
+#ifndef RECODEX_WORKER_TESTS_MOCKS_H
+#define RECODEX_WORKER_TESTS_MOCKS_H
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
@@ -140,4 +140,4 @@ public:
 	MOCK_METHOD1(evaluate, eval_response(eval_request));
 };
 
-#endif // CODEX_WORKER_TESTS_MOCKS_H
+#endif // RECODEX_WORKER_TESTS_MOCKS_H

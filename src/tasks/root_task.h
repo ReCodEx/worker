@@ -1,5 +1,5 @@
-#ifndef CODEX_WORKER_FAKE_TASK_HPP
-#define CODEX_WORKER_FAKE_TASK_HPP
+#ifndef RECODEX_WORKER_FAKE_TASK_HPP
+#define RECODEX_WORKER_FAKE_TASK_HPP
 
 #include <memory>
 #include "task_base.h"
@@ -29,4 +29,4 @@ public:
 	virtual std::shared_ptr<task_results> run();
 };
 
-#endif // CODEX_WORKER_FAKE_TASK_HPP
+#endif // RECODEX_WORKER_FAKE_TASK_HPP

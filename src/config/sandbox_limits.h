@@ -1,5 +1,5 @@
-#ifndef CODEX_WORKER_SANDBOX_LIMITS_H
-#define CODEX_WORKER_SANDBOX_LIMITS_H
+#ifndef RECODEX_WORKER_SANDBOX_LIMITS_H
+#define RECODEX_WORKER_SANDBOX_LIMITS_H
 
 #include <cfloat>
 #include <limits>

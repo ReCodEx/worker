@@ -1,5 +1,5 @@
-#ifndef CODEX_WORKER_JOB_EXCEPTION_H
-#define CODEX_WORKER_JOB_EXCEPTION_H
+#ifndef RECODEX_WORKER_JOB_EXCEPTION_H
+#define RECODEX_WORKER_JOB_EXCEPTION_H
 
 /**
  * Job exception class.
@@ -39,4 +39,4 @@ protected:
 	std::string what_;
 };
 
-#endif // CODEX_WORKER_JOB_EXCEPTION_H
+#endif // RECODEX_WORKER_JOB_EXCEPTION_H

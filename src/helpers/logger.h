@@ -1,5 +1,5 @@
-#ifndef CODEX_WORKER_HELPERS_LOGGER_H
-#define CODEX_WORKER_HELPERS_LOGGER_H
+#ifndef RECODEX_WORKER_HELPERS_LOGGER_H
+#define RECODEX_WORKER_HELPERS_LOGGER_H
 
 #include <memory>
 #include <spdlog/spdlog.h>
@@ -40,4 +40,4 @@ namespace helpers
 }
 
 
-#endif // CODEX_WORKER_HELPERS_LOGGER_H
+#endif // RECODEX_WORKER_HELPERS_LOGGER_H

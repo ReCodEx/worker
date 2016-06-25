@@ -1,5 +1,5 @@
-#ifndef CODEX_WORKER_JOB_EVALUATOR_BASE_H
-#define CODEX_WORKER_JOB_EVALUATOR_BASE_H
+#ifndef RECODEX_WORKER_JOB_EVALUATOR_BASE_H
+#define RECODEX_WORKER_JOB_EVALUATOR_BASE_H
 
 #include "../eval_request.h"
 #include "../eval_response.h"
@@ -24,4 +24,4 @@ public:
 	virtual eval_response evaluate(eval_request request) = 0;
 };
 
-#endif // CODEX_WORKER_JOB_EVALUATOR_BASE_H
+#endif // RECODEX_WORKER_JOB_EVALUATOR_BASE_H

@@ -1,5 +1,5 @@
-#ifndef CODEX_WORKER_ISOEVAL_CORE_HPP
-#define CODEX_WORKER_ISOEVAL_CORE_HPP
+#ifndef RECODEX_WORKER_ISOEVAL_CORE_HPP
+#define RECODEX_WORKER_ISOEVAL_CORE_HPP
 
 #include "spdlog/spdlog.h"
 #include <curl/curl.h>
@@ -147,4 +147,4 @@ private:
 	std::shared_ptr<zmq::context_t> zmq_context_;
 };
 
-#endif // CODEX_WORKER_ISOEVAL_CORE_HPP
+#endif // RECODEX_WORKER_ISOEVAL_CORE_HPP

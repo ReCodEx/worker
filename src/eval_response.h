@@ -1,5 +1,5 @@
-#ifndef CODEX_WORKER_EVAL_RESPONSE_H
-#define CODEX_WORKER_EVAL_RESPONSE_H
+#ifndef RECODEX_WORKER_EVAL_RESPONSE_H
+#define RECODEX_WORKER_EVAL_RESPONSE_H
 
 #include <string>
 
@@ -15,4 +15,4 @@ struct eval_response {
 	}
 };
 
-#endif // CODEX_WORKER_EVAL_RESPONSE_H
+#endif // RECODEX_WORKER_EVAL_RESPONSE_H

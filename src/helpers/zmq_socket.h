@@ -1,5 +1,5 @@
-#ifndef CODEX_HELPERS_ZMQ_SOCKET_H
-#define CODEX_HELPERS_ZMQ_SOCKET_H
+#ifndef RECODEX_HELPERS_ZMQ_SOCKET_H
+#define RECODEX_HELPERS_ZMQ_SOCKET_H
 
 #include <string>
 #include <vector>
@@ -13,4 +13,4 @@ namespace helpers
 }
 
 
-#endif // CODEX_HELPERS_ZMQ_SOCKET_H
+#endif // RECODEX_HELPERS_ZMQ_SOCKET_H

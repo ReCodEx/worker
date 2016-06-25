@@ -1,5 +1,5 @@
-#ifndef CODEX_WORKER_JOB_HPP
-#define CODEX_WORKER_JOB_HPP
+#ifndef RECODEX_WORKER_JOB_HPP
+#define RECODEX_WORKER_JOB_HPP
 
 #include <vector>
 #include <queue>
@@ -148,4 +148,4 @@ private:
 };
 
 
-#endif // CODEX_WORKER_JOB_HPP
+#endif // RECODEX_WORKER_JOB_HPP
