@@ -6,6 +6,10 @@
 #ifndef RECODEX_WORKER_TESTS_MOCKS_H
 #define RECODEX_WORKER_TESTS_MOCKS_H
 
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include "../src/config/worker_config.h"

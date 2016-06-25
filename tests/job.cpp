@@ -9,6 +9,7 @@
 #include <boost/filesystem.hpp>
 using namespace boost::filesystem;
 
+#include "mocks.h"
 #include "../src/job/job.h"
 #include "../src/job/job_exception.h"
 #include "../src/helpers/config.h"
@@ -16,8 +17,6 @@ using namespace boost::filesystem;
 #include "../src/tasks/task_factory_base.h"
 #include "../src/tasks/external_task.h"
 #include "../src/config/worker_config.h"
-
-#include "mocks.h"
 
 
 using namespace testing;

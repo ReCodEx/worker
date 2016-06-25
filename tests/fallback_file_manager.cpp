@@ -5,8 +5,8 @@
 #include <memory>
 #include <utility>
 
-#include "../src/fileman/fallback_file_manager.h"
 #include "mocks.h"
+#include "../src/fileman/fallback_file_manager.h"
 
 using namespace testing;
 using namespace std;

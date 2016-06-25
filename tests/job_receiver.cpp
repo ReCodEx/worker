@@ -4,10 +4,10 @@
 #include <thread>
 #include <chrono>
 
+#include "mocks.h"
 #include "../src/job/job_receiver.h"
 #include "../src/eval_request.h"
 #include "../src/connection_proxy.h"
-#include "mocks.h"
 
 using namespace testing;
 
