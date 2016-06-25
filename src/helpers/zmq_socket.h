@@ -18,7 +18,8 @@ namespace helpers
 	 * Receive multipart message from given zmq socket.
 	 * @param socket messages should be received here
 	 * @param target reference to modifiable vector, after calling it should contain received messages
-	 * @param terminate pointer to boolean variable which will be set to true if exception occured on receiving
+	 * @param terminate pointer to boolean variable which will be set to true if the socket cannot be read from anymore
+	 *        (e.g. when an exception occurs)
 	 * @return true on success, false otherwise
 	 */
 	bool recv_from_socket(zmq::socket_t &socket, std::vector<std::string> &target, bool *terminate = nullptr);
