@@ -131,59 +131,63 @@ public:
 			std::chrono::milliseconds poll_duration;
 			bool terminate = false;
 
-			socket_->poll(result, poll_limit, terminate, poll_duration);
+			try {
+				socket_->poll(result, poll_limit, terminate, poll_duration);
 
-			if (poll_duration >= poll_limit) {
-				// logger_->debug() << "Sending a ping";
-				socket_->send_broker(std::vector<std::string>{"ping"});
-				poll_limit = ping_interval;
+				if (poll_duration >= poll_limit) {
+					// logger_->debug() << "Sending a ping";
+					socket_->send_broker(std::vector<std::string>{"ping"});
+					poll_limit = ping_interval;
 
-				broker_liveness -= 1;
-				if (broker_liveness == 0) {
-					logger_->info() << "Broker connection expired - trying to reconnect";
-					reconnect();
-					send_init();
+					broker_liveness -= 1;
+					if (broker_liveness == 0) {
+						logger_->info() << "Broker connection expired - trying to reconnect";
+						reconnect();
+						send_init();
+						broker_liveness = config_->get_max_broker_liveness();
+					}
+				} else {
+					poll_limit -= poll_duration;
+				}
+
+				if (terminate) {
+					break;
+				}
+
+				if (result.test(message_origin::BROKER)) {
 					broker_liveness = config_->get_max_broker_liveness();
-				}
-			} else {
-				poll_limit -= poll_duration;
-			}
+					reset_reconnect_delay();
 
-			if (terminate) {
-				break;
-			}
+					socket_->recv_broker(msg, &terminate);
 
-			if (result.test(message_origin::BROKER)) {
-				broker_liveness = config_->get_max_broker_liveness();
-				reset_reconnect_delay();
+					if (terminate) {
+						break;
+					}
 
-				socket_->recv_broker(msg, &terminate);
-
-				if (terminate) {
-					break;
+					broker_cmds_->call_function(msg.at(0), msg);
 				}
 
-				broker_cmds_->call_function(msg.at(0), msg);
-			}
+				if (result.test(message_origin::JOBS)) {
+					socket_->recv_jobs(msg, &terminate);
 
-			if (result.test(message_origin::JOBS)) {
-				socket_->recv_jobs(msg, &terminate);
+					if (terminate) {
+						break;
+					}
 
-				if (terminate) {
-					break;
+					jobs_server_cmds_->call_function(msg.at(0), msg);
 				}
 
-				jobs_server_cmds_->call_function(msg.at(0), msg);
-			}
+				if (result.test(message_origin::PROGRESS)) {
+					socket_->recv_progress(msg, &terminate);
 
-			if (result.test(message_origin::PROGRESS)) {
-				socket_->recv_progress(msg, &terminate);
+					if (terminate) {
+						break;
+					}
 
-				if (terminate) {
-					break;
+					socket_->send_broker(msg);
 				}
-
-				socket_->send_broker(msg);
+			} catch (std::exception &e) {
+				logger_->error() << "Unexpected error while receiving tasks: " << e.what();
 			}
 		}
 

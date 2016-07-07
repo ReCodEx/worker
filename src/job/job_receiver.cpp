@@ -30,19 +30,23 @@ void job_receiver::start_receiving()
 	while (true) {
 		logger_->info() << "Job-receiver: Waiting for incomings requests...";
 
-		std::vector<std::string> message;
-		bool terminate;
-		if (!helpers::recv_from_socket(socket_, message, &terminate)) {
-			if (terminate) {
-				break;
+		try {
+			std::vector<std::string> message;
+			bool terminate;
+			if (!helpers::recv_from_socket(socket_, message, &terminate)) {
+				if (terminate) {
+					break;
+				}
+				logger_->warn() << "Job-receiver: failed to receive message. Skipping...";
+				continue;
 			}
-			logger_->warn() << "Job-receiver: failed to receive message. Skipping...";
-			continue;
-		}
 
-		// Invoke command callback
-		if (!message.empty()) {
-			commands_->call_function(message[0], message);
+			// Invoke command callback
+			if (!message.empty()) {
+				commands_->call_function(message[0], message);
+			}
+		} catch (std::exception &e) {
+			logger_->error() << "Job-receiver: unexpected error occured: " << e.what();
 		}
 	}
 }
