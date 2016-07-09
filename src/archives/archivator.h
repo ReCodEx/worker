@@ -34,6 +34,7 @@ public:
 	 * in @a /home.
 	 * @param dir Directory to compress.
 	 * @param destination Name and path to the destination archive (should have suffix .zip).
+	 * @throws archive_exception if any error occured
 	 */
 	static void compress(const std::string &dir, const std::string &destination);
 	/**
@@ -45,10 +46,16 @@ public:
 	 * @note In source archive, paths containing ".." are not allowed!
 	 * @param filename Archive to extract.
 	 * @param destination Directory, where will be extracted files stored.
+	 * @throws archive_exception if any error occured
 	 */
 	static void decompress(const std::string &filename, const std::string &destination);
 
 private:
+	/**
+	 * Copy one entry from source archive @a ar to archive @a aw.
+	 * @param ar source archive
+	 * @param aw destination archive
+	 */
 	static void copy_data(archive *ar, archive *aw);
 };
 
@@ -72,12 +79,14 @@ public:
 	archive_exception(std::string what) : what_(what)
 	{
 	}
+
 	/**
 	 * Destructor.
 	 */
 	virtual ~archive_exception()
 	{
 	}
+
 	/**
 	 * Get failure description.
 	 * @return Stored string.
@@ -88,6 +97,7 @@ public:
 	}
 
 protected:
+	/** Textual description of failure. */
 	std::string what_;
 };
 
