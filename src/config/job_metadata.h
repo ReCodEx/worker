@@ -7,6 +7,7 @@
 
 /**
  * Overall information about job loaded from job configuration file.
+ * Whole job should be described here with all datas from configuration.
  */
 class job_metadata
 {

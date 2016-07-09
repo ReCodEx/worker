@@ -60,6 +60,7 @@ struct sandbox_results {
 	 * Default: ""
 	 */
 	std::string message;
+
 	/**
 	 * Constructor with default values initialization.
 	 */
@@ -68,9 +69,22 @@ struct sandbox_results {
 		  killed(false), message()
 	{
 	}
+
+	/**
+	 * Defaulted copy constructor.
+	 */
 	sandbox_results(const sandbox_results &) = default;
+	/**
+	 * Defaulted move constructor.
+	 */
 	sandbox_results(sandbox_results &&) = default;
+	/**
+	 * Defaulted copy assignment.
+	 */
 	sandbox_results &operator=(const sandbox_results &) = default;
+	/**
+	 * Defaulted move assignment.
+	 */
 	sandbox_results &operator=(sandbox_results &&) = default;
 };
 
@@ -93,15 +107,29 @@ struct task_results {
 	 * Default: nullptr (other types of tasks)
 	 */
 	std::unique_ptr<sandbox_results> sandbox_status;
+
 	/**
 	 * Constructor with default values initiazation.
 	 */
 	task_results() : failed(false), error_message(), sandbox_status(nullptr)
 	{
 	}
+
+	/**
+	 * Defaulted copy constructor.
+	 */
 	task_results(const task_results &) = default;
+	/**
+	 * Defaulted move constructor.
+	 */
 	task_results(task_results &&) = default;
+	/**
+	 * Defaulted copy assignment.
+	 */
 	task_results &operator=(const task_results &) = default;
+	/**
+	 * Defaulted move assignment.
+	 */
 	task_results &operator=(task_results &&) = default;
 };
 

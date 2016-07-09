@@ -3,26 +3,20 @@
 
 
 /**
- * Struct which stores informations which are usefull in file managers
+ * Struct which stores informations which are usefull in file managers.
  */
 struct fileman_config {
 public:
-	/**
-	 * Remote address of file server, port can be specified as well.
-	 */
+	/** Remote address of file server, port can be specified as well. */
 	std::string remote_url = "";
-	/**
-	 * Classical credentials.
-	 */
+	/** Classical credentials. */
 	std::string username = "";
-	/**
-	 * Classical credentials.
-	 */
+	/** Classical credentials. */
 	std::string password = "";
 
 	/**
 	 * Classic equality operator. All variables should match.
-	 * @param second
+	 * @param second compared structure
 	 * @return true if this structure and second has same values in variables
 	 */
 	bool operator==(const fileman_config &second) const
@@ -32,7 +26,7 @@ public:
 
 	/**
 	 * Opossite for equality operator.
-	 * @param second
+	 * @param second compared structure
 	 * @return true if structures has different variables
 	 */
 	bool operator!=(const fileman_config &second) const

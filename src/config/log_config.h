@@ -9,35 +9,22 @@
  */
 struct log_config {
 public:
-	/**
-	 * Determines in which directory log will be saved.
-	 */
+	/** Determines in which directory log will be saved. */
 	std::string log_path = "/tmp/recodex/";
-	/**
-	 * Filemane of log file without extension.
-	 */
+	/** Filemane of log file without extension. */
 	std::string log_basename = "worker";
-	/**
-	 * Log filename extension.
-	 */
+	/** Log filename extension. */
 	std::string log_suffix = "log";
-	/**
-	 * Level of logging.
-	 * Currently 4 levels are available: emerg, warn, info, debug
-	 */
+	/** Level of logging. Log levels are taken from spdlog. */
 	std::string log_level = "debug";
-	/**
-	 * File size of one log file.
-	 */
+	/** File size of one log file. */
 	int log_file_size = 1024 * 1024;
-	/**
-	 * Number of rotations which will be used.
-	 */
+	/** Number of rotations which will be used. */
 	int log_files_count = 3;
 
 	/**
 	 * Classical equality operator on log_config structures.
-	 * @param second
+	 * @param second compared structure
 	 * @return true if this instance and second has the same variables values
 	 */
 	bool operator==(const log_config &second) const
@@ -49,7 +36,7 @@ public:
 
 	/**
 	 * Opposite of equality operator
-	 * @param second
+	 * @param second compared structure
 	 * @return true if compared structured has different values
 	 */
 	bool operator!=(const log_config &second) const

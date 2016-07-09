@@ -9,7 +9,7 @@
 
 
 /**
-* Sandbox limits.
+* Sandbox limits which are sent to sandbox during execution of given task.
 * @note Not all sandbox implementations must follow all these parameters.
 */
 struct sandbox_limits {
@@ -109,7 +109,7 @@ public:
 
 	/**
 	 * Classical equality operator on two structures.
-	 * @param second
+	 * @param second compared structure
 	 * @return true if compared structures has same variable values
 	 */
 	bool operator==(const sandbox_limits &second) const
@@ -124,7 +124,7 @@ public:
 
 	/**
 	 * Opposite of equality operator.
-	 * @param second
+	 * @param second compared structure
 	 * @return true if structures are not the same
 	 */
 	bool operator!=(const sandbox_limits &second) const

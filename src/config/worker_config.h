@@ -33,6 +33,7 @@ public:
 
 	/**
 	 * A constructor that loads the configuration from a YAML document
+	 * @param config YAML representation of worker configuration
 	 */
 	worker_config(const YAML::Node &config);
 
@@ -43,42 +44,46 @@ public:
 
 	/**
 	 * Get worker ID which has to be unique at least in context of one machine.
-	 * @return not integer but textual description for better debuggin and human readibility
+	 * @return integer which can be used also as identifier/index of sandbox
 	 */
 	virtual size_t get_worker_id() const;
 	/**
 	 * Working directory path defined in config file.
-	 * @return
+	 * Basically directory which is used as central point of work, all things should be done here.
+	 * @return textual representation of path
 	 */
 	virtual std::string get_working_directory() const;
 	/**
 	 * Defines address on which broker run.
-	 * @return
+	 * @return textual representation of address or domain name and port
 	 */
 	virtual std::string get_broker_uri() const;
 	/**
 	 * Headers defined in configuration file, which will be sent to broker.
-	 * @return
+	 * @return associative array
 	 */
 	virtual const header_map_t &get_headers() const;
 	/**
 	 * Gets hwgroup string description.
-	 * @return
+	 * @return hardware group of this worker
 	 */
 	virtual const std::string &get_hwgroup() const;
 
 	/**
-	 * Get the maximum number of pings in a row without response before the broker is considered disconnected
+	 * Get the maximum number of pings in a row without response before the broker is considered disconnected.
+	 * @return broker liveness integer
 	 */
 	virtual size_t get_max_broker_liveness() const;
 
 	/**
-	 * Get the interval between pings sent to the broker
+	 * Get the interval between pings sent to the broker.
+	 * @return milliseconds representation from std
 	 */
 	virtual std::chrono::milliseconds get_broker_ping_interval() const;
 
 	/**
-	 * Get path to the caching directory
+	 * Get path to the caching directory.
+	 * @return textual representation of path
 	 */
 	virtual std::string get_cache_dir() const;
 
@@ -99,9 +104,9 @@ public:
 	virtual const sandbox_limits &get_limits() const;
 
 private:
-	/** Unique worker number in context of one machine (0-100) */
+	/** Unique worker number in context of one machine (0-100 preferably) */
 	size_t worker_id_;
-	/** Working directory of whole server */
+	/** Working directory of whole worker used as base directory for all temporary files */
 	std::string working_directory_;
 	/** Broker URI, address where broker is listening */
 	std::string broker_uri_;

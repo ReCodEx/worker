@@ -13,6 +13,13 @@ class task_metadata
 public:
 	/**
 	 * Just constructor which takes all internal variables. Stated for better construction of class.
+	 * @param task_id identification of task in job configuration, default = ""
+	 * @param priority priority of execution of task, default = 0
+	 * @param fatal if task is fatal, then whole job ends of failure, default = false
+	 * @param deps dependencies of this task, default = none
+	 * @param cmd command which will be executed, default = ""
+	 * @param args arguments supplied for command, default = none
+	 * @param sandbox configuration of sandbox, shared pointer, its data can be changed! default = nullptr
 	 */
 	task_metadata(std::string task_id = "",
 		size_t priority = 0,
