@@ -20,6 +20,7 @@ template <typename proxy> class broker_connection_context
 public:
 	/** Socket for communication. */
 	std::shared_ptr<proxy> sockets;
+	/** Worker configuration loaded from file. */
 	std::shared_ptr<const worker_config> config;
 };
 
@@ -58,6 +59,7 @@ public:
 			logger = helpers::create_null_logger();
 		}
 	}
+
 	/** System logger. */
 	std::shared_ptr<spdlog::logger> logger;
 };
@@ -67,7 +69,7 @@ public:
  * Command holder.
  *
  * This class can handle, register and execute commands with corresponding callbacks. Command is @a std::string,
- * callback needs to be "void callback(const std::vector<std::string> &args, const command_context<context_t> &context".
+ * callback has to be "void callback(const std::vector<std::string> &args, const command_context<context_t> &context)".
  * @a context_t is templated argument, which specifies different requirements in different usages. Every context has
  * pointer to system logger, commands in "main" thread (@ref broker_connection) has additional members as in
  * @ref broker_connection_context and commands in "job" thread (@ref job_receiver) has additional members as in
@@ -78,11 +80,17 @@ template <typename context_t> class command_holder
 public:
 	/** Type of callback function for easier use. */
 	typedef std::function<void(const std::vector<std::string> &, const command_context<context_t> &)> callback_fn;
-	/** Constructor with initialization of dependent (templated) part of context and logger. */
+
+	/**
+	 * Constructor with initialization of dependent (templated) part of context and logger.
+	 * @param dependent_context command context of this instance of command holder
+	 * @param logger system logger
+	 */
 	command_holder(const context_t &dependent_context, std::shared_ptr<spdlog::logger> logger = nullptr)
 		: context_(dependent_context, logger)
 	{
 	}
+
 	/**
 	 * Invoke registered callback for given command (if any).
 	 * @param command String reprezentation of command for processing.

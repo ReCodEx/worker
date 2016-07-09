@@ -9,14 +9,22 @@
  */
 namespace broker_commands
 {
-
-	/** Eval command */
+	/**
+	 * Command eval was received from broker, send it to "job" thread.
+	 * @param args received multipart message without leading command
+	 * @param context command context of command holder
+	 */
 	template <typename context_t>
 	void process_eval(const std::vector<std::string> &args, const command_context<context_t> &context)
 	{
 		context.sockets->send_jobs(args);
 	}
 
+	/**
+	 * Intro command arrived from broker, send him back init message with headers and hwgroup.
+	 * @param args received multipart message without leading command
+	 * @param context command context of command holder
+	 */
 	template <typename context_t>
 	void process_intro(const std::vector<std::string> &args, const command_context<context_t> &context)
 	{

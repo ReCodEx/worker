@@ -13,7 +13,13 @@
 namespace jobs_client_commands
 {
 
-	/** Eval command */
+	/**
+	 * From "main" thread arrived eval command.
+	 * Received job id and other information are handed over for evaluation,
+	 * after this done reply is sent back to "main" thread.
+	 * @param args received multipart message without leading command
+	 * @param context command context of command holder
+	 */
 	template <typename context_t>
 	void process_eval(const std::vector<std::string> &args, const command_context<context_t> &context)
 	{
