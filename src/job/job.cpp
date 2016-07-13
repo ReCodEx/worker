@@ -78,9 +78,7 @@ void job::build_job()
 
 	// create root task, which is logical root of evaluation
 	size_t id = 0;
-	std::map<std::string, size_t> eff_indegree;
 	root_task_ = factory_->create_internal_task(id++);
-	eff_indegree.insert(std::make_pair(root_task_->get_task_id(), 0));
 
 	// construct all tasks with their ids and check if they have all datas, but do not connect them
 	std::map<std::string, std::shared_ptr<task_base>> unconnected_tasks;
@@ -159,15 +157,14 @@ void job::build_job()
 
 		// add newly created task to container ready for connect with other tasks
 		unconnected_tasks.insert(std::make_pair(task_meta->task_id, task));
-		eff_indegree.insert(std::make_pair(task_meta->task_id, 0));
 	}
 
 	// constructed tasks in map have to have tree structure, so... make it and connect them
-	connect_tasks(root_task_, unconnected_tasks, eff_indegree);
+	connect_tasks(root_task_, unconnected_tasks);
 
 	// all should be done now... just linear ordering is missing...
 	try {
-		helpers::topological_sort(root_task_, eff_indegree, task_queue_);
+		helpers::topological_sort(root_task_, task_queue_);
 	} catch (helpers::top_sort_exception &e) {
 		throw job_exception(e.what());
 	}
@@ -247,9 +244,8 @@ void job::process_task_limits(std::shared_ptr<sandbox_limits> limits)
 		limits->bound_dirs.end(), worker_limits.bound_dirs.begin(), worker_limits.bound_dirs.end());
 }
 
-void job::connect_tasks(std::shared_ptr<task_base> root,
-	std::map<std::string, std::shared_ptr<task_base>> &unconn_tasks,
-	std::map<std::string, size_t> &eff_indegree)
+void job::connect_tasks(
+	std::shared_ptr<task_base> root, std::map<std::string, std::shared_ptr<task_base>> &unconn_tasks)
 {
 	for (auto &elem : unconn_tasks) {
 		const std::vector<std::string> &depend = elem.second->get_dependencies();
@@ -258,10 +254,6 @@ void job::connect_tasks(std::shared_ptr<task_base> root,
 		if (depend.size() == 0) {
 			root->add_children(elem.second);
 			elem.second->add_parent(root);
-			eff_indegree.at(elem.first) = 1;
-		} else {
-			// write indegrees to every task
-			eff_indegree.at(elem.first) = depend.size();
 		}
 
 		for (size_t i = 0; i < depend.size(); ++i) {
