@@ -38,6 +38,10 @@ public:
 	virtual sandbox_results run(const std::string &binary, const std::vector<std::string> &arguments) = 0;
 
 protected:
+	/**
+	 * Path to sandboxed directory.
+	 * @warning Must be set in constructor of child class.
+	 */
 	std::string sandboxed_dir_;
 };
 
@@ -55,7 +59,7 @@ public:
 	{
 	}
 	/**
-	 * Constructor with custom message.
+	 * Constructor with custom error message.
 	 * @param what Custom message.
 	 */
 	sandbox_exception(const std::string &what) : what_(what)
@@ -68,7 +72,7 @@ public:
 	{
 	}
 	/**
-	 * Get message.
+	 * Get message describing the issue.
 	 */
 	virtual const char *what() const noexcept
 	{
@@ -76,6 +80,7 @@ public:
 	}
 
 protected:
+	/** Error message. */
 	std::string what_;
 };
 

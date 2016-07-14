@@ -23,15 +23,14 @@ public:
 	/**
 	 * Get the file.
 	 * @param src_name Name of the file to retrieve. Mostly this is sha1sum of the file.
-	 * @param dst_path Path to directory, where the file will be copied. Name of the file
-	 *                 will not change.
+	 * @param dst_name Path to file, where the data will be copied.
 	 */
-	virtual void get_file(const std::string &src_name, const std::string &dst_path) = 0;
+	virtual void get_file(const std::string &src_name, const std::string &dst_name) = 0;
 	/**
 	 * Put the file.
 	 * @param src_name Name of the file, which should be put somewhere. Possible use cases are
 	 *                 insert this file to cache or send this file to remote server.
-	 * @param dst_path Where the file should be stored
+	 * @param dst_path Where the file should be stored.
 	 */
 	virtual void put_file(const std::string &src_name, const std::string &dst_path) = 0;
 };
@@ -72,6 +71,7 @@ public:
 	}
 
 protected:
+	/** Error message. */
 	std::string what_;
 };
 
