@@ -27,7 +27,6 @@ TEST(topological_sort_test, top_sort_1)
 {
 	// initialization
 	size_t id = 0;
-	map<string, size_t> eff_ind;
 	vector<shared_ptr<task_base>> result;
 	vector<shared_ptr<task_base>> expected;
 
@@ -50,11 +49,10 @@ TEST(topological_sort_test, top_sort_1)
 	B->add_parent(A);
 	A->add_children(C);
 	C->add_parent(A);
-	eff_ind = {{"A", 0}, {"B", 1}, {"C", 1}};
 	expected = {A, C, B};
 
 	// sort itself
-	helpers::topological_sort(A, eff_ind, result);
+	helpers::topological_sort(A, result);
 	// and check it
 	ASSERT_EQ(result, expected);
 
@@ -75,11 +73,10 @@ TEST(topological_sort_test, top_sort_1)
 	shared_ptr<task_base> D = make_shared<test_task>(id++, std::make_shared<task_metadata>("D", 4));
 	C->add_children(D);
 	D->add_parent(C);
-	eff_ind = {{"A", 0}, {"B", 1}, {"C", 1}, {"D", 1}};
 	expected = {A, C, D, B};
 
 	// sort itself
-	helpers::topological_sort(A, eff_ind, result);
+	helpers::topological_sort(A, result);
 	// and check it
 	ASSERT_EQ(result, expected);
 }
@@ -113,11 +110,10 @@ TEST(topological_sort_test, top_sort_2)
 	B->add_parent(A);
 	B->add_children(C);
 	C->add_parent(B);
-	eff_ind = {{"A", 0}, {"B", 1}, {"C", 1}};
 	expected = {A, B, C};
 
 	// sort itself
-	helpers::topological_sort(A, eff_ind, result);
+	helpers::topological_sort(A, result);
 	// and check it
 	ASSERT_EQ(result, expected);
 
@@ -146,11 +142,10 @@ TEST(topological_sort_test, top_sort_2)
 	E->add_parent(C);
 	C->add_children(F);
 	F->add_parent(C);
-	eff_ind = {{"A", 0}, {"B", 1}, {"C", 1}, {"D", 1}, {"E", 1}, {"F", 1}};
 	expected = {A, B, C, D, E, F};
 
 	// sort itself
-	helpers::topological_sort(A, eff_ind, result);
+	helpers::topological_sort(A, result);
 	// and check it
 	ASSERT_EQ(result, expected);
 }
@@ -159,7 +154,6 @@ TEST(topological_sort_test, top_sort_3)
 {
 	// initialization
 	size_t id = 0;
-	map<string, size_t> eff_ind;
 	vector<shared_ptr<task_base>> result;
 	vector<shared_ptr<task_base>> expected;
 
@@ -219,23 +213,10 @@ TEST(topological_sort_test, top_sort_3)
 	K->add_parent(A);
 	L->add_parent(A);
 	M->add_parent(A);
-	eff_ind = {{"A", 0},
-		{"B", 1},
-		{"C", 1},
-		{"D", 1},
-		{"E", 1},
-		{"F", 1},
-		{"G", 1},
-		{"H", 1},
-		{"I", 1},
-		{"J", 1},
-		{"K", 1},
-		{"L", 1},
-		{"M", 1}};
 	expected = {A, K, L, M, E, F, G, H, I, J, B, C, D};
 
 	// sort itself
-	helpers::topological_sort(A, eff_ind, result);
+	helpers::topological_sort(A, result);
 	// and check it
 	ASSERT_EQ(result, expected);
 }
@@ -244,7 +225,6 @@ TEST(topological_sort_test, top_sort_4)
 {
 	// initialization
 	size_t id = 0;
-	map<string, size_t> eff_ind;
 	vector<shared_ptr<task_base>> result;
 	vector<shared_ptr<task_base>> expected;
 
@@ -285,11 +265,10 @@ TEST(topological_sort_test, top_sort_4)
 	F->add_parent(D);
 	C->add_children(G);
 	G->add_parent(C);
-	eff_ind = {{"A", 0}, {"B", 1}, {"C", 2}, {"D", 1}, {"E", 1}, {"F", 1}, {"G", 1}};
 	expected = {A, B, D, C, G, F, E};
 
 	// sort itself
-	helpers::topological_sort(A, eff_ind, result);
+	helpers::topological_sort(A, result);
 	// and check it
 	ASSERT_EQ(result, expected);
 }
@@ -298,7 +277,6 @@ TEST(topological_sort_test, top_sort_cycle_1)
 {
 	// initialization
 	size_t id = 0;
-	map<string, size_t> eff_ind;
 	vector<shared_ptr<task_base>> result;
 
 
@@ -340,16 +318,14 @@ TEST(topological_sort_test, top_sort_cycle_1)
 	G->add_parent(C);
 	G->add_children(B);
 	B->add_parent(G);
-	eff_ind = {{"A", 0}, {"B", 2}, {"C", 2}, {"D", 1}, {"E", 1}, {"F", 1}, {"G", 1}};
 
-	EXPECT_THROW(helpers::topological_sort(A, eff_ind, result), helpers::top_sort_exception);
+	EXPECT_THROW(helpers::topological_sort(A, result), helpers::top_sort_exception);
 }
 
 TEST(topological_sort_test, top_sort_cycle_2)
 {
 	// initialization
 	size_t id = 0;
-	map<string, size_t> eff_ind;
 	vector<shared_ptr<task_base>> result;
 
 
@@ -377,7 +353,6 @@ TEST(topological_sort_test, top_sort_cycle_2)
 	D->add_parent(C);
 	D->add_children(A);
 	A->add_parent(D);
-	eff_ind = {{"A", 1}, {"B", 1}, {"C", 1}, {"D", 1}};
 
-	EXPECT_THROW(helpers::topological_sort(A, eff_ind, result), helpers::top_sort_exception);
+	EXPECT_THROW(helpers::topological_sort(A, result), helpers::top_sort_exception);
 }

@@ -3,6 +3,7 @@
 
 #include <map>
 #include <queue>
+#include <stack>
 #include <set>
 #include "../tasks/task_base.h"
 
@@ -10,19 +11,17 @@
 namespace helpers
 {
 	/**
-	 * Topological sort of tasks starting from root.
+	 * Topological sort of tasks starting from root, priorities included.
 	 * Result order is saved in result variable, which is cleared before computation.
+	 * Its assumed that whole graph is reachable through root task.
 	 * Priorities and configuration file order are taken into account.
 	 * Bigger number of priority means greater priority and therefore appropriate task will be prefered.
 	 * @note Algorithm itself taken from: http://stackoverflow.com/a/11236027
 	 * @param root base node from which sorting starts
-	 * @param effective_indegree indegrees of all nodes has to be supplied
 	 * @param result queue of task in order of execution
 	 * @throws top_sort_exception if cycle was detected
 	 */
-	void topological_sort(std::shared_ptr<task_base> root,
-		std::map<std::string, size_t> &effective_indegree,
-		std::vector<std::shared_ptr<task_base>> &result);
+	void topological_sort(std::shared_ptr<task_base> root, std::vector<std::shared_ptr<task_base>> &result);
 
 
 	/**
