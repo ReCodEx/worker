@@ -136,7 +136,7 @@ class config_error : public std::runtime_error
 {
 public:
 	/**
-	 * Construction with message returned with @ref what() method.
+	 * Construction with message returned with @a what() method.
 	 * @param msg description of exception circumstances
 	 */
 	explicit config_error(const std::string &msg) : std::runtime_error(msg)
