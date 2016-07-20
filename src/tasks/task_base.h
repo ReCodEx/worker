@@ -11,24 +11,25 @@
 
 /**
  * Logical base of all possible tasks.
- * Its abstract class which cannot be instantiated.
- * But it stores some information about task which always have to be defined.
- * @note Task can be created only with one constructor which receive pointer to task_metadata as parameter.
- * Task_metadata structure is mutable, so it can be changed during task execution.
- * This case should never happen in ReCodEx worker, but posibility is still here.
- * Please keep this in mind if you're editing this code otherwise it can end up very bad for you!
+ * It's abstract class which cannot be instantiated. But it stores some information
+ * about task which always have to be defined.
+ * @note Task can be created only with one constructor which receive pointer to
+ * @ref task_metadata as parameter. This structure is mutable, so it can be changed
+ * during task execution. This case should never happen in ReCodEx worker, but posibility
+ * is still here. Please keep this in mind if you're editing this code otherwise it can
+ * end up very bad for you!
  */
 class task_base
 {
 public:
 	/**
-	 * Default constructor deleted.
+	 * Default constructor is disabled.
 	 */
 	task_base() = delete;
 	/**
 	 * Only possible way of construction which just store all given parameters into private variables.
-	 * @param id unique identificator of load order of tasks
-	 * @param task_meta variable containing further info about task
+	 * @param id Unique identificator of load order of tasks.
+	 * @param task_meta Variable containing further info about task.
 	 */
 	task_base(size_t id, std::shared_ptr<task_metadata> task_meta);
 	/**
@@ -38,76 +39,80 @@ public:
 
 	/**
 	 * This method runs operation which this task is supposed to do.
-	 * @return results to be pushed back
+	 * @return Evaluation results to be pushed back to frontend.
 	 */
 	virtual std::shared_ptr<task_results> run() = 0;
 	/**
-	 * Add child to this task. Once given child cannot be deleted.
-	 * @param add
+	 * Add child to this task. Once given, child cannot be deleted.
+	 * @param add Pointer to child task (task dependent on current one).
 	 */
 	void add_children(std::shared_ptr<task_base> add);
 	/**
 	 * Get all children of task.
-	 * @return constant reference to vector of task_base pointers
+	 * @return List of children tasks.
 	 */
 	const std::vector<std::shared_ptr<task_base>> &get_children();
 	/**
 	 * To this task object add parent.
-	 * @param add
+	 * @param add Parent of this task. Execution may proceed only if parent task is
+	 * successfully finished.
 	 */
 	void add_parent(std::shared_ptr<task_base> add);
 
 	/**
 	 * Get unique identification number.
 	 * This number expresses order in job configuration.
-	 * @return unsigned integer
+	 * @return Task's identification number.
 	 */
 	size_t get_id();
 	/**
 	 * Unique task ID which was stated in job configuration.
-	 * @return textual description of id
+	 * @return Unique textual description of current task.
 	 */
 	const std::string &get_task_id();
 	/**
 	 * Get priority of this task.
-	 * Lower number -> higher priority.
-	 * @return unsigned integer
+	 * Lower number = higher priority.
+	 * @return Priority.
 	 */
 	size_t get_priority();
 	/**
-	 * If true than failure of this task will cause immediate exit of job evaluation.
-	 * @return
+	 * Get failing policy. If @a true than failure of this task will cause
+	 * mmediate exit of job evaluation.
+	 * @return If task's failure is fatal for whole job.
 	 */
 	bool get_fatal_failure();
 	/**
-	 * Get command which will be executed within this task.
-	 * @return textual description of command
+	 * Get a (shell) command which will be executed within this task. Same value
+	 * as @a binary item inside @ref task_metadata structure during class construction.
+	 * @return Command binary.
 	 */
 	const std::string &get_cmd();
 	/**
 	 * Arguments which will be supplied to executed command.
-	 * @return constant vector of texts
+	 * @return List of text arguments.
 	 */
 	const std::vector<std::string> &get_args();
 	/**
 	 * Return dependencies of this particular task.
-	 * @return textual vector array of dependencies
+	 * @return List of dependencies - textual IDs of predecessor tasks. Same value
+	 * as @a dependencies item inside @ref task_metadata structure during class construction.
 	 */
 	const std::vector<std::string> &get_dependencies();
 
 	/**
-	 * Tells whether task can be safely executed or not.
-	 * @return true if task can be executed
+	 * Tells whether task can be safely executed or not (ie. if parent task is failed).
+	 * @return @a true if task can be executed.
 	 */
 	bool is_executable();
 	/**
-	 * To this particular task set execution bit on false.
-	 * @param set false if task cannot be safely executed
+	 * Set execution bit to this task.
+	 * @param set @a false if task cannot be safely executed, @a true otherwise (default value).
 	 */
 	void set_execution(bool set);
 	/**
 	 * Calls @a set_execution function on all children of this task.
-	 * @param set flag which will be passed to children
+	 * @param set Flag which will be passed to children.
 	 */
 	void set_children_execution(bool set);
 
@@ -121,7 +126,7 @@ protected:
 
 	/** Weak pointers to parents of task. */
 	std::vector<std::weak_ptr<task_base>> parents_;
-	/** Pointers to children of task. */
+	/** Pointers to task childrens. */
 	std::vector<std::shared_ptr<task_base>> children_;
 };
 
@@ -153,7 +158,7 @@ public:
 	}
 	/**
 	 * Return description of this exception.
-	 * @return C string
+	 * @return Cause description as C string.
 	 */
 	virtual const char *what() const noexcept
 	{
@@ -161,6 +166,7 @@ public:
 	}
 
 protected:
+	/** Error description. */
 	std::string what_;
 };
 
@@ -172,11 +178,12 @@ class task_compare
 {
 public:
 	/**
-	 * Greater than operator on task_base objects.
+	 * Compare @ref task_base objects by their priority and identifier. This is something like
+	 * greater than operator on @ref task_base objects.
 	 * Its supposed that bigger number of priority is greater priority, so this tasks will be prefered.
-	 * @param a first parameter
-	 * @param b second parameter
-	 * @return true if parameter a is greater than b
+	 * @param a First task to compare.
+	 * @param b Second task to compare.
+	 * @return @a true if parameter a is greater than b
 	 */
 	bool operator()(std::shared_ptr<task_base> a, std::shared_ptr<task_base> b)
 	{

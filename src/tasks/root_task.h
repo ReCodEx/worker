@@ -13,9 +13,14 @@
 class root_task : public task_base
 {
 public:
+	/**
+	 * Default constructor is disabled.
+	 */
 	root_task() = delete;
 	/**
 	 * Only send some fake information to task_base.
+	 * @param id Unique identificator of load order of tasks.
+	 * @param task_meta Variable containing further info about task.
 	 */
 	root_task(size_t id, std::shared_ptr<task_metadata> task_meta = std::make_shared<task_metadata>());
 	/**
@@ -24,7 +29,8 @@ public:
 	virtual ~root_task();
 
 	/**
-	 * Empty function. Has to be stated for completion.
+	 * Empty function. Has to be stated for completeness.
+	 * @return Always @a nullptr.
 	 */
 	virtual std::shared_ptr<task_results> run();
 };

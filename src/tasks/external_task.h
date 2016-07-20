@@ -16,36 +16,40 @@
 class external_task : public task_base
 {
 public:
+	/**
+	 * Disabled default constructor.
+	 */
 	external_task() = delete;
 
 	/**
 	 * Only way to construct external task is through this constructor.
 	 * Choosing propriate sandbox and constructing it is also done here.
-	 * @param data data to create external task class
-	 * @throws task_exception if @a sandbox_id is unknown
+	 * @param data Data to create external task class.
+	 * @throws task_exception if name of the sandbox in data argument is unknown.
 	 */
 	external_task(const create_params &data);
 	/**
-	 * Empty right now.
+	 * Destructor, empty right now.
 	 */
 	virtual ~external_task();
 
 	/**
 	 * Runs given program and parameters in constructed sandbox.
 	 * @return @ref task_results with @a sandbox_status item properly set
-	 * @throws @ref sandbox_exception if error occured in sandbox
+	 * @throws sandbox_exception if error occured in sandbox
 	 */
 	virtual std::shared_ptr<task_results> run();
 
 	/**
 	 * Get sandbox_limits structure, given during construction.
-	 * @return
+	 * @return Restrictive limits for sandboxed program.
 	 */
 	std::shared_ptr<sandbox_limits> get_limits();
 
 private:
 	/**
-	 * Check if sandbox_id have counterpart in sandbox classes.
+	 * Check if sandbox name have counterpart in sandbox classes (ie. ReCodEx knows
+	 * stated sandbox).
 	 */
 	void sandbox_check();
 	/**

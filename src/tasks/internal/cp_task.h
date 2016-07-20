@@ -5,13 +5,29 @@
 
 
 /**
- * Copy files. Requires 2 arguments (like boost::filesystem::copy).
+ * Copy files using boost::filesystem::copy.
  */
 class cp_task : public task_base
 {
 public:
+	/**
+	 * Constructor with initialization.
+	 * @param id Unique identificator of load order of tasks.
+	 * @param task_meta Variable containing further info about task. It's required that
+	 * @a cmd_args entry has just 2 arguments -
+	 * http://www.boost.org/doc/libs/1_59_0_b1/libs/filesystem/doc/reference.html#copy.
+	 * @throws task_exception on invalid number of arguments.
+	 */
 	cp_task(size_t id, std::shared_ptr<task_metadata> task_meta);
+	/**
+	 * Destructor.
+	 */
 	virtual ~cp_task();
+	/**
+	 * Run the action.
+	 * @return Evaluation results to be pushed back to frontend.
+	 * @throws task_exception on copying error.
+	 */
 	virtual std::shared_ptr<task_results> run();
 };
 

@@ -5,14 +5,32 @@
 
 
 /**
- * Rename files. Calls boost::filesystem::rename. For detailed behavior listing see
- * POSIX rename() function - http://pubs.opengroup.org/onlinepubs/000095399/functions/rename.html
+ * Rename one file.
  */
 class rename_task : public task_base
 {
 public:
+	/**
+	 * Constructor with initialization.
+	 * @param id Unique identificator of load order of tasks.
+	 * @param task_meta Variable containing further info about task. It's required that
+	 * @a cmd_args entry has just 2 arguments - current and new name of the file.
+	 * The semantics is same as POSIX rename() function, see
+	 * http://pubs.opengroup.org/onlinepubs/000095399/functions/rename.html or
+	 * http://www.boost.org/doc/libs/1_59_0_b1/libs/filesystem/doc/reference.html#rename
+	 * for more info.
+	 * @throws task_exception when no argument provided.
+	 */
 	rename_task(size_t id, std::shared_ptr<task_metadata> task_meta);
+	/**
+	 * Destructor.
+	 */
 	virtual ~rename_task();
+	/**
+	 * Run the action.
+	 * @return Evaluation results to be pushed back to frontend.
+	 * @throws task_exception when file cannot be renamed.
+	 */
 	virtual std::shared_ptr<task_results> run();
 };
 
