@@ -11,7 +11,7 @@ namespace broker_commands
 {
 	/**
 	 * Command eval was received from broker, send it to "job" thread.
-	 * @param args received multipart message without leading command
+	 * @param args received multipart message with leading command
 	 * @param context command context of command holder
 	 */
 	template <typename context_t>
@@ -22,7 +22,7 @@ namespace broker_commands
 
 	/**
 	 * Intro command arrived from broker, send him back init message with headers and hwgroup.
-	 * @param args received multipart message without leading command
+	 * @param args received multipart message with leading command
 	 * @param context command context of command holder
 	 */
 	template <typename context_t>

@@ -13,7 +13,7 @@ namespace jobs_server_commands
 
 	/**
 	 * Done command arrived from "job" thread, this information has to be sent back to broker.
-	 * @param args received multipart message without leading command
+	 * @param args received multipart message with leading command
 	 * @param context command context of command holder
 	 */
 	template <typename context_t>
