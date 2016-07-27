@@ -8,7 +8,7 @@ var hierarchy =
     [ "context_t", null, [
       [ "command_context< context_t >", "classcommand__context.html", null ]
     ] ],
-    [ "external_task::create_params", "structexternal__task_1_1create__params.html", null ],
+    [ "create_params", "structcreate__params.html", null ],
     [ "eval_request", "structeval__request.html", null ],
     [ "eval_response", "structeval__response.html", null ],
     [ "std::exception", null, [
@@ -33,13 +33,18 @@ var hierarchy =
     [ "fileman_config", "structfileman__config.html", null ],
     [ "job", "classjob.html", null ],
     [ "job_client_context", "classjob__client__context.html", null ],
-    [ "job_evaluator", "classjob__evaluator.html", null ],
+    [ "job_evaluator_base", "classjob__evaluator__base.html", [
+      [ "job_evaluator", "classjob__evaluator.html", null ]
+    ] ],
     [ "job_metadata", "classjob__metadata.html", null ],
     [ "job_receiver", "classjob__receiver.html", null ],
     [ "log_config", "structlog__config.html", null ],
     [ "message_origin", "structmessage__origin.html", null ],
+    [ "progress_callback_base", "classprogress__callback__base.html", [
+      [ "empty_progress_callback", "classempty__progress__callback.html", null ],
+      [ "progress_callback", "classprogress__callback.html", null ]
+    ] ],
     [ "sandbox_base", "classsandbox__base.html", [
-      [ "fake_sandbox", "classfake__sandbox.html", null ],
       [ "isolate_sandbox", "classisolate__sandbox.html", null ]
     ] ],
     [ "sandbox_config", "classsandbox__config.html", null ],
@@ -57,6 +62,9 @@ var hierarchy =
       [ "root_task", "classroot__task.html", null ]
     ] ],
     [ "task_compare", "classtask__compare.html", null ],
+    [ "task_factory_base", "classtask__factory__base.html", [
+      [ "task_factory", "classtask__factory.html", null ]
+    ] ],
     [ "task_metadata", "classtask__metadata.html", null ],
     [ "task_results", "structtask__results.html", null ],
     [ "worker_config", "classworker__config.html", null ],

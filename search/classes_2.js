@@ -7,5 +7,5 @@ var searchData=
   ['config_5fexception',['config_exception',['../classhelpers_1_1config__exception.html',1,'helpers']]],
   ['connection_5fproxy',['connection_proxy',['../classconnection__proxy.html',1,'']]],
   ['cp_5ftask',['cp_task',['../classcp__task.html',1,'']]],
-  ['create_5fparams',['create_params',['../structexternal__task_1_1create__params.html',1,'external_task']]]
+  ['create_5fparams',['create_params',['../structcreate__params.html',1,'']]]
 ];

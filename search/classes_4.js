@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['fake_5fsandbox',['fake_sandbox',['../classfake__sandbox.html',1,'']]],
   ['fallback_5ffile_5fmanager',['fallback_file_manager',['../classfallback__file__manager.html',1,'']]],
   ['fetch_5ftask',['fetch_task',['../classfetch__task.html',1,'']]],
   ['file_5fmanager_5fbase',['file_manager_base',['../classfile__manager__base.html',1,'']]],

@@ -1,6 +1,5 @@
 var classexternal__task =
 [
-    [ "create_params", "structexternal__task_1_1create__params.html", "structexternal__task_1_1create__params" ],
     [ "external_task", "classexternal__task.html#a10502de3ad96567420659acb18fc80c0", null ],
     [ "external_task", "classexternal__task.html#a91da878ffd5eca35d9bbf58393d3497e", null ],
     [ "~external_task", "classexternal__task.html#a214547602df9ab44bc507d45ab9aa40d", null ],
