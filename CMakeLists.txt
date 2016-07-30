@@ -124,7 +124,7 @@ set(SOURCE_FILES
 	${SRC_DIR}/archives/archivator.cpp
 	${SRC_DIR}/eval_response.h
 
-	${FILEMAN_DIR}/file_manager_base.h
+	${FILEMAN_DIR}/file_manager_interface.h
 	${FILEMAN_DIR}/cache_manager.h
 	${FILEMAN_DIR}/http_manager.h
 	${FILEMAN_DIR}/fallback_file_manager.h
@@ -138,7 +138,7 @@ set(SOURCE_FILES
 	${SANDBOX_DIR}/isolate_sandbox.h
 	${SANDBOX_DIR}/isolate_sandbox.cpp
 
-	${TASKS_DIR}/task_factory_base.h
+	${TASKS_DIR}/task_factory_interface.h
 	${TASKS_DIR}/create_params.h
 	${TASKS_DIR}/task_factory.h
 	${TASKS_DIR}/task_factory.cpp
@@ -187,12 +187,12 @@ set(SOURCE_FILES
 	${JOB_DIR}/job.h
 	${JOB_DIR}/job_exception.h
 	${JOB_DIR}/job.cpp
-	${JOB_DIR}/job_evaluator_base.h
+	${JOB_DIR}/job_evaluator_interface.h
 	${JOB_DIR}/job_evaluator.h
 	${JOB_DIR}/job_evaluator.cpp
 	${JOB_DIR}/job_receiver.cpp
 	${JOB_DIR}/job_receiver.h
-	${JOB_DIR}/progress_callback_base.h
+	${JOB_DIR}/progress_callback_interface.h
 	${JOB_DIR}/progress_callback.h
 	${JOB_DIR}/progress_callback.cpp
 

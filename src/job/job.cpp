@@ -6,8 +6,8 @@ job::job(std::shared_ptr<job_metadata> job_meta,
 	fs::path working_directory,
 	fs::path source_path,
 	fs::path result_path,
-	std::shared_ptr<task_factory_base> factory,
-	std::shared_ptr<progress_callback_base> progr_callback)
+	std::shared_ptr<task_factory_interface> factory,
+	std::shared_ptr<progress_callback_interface> progr_callback)
 	: job_meta_(job_meta), worker_config_(worker_conf), working_directory_(working_directory),
 	  source_path_(source_path), result_path_(result_path), factory_(factory), progress_callback_(progr_callback)
 {

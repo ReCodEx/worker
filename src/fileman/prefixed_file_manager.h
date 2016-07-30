@@ -2,7 +2,7 @@
 #define RECODEX_WORKER_PREFIXED_FILE_MANAGER_H
 
 #include <memory>
-#include "file_manager_base.h"
+#include "file_manager_interface.h"
 
 /**
  * Prefixed file manager is just simple wrapper around any other file
@@ -11,13 +11,13 @@
  * Sample usage is set URI address of file server to manager and then provide
  * only filenames to method of http manager.
  */
-class prefixed_file_manager : public file_manager_base
+class prefixed_file_manager : public file_manager_interface
 {
 private:
 	/** String to prepend. */
 	const std::string prefix_;
 	/** Base file manager which need to be prefixed. */
-	std::shared_ptr<file_manager_base> fm_;
+	std::shared_ptr<file_manager_interface> fm_;
 
 public:
 	/**
@@ -27,7 +27,7 @@ public:
 	 * @param prefix String to be prepend to source name in get_file()
 	 *				 method and destination name in put_file() method.
 	 */
-	prefixed_file_manager(std::shared_ptr<file_manager_base> fm, const std::string &prefix);
+	prefixed_file_manager(std::shared_ptr<file_manager_interface> fm, const std::string &prefix);
 
 	/**
 	 * Get file. This method has same semantics and arguments as underlying

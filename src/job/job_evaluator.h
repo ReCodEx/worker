@@ -14,18 +14,18 @@ namespace fs = boost::filesystem;
 
 #include "job.h"
 #include "../config/worker_config.h"
-#include "../fileman/file_manager_base.h"
+#include "../fileman/file_manager_interface.h"
 #include "../tasks/task_factory.h"
 #include "../archives/archivator.h"
 #include "../helpers/filesystem.h"
-#include "job_evaluator_base.h"
+#include "job_evaluator_interface.h"
 
 
 /**
  * Class which handles receiving job from broker_connection, construction of working tree and its evaluation.
  * Above stated run in loop, so this class is in program constructed only once.
  */
-class job_evaluator : public job_evaluator_base
+class job_evaluator : public job_evaluator_interface
 {
 public:
 	job_evaluator() = delete;
@@ -42,10 +42,10 @@ public:
 	 */
 	job_evaluator(std::shared_ptr<spdlog::logger> logger,
 		std::shared_ptr<worker_config> config,
-		std::shared_ptr<file_manager_base> remote_fm,
-		std::shared_ptr<file_manager_base> cache_fm,
+		std::shared_ptr<file_manager_interface> remote_fm,
+		std::shared_ptr<file_manager_interface> cache_fm,
 		fs::path working_directory,
-		std::shared_ptr<progress_callback_base> progr_callback);
+		std::shared_ptr<progress_callback_interface> progr_callback);
 	/**
 	 * Theoretically not needed, but stated for completion.
 	 */
@@ -156,15 +156,15 @@ private:
 	std::vector<std::pair<std::string, std::shared_ptr<task_results>>> job_results_;
 
 	/** File manager which is used to download and upload submission related files */
-	std::shared_ptr<file_manager_base> remote_fm_;
+	std::shared_ptr<file_manager_interface> remote_fm_;
 	/** File manager used to download submission archives without caching */
-	std::shared_ptr<file_manager_base> cache_fm_;
+	std::shared_ptr<file_manager_interface> cache_fm_;
 	/** Logger given during construction */
 	std::shared_ptr<spdlog::logger> logger_;
 	/** Default configuration of worker */
 	std::shared_ptr<worker_config> config_;
 	/** Progress callback which is used to signal progress to whoever wants */
-	std::shared_ptr<progress_callback_base> progress_callback_;
+	std::shared_ptr<progress_callback_interface> progress_callback_;
 };
 
 #endif // RECODEX_WORKER_JOB_EVALUATOR_HPP

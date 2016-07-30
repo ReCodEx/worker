@@ -7,10 +7,10 @@
 
 job_evaluator::job_evaluator(std::shared_ptr<spdlog::logger> logger,
 	std::shared_ptr<worker_config> config,
-	std::shared_ptr<file_manager_base> remote_fm,
-	std::shared_ptr<file_manager_base> cache_fm,
+	std::shared_ptr<file_manager_interface> remote_fm,
+	std::shared_ptr<file_manager_interface> cache_fm,
 	fs::path working_directory,
-	std::shared_ptr<progress_callback_base> progr_callback)
+	std::shared_ptr<progress_callback_interface> progr_callback)
 	: working_directory_(working_directory), job_(nullptr), job_results_(), remote_fm_(remote_fm), cache_fm_(cache_fm),
 	  logger_(logger), config_(config), progress_callback_(progr_callback)
 {

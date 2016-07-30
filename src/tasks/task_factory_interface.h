@@ -4,19 +4,19 @@
 #include <memory>
 #include "task_base.h"
 #include "create_params.h"
-#include "../fileman/file_manager_base.h"
+#include "../fileman/file_manager_interface.h"
 
 
 /**
  * Interface for task factories.
  */
-class task_factory_base
+class task_factory_interface
 {
 public:
 	/**
 	 * Virtual destructor for proper destruction of inherited classes.
 	 */
-	virtual ~task_factory_base()
+	virtual ~task_factory_interface()
 	{
 	}
 

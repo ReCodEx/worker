@@ -17,9 +17,9 @@ namespace fs = boost::filesystem;
 #include "../config/worker_config.h"
 #include "../config/job_metadata.h"
 #include "../config/task_metadata.h"
-#include "../tasks/task_factory_base.h"
+#include "../tasks/task_factory_interface.h"
 #include "../sandbox/sandbox_base.h"
-#include "progress_callback_base.h"
+#include "progress_callback_interface.h"
 
 
 /**
@@ -53,8 +53,8 @@ public:
 		fs::path working_directory,
 		fs::path source_path,
 		fs::path result_path,
-		std::shared_ptr<task_factory_base> factory,
-		std::shared_ptr<progress_callback_base> progr_callback);
+		std::shared_ptr<task_factory_interface> factory,
+		std::shared_ptr<progress_callback_interface> progr_callback);
 
 	/**
 	 * Job cleanup (if needed) is executed.
@@ -129,9 +129,9 @@ private:
 	/** Directory where results and log of job are stored. */
 	fs::path result_path_;
 	/** Factory for creating tasks. */
-	std::shared_ptr<task_factory_base> factory_;
+	std::shared_ptr<task_factory_interface> factory_;
 	/** Progress callback which is called on some important points */
-	std::shared_ptr<progress_callback_base> progress_callback_;
+	std::shared_ptr<progress_callback_interface> progress_callback_;
 
 	/** Variables which can be used in job configuration */
 	std::map<std::string, std::string> job_variables_;

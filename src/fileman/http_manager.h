@@ -3,7 +3,7 @@
 
 #include <string>
 #include <memory>
-#include "file_manager_base.h"
+#include "file_manager_interface.h"
 #include "../helpers/logger.h"
 #include "../config/fileman_config.h"
 
@@ -17,7 +17,7 @@
  * interpreted as strict error.
  * Failed operations throws @ref fm_exception exception.
  */
-class http_manager : public file_manager_base
+class http_manager : public file_manager_interface
 {
 public:
 	/**

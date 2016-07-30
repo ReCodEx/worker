@@ -3,7 +3,7 @@
 
 #include <string>
 #include <memory>
-#include "file_manager_base.h"
+#include "file_manager_interface.h"
 #include "../helpers/logger.h"
 
 #define BOOST_FILESYSTEM_NO_DEPRECATED
@@ -21,7 +21,7 @@ namespace fs = boost::filesystem;
  * more worker instances. Removing old files will do recodex-cleaner project.
  * Failed operations throws @a fm_exception exception.
  */
-class cache_manager : public file_manager_base
+class cache_manager : public file_manager_interface
 {
 public:
 	/**

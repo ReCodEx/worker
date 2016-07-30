@@ -6,13 +6,13 @@
  * Can be used to inform user about evaluating particular submissions/jobs.
  * @note All methods should be exceptionless, otherwise behavior is undefined.
  */
-class progress_callback_base
+class progress_callback_interface
 {
 public:
 	/**
 	 * Stated for completion and for derived classes.
 	 */
-	virtual ~progress_callback_base()
+	virtual ~progress_callback_interface()
 	{
 	}
 
@@ -70,7 +70,7 @@ public:
  * Its provided because of better looking code through calling this class instead of nullptr checking.
  * @note See @ref progress_callback_base for better description of this class and its methods.
  */
-class empty_progress_callback : public progress_callback_base
+class empty_progress_callback : public progress_callback_interface
 {
 public:
 	/**

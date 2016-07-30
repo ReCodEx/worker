@@ -1,7 +1,7 @@
 #include "task_factory.h"
 
 
-task_factory::task_factory(std::shared_ptr<file_manager_base> fileman) : fileman_(fileman)
+task_factory::task_factory(std::shared_ptr<file_manager_interface> fileman) : fileman_(fileman)
 {
 }
 

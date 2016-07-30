@@ -2,7 +2,7 @@
 #define RECODEX_WORKER_TASK_FACTORY_H
 
 #include <memory>
-#include "task_factory_base.h"
+#include "task_factory_interface.h"
 #include "external_task.h"
 #include "root_task.h"
 #include "internal/archivate_task.h"
@@ -12,20 +12,20 @@
 #include "internal/mkdir_task.h"
 #include "internal/rename_task.h"
 #include "internal/rm_task.h"
-#include "../fileman/file_manager_base.h"
+#include "../fileman/file_manager_interface.h"
 
 
 /**
  * Main task factory used by @ref job class.
  */
-class task_factory : public task_factory_base
+class task_factory : public task_factory_interface
 {
 public:
 	/**
 	 * Constructor
 	 * @param fileman Instance of file manager to be used. It's required by @ref fetch_task to work properly.
 	 */
-	task_factory(std::shared_ptr<file_manager_base> fileman);
+	task_factory(std::shared_ptr<file_manager_interface> fileman);
 
 	/**
 	 * Virtual destructor
@@ -55,7 +55,7 @@ public:
 
 private:
 	/** Pointer to given file manager instance. */
-	std::shared_ptr<file_manager_base> fileman_;
+	std::shared_ptr<file_manager_interface> fileman_;
 };
 
 

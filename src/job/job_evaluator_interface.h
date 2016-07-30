@@ -6,15 +6,15 @@
 
 
 /**
- * Base type of job evaluator.
+ * Interface of job evaluator.
  */
-class job_evaluator_base
+class job_evaluator_interface
 {
 public:
 	/**
 	 * Virtual destructor for proper destruction of inherited classes.
 	 */
-	virtual ~job_evaluator_base()
+	virtual ~job_evaluator_interface()
 	{
 	}
 

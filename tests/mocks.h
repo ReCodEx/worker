@@ -14,10 +14,10 @@
 #include <gmock/gmock.h>
 #include "../src/config/worker_config.h"
 #include "../src/broker_connection.h"
-#include "../src/fileman/file_manager_base.h"
-#include "../src/tasks/task_factory_base.h"
-#include "../src/job/progress_callback_base.h"
-#include "../src/job/job_evaluator_base.h"
+#include "../src/fileman/file_manager_interface.h"
+#include "../src/tasks/task_factory_interface.h"
+#include "../src/job/progress_callback_interface.h"
+#include "../src/job/job_evaluator_interface.h"
 
 using namespace testing;
 
@@ -60,7 +60,7 @@ public:
 /**
  * A mock of file manager class.
  */
-class mock_file_manager : public file_manager_base
+class mock_file_manager : public file_manager_interface
 {
 public:
 	mock_file_manager()
@@ -74,7 +74,7 @@ public:
 /**
  * A mock of task factory creator class.
  */
-class mock_task_factory : public task_factory_base
+class mock_task_factory : public task_factory_interface
 {
 public:
 	mock_task_factory()
@@ -113,7 +113,7 @@ public:
 /**
  * A mock of progress callback class.
  */
-class mock_progress_callback : public progress_callback_base
+class mock_progress_callback : public progress_callback_interface
 {
 public:
 	mock_progress_callback()
@@ -135,7 +135,7 @@ public:
 /**
  * A mock of job evaluator service.
  */
-class mock_job_evaluator : public job_evaluator_base
+class mock_job_evaluator : public job_evaluator_interface
 {
 public:
 	mock_job_evaluator()

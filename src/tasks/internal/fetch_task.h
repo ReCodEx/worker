@@ -2,7 +2,7 @@
 #define RECODEX_WORKER_INTERNAL_FETCH_TASK_H
 
 #include "../task_base.h"
-#include "../../fileman/file_manager_base.h"
+#include "../../fileman/file_manager_interface.h"
 #include <memory>
 
 
@@ -20,7 +20,7 @@ public:
 	 * @param filemanager Filemanager which needs to gather requested file.
 	 * @throws task_exception on invalid number of arguments.
 	 */
-	fetch_task(size_t id, std::shared_ptr<task_metadata> task_meta, std::shared_ptr<file_manager_base> filemanager);
+	fetch_task(size_t id, std::shared_ptr<task_metadata> task_meta, std::shared_ptr<file_manager_interface> filemanager);
 	/**
 	 * Destructor.
 	 */
@@ -34,7 +34,7 @@ public:
 
 private:
 	/** Pointer to filemanager instance. */
-	std::shared_ptr<file_manager_base> filemanager_;
+	std::shared_ptr<file_manager_interface> filemanager_;
 };
 
 #endif // RECODEX_WORKER_INTERNAL_FETCH_TASK_H

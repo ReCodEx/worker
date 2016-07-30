@@ -1,7 +1,7 @@
 #ifndef RECODEX_WORKER_FILE_MANAGER_H
 #define RECODEX_WORKER_FILE_MANAGER_H
 
-#include "file_manager_base.h"
+#include "file_manager_interface.h"
 #include "cache_manager.h"
 #include "http_manager.h"
 #include <utility>
@@ -17,11 +17,11 @@
  * @note Both managers need to use the same file names - some prefixing might need to be
  *		 done (see @ref prefixed_file_manager).
  */
-class fallback_file_manager : public file_manager_base
+class fallback_file_manager : public file_manager_interface
 {
 public:
 	/** Pointer to every file manager type. */
-	typedef std::shared_ptr<file_manager_base> file_manager_ptr;
+	typedef std::shared_ptr<file_manager_interface> file_manager_ptr;
 
 public:
 	/**

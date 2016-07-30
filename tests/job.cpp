@@ -14,7 +14,7 @@ using namespace boost::filesystem;
 #include "../src/job/job_exception.h"
 #include "../src/helpers/config.h"
 
-#include "../src/tasks/task_factory_base.h"
+#include "../src/tasks/task_factory_interface.h"
 #include "../src/tasks/external_task.h"
 #include "../src/config/worker_config.h"
 

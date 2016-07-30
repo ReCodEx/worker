@@ -7,14 +7,14 @@
 #include <memory>
 #include <spdlog/spdlog.h>
 
-#include "progress_callback_base.h"
+#include "progress_callback_interface.h"
 
 /**
  * Progress callback implementation which is connected to ZMQ inproc socket.
  * Through this socket information about progress are sent to broker_connection and possibly further.
  * @note No throw implementation... All public methods should be safe to use.
  */
-class progress_callback : public progress_callback_base
+class progress_callback : public progress_callback_interface
 {
 private:
 	/** Socket which serves to sending progress to broker_connection */

@@ -6,20 +6,21 @@
 
 
 /**
- * Base class for file manager.
+ * Interface class for file manager.
  * File manager can get you a copy of file to some directory or put a file somewhere.
  * Failed operations throws @a fm_exception exception.
- * For more info, see derived classes.
+ * For more info, see implementation classes.
  */
-class file_manager_base
+class file_manager_interface
 {
 public:
 	/**
 	 * Destructor.
 	 */
-	virtual ~file_manager_base()
+	virtual ~file_manager_interface()
 	{
 	}
+
 	/**
 	 * Get the file.
 	 * @param src_name Name of the file to retrieve. Mostly this is sha1sum of the file.
@@ -55,12 +56,14 @@ public:
 	fm_exception(std::string what) : what_(what)
 	{
 	}
+
 	/**
 	 * Destructor.
 	 */
 	virtual ~fm_exception()
 	{
 	}
+
 	/**
 	 * Get failure description.
 	 * @return Stored string.
