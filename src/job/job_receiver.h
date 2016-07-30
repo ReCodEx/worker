@@ -11,7 +11,7 @@
 
 /**
  * Job receiver handles incoming requests from broker_connection and
- * psses them to job evaluator. It also sends back response from evaluator.
+ * passes them to job evaluator. It also sends back response from evaluator.
  */
 class job_receiver
 {
