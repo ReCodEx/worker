@@ -16,8 +16,14 @@
  * Contains types used by the proxy for polling
  */
 struct message_origin {
+	/**
+	 * Associates numbers with possible origins of messages
+	 */
 	enum type { BROKER = 0, JOBS = 1, PROGRESS = 2 };
 
+	/**
+	 * A set of origins from which there are incoming messages
+	 */
 	typedef std::bitset<3> set;
 };
 
@@ -76,10 +82,9 @@ private:
 
 public:
 	/**
-	 * TODO: documentation
-	 * @param config
-	 * @param socket
-	 * @param logger
+	 * @param config configuration of the worker
+	 * @param socket a proxy of ZeroMQ communication channels
+	 * @param logger a logging service
 	 */
 	broker_connection(std::shared_ptr<const worker_config> config,
 		std::shared_ptr<proxy> socket,
@@ -135,7 +140,6 @@ public:
 				socket_->poll(result, poll_limit, terminate, poll_duration);
 
 				if (poll_duration >= poll_limit) {
-					// logger_->debug() << "Sending a ping";
 					socket_->send_broker(std::vector<std::string>{"ping"});
 					poll_limit = ping_interval;
 
@@ -191,7 +195,7 @@ public:
 			}
 		}
 
-		logger_->emerg() << "Terminating to receive messages.";
+		logger_->emerg() << "Ceasing to receive messages.";
 	}
 };
 

@@ -36,6 +36,7 @@ public:
 	}
 
 protected:
+	/** A textual description of the exception */
 	std::string what_;
 };
 

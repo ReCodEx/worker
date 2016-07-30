@@ -66,9 +66,9 @@ public:
 };
 
 /**
- * Implementation of @ref progress_callback_base which has all functions empty.
+ * Implementation of @ref progress_callback_interface which has all functions empty.
  * Its provided because of better looking code through calling this class instead of nullptr checking.
- * @note See @ref progress_callback_base for better description of this class and its methods.
+ * @note See @ref progress_callback_interface for better description of this class and its methods.
  */
 class empty_progress_callback : public progress_callback_interface
 {

@@ -28,8 +28,7 @@ private:
 
 public:
 	/**
-	 * TODO: documentation
-	 * @param context
+	 * @param context a ZeroMQ context
 	 */
 	connection_proxy(std::shared_ptr<zmq::context_t> context)
 		: broker_(*context, ZMQ_DEALER), jobs_(*context, ZMQ_PAIR), progress_(*context, ZMQ_PAIR), context_(context)
@@ -51,8 +50,8 @@ public:
 	}
 
 	/**
-	 * TODO: documentation
-	 * @param addr
+	 * Connect and bind all the necessary sockets
+	 * @param addr address of the broker
 	 */
 	void connect(const std::string &addr)
 	{
@@ -65,6 +64,7 @@ public:
 	/**
 	 * Disconnect the broker socket and connect again.
 	 * This results in dropping unsent messages.
+	 * @param addr address of the broker
 	 */
 	void reconnect_broker(const std::string &addr)
 	{
@@ -74,6 +74,10 @@ public:
 
 	/**
 	 * Block execution until a message arrives to a socket
+	 * @param result set by the method to contain sockets that received a message
+	 * @param timeout the maximum time the method should wait for messages
+	 * @param terminate set to true if the underlying ZeroMQ sockets can't receive messages anymore
+	 * @param elapsed_time set to the time spent in the method
 	 */
 	void poll(message_origin::set &result,
 		std::chrono::milliseconds timeout,
@@ -108,6 +112,7 @@ public:
 
 	/**
 	 * Send data to the broker
+	 * @param msg message to be sent
 	 */
 	bool send_broker(const std::vector<std::string> &msg)
 	{
@@ -116,6 +121,7 @@ public:
 
 	/**
 	 * Send data through the job socket
+	 * @param msg message to be sent
 	 */
 	bool send_jobs(const std::vector<std::string> &msg)
 	{
@@ -125,6 +131,8 @@ public:
 	/**
 	 * Receive data from the broker.
 	 * This method should only be called after a successful poll call (only poll measures elapsed time).
+	 * @param target where the received message should be stored
+	 * @param terminate set to true if the underlying ZeroMQ sockets can't receive messages anymore
 	 */
 	bool recv_broker(std::vector<std::string> &target, bool *terminate = nullptr)
 	{
@@ -134,6 +142,8 @@ public:
 	/**
 	 * Receive data from the job socket.
 	 * This method should only be called after a successful poll call (only poll measures elapsed time).
+	 * @param target where the received message should be stored
+	 * @param terminate set to true if the underlying ZeroMQ sockets can't receive messages anymore
 	 */
 	bool recv_jobs(std::vector<std::string> &target, bool *terminate = nullptr)
 	{
@@ -141,8 +151,10 @@ public:
 	}
 
 	/**
-	 * Receive data from the progress socket.
+	 * Receive data from the progress socket (sent by the job evaluator).
 	 * This method should only be called after a successful poll call (only poll measures elapsed time).
+	 * @param target where the received message should be stored
+	 * @param terminate set to true if the underlying ZeroMQ sockets can't receive messages anymore
 	 */
 	bool recv_progress(std::vector<std::string> &target, bool *terminate = nullptr)
 	{

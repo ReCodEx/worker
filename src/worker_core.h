@@ -17,7 +17,6 @@
 namespace fs = boost::filesystem;
 
 
-// Our very own code includes
 #include "broker_connection.h"
 #include "config/log_config.h"
 #include "config/worker_config.h"
@@ -29,9 +28,8 @@ namespace fs = boost::filesystem;
 
 
 /**
- * Main class of whole program.
- * It handles all creation and destruction of all used parts.
- * And of course run all those parts.
+ * Main class of the whole program.
+ * It handles the creation and destruction of all services.
  */
 class worker_core
 {
@@ -132,9 +130,9 @@ private:
 	/** Pointer to logger */
 	std::shared_ptr<spdlog::logger> logger_;
 
-	/** File manager for submission archives which need no caching */
+	/** File manager that works with a remote file storage */
 	std::shared_ptr<file_manager_interface> remote_fm_;
-	/** File manager which is used to download and upload needed files */
+	/** File manager that works with a local cache */
 	std::shared_ptr<file_manager_interface> cache_fm_;
 
 	/** Handles evaluation and all things around */
