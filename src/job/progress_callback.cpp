@@ -11,10 +11,6 @@ progress_callback::progress_callback(std::shared_ptr<zmq::context_t> context, st
 	}
 }
 
-progress_callback::~progress_callback()
-{
-}
-
 void progress_callback::connect()
 {
 	if (!connected_) {

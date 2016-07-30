@@ -22,8 +22,7 @@ namespace fs = boost::filesystem;
 
 
 /**
- * Class which handles receiving job from broker_connection, construction of working tree and its evaluation.
- * Above stated run in loop, so this class is in program constructed only once.
+ * Processes jobs received from the broker by @ref job_receiver
  */
 class job_evaluator : public job_evaluator_interface
 {
@@ -38,7 +37,10 @@ public:
 	 * All other constructors are disabled, because of needed data.
 	 * @param logger pointer to logger created in core
 	 * @param config default configuration of worker loaded from yaml file
-	 * @param fileman filemanager used to download and upload files
+	 * @param remote_fm a file manager that works with a remote file storage
+	 * @param cache_fm a file manager that works with a local cache
+	 * @param working_directory a directory in which the evaluation is done
+	 * @param progr_callback a callback for notifying the broker of progress
 	 */
 	job_evaluator(std::shared_ptr<spdlog::logger> logger,
 		std::shared_ptr<worker_config> config,
@@ -46,10 +48,6 @@ public:
 		std::shared_ptr<file_manager_interface> cache_fm,
 		fs::path working_directory,
 		std::shared_ptr<progress_callback_interface> progr_callback);
-	/**
-	 * Theoretically not needed, but stated for completion.
-	 */
-	virtual ~job_evaluator();
 
 	/**
 	 * Process an "eval" request

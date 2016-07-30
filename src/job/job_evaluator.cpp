@@ -21,10 +21,6 @@ job_evaluator::job_evaluator(std::shared_ptr<spdlog::logger> logger,
 	init_progress_callback();
 }
 
-job_evaluator::~job_evaluator()
-{
-}
-
 void job_evaluator::init_progress_callback()
 {
 	if (progress_callback_ == nullptr) {

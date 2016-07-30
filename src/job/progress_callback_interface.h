@@ -57,7 +57,7 @@ public:
 	 */
 	virtual void task_failed(const std::string &job_id, const std::string &task_id) = 0;
 	/**
-	 * Parental task of given one failed and this one was skipped.
+	 * Parent of a task failed and this one was skipped.
 	 * @param job_id unique identification of job
 	 * @param task_id unique identification of skipped task
 	 * @note Implementation should not throw an exception.

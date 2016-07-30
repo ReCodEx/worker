@@ -45,7 +45,8 @@ public:
 	 *							use case is storing isolate's meta log file.
 	 * @param source_path path to source codes of submission
 	 * @param result_path path to directory containing all results
-	 * @param fileman file manager which is provided to tasks
+	 * @param factory used in creation of task objects
+	 * @param progr_callback used to notify the broker of progress
 	 * @throws job_exception if there is problem during loading of configuration
 	 */
 	job(std::shared_ptr<job_metadata> job_meta,
@@ -68,6 +69,10 @@ public:
 	 */
 	std::vector<std::pair<std::string, std::shared_ptr<task_results>>> run();
 
+	/**
+	 * Returns a collection that contains linearly ordered tasks contained in the job
+	 * @return a linearly ordered collection of tasks
+	 */
 	const std::vector<std::shared_ptr<task_base>> &get_task_queue() const;
 
 private:
@@ -110,8 +115,7 @@ private:
 	 */
 	void prepare_job_vars();
 	/**
-	 * In input string tries to find internal job config variable.
-	 * If so, then replace variable with actual value and return it.
+	 * Replace occurences of job config variables and return the resulting string
 	 * @param src scanned string for variables
 	 * @return new string with all variables replaced with values
 	 */

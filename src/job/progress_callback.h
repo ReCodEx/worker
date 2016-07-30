@@ -17,7 +17,7 @@
 class progress_callback : public progress_callback_interface
 {
 private:
-	/** Socket which serves to sending progress to broker_connection */
+	/** Socket used to send progress information to broker_connection */
 	zmq::socket_t socket_;
 	/** String which is used as command in message */
 	std::string command_;
@@ -35,69 +35,23 @@ private:
 public:
 	/**
 	 * Construct progress_callback and fill it with given data.
-	 * @param context zmq contextu structure
+	 * @param context zmq context structure
 	 * @param logger pointer to logging class
 	 */
 	progress_callback(std::shared_ptr<zmq::context_t> context, std::shared_ptr<spdlog::logger> logger);
 
-	/**
-	 * Stated for completion.
-	 */
-	virtual ~progress_callback();
-
-	/**
-	 * Indicates that submission was successfully downloaded from fileserver.
-	 * Sends message through zmqsocket to broker_connection.
-	 * @param job_id unique identification of downloaded job
-	 * @note No throw implementation.
-	 */
 	virtual void submission_downloaded(const std::string &job_id);
-	/**
-	 * After calling this, results should be visible for end users.
-	 * Sends message through zmqsocket to broker_connection.
-	 * @param job_id unique identification of job which results were uploaded
-	 * @note No throw implementation.
-	 */
+
 	virtual void job_results_uploaded(const std::string &job_id);
-	/**
-	 * Indicates job was started and all execution machinery was setup and is ready to roll.
-	 * Sends message through zmqsocket to broker_connection.
-	 * @param job_id unique identification of soon to be evaluated job
-	 * @note No throw implementation.
-	 */
+
 	virtual void job_started(const std::string &job_id);
-	/**
-	 * Calling this function should indicate that all was evaluated, just results have to be bubble through.
-	 * Sends message through zmqsocket to broker_connection.
-	 * @param job_id unique identifier of executed job
-	 * @note No throw implementation.
-	 */
+
 	virtual void job_ended(const std::string &job_id);
-	/**
-	 * Tells that task with given particular ID was just successfully completed.
-	 * Sends message through zmqsocket to broker_connection.
-	 * @param job_id unique identification of job
-	 * @param task_id unique identification of successfully completed task
-	 * @note No throw implementation.
-	 */
+
 	virtual void task_completed(const std::string &job_id, const std::string &task_id);
-	/**
-	 * Indicates that task with given ID failed in execution.
-	 * Information whether task was esential (fatal-failure) is not given.
-	 * This should be detected through job_ended callback.
-	 * Sends message through zmqsocket to broker_connection.
-	 * @param job_id unique identification of job
-	 * @param task_id unique identification of failed task
-	 * @note No throw implementation.
-	 */
+
 	virtual void task_failed(const std::string &job_id, const std::string &task_id);
-	/**
-	 * Parental task of given one failed and this one was skipped.
-	 * Sends message through zmqsocket to broker_connection.
-	 * @param job_id unique identification of job
-	 * @param task_id unique identification of skipped task
-	 * @note No throw implementation.
-	 */
+
 	virtual void task_skipped(const std::string &job_id, const std::string &task_id);
 };
 
