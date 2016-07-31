@@ -1,7 +1,8 @@
 #include "fetch_task.h"
 
 
-fetch_task::fetch_task(size_t id, std::shared_ptr<task_metadata> task_meta, std::shared_ptr<file_manager_interface> filemanager)
+fetch_task::fetch_task(
+	size_t id, std::shared_ptr<task_metadata> task_meta, std::shared_ptr<file_manager_interface> filemanager)
 	: task_base(id, task_meta), filemanager_(filemanager)
 {
 	if (task_meta_->cmd_args.size() != 2) {

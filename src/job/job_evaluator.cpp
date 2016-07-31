@@ -135,16 +135,9 @@ void job_evaluator::build_job()
 
 void job_evaluator::run_job()
 {
-	try {
-		logger_->info() << "Ready for evaluation...";
-		job_results_ = job_->run();
-		logger_->info() << "Job evaluated.";
-	} catch (std::exception) {
-		result_ = 1;
-	} catch (...) {
-		throw;
-	}
-	return;
+	logger_->info() << "Ready for evaluation...";
+	job_results_ = job_->run();
+	logger_->info() << "Job evaluated.";
 }
 
 void job_evaluator::init_submission_paths()
@@ -225,7 +218,6 @@ void job_evaluator::cleanup_variables()
 
 		job_id_ = "";
 		job_ = nullptr;
-		result_ = 0;
 	} catch (std::exception &e) {
 		logger_->error() << "Error in deinicialization of evaluator: " << e.what();
 	}

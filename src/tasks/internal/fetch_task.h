@@ -20,7 +20,8 @@ public:
 	 * @param filemanager Filemanager which needs to gather requested file.
 	 * @throws task_exception on invalid number of arguments.
 	 */
-	fetch_task(size_t id, std::shared_ptr<task_metadata> task_meta, std::shared_ptr<file_manager_interface> filemanager);
+	fetch_task(
+		size_t id, std::shared_ptr<task_metadata> task_meta, std::shared_ptr<file_manager_interface> filemanager);
 	/**
 	 * Destructor.
 	 */

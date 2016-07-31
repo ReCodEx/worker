@@ -148,8 +148,6 @@ private:
 	std::string job_id_;
 	/** Structure of job itself, this will be evaluated */
 	std::shared_ptr<job> job_;
-	/** Indicates result of given job */
-	size_t result_;
 	/** Results of all evaluated tasks included in job. */
 	std::vector<std::pair<std::string, std::shared_ptr<task_results>>> job_results_;
 
