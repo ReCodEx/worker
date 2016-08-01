@@ -124,6 +124,7 @@ public:
 	}
 
 	MOCK_METHOD1(submission_downloaded, void(const std::string &));
+	MOCK_METHOD1(submission_failed, void(const std::string &));
 	MOCK_METHOD1(job_results_uploaded, void(const std::string &));
 	MOCK_METHOD1(job_started, void(const std::string &));
 	MOCK_METHOD1(job_ended, void(const std::string &));

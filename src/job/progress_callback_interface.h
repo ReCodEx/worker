@@ -23,6 +23,13 @@ public:
 	 */
 	virtual void submission_downloaded(const std::string &job_id) = 0;
 	/**
+	 * Calling this function should indicate that something went wrong in building job
+	 *   or another preparation on evaluation.
+	 * @param job_id unique identifier of executed job
+	 * @note Implementation should not throw an exception.
+	 */
+	virtual void submission_failed(const std::string &job_id) = 0;
+	/**
 	 * After calling this, results should be visible for end users.
 	 * @param job_id unique identification of job which results were uploaded
 	 * @note Implementation should not throw an exception.
@@ -73,62 +80,34 @@ public:
 class empty_progress_callback : public progress_callback_interface
 {
 public:
-	/**
-	 * Stated for completion.
-	 */
-	virtual ~empty_progress_callback()
-	{
-	}
-
-	/**
-	 * Empty indication.
-	 * @param job_id
-	 */
 	virtual void submission_downloaded(const std::string &job_id)
 	{
 	}
-	/**
-	 * Empty indication.
-	 * @param job_id
-	 */
+
+	virtual void submission_failed(const std::string &job_id)
+	{
+	}
+
 	virtual void job_results_uploaded(const std::string &job_id)
 	{
 	}
-	/**
-	 * Empty indication.
-	 * @param job_id
-	 */
+
 	virtual void job_started(const std::string &job_id)
 	{
 	}
-	/**
-	 * Empty indication.
-	 * @param job_id
-	 */
+
 	virtual void job_ended(const std::string &job_id)
 	{
 	}
-	/**
-	 * Empty indication.
-	 * @param job_id
-	 * @param task_id
-	 */
+
 	virtual void task_completed(const std::string &job_id, const std::string &task_id)
 	{
 	}
-	/**
-	 * Empty indication.
-	 * @param job_id
-	 * @param task_id
-	 */
+
 	virtual void task_failed(const std::string &job_id, const std::string &task_id)
 	{
 	}
-	/**
-	 * Empty indication.
-	 * @param job_id
-	 * @param task_id
-	 */
+
 	virtual void task_skipped(const std::string &job_id, const std::string &task_id)
 	{
 	}

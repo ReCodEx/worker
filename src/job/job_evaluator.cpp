@@ -343,6 +343,7 @@ eval_response job_evaluator::evaluate(eval_request request)
 		push_result();
 	} catch (std::exception &e) {
 		logger_->error() << "Job evaluator encountered error: " << e.what();
+		progress_callback_->submission_failed(job_id_);
 		response_result = "ERR";
 	}
 	cleanup_evaluator();

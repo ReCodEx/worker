@@ -32,6 +32,26 @@ private:
 	 */
 	void connect();
 
+	/**
+	 * Helper function for sending job progress state to broker and beyond.
+	 * @param func_name name of function which calls this one
+	 * @param job_id identification of job
+	 * @param job_status status of job
+	 */
+	void send_job_status(const std::string &func_name, const std::string &job_id, const std::string &job_status);
+
+	/**
+	 * Helpers function for sending task progress state to broker and beyond.
+	 * @param func_name name of function which calls this one
+	 * @param job_id identification of job
+	 * @param task_id identification of task
+	 * @param task_status status of task
+	 */
+	void send_task_status(const std::string &func_name,
+		const std::string &job_id,
+		const std::string &task_id,
+		const std::string &task_status);
+
 public:
 	/**
 	 * Construct progress_callback and fill it with given data.
@@ -41,6 +61,8 @@ public:
 	progress_callback(std::shared_ptr<zmq::context_t> context, std::shared_ptr<spdlog::logger> logger);
 
 	virtual void submission_downloaded(const std::string &job_id);
+
+	virtual void submission_failed(const std::string &job_id);
 
 	virtual void job_results_uploaded(const std::string &job_id);
 
