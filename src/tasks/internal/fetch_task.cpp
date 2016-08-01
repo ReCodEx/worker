@@ -6,7 +6,8 @@ fetch_task::fetch_task(
 	: task_base(id, task_meta), filemanager_(filemanager)
 {
 	if (task_meta_->cmd_args.size() != 2) {
-		throw task_exception("Wrong number of arguments. Required: 2, Actual: " + task_meta_->cmd_args.size());
+		throw task_exception(
+			"Wrong number of arguments. Required: 2, Actual: " + std::to_string(task_meta_->cmd_args.size()));
 	}
 }
 

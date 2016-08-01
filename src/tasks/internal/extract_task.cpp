@@ -5,7 +5,8 @@
 extract_task::extract_task(size_t id, std::shared_ptr<task_metadata> task_meta) : task_base(id, task_meta)
 {
 	if (task_meta_->cmd_args.size() != 2) {
-		throw task_exception("Wrong number of arguments. Required: 2, Actual: " + task_meta_->cmd_args.size());
+		throw task_exception(
+			"Wrong number of arguments. Required: 2, Actual: " + std::to_string(task_meta_->cmd_args.size()));
 	}
 }
 
