@@ -27,7 +27,7 @@ namespace jobs_client_commands
 			context.logger->info() << "Job-receiver: Job evaluating request received.";
 
 			eval_response response = context.evaluator->evaluate(eval_request(args[1], args[2], args[3]));
-			std::vector<std::string> reply = {"done", response.job_id, response.result};
+			std::vector<std::string> reply = {"done", response.job_id, response.result, response.message};
 
 			helpers::send_through_socket(context.socket, reply);
 			context.logger->info() << "Job-receiver: Job evaluated and respond sent.";

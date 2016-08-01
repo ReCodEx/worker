@@ -59,6 +59,11 @@ TEST(job_receiver, basic)
 	retval = socket.recv(&msg, ZMQ_NOBLOCK);
 	ASSERT_TRUE(retval);
 	ASSERT_EQ("OK", std::string((char *) msg.data(), msg.size()));
+	ASSERT_TRUE(msg.more());
+
+	retval = socket.recv(&msg, ZMQ_NOBLOCK);
+	ASSERT_TRUE(retval);
+	ASSERT_EQ("", std::string((char *) msg.data(), msg.size()));
 	ASSERT_FALSE(msg.more());
 
 	context->close();

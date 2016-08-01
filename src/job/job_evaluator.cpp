@@ -333,6 +333,7 @@ eval_response job_evaluator::evaluate(eval_request request)
 
 	// prepare result of response which will be sent to broker
 	std::string response_result = "OK";
+	std::string response_msg = "";
 
 	prepare_evaluator();
 	try {
@@ -344,11 +345,13 @@ eval_response job_evaluator::evaluate(eval_request request)
 	} catch (std::exception &e) {
 		logger_->error() << "Job evaluator encountered error: " << e.what();
 		progress_callback_->submission_failed(job_id_);
+
 		response_result = "ERR";
+		response_msg = e.what();
 	}
 	cleanup_evaluator();
 
 	logger_->info() << "Job (" + request.job_id + ") ended.";
 
-	return eval_response(request.job_id, response_result);
+	return eval_response(request.job_id, response_result, response_msg);
 }

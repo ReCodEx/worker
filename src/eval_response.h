@@ -4,20 +4,26 @@
 #include <string>
 
 /**
- * A structure that contains the result of an evaluation
+ * A structure that contains the result of an evaluation.
  */
 struct eval_response {
 	/** ID of the job */
 	const std::string job_id;
 
-	/** a rtextual representation of the evaluation result */
+	/** Textual representation of the evaluation result */
 	const std::string result;
 
+	/** Description of error if needed */
+	const std::string message;
+
 	/**
+	 * Classical initialization constructor.
 	 * @param job_id ID of the job
 	 * @param result a textual representation of the evaluation result
+	 * @param message if execution failed then this will contain error message
 	 */
-	eval_response(std::string job_id, std::string result) : job_id(job_id), result(result)
+	eval_response(std::string job_id, std::string result, std::string message = "")
+		: job_id(job_id), result(result), message(message)
 	{
 	}
 };
