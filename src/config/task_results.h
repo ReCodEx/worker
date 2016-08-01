@@ -9,6 +9,11 @@
  */
 enum class isolate_status { OK, RE, SG, TO, XX };
 
+/**
+ * Status of whole task after execution.
+ */
+enum class task_status { OK, FAILED, SKIPPED };
+
 
 /**
  * Sandbox results.
@@ -94,9 +99,10 @@ struct sandbox_results {
  */
 struct task_results {
 	/**
-	 * Flag whether task succeeded or not.
+	 * Status of task after execution.
+	 * Default: OK
 	 */
-	bool failed;
+	task_status status;
 	/**
 	 * Error message if the task failed.
 	 * Default: ""
@@ -111,7 +117,7 @@ struct task_results {
 	/**
 	 * Constructor with default values initiazation.
 	 */
-	task_results() : failed(false), error_message(), sandbox_status(nullptr)
+	task_results() : status(task_status::OK), error_message(), sandbox_status(nullptr)
 	{
 	}
 

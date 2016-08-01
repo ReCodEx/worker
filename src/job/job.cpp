@@ -292,14 +292,20 @@ std::vector<std::pair<std::string, std::shared_ptr<task_results>>> job::run()
 					results.push_back({task_id, res});
 				}
 			} else {
-				// we have to pass information about non-execution to children
 				logger_->info() << "Task \"" << task_id << "\" marked as not executable, proceeding to next task";
 				progress_callback_->task_skipped(job_meta_->job_id, task_id);
+
+				// even skipped task has its own result entry
+				std::shared_ptr<task_results> result(new task_results());
+				result->status = task_status::SKIPPED;
+				results.push_back({task_id, result});
+
+				// we have to pass information about non-execution to children
 				i->set_children_execution(false);
 			}
 		} catch (std::exception &e) {
 			std::shared_ptr<task_results> result(new task_results());
-			result->failed = true;
+			result->status = task_status::FAILED;
 			result->error_message = e.what();
 			results.push_back({task_id, result});
 

@@ -256,7 +256,13 @@ void job_evaluator::push_result()
 	for (auto &i : job_results_) {
 		YAML::Node node;
 		node["task-id"] = i.first;
-		node["status"] = i.second->failed ? "FAILED" : "OK";
+
+		switch (i.second->status) {
+		case task_status::OK: node["status"] = "OK"; break;
+		case task_status::FAILED: node["status"] = "FAILED"; break;
+		case task_status::SKIPPED: node["status"] = "SKIPPED"; break;
+		}
+
 		if (!i.second->error_message.empty()) {
 			node["error_message"] = i.second->error_message;
 		}
