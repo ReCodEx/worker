@@ -45,7 +45,7 @@ void job_evaluator::download_submission()
 	remote_fm_->get_file(archive_url.string(), (archive_path_ / archive_name_).string());
 
 	logger_->info() << "Submission archive downloaded succesfully.";
-	progress_callback_->submission_downloaded(job_id_);
+	progress_callback_->job_archive_downloaded(job_id_);
 	return;
 }
 
@@ -344,7 +344,7 @@ eval_response job_evaluator::evaluate(eval_request request)
 		push_result();
 	} catch (std::exception &e) {
 		logger_->error() << "Job evaluator encountered error: " << e.what();
-		progress_callback_->submission_failed(job_id_);
+		progress_callback_->job_build_failed(job_id_);
 
 		response_result = "ERR";
 		response_msg = e.what();
@@ -352,6 +352,7 @@ eval_response job_evaluator::evaluate(eval_request request)
 	cleanup_evaluator();
 
 	logger_->info() << "Job (" + request.job_id + ") ended.";
+	progress_callback_->job_finished(job_id_);
 
 	return eval_response(request.job_id, response_result, response_msg);
 }

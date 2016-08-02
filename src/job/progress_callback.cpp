@@ -32,14 +32,19 @@ void progress_callback::send_job_status(
 	}
 }
 
-void progress_callback::submission_downloaded(const std::string &job_id)
+void progress_callback::job_archive_downloaded(const std::string &job_id)
 {
 	send_job_status("submission_downloaded", job_id, "DOWNLOADED");
 }
 
-void progress_callback::submission_failed(const std::string &job_id)
+void progress_callback::job_build_failed(const std::string &job_id)
 {
 	send_job_status("submission_failed", job_id, "FAILED");
+}
+
+void progress_callback::job_finished(const std::string &job_id)
+{
+	send_job_status("submission_finished", job_id, "FINISHED");
 }
 
 void progress_callback::job_results_uploaded(const std::string &job_id)

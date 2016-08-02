@@ -17,18 +17,24 @@ public:
 	}
 
 	/**
-	 * Indicates that submission was successfully downloaded from fileserver.
+	 * Indicates that job archive was successfully downloaded from fileserver.
 	 * @param job_id unique identification of downloaded job
 	 * @note Implementation should not throw an exception.
 	 */
-	virtual void submission_downloaded(const std::string &job_id) = 0;
+	virtual void job_archive_downloaded(const std::string &job_id) = 0;
 	/**
 	 * Calling this function should indicate that something went wrong in building job
 	 *   or another preparation on evaluation.
 	 * @param job_id unique identifier of executed job
 	 * @note Implementation should not throw an exception.
 	 */
-	virtual void submission_failed(const std::string &job_id) = 0;
+	virtual void job_build_failed(const std::string &job_id) = 0;
+	/**
+	 * Indicates that all work on given job is done and worker can proceed to another one.
+	 * @param job_id unique identifier of executed job
+	 * @note Implementation should not throw an exception.
+	 */
+	virtual void job_finished(const std::string &job_id) = 0;
 	/**
 	 * After calling this, results should be visible for end users.
 	 * @param job_id unique identification of job which results were uploaded
@@ -80,11 +86,15 @@ public:
 class empty_progress_callback : public progress_callback_interface
 {
 public:
-	virtual void submission_downloaded(const std::string &job_id)
+	virtual void job_archive_downloaded(const std::string &job_id)
 	{
 	}
 
-	virtual void submission_failed(const std::string &job_id)
+	virtual void job_build_failed(const std::string &job_id)
+	{
+	}
+
+	virtual void job_finished(const std::string &job_id)
 	{
 	}
 

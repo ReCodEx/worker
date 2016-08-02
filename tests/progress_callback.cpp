@@ -22,14 +22,15 @@ TEST(progress_callback, basic)
 
 	std::thread r([&]() {
 		progress_callback callback(context, nullptr);
-		callback.submission_downloaded(job_id);
-		callback.submission_failed(job_id);
+		callback.job_archive_downloaded(job_id);
+		callback.job_build_failed(job_id);
 		callback.job_started(job_id);
 		callback.task_completed(job_id, task_id);
 		callback.task_failed(job_id, task_id);
 		callback.task_skipped(job_id, task_id);
 		callback.job_ended(job_id);
 		callback.job_results_uploaded(job_id);
+		callback.job_finished(job_id);
 	});
 
 	std::vector<std::string> result;
@@ -72,6 +73,11 @@ TEST(progress_callback, basic)
 
 	// receive message results uploaded
 	expected = {command, job_id, "UPLOADED"};
+	helpers::recv_from_socket(socket, result, &terminate);
+	ASSERT_EQ(result, expected);
+
+	// receive message results uploaded
+	expected = {command, job_id, "FINISHED"};
 	helpers::recv_from_socket(socket, result, &terminate);
 	ASSERT_EQ(result, expected);
 

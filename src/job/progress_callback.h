@@ -60,9 +60,11 @@ public:
 	 */
 	progress_callback(std::shared_ptr<zmq::context_t> context, std::shared_ptr<spdlog::logger> logger);
 
-	virtual void submission_downloaded(const std::string &job_id);
+	virtual void job_archive_downloaded(const std::string &job_id);
 
-	virtual void submission_failed(const std::string &job_id);
+	virtual void job_build_failed(const std::string &job_id);
+
+	virtual void job_finished(const std::string &job_id);
 
 	virtual void job_results_uploaded(const std::string &job_id);
 
