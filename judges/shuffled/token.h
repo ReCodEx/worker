@@ -25,8 +25,7 @@
  * Common return codes for all judges.
  */
 #define	RES_OK		0
-#define	RES_WRONG	1
-#define	RES_ERROR	2
+#define	RES_ERROR	1
 
 
 /*

@@ -2,6 +2,7 @@
  * Judge for shuffled files.
  * (C) 2007 Martin Krulis <krulis@ksvi.mff.cuni.cz>
  * (consulted with Martin Mares <mj@ucw.cz>)
+ * (C) 2016 ReCodEx Team <github.com/ReCodEx>
  *
  * This judge compares two text files and returns 0 if they matches (and 1 otherwise).
  * Two files are compared with no regards for whitespace (whitespace acts just like token delimiter).
@@ -9,6 +10,10 @@
  *	-n	ignore newlines (newline is considered only a whitespace)
  *	-i	ignore items order on the row (tokens on each row may be permutated)
  *	-r	ignore order of rows (rows may be permutated); this option has no effect when "-n" is used
+ *
+ * Exitcode:
+ *  - 0: files are similar, percentage of similarity is given as double on stdout
+ *  - 1: errors were present during execution of comparision, error message should be visible on stderr
  *
  * Enjoy :o)
  */
@@ -97,17 +102,17 @@ void load(FILE_DATA &data, const char *fileName, bool ignoreNewlines) {
 
 
 /*
- * Compares data sets and returns the RES_OK or RES_WRONG result.
+ * Compares data sets and returns percentage of similarity.
  */
-int compare(FILE_DATA &data1, FILE_DATA &data2) {
+double compare(FILE_DATA &data1, FILE_DATA &data2) {
 	if (data1.size() != data2.size())
-		return RES_WRONG;
+		return 0.0;
 
 	for(unsigned int i = 0; i < data1.size(); i++)
 		if (data1[i] != data2[i])
-			return RES_WRONG;
+			return 0.0;
 		
-	return RES_OK;
+	return 1.0;
 }
 
 
@@ -145,6 +150,9 @@ int main(int argc, char **argv) {
 	return 0;
 #endif
 
-	// Compare the data sets and return results.
-    return compare(data1, data2);
+	// Compare the data sets and write results.
+	double res = compare(data1, data2);
+	printf("%lf\n", res);
+
+	return RES_OK;
 }

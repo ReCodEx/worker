@@ -1,6 +1,7 @@
 /*
  * Universal judge for CodEx.
  * (C) 2007 Martin Krulis <krulis@ksvi.mff.cuni.cz>
+ * (C) 2016 ReCodEx Team <github.com/ReCodEx>
  *
  * This judge compares two text files. It compares only text tokens regardless amount of whitespace between them.
  * Usage: codex_judge [-r | -n | -rn] <file1> <file2>
@@ -8,6 +9,10 @@
  *	- switch options "r" and "n" can be specified as a 1st optional argument leading with "-".
  *		"n" - judge will treat newlines as ordinary whitespace (it will ignore line breaking)
  *		"r" - judge will treat tokens as real numbers and compares them accordingly (with some amount of error)
+ *
+ * Exitcode:
+ *  - 0: files are similar, percentage of similarity is given as double on stdout
+ *  - 1: errors were present during execution of comparision, error message should be visible on stderr
  *
  */
 #include <stdio.h>
@@ -21,8 +26,7 @@
 #define	FALSE		0
 
 #define	RES_OK		0
-#define	RES_WRONG	1
-#define	RES_ERROR	2
+#define	RES_ERROR	1
 
 
 /*
@@ -75,9 +79,9 @@ int compareRealTokens(TOKEN *token1, TOKEN *token2) {
 
 
 /*
- * Function that compares two files. It returns RES_xxx values.
+ * Function that compares two files. It returns similarity percentage.
  */
-int compare(TOKEN_FILE *f1, TOKEN_FILE *f2, token_compare_function *comp, int ignoreNewline) {
+double compare(TOKEN_FILE *f1, TOKEN_FILE *f2, token_compare_function *comp, int ignoreNewline) {
 	
 	// Initialize token structures.
 	TOKEN token1, token2;
@@ -104,7 +108,7 @@ int compare(TOKEN_FILE *f1, TOKEN_FILE *f2, token_compare_function *comp, int ig
 	freeToken(&token1);
 	freeToken(&token2);
 	
-	return ((res1 == TOK_EOF) && (res2 == TOK_EOF)) ? RES_OK : RES_WRONG;
+	return ((res1 == TOK_EOF) && (res2 == TOK_EOF)) ? 1.0 : 0.0;
 }
 
 
@@ -153,11 +157,14 @@ int main(int argc, char **argv) {
 	token_compare_function *comp = tokensEqual;
 	if (realTokens)
 		comp = compareRealTokens;
-	int res = compare(f1, f2, comp, ignoreNewline);
+	double res = compare(f1, f2, comp, ignoreNewline);
+
+	// Print result similarity percentage to stdout.
+	printf("%f\n", res);
 
 	// Close files.
 	tfclose(f1);
 	tfclose(f2);
 
-    return res;
+	return RES_OK;
 }
