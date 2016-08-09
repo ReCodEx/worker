@@ -349,10 +349,10 @@ eval_response job_evaluator::evaluate(eval_request request)
 		response_result = "ERR";
 		response_msg = e.what();
 	}
-	cleanup_evaluator();
-
-	logger_->info() << "Job (" + request.job_id + ") ended.";
+	
+	logger_->info() << "Job (" + job_id_ + ") ended.";
 	progress_callback_->job_finished(job_id_);
-
+	
+	cleanup_evaluator();
 	return eval_response(request.job_id, response_result, response_msg);
 }
