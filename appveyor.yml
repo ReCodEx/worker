@@ -108,4 +108,4 @@ after_test:
 - cmd: >-
     cd C:\projects\codex_worker\tests
     
-    ctest -C Release -R tool_ --output-on-failure
+    ctest -C Release -R tool_ --output-on-failure || ver>nul
