@@ -60,6 +60,11 @@ std::shared_ptr<task_results> external_task::run()
 
 	sandbox_fini();
 
+	// Check if sandbox ran successfully, else report error
+	if (res->sandbox_status->status != isolate_status::OK) {
+		throw task_exception("Sandboxed program failed: " + res->sandbox_status->message);
+	}
+
 	return res;
 }
 
