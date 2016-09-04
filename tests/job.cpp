@@ -362,7 +362,7 @@ TEST(job_test, load_of_worker_defaults)
 	// construct and check
 	job result(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory, nullptr);
 
-	ASSERT_EQ(result.get_task_queue().size(), 2u); // 2 because of root_task as root
+	ASSERT_EQ(result.get_task_queue().size(), 1u); // 1 because of root_task as root is deleted
 
 	// check changed values
 	// Now it's not sure that the values are changed before create_sandboxed_task() is called.
@@ -516,15 +516,14 @@ TEST(job_test, correctly_built_queue)
 	job result(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory, nullptr);
 
 	auto tasks = result.get_task_queue();
-	ASSERT_EQ(tasks.size(), 8u); // +1 because of fake_task root
-	ASSERT_EQ(tasks.at(0)->get_task_id(), ""); // fake root
-	ASSERT_EQ(tasks.at(1)->get_task_id(), "A");
-	ASSERT_EQ(tasks.at(2)->get_task_id(), "B");
-	ASSERT_EQ(tasks.at(3)->get_task_id(), "D");
-	ASSERT_EQ(tasks.at(4)->get_task_id(), "C");
-	ASSERT_EQ(tasks.at(5)->get_task_id(), "G");
-	ASSERT_EQ(tasks.at(6)->get_task_id(), "F");
-	ASSERT_EQ(tasks.at(7)->get_task_id(), "E");
+	ASSERT_EQ(tasks.size(), 7u);
+	ASSERT_EQ(tasks.at(0)->get_task_id(), "A");
+	ASSERT_EQ(tasks.at(1)->get_task_id(), "B");
+	ASSERT_EQ(tasks.at(2)->get_task_id(), "D");
+	ASSERT_EQ(tasks.at(3)->get_task_id(), "C");
+	ASSERT_EQ(tasks.at(4)->get_task_id(), "G");
+	ASSERT_EQ(tasks.at(5)->get_task_id(), "F");
+	ASSERT_EQ(tasks.at(6)->get_task_id(), "E");
 
 	// cleanup after yourself
 	remove_all(dir_root);
@@ -592,16 +591,12 @@ TEST(job_test, correctly_executed_job)
 
 		// progress callback calling expectations
 		EXPECT_CALL(*progress_callback, job_started(_)).Times(1);
-		EXPECT_CALL(*progress_callback, task_completed(_, _)).Times(tasks_count - 2);
+		EXPECT_CALL(*progress_callback, task_completed(_, _)).Times(tasks_count - 3);
 		EXPECT_CALL(*progress_callback, task_failed(_, _)).Times(1);
 		EXPECT_CALL(*progress_callback, task_skipped(_, _)).Times(1);
 		EXPECT_CALL(*progress_callback, job_ended(_)).Times(1);
 	}
 	{ // ! out of sequence calling
-
-		// expect root task will be executed once
-		EXPECT_CALL(*empty_task, run()).WillOnce(Return(empty_results));
-
 		for (size_t i = 1; i < tasks_count - 2; i++) {
 			// expect tasks A to G will be executed each at once
 			EXPECT_CALL(*mock_tasks[i - 1], run()).WillOnce(Return(empty_results));
@@ -674,7 +669,7 @@ TEST(job_test, job_variables)
 
 	// construct and check
 	job j(job_meta, worker_conf, dir_root, dir, res_dir, factory, nullptr);
-	ASSERT_EQ(j.get_task_queue().size(), 2u);
+	ASSERT_EQ(j.get_task_queue().size(), 1u);
 
 	std::shared_ptr<sandbox_limits> limits = params.limits;
 	ASSERT_EQ(params.task_meta->binary, path("/evaluate/recodex").string());

@@ -30,8 +30,7 @@ TEST(HttpManager, GetExistingFile)
 	auto tmp = fs::temp_directory_path();
 	fileman_config config = get_recodex_config();
 	http_manager m({config});
-	EXPECT_NO_THROW(
-		m.get_file(config.remote_url + "/fm_test/test1.txt", (tmp / "test1.txt").string()));
+	EXPECT_NO_THROW(m.get_file(config.remote_url + "/fm_test/test1.txt", (tmp / "test1.txt").string()));
 	EXPECT_TRUE(fs::is_regular_file((tmp / "test1.txt").string()));
 	fs::remove(tmp / "test1.txt");
 }
@@ -41,8 +40,7 @@ TEST(HttpManager, GetExistingFileRedirect)
 	auto tmp = fs::temp_directory_path();
 	fileman_config config = get_recodex_config();
 	http_manager m({config});
-	EXPECT_NO_THROW(
-		m.get_file(config.remote_url + "/fm_test/test2.txt", (tmp / "test2.txt").string()));
+	EXPECT_NO_THROW(m.get_file(config.remote_url + "/fm_test/test2.txt", (tmp / "test2.txt").string()));
 	EXPECT_TRUE(fs::is_regular_file((tmp / "test2.txt").string()));
 	fs::remove(tmp / "test2.txt");
 }
@@ -66,8 +64,7 @@ TEST(HttpManager, GetNonexistingFile)
 	fileman_config config = get_recodex_config();
 	http_manager m({config});
 	EXPECT_THROW(
-		m.get_file(config.remote_url + "/fm_test_nonexist/test3.txt", (tmp / "test3.txt").string()),
-		fm_exception);
+		m.get_file(config.remote_url + "/fm_test_nonexist/test3.txt", (tmp / "test3.txt").string()), fm_exception);
 	EXPECT_FALSE(fs::is_regular_file((tmp / "test3.txt").string()));
 	//*
 	try {
@@ -84,8 +81,7 @@ TEST(HttpManager, WrongAuthentication)
 	config.username = "codex";
 	config.password = "re";
 	http_manager m({config});
-	EXPECT_THROW(m.get_file(config.remote_url + "/fm_test/test1.txt", (tmp / "test1.txt").string()),
-		fm_exception);
+	EXPECT_THROW(m.get_file(config.remote_url + "/fm_test/test1.txt", (tmp / "test1.txt").string()), fm_exception);
 	EXPECT_FALSE(fs::is_regular_file((tmp / "test1.txt").string()));
 	fs::remove(tmp / "test1.txt");
 }
@@ -184,8 +180,7 @@ TEST(HttpManager, SimplePutFile)
 	config2.username = "codex";
 	config2.password = "re";
 	http_manager m2({config2});
-	EXPECT_THROW(
-		m2.put_file((tmp / "a.txt").string(), config2.remote_url + "/fm_test/a.txt"), fm_exception);
+	EXPECT_THROW(m2.put_file((tmp / "a.txt").string(), config2.remote_url + "/fm_test/a.txt"), fm_exception);
 
 	fs::remove(tmp / "a.txt");
 }
@@ -200,8 +195,7 @@ TEST(HttpManager, PutFileWrongURL)
 
 	fileman_config config = get_recodex_config();
 	http_manager m({config});
-	EXPECT_THROW(m.put_file((tmp / "b.txt").string(), config.remote_url + "/fm_test_nonexist/b.txt"),
-		fm_exception);
+	EXPECT_THROW(m.put_file((tmp / "b.txt").string(), config.remote_url + "/fm_test_nonexist/b.txt"), fm_exception);
 
 	EXPECT_THROW(m.put_file((tmp / "b.txt").string(), "http://ps.stdin.cz/b.txt"), fm_exception);
 
@@ -213,7 +207,5 @@ TEST(HttpManager, PutWrongFile)
 	auto tmp = fs::temp_directory_path();
 	fileman_config config = get_recodex_config();
 	http_manager m({config});
-	EXPECT_THROW(
-		m.put_file((tmp / "abc5xyz.txt").string(), config.remote_url + "/fm_test/abc5xyz.txt"),
-		fm_exception);
+	EXPECT_THROW(m.put_file((tmp / "abc5xyz.txt").string(), config.remote_url + "/fm_test/abc5xyz.txt"), fm_exception);
 }

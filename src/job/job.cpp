@@ -168,6 +168,14 @@ void job::build_job()
 	} catch (helpers::top_sort_exception &e) {
 		throw job_exception(e.what());
 	}
+
+	// remove unnecessary root task from begining of task queue
+	if (task_queue_.at(0)->get_task_id() == "") {
+		task_queue_.erase(task_queue_.begin());
+	} else {
+		// something bad is happening here, stop this job evaluation
+		throw job_exception("Root task not present in first place after topological sort.");
+	}
 }
 
 void job::process_task_limits(std::shared_ptr<sandbox_limits> limits)
