@@ -6,6 +6,11 @@
 
 
 /**
+ * Type of task which can be present in configuration.
+ */
+enum class task_type { INTERNAL, INITIALISATION, EXECUTION, EVALUATION };
+
+/**
  * Information about one task loaded from job configuration file.
  */
 class task_metadata
@@ -17,6 +22,7 @@ public:
 	 * @param priority priority of execution of task, default = 0
 	 * @param fatal if task is fatal, then whole job ends of failure, default = false
 	 * @param deps dependencies of this task, default = none
+	 * @param type type of this task, default = INTERNAL
 	 * @param cmd command which will be executed, default = ""
 	 * @param args arguments supplied for command, default = none
 	 * @param sandbox configuration of sandbox, shared pointer, its data can be changed! default = nullptr
@@ -25,11 +31,12 @@ public:
 		size_t priority = 0,
 		bool fatal = false,
 		std::vector<std::string> deps = {},
+		task_type type = task_type::INTERNAL,
 		std::string cmd = "",
 		std::vector<std::string> args = {},
 		std::shared_ptr<sandbox_config> sandbox = nullptr)
-		: task_id(task_id), priority(priority), fatal_failure(fatal), dependencies(deps), binary(cmd), cmd_args(args),
-		  sandbox(sandbox)
+		: task_id(task_id), priority(priority), fatal_failure(fatal), dependencies(deps), type(type), binary(cmd),
+		  cmd_args(args), sandbox(sandbox)
 	{
 	}
 
@@ -41,6 +48,9 @@ public:
 	bool fatal_failure;
 	/** Dependent tasks which have to be executed before this one. */
 	std::vector<std::string> dependencies;
+
+	/** Type of this task. */
+	task_type type;
 
 	/** Command which will be executed within this task. */
 	std::string binary;

@@ -66,6 +66,7 @@ TEST(job_metadata, build_all_from_yaml)
 	EXPECT_EQ(metadata->binary, "recodex");
 	auto args = std::vector<std::string>{"-v", "-f 01.in"};
 	EXPECT_EQ(metadata->cmd_args, args);
+	EXPECT_EQ(metadata->type, task_type::INTERNAL);
 
 	auto sandbox = metadata->sandbox;
 	EXPECT_NE(sandbox, nullptr);
@@ -106,6 +107,7 @@ TEST(job_metadata, queue_of_tasks)
 							   "    file-collector: localhost\n"
 							   "tasks:\n"
 							   "    - task-id: A\n"
+							   "      type: InTeRnAl\n"
 							   "      priority: 1\n"
 							   "      fatal-failure: false\n"
 							   "      cmd:\n"
@@ -113,6 +115,7 @@ TEST(job_metadata, queue_of_tasks)
 							   "          args:\n"
 							   "              - hello\n"
 							   "    - task-id: B\n"
+							   "      type: InItIaLiSaTiOn\n"
 							   "      priority: 4\n"
 							   "      fatal-failure: true\n"
 							   "      dependencies:\n"
@@ -122,6 +125,7 @@ TEST(job_metadata, queue_of_tasks)
 							   "          args:\n"
 							   "              - hello\n"
 							   "    - task-id: C\n"
+							   "      type: ExEcUtIoN\n"
 							   "      priority: 6\n"
 							   "      fatal-failure: false\n"
 							   "      dependencies:\n"
@@ -131,17 +135,29 @@ TEST(job_metadata, queue_of_tasks)
 							   "          bin: mkdir\n"
 							   "          args:\n"
 							   "              - hello\n"
+							   "    - task-id: D\n"
+							   "      type: EvAlUaTiOn\n"
+							   "      priority: 8\n"
+							   "      fatal-failure: false\n"
+							   "      dependencies:\n"
+							   "          - B\n"
+							   "          - D\n"
+							   "      cmd:\n"
+							   "          bin: cp\n"
+							   "          args:\n"
+							   "              - hello\n"
 							   "...\n");
 	auto job_meta = helpers::build_job_metadata(job_yaml);
 
 	auto tasks = job_meta->tasks;
-	EXPECT_EQ(tasks.size(), 3u);
+	EXPECT_EQ(tasks.size(), 4u);
 	EXPECT_EQ(tasks[0]->task_id, "A");
 	EXPECT_EQ(tasks[0]->priority, 1u);
 	EXPECT_EQ(tasks[0]->fatal_failure, false);
 	EXPECT_EQ(tasks[0]->binary, "mkdir");
 	auto args0 = std::vector<std::string>{"hello"};
 	EXPECT_EQ(tasks[0]->cmd_args, args0);
+	EXPECT_EQ(tasks[0]->type, task_type::INTERNAL);
 
 	EXPECT_EQ(tasks[1]->task_id, "B");
 	EXPECT_EQ(tasks[1]->priority, 4u);
@@ -151,6 +167,7 @@ TEST(job_metadata, queue_of_tasks)
 	EXPECT_EQ(tasks[1]->binary, "mkdir");
 	auto args1 = std::vector<std::string>{"hello"};
 	EXPECT_EQ(tasks[1]->cmd_args, args1);
+	EXPECT_EQ(tasks[1]->type, task_type::INITIALISATION);
 
 	EXPECT_EQ(tasks[2]->task_id, "C");
 	EXPECT_EQ(tasks[2]->priority, 6u);
@@ -160,4 +177,10 @@ TEST(job_metadata, queue_of_tasks)
 	EXPECT_EQ(tasks[2]->binary, "mkdir");
 	auto args2 = std::vector<std::string>{"hello"};
 	EXPECT_EQ(tasks[2]->cmd_args, args2);
+	EXPECT_EQ(tasks[2]->type, task_type::EXECUTION);
+
+	EXPECT_EQ(tasks[3]->task_id, "D");
+	EXPECT_EQ(tasks[3]->priority, 8u);
+	EXPECT_EQ(tasks[3]->binary, "cp");
+	EXPECT_EQ(tasks[3]->type, task_type::EVALUATION);
 }

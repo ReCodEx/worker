@@ -15,6 +15,14 @@ namespace helpers
 	 * @return pointer on job_metadata class
 	 */
 	std::shared_ptr<job_metadata> build_job_metadata(const YAML::Node &conf);
+
+	/**
+	 *
+	 * @param type
+	 * @return
+	 */
+	task_type get_task_type(const std::string &type);
+
 	/**
 	 * From given configuration in yaml get bind directories config for sandbox.
 	 * @param lim YAML representation of bind directories element

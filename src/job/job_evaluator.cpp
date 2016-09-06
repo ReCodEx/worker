@@ -346,7 +346,7 @@ eval_response job_evaluator::evaluate(eval_request request)
 		logger_->error() << "Job evaluator encountered error: " << e.what();
 		progress_callback_->job_build_failed(job_id_);
 
-		response_result = "ERR";
+		response_result = "FAILED";
 		response_msg = e.what();
 	}
 

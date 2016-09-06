@@ -1,5 +1,6 @@
-#include "config.h"
 #include <algorithm>
+#include <boost/algorithm/string.hpp>
+#include "config.h"
 
 
 std::shared_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf)
@@ -85,6 +86,11 @@ std::shared_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 			// load dependencies
 			if (ctask["dependencies"] && ctask["dependencies"].IsSequence()) {
 				task_meta->dependencies = ctask["dependencies"].as<std::vector<std::string>>();
+			}
+
+			// load task type
+			if (ctask["type"] && ctask["type"].IsScalar()) {
+				task_meta->type = helpers::get_task_type(ctask["type"].as<std::string>());
 			}
 
 			// distinguish internal/external command and construct suitable object
@@ -211,6 +217,20 @@ std::shared_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 	}
 
 	return job_meta;
+}
+
+task_type helpers::get_task_type(const std::string &type)
+{
+	std::string lower = boost::algorithm::to_lower_copy(type);
+	if (lower == "evaluation") {
+		return task_type::EVALUATION;
+	} else if (lower == "execution") {
+		return task_type::EXECUTION;
+	} else if (lower == "initialisation") {
+		return task_type::INITIALISATION;
+	}
+
+	return task_type::INTERNAL;
 }
 
 std::vector<std::tuple<std::string, std::string, sandbox_limits::dir_perm>> helpers::get_bind_dirs(

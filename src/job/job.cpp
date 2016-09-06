@@ -170,7 +170,7 @@ void job::build_job()
 	}
 
 	// remove unnecessary root task from begining of task queue
-	if (task_queue_.at(0)->get_task_id() == "") {
+	if (!task_queue_.empty() && task_queue_.at(0)->get_task_id() == "") {
 		task_queue_.erase(task_queue_.begin());
 	} else {
 		// something bad is happening here, stop this job evaluation
