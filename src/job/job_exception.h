@@ -1,6 +1,7 @@
 #ifndef RECODEX_WORKER_JOB_EXCEPTION_H
 #define RECODEX_WORKER_JOB_EXCEPTION_H
 
+
 /**
  * Job exception class.
  */
@@ -38,6 +39,22 @@ public:
 protected:
 	/** A textual description of the exception */
 	std::string what_;
+};
+
+
+/**
+ * Special exception for unrecoverable errors in job execution.
+ */
+class job_unrecoverable_exception : public job_exception
+{
+public:
+	/**
+	 * Exception with description.
+	 * @param what textual description
+	 */
+	job_unrecoverable_exception(const std::string &what) : job_exception(what)
+	{
+	}
 };
 
 #endif // RECODEX_WORKER_JOB_EXCEPTION_H

@@ -69,6 +69,11 @@ const std::vector<std::string> &task_base::get_dependencies()
 	return task_meta_->dependencies;
 }
 
+task_type task_base::get_type()
+{
+	return task_meta_->type;
+}
+
 bool task_base::is_executable()
 {
 	return execute_;

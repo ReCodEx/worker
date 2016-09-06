@@ -7,6 +7,7 @@
  * A structure that contains the result of an evaluation.
  */
 struct eval_response {
+public:
 	/** ID of the job */
 	const std::string job_id;
 

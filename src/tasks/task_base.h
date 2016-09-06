@@ -99,6 +99,11 @@ public:
 	 * as @a dependencies item inside @ref task_metadata structure during class construction.
 	 */
 	const std::vector<std::string> &get_dependencies();
+	/**
+	 * Return type of this task.
+	 * @return task_type enum with all possible types
+	 */
+	task_type get_type();
 
 	/**
 	 * Tells whether task can be safely executed or not (ie. if parent task is failed).

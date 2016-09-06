@@ -116,7 +116,7 @@ void job_evaluator::build_job()
 	try {
 		job_meta = helpers::build_job_metadata(conf);
 	} catch (helpers::config_exception &e) {
-		throw job_exception("Job configuration loading problem: " + std::string(e.what()));
+		throw job_unrecoverable_exception("Job configuration loading problem: " + std::string(e.what()));
 	}
 
 	// construct manager which is used in task factory
@@ -327,11 +327,8 @@ eval_response job_evaluator::evaluate(eval_request request)
 	job_id_ = request.job_id;
 	archive_url_ = request.job_url;
 	result_url_ = request.result_url;
-	std::cerr << "Job ID: " << job_id_ << std::endl; // TODO: just for debugging purposes
-	std::cerr << "Archive url: " << archive_url_ << std::endl; // TODO: just for debugging purposes
-	std::cerr << "Result url: " << result_url_ << std::endl; // TODO: just for debugging purposes
 
-	// prepare result of response which will be sent to broker
+	// prepare response which will be sent to broker
 	std::string response_result = "OK";
 	std::string response_msg = "";
 
@@ -342,17 +339,27 @@ eval_response job_evaluator::evaluate(eval_request request)
 		build_job();
 		run_job();
 		push_result();
-	} catch (std::exception &e) {
-		logger_->error() << "Job evaluator encountered error: " << e.what();
+
+		progress_callback_->job_finished(job_id_);
+
+	} catch (job_unrecoverable_exception &e) {
+		logger_->error() << "Job evaluator encountered unrecoverable error: " << e.what();
 		progress_callback_->job_build_failed(job_id_);
+		progress_callback_->job_finished(job_id_);
 
 		response_result = "FAILED";
+		response_msg = e.what();
+
+	} catch (std::exception &e) {
+		logger_->error() << "Job evaluator encountered internal error: " << e.what();
+		progress_callback_->job_aborted(job_id_);
+
+		response_result = "INTERNAL_ERROR";
 		response_msg = e.what();
 	}
 
 	logger_->info() << "Job (" + job_id_ + ") ended.";
-	progress_callback_->job_finished(job_id_);
-
 	cleanup_evaluator();
+
 	return eval_response(request.job_id, response_result, response_msg);
 }

@@ -29,6 +29,7 @@ TEST(progress_callback, basic)
 		callback.task_failed(job_id, task_id);
 		callback.task_skipped(job_id, task_id);
 		callback.job_ended(job_id);
+		callback.job_aborted(job_id);
 		callback.job_results_uploaded(job_id);
 		callback.job_finished(job_id);
 	});
@@ -68,6 +69,11 @@ TEST(progress_callback, basic)
 
 	// receive message job ended
 	expected = {command, job_id, "ENDED"};
+	helpers::recv_from_socket(socket, result, &terminate);
+	ASSERT_EQ(result, expected);
+
+	// receive message job aborted
+	expected = {command, job_id, "ABORTED"};
 	helpers::recv_from_socket(socket, result, &terminate);
 	ASSERT_EQ(result, expected);
 

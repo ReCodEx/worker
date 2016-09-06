@@ -282,16 +282,16 @@ std::vector<std::pair<std::string, std::shared_ptr<task_results>>> job::run()
 	progress_callback_->job_started(job_meta_->job_id);
 
 	// simply run all tasks in given topological order
-	for (auto &i : task_queue_) {
+	for (auto &task : task_queue_) {
 		// we don't want nullptr dereference
-		if (i == nullptr) {
+		if (task == nullptr) {
 			continue;
 		}
 
-		auto task_id = i->get_task_id();
+		auto task_id = task->get_task_id();
 		try {
-			if (i->is_executable()) {
-				auto res = i->run();
+			if (task->is_executable()) {
+				auto res = task->run();
 				logger_->info() << "Task \"" << task_id << "\" ran successfully";
 				progress_callback_->task_completed(job_meta_->job_id, task_id);
 
@@ -309,9 +309,16 @@ std::vector<std::pair<std::string, std::shared_ptr<task_results>>> job::run()
 				results.push_back({task_id, result});
 
 				// we have to pass information about non-execution to children
-				i->set_children_execution(false);
+				task->set_children_execution(false);
 			}
 		} catch (std::exception &e) {
+			if (task->get_type() == task_type::INTERNAL) {
+				// evaluation just encountered internal error and its quite possible
+				// that something is very wrong in here, so be gentle and crash like a sir
+				// and try not to mess up next job execution
+				throw;
+			}
+
 			std::shared_ptr<task_results> result(new task_results());
 			result->status = task_status::FAILED;
 			result->error_message = e.what();
@@ -320,14 +327,14 @@ std::vector<std::pair<std::string, std::shared_ptr<task_results>>> job::run()
 			logger_->info() << "Task \"" << task_id << "\" failed: " << e.what();
 			progress_callback_->task_failed(job_meta_->job_id, task_id);
 
-			if (i->get_fatal_failure()) {
+			if (task->get_fatal_failure()) {
 				logger_->info() << "Fatal failure bit set. Terminating of job execution...";
 				break;
 			} else {
 				// set executable bit in this task and in children
 				logger_->info() << "Task children will not be executed";
-				i->set_execution(false);
-				i->set_children_execution(false);
+				task->set_execution(false);
+				task->set_children_execution(false);
 			}
 		}
 	}
