@@ -17,9 +17,9 @@ namespace helpers
 	std::shared_ptr<job_metadata> build_job_metadata(const YAML::Node &conf);
 
 	/**
-	 *
-	 * @param type
-	 * @return
+	 * From given string parse suitable task_type enum.
+	 * @param type textual representation of task type
+	 * @return enum with task types
 	 */
 	task_type get_task_type(const std::string &type);
 

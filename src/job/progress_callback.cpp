@@ -62,6 +62,11 @@ void progress_callback::job_ended(const std::string &job_id)
 	send_job_status("job_ended", job_id, "ENDED");
 }
 
+void progress_callback::job_aborted(const std::string &job_id)
+{
+	send_job_status("job_aborted", job_id, "ABORTED");
+}
+
 void progress_callback::send_task_status(
 	const std::string &func_name, const std::string &job_id, const std::string &task_id, const std::string &task_status)
 {

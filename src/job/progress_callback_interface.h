@@ -54,6 +54,12 @@ public:
 	 */
 	virtual void job_ended(const std::string &job_id) = 0;
 	/**
+	 * Indicates that job run into some kind of internal error and needs to be reevaluated.
+	 * @param job_id identification of job
+	 * @note Implementation should not throw an exception.
+	 */
+	virtual void job_aborted(const std::string &job_id) = 0;
+	/**
 	 * Tells that task with given particular ID was just successfully completed.
 	 * @param job_id unique identification of job
 	 * @param task_id unique identification of successfully completed task
@@ -107,6 +113,10 @@ public:
 	}
 
 	virtual void job_ended(const std::string &job_id)
+	{
+	}
+
+	virtual void job_aborted(const std::string &job_id)
 	{
 	}
 
