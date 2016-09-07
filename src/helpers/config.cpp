@@ -230,7 +230,7 @@ task_type helpers::get_task_type(const std::string &type)
 		return task_type::INITIALISATION;
 	}
 
-	return task_type::INTERNAL;
+	return task_type::INNER;
 }
 
 std::vector<std::tuple<std::string, std::string, sandbox_limits::dir_perm>> helpers::get_bind_dirs(

@@ -122,6 +122,7 @@ std::shared_ptr<task_metadata> get_simple_task(
 	task->dependencies = deps;
 	task->binary = "mkdir";
 	task->cmd_args = std::vector<std::string>{"-v"};
+	task->type = task_type::EXECUTION;
 
 	return task;
 }
@@ -615,6 +616,96 @@ TEST(job_test, correctly_executed_job)
 
 	// and run it!...
 	result.run();
+
+	// cleanup after yourself
+	remove_all(dir_root);
+}
+
+/**
+ * Internal error means error in execution of inner task.
+ * These errors can be possibly only "localy" place
+ * and there is quite huge possibility that job can be executed on some other worker.
+ */
+TEST(job_test, internal_error_job)
+{
+	// prepare all things which need to be prepared
+	path dir_root = temp_directory_path() / "isoeval";
+	path dir = dir_root / "job_test";
+
+	auto job_meta = get_correct_meta();
+
+	/*
+	 * TASK TREE:
+	 *
+	 *      A
+	 *     / \
+	 *    B   D
+	 *     \ /
+	 *      C
+	 *
+	 * Calling order: A, B, D, C
+	 *
+	 * progress_callback: D (inner) will fail and abort whole execution
+	 */
+	job_meta->tasks.clear();
+	job_meta->tasks.push_back(get_simple_task("A", 1, {}));
+	job_meta->tasks.push_back(get_simple_task("B", 4, {"A"}));
+	job_meta->tasks.push_back(get_simple_task("C", 6, {"B", "D"}));
+	job_meta->tasks.push_back(get_simple_task("D", 2, {"A"}));
+
+	job_meta->tasks.back()->type = task_type::INNER;
+
+	auto worker_conf = std::make_shared<mock_worker_config>();
+	auto default_limits = get_default_limits();
+	std::string group_name = "group1";
+	EXPECT_CALL((*worker_conf), get_hwgroup()).WillRepeatedly(ReturnRef(group_name));
+	EXPECT_CALL((*worker_conf), get_worker_id()).WillRepeatedly(Return(8));
+	EXPECT_CALL((*worker_conf), get_limits()).WillRepeatedly(ReturnRef(default_limits));
+
+	auto progress_callback = std::make_shared<mock_progress_callback>();
+	auto factory = std::make_shared<mock_task_factory>();
+	std::vector<std::shared_ptr<mock_task>> mock_tasks;
+	auto empty_task = std::make_shared<mock_task>();
+	auto empty_results = std::make_shared<task_results>();
+	for (size_t i = 0; i < job_meta->tasks.size(); i++) {
+		mock_tasks.push_back(std::make_shared<mock_task>(i + 1, job_meta->tasks[i]));
+	}
+
+	{
+		InSequence s;
+		// expect root task to be created
+		EXPECT_CALL((*factory), create_internal_task(0, _)).WillOnce(Return(empty_task));
+
+		for (size_t i = 0; i < mock_tasks.size(); i++) {
+			// expect tasks to be created
+			EXPECT_CALL((*factory), create_internal_task(i + 1, job_meta->tasks[i])).WillOnce(Return(mock_tasks[i]));
+		}
+
+		// progress callback calling expectations
+		EXPECT_CALL(*progress_callback, job_started(_)).Times(1);
+		EXPECT_CALL(*progress_callback, task_completed(_, _)).Times(2);
+
+		// job aborted will not be sent because this function is called in job_evaluator
+		// generelly after internal failure job wil immediatelly end
+	}
+	{
+		InSequence s;
+		EXPECT_CALL(*mock_tasks[0], run()).WillOnce(Return(empty_results));
+		EXPECT_CALL(*mock_tasks[1], run()).WillOnce(Return(empty_results));
+		// task D will fail
+		EXPECT_CALL(*mock_tasks[3], run()).WillOnce(Throw(task_exception()));
+	}
+
+	create_directories(dir);
+	std::ofstream hello((dir / "hello").string());
+	hello << "hello" << std::endl;
+	hello.close();
+
+	// construct
+	job result(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory, progress_callback);
+
+	// and run it!...
+	EXPECT_THROW(result.run(), task_exception);
 
 	// cleanup after yourself
 	remove_all(dir_root);

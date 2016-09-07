@@ -8,7 +8,7 @@
 /**
  * Type of task which can be present in configuration.
  */
-enum class task_type { INTERNAL, INITIALISATION, EXECUTION, EVALUATION };
+enum class task_type { INNER, INITIALISATION, EXECUTION, EVALUATION };
 
 /**
  * Information about one task loaded from job configuration file.
@@ -22,7 +22,7 @@ public:
 	 * @param priority priority of execution of task, default = 0
 	 * @param fatal if task is fatal, then whole job ends of failure, default = false
 	 * @param deps dependencies of this task, default = none
-	 * @param type type of this task, default = INTERNAL
+	 * @param type type of this task, default = INNER
 	 * @param cmd command which will be executed, default = ""
 	 * @param args arguments supplied for command, default = none
 	 * @param sandbox configuration of sandbox, shared pointer, its data can be changed! default = nullptr
@@ -31,7 +31,7 @@ public:
 		size_t priority = 0,
 		bool fatal = false,
 		std::vector<std::string> deps = {},
-		task_type type = task_type::INTERNAL,
+		task_type type = task_type::INNER,
 		std::string cmd = "",
 		std::vector<std::string> args = {},
 		std::shared_ptr<sandbox_config> sandbox = nullptr)

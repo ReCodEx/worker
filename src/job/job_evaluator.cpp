@@ -329,8 +329,7 @@ eval_response job_evaluator::evaluate(eval_request request)
 	result_url_ = request.result_url;
 
 	// prepare response which will be sent to broker
-	std::string response_result = "OK";
-	std::string response_msg = "";
+	eval_response_holder response(request.job_id, "OK");
 
 	prepare_evaluator();
 	try {
@@ -347,19 +346,17 @@ eval_response job_evaluator::evaluate(eval_request request)
 		progress_callback_->job_build_failed(job_id_);
 		progress_callback_->job_finished(job_id_);
 
-		response_result = "FAILED";
-		response_msg = e.what();
+		response.set_result("FAILED", e.what());
 
 	} catch (std::exception &e) {
 		logger_->error() << "Job evaluator encountered internal error: " << e.what();
 		progress_callback_->job_aborted(job_id_);
 
-		response_result = "INTERNAL_ERROR";
-		response_msg = e.what();
+		response.set_result("INTERNAL_ERROR", e.what());
 	}
 
 	logger_->info() << "Job (" + job_id_ + ") ended.";
 	cleanup_evaluator();
 
-	return eval_response(request.job_id, response_result, response_msg);
+	return response.get_eval_response();
 }

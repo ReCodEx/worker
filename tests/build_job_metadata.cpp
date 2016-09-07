@@ -66,7 +66,7 @@ TEST(job_metadata, build_all_from_yaml)
 	EXPECT_EQ(metadata->binary, "recodex");
 	auto args = std::vector<std::string>{"-v", "-f 01.in"};
 	EXPECT_EQ(metadata->cmd_args, args);
-	EXPECT_EQ(metadata->type, task_type::INTERNAL);
+	EXPECT_EQ(metadata->type, task_type::INNER);
 
 	auto sandbox = metadata->sandbox;
 	EXPECT_NE(sandbox, nullptr);
@@ -107,7 +107,7 @@ TEST(job_metadata, queue_of_tasks)
 							   "    file-collector: localhost\n"
 							   "tasks:\n"
 							   "    - task-id: A\n"
-							   "      type: InTeRnAl\n"
+							   "      type: InNeR\n"
 							   "      priority: 1\n"
 							   "      fatal-failure: false\n"
 							   "      cmd:\n"
@@ -157,7 +157,7 @@ TEST(job_metadata, queue_of_tasks)
 	EXPECT_EQ(tasks[0]->binary, "mkdir");
 	auto args0 = std::vector<std::string>{"hello"};
 	EXPECT_EQ(tasks[0]->cmd_args, args0);
-	EXPECT_EQ(tasks[0]->type, task_type::INTERNAL);
+	EXPECT_EQ(tasks[0]->type, task_type::INNER);
 
 	EXPECT_EQ(tasks[1]->task_id, "B");
 	EXPECT_EQ(tasks[1]->priority, 4u);

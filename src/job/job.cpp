@@ -312,7 +312,7 @@ std::vector<std::pair<std::string, std::shared_ptr<task_results>>> job::run()
 				task->set_children_execution(false);
 			}
 		} catch (std::exception &e) {
-			if (task->get_type() == task_type::INTERNAL) {
+			if (task->get_type() == task_type::INNER) {
 				// evaluation just encountered internal error and its quite possible
 				// that something is very wrong in here, so be gentle and crash like a sir
 				// and try not to mess up next job execution
