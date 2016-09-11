@@ -1,5 +1,4 @@
 #include <algorithm>
-#include <boost/algorithm/string.hpp>
 #include "config.h"
 
 
@@ -221,7 +220,8 @@ std::shared_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 
 task_type helpers::get_task_type(const std::string &type)
 {
-	std::string lower = boost::algorithm::to_lower_copy(type);
+	std::string lower = type;
+	std::transform(lower.begin(), lower.end(), lower.begin(), ::tolower);
 	if (lower == "evaluation") {
 		return task_type::EVALUATION;
 	} else if (lower == "execution") {
