@@ -1,4 +1,4 @@
-# BasicWorker
+# Worker
 
 [![Linux build Status](https://img.shields.io/travis/ReCodEx/worker/master.svg?label=Linux%20build)](https://travis-ci.org/ReCodEx/worker)
 [![Windows build status](https://img.shields.io/appveyor/ci/ReCodEx/BasicWorker/master.svg?label=Windows%20build)](https://ci.appveyor.com/project/ReCodEx/basicworker/branch/master)

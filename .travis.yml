@@ -25,9 +25,6 @@ before_install:
   - cd ..
   - rm -rf isolate
 
-install:
-  - git submodule update --init
-
 script:
   - mkdir build
   - cd build
