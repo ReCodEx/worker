@@ -116,8 +116,10 @@ void http_manager::get_file(const std::string &src_name, const std::string &dst_
 				fs::remove(dst_name);
 			} catch (...) {
 			}
-			auto error_message =
-				"Failed to download " + src_name + " to " + dst_name + ". Error: " + curl_easy_strerror(res);
+			long response_code;
+			curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
+			auto error_message = "Failed to download " + src_name + " to " + dst_name + ". Error: (" +
+				std::to_string(response_code) + ") " + curl_easy_strerror(res);
 			logger_->warn() << error_message;
 			curl_easy_cleanup(curl);
 			throw fm_exception(error_message);
@@ -199,7 +201,10 @@ void http_manager::put_file(const std::string &src_name, const std::string &dst_
 
 		// Check for errors
 		if (res != CURLE_OK) {
-			auto message = "Failed to upload " + src_name + " to " + dst_url + ". Error: " + curl_easy_strerror(res);
+			long response_code;
+			curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
+			auto message = "Failed to upload " + src_name + " to " + dst_url + ". Error: (" +
+				std::to_string(response_code) + ") " + curl_easy_strerror(res);
 			logger_->warn() << message;
 			throw fm_exception(message);
 		}
