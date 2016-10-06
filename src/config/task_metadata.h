@@ -8,7 +8,7 @@
 /**
  * Type of task which can be present in configuration.
  */
-enum class task_type { INNER, INITIALISATION, EXECUTION, EVALUATION };
+enum class task_type { INNER, INITIATION, EXECUTION, EVALUATION };
 
 /**
  * Information about one task loaded from job configuration file.

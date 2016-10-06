@@ -226,8 +226,8 @@ task_type helpers::get_task_type(const std::string &type)
 		return task_type::EVALUATION;
 	} else if (lower == "execution") {
 		return task_type::EXECUTION;
-	} else if (lower == "initialisation") {
-		return task_type::INITIALISATION;
+	} else if (lower == "initiation") {
+		return task_type::INITIATION;
 	}
 
 	return task_type::INNER;

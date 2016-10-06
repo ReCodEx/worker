@@ -115,7 +115,7 @@ TEST(job_metadata, queue_of_tasks)
 							   "          args:\n"
 							   "              - hello\n"
 							   "    - task-id: B\n"
-							   "      type: InItIaLiSaTiOn\n"
+							   "      type: InItIaTiOn\n"
 							   "      priority: 4\n"
 							   "      fatal-failure: true\n"
 							   "      dependencies:\n"
@@ -167,7 +167,7 @@ TEST(job_metadata, queue_of_tasks)
 	EXPECT_EQ(tasks[1]->binary, "mkdir");
 	auto args1 = std::vector<std::string>{"hello"};
 	EXPECT_EQ(tasks[1]->cmd_args, args1);
-	EXPECT_EQ(tasks[1]->type, task_type::INITIALISATION);
+	EXPECT_EQ(tasks[1]->type, task_type::INITIATION);
 
 	EXPECT_EQ(tasks[2]->task_id, "C");
 	EXPECT_EQ(tasks[2]->priority, 6u);
