@@ -9,6 +9,6 @@
 A daemon that consumes assignments from the message queue, builds and runs them 
 and then sends results back.
 
-## Description
+## Documentation
 
 Feel free to read the documentation on [our wiki](https://github.com/ReCodEx/GlobalWiki/wiki/Worker).
