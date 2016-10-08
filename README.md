@@ -9,13 +9,6 @@
 A daemon that consumes assignments from the message queue, builds and runs them 
 and then sends results back.
 
-## How to run it
+## Description
 
-### Linux
-- Install dependencies according to [common](https://github.com/ReCodEx/GlobalWiki/wiki/Build-and-Deployment#common) and [worker-specific](https://github.com/ReCodEx/GlobalWiki/wiki/Build-and-Deployment#worker) configuration
-- Download dependencies using `git submodule update --init`
-- Build with cmake: `mkdir build && cd build && cmake .. && make`
-- Run `./basic-worker` (or unit tests `./tests/run_tests`)
-
-### Windows
-- Look at description in our wiki over [here](https://github.com/ReCodEx/GlobalWiki/wiki/Build-and-Deployment#windows-worker).
+Feel free to read the documentation on [our wiki](https://github.com/ReCodEx/GlobalWiki/wiki/Worker).
