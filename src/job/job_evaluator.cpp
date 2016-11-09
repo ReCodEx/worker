@@ -253,6 +253,7 @@ void job_evaluator::push_result()
 	// build yaml tree
 	YAML::Node res;
 	res["job-id"] = job_id_;
+    res["hw-group"] = config_->get_hwgroup();
 	for (auto &i : job_results_) {
 		YAML::Node node;
 		node["task-id"] = i.first;
