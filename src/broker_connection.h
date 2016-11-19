@@ -41,6 +41,7 @@ private:
 	std::shared_ptr<command_holder<broker_connection_context<proxy>>> broker_cmds_;
 	std::shared_ptr<command_holder<broker_connection_context<proxy>>> jobs_server_cmds_;
 	std::chrono::seconds reconnect_delay = std::chrono::seconds(1);
+	std::string current_job_;
 
 	/**
 	 * Send the init command to the broker
@@ -52,6 +53,11 @@ private:
 
 		for (auto &it : headers) {
 			msg.push_back(it.first + "=" + it.second);
+		}
+		msg.push_back("");
+		msg.push_back("description=" + config_->get_worker_description());
+		if (!current_job_.empty()) {
+			msg.push_back("current_job=" + current_job_);
 		}
 
 		socket_->send_broker(msg);
@@ -89,14 +95,14 @@ public:
 	broker_connection(std::shared_ptr<const worker_config> config,
 		std::shared_ptr<proxy> socket,
 		std::shared_ptr<spdlog::logger> logger = nullptr)
-		: config_(config), socket_(socket), logger_(logger)
+		: config_(config), socket_(socket), logger_(logger), current_job_("")
 	{
 		if (logger_ == nullptr) {
 			logger_ = helpers::create_null_logger();
 		}
 
 		// prepare dependent context for commands (in this class)
-		broker_connection_context<proxy> dependent_context = {socket_, config_};
+		broker_connection_context<proxy> dependent_context = {socket_, config_, current_job_};
 
 		// init broker commands
 		broker_cmds_ = std::make_shared<command_holder<broker_connection_context<proxy>>>(dependent_context, logger_);
@@ -168,6 +174,10 @@ public:
 						break;
 					}
 
+					if (msg.size() >= 2 && msg.at(0) == "eval") {
+						current_job_ = msg.at(1);
+					}
+
 					broker_cmds_->call_function(msg.at(0), msg);
 				}
 
@@ -176,6 +186,10 @@ public:
 
 					if (terminate) {
 						break;
+					}
+
+					if (msg.size() >= 1 && msg.at(0) == "done") {
+						current_job_ = "";
 					}
 
 					jobs_server_cmds_->call_function(msg.at(0), msg);

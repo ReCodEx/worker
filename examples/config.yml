@@ -1,12 +1,13 @@
 ---  # only one document with all configuration needed
 worker-id: 1
+worker-description: "linux_worker_1"
 broker-uri: tcp://localhost:9657
 headers:
     env:
         - c
         - python
         - cpp
-    threads: 2
+    threads: 1
 hwgroup: "group1"
 working-directory: /tmp/recodex
 file-managers:
@@ -26,7 +27,7 @@ limits:
     extra-time: 2  # seconds
     stack-size: 0  # normal in KB, but 0 means no special limit
     memory: 900000  # in KB
-    parallel: 16  # time and memory limits are merged
+    parallel: 0  # time and memory limits are merged
     disk-size: 1048576
     disk-files: 100
     environ-variable:

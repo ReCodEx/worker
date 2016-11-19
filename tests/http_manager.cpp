@@ -25,7 +25,7 @@ static fileman_config get_recodex_config()
 }
 
 
-TEST(HttpManager, GetExistingFile)
+TEST(HttpManager, DISABLED_GetExistingFile)
 {
 	auto tmp = fs::temp_directory_path();
 	fileman_config config = get_recodex_config();
@@ -35,7 +35,7 @@ TEST(HttpManager, GetExistingFile)
 	fs::remove(tmp / "test1.txt");
 }
 
-TEST(HttpManager, GetExistingFileRedirect)
+TEST(HttpManager, DISABLED_GetExistingFileRedirect)
 {
 	auto tmp = fs::temp_directory_path();
 	fileman_config config = get_recodex_config();
@@ -162,7 +162,7 @@ TEST(HttpManager, DISABLED_AllWrongErrorCodes)
 	}
 }
 
-TEST(HttpManager, SimplePutFile)
+TEST(HttpManager, DISABLED_SimplePutFile)
 {
 	auto tmp = fs::temp_directory_path();
 	{

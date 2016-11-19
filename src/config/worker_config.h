@@ -48,16 +48,21 @@ public:
 	 */
 	virtual size_t get_worker_id() const;
 	/**
+	 * Get worker human readable description (name), which will be shown in broker logs.
+	 * @return string with the description
+	 */
+	virtual const std::string &get_worker_description() const;
+	/**
 	 * Working directory path defined in config file.
 	 * Basically directory which is used as central point of work, all things should be done here.
 	 * @return textual representation of path
 	 */
-	virtual std::string get_working_directory() const;
+	virtual const std::string &get_working_directory() const;
 	/**
 	 * Defines address on which broker run.
 	 * @return textual representation of address or domain name and port
 	 */
-	virtual std::string get_broker_uri() const;
+	virtual const std::string &get_broker_uri() const;
 	/**
 	 * Headers defined in configuration file, which will be sent to broker.
 	 * @return associative array
@@ -85,7 +90,7 @@ public:
 	 * Get path to the caching directory.
 	 * @return textual representation of path
 	 */
-	virtual std::string get_cache_dir() const;
+	virtual const std::string &get_cache_dir() const;
 
 	/**
 	 * Get wrapper for logger configuration.
@@ -106,6 +111,8 @@ public:
 private:
 	/** Unique worker number in context of one machine (0-100 preferably) */
 	size_t worker_id_;
+	/** Human readable description of the worker for logging purposes */
+	std::string worker_description_;
 	/** Working directory of whole worker used as base directory for all temporary files */
 	std::string working_directory_;
 	/** Broker URI, address where broker is listening */

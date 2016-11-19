@@ -22,6 +22,8 @@ public:
 	std::shared_ptr<proxy> sockets;
 	/** Worker configuration loaded from file. */
 	std::shared_ptr<const worker_config> config;
+	/** Identifier of currently evaluated job, usefull when reconnecting during evaluation. */
+	const std::string &current_job;
 };
 
 /**

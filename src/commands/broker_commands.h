@@ -33,6 +33,11 @@ namespace broker_commands
 		for (auto &it : context.config->get_headers()) {
 			reply.push_back(it.first + "=" + it.second);
 		}
+		reply.push_back("");
+		reply.push_back("description=" + context.config->get_worker_description());
+		if (!context.current_job.empty()) {
+			reply.push_back("current_job=" + context.current_job);
+		}
 
 		context.sockets->send_broker(reply);
 	}

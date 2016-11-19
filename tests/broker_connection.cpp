@@ -19,11 +19,12 @@ TEST(broker_connection, sends_init)
 	broker_connection<mock_connection_proxy> connection(config, proxy);
 
 	std::string addr("tcp://localhost:9876");
+	std::string description("linux_worker_1");
 	worker_config::header_map_t headers = {std::make_pair("env", "c"), std::make_pair("threads", "2")};
 
-	EXPECT_CALL(*config, get_broker_uri()).WillRepeatedly(Return(addr));
-
+	EXPECT_CALL(*config, get_broker_uri()).WillRepeatedly(ReturnRef(addr));
 	EXPECT_CALL(*config, get_headers()).WillRepeatedly(ReturnRef(headers));
+	EXPECT_CALL(*config, get_worker_description()).WillRepeatedly(ReturnRef(description));
 
 	std::string hwgroup = "group_1";
 	EXPECT_CALL(*config, get_hwgroup()).WillRepeatedly(ReturnRef(hwgroup));
@@ -32,7 +33,9 @@ TEST(broker_connection, sends_init)
 		InSequence s;
 
 		EXPECT_CALL(*proxy, connect(StrEq(addr)));
-		EXPECT_CALL(*proxy, send_broker(ElementsAre("init", hwgroup, "env=c", "threads=2"))).WillOnce(Return(true));
+		EXPECT_CALL(
+			*proxy, send_broker(ElementsAre("init", hwgroup, "env=c", "threads=2", "", "description=linux_worker_1")))
+			.WillOnce(Return(true));
 	}
 
 	connection.connect();

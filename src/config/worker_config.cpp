@@ -69,6 +69,11 @@ worker_config::worker_config(const YAML::Node &config)
 			throw config_error("Item worker-id not defined properly");
 		}
 
+		// load worker-description
+		if (config["worker-description"] && config["worker-description"].IsScalar()) {
+			worker_description_ = config["worker-description"].as<std::string>();
+		} // can be omitted... no throw
+
 		// load working directory path
 		if (config["working-directory"] && config["working-directory"].IsScalar()) {
 			working_directory_ = config["working-directory"].as<std::string>();
@@ -173,12 +178,18 @@ size_t worker_config::get_worker_id() const
 	return worker_id_;
 }
 
-std::string worker_config::get_working_directory() const
+const std::string &worker_config::get_worker_description() const
+{
+	return worker_description_;
+}
+
+
+const std::string &worker_config::get_working_directory() const
 {
 	return working_directory_;
 }
 
-std::string worker_config::get_broker_uri() const
+const std::string &worker_config::get_broker_uri() const
 {
 	return broker_uri_;
 }
@@ -208,7 +219,7 @@ const sandbox_limits &worker_config::get_limits() const
 	return limits_;
 }
 
-std::string worker_config::get_cache_dir() const
+const std::string &worker_config::get_cache_dir() const
 {
 	return cache_dir_;
 }

@@ -33,11 +33,12 @@ public:
 		ON_CALL(*this, get_broker_ping_interval()).WillByDefault(Return(std::chrono::milliseconds(1000)));
 	}
 
-	MOCK_CONST_METHOD0(get_broker_uri, std::string());
+	MOCK_CONST_METHOD0(get_broker_uri, const std::string &());
 	MOCK_CONST_METHOD0(get_headers, const worker_config::header_map_t &());
 	MOCK_CONST_METHOD0(get_broker_ping_interval, std::chrono::milliseconds());
 	MOCK_CONST_METHOD0(get_hwgroup, const std::string &());
 	MOCK_CONST_METHOD0(get_worker_id, size_t());
+	MOCK_CONST_METHOD0(get_worker_description, const std::string &());
 	MOCK_CONST_METHOD0(get_limits, const sandbox_limits &());
 };
 
