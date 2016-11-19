@@ -6,6 +6,6 @@ var searchData=
   ['send_5fjobs',['send_jobs',['../classconnection__proxy.html#a196e6c7adc01da90ae3efb142af83281',1,'connection_proxy']]],
   ['set_5fchildren_5fexecution',['set_children_execution',['../classtask__base.html#ac2dd9519d27a2903276d86b4e38b2c12',1,'task_base']]],
   ['set_5fexecution',['set_execution',['../classtask__base.html#abbe49db38ee7a6152681d2a46469dd31',1,'task_base']]],
-  ['start_5freceiving',['start_receiving',['../classjob__receiver.html#adf9b34aa723447d9b1af2ea4bf792086',1,'job_receiver']]],
-  ['submission_5fdownloaded',['submission_downloaded',['../classprogress__callback.html#a66f6fad0a006507cdfd1d40e4e1dd4c9',1,'progress_callback::submission_downloaded()'],['../classprogress__callback__base.html#a65a420e1445c04ad9c038525ea1df3e8',1,'progress_callback_base::submission_downloaded()'],['../classempty__progress__callback.html#ac20485ce68f74482066e40eb44549e47',1,'empty_progress_callback::submission_downloaded()']]]
+  ['set_5fresult',['set_result',['../classeval__response__holder.html#a8bed4a98d1d77fbc3d78ae29988badc4',1,'eval_response_holder']]],
+  ['start_5freceiving',['start_receiving',['../classjob__receiver.html#adf9b34aa723447d9b1af2ea4bf792086',1,'job_receiver']]]
 ];

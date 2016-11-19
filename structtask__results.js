@@ -6,6 +6,6 @@ var structtask__results =
     [ "operator=", "structtask__results.html#a263ba4689d8d89ccedcbe88b3d9c8e1b", null ],
     [ "operator=", "structtask__results.html#ab3e181836379bc5a848be0f5fd56066a", null ],
     [ "error_message", "structtask__results.html#ab46a9b36f7309e33adfa6e67c9f34b72", null ],
-    [ "failed", "structtask__results.html#aeb49159a3adebca3d7eba2c0cca929aa", null ],
-    [ "sandbox_status", "structtask__results.html#a6b5d59f63c7e6ea5ad25d08749b7c687", null ]
+    [ "sandbox_status", "structtask__results.html#a6b5d59f63c7e6ea5ad25d08749b7c687", null ],
+    [ "status", "structtask__results.html#a5d448d7d76cc137c57c37987879813b4", null ]
 ];

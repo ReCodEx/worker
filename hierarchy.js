@@ -11,20 +11,23 @@ var hierarchy =
     [ "create_params", "structcreate__params.html", null ],
     [ "eval_request", "structeval__request.html", null ],
     [ "eval_response", "structeval__response.html", null ],
+    [ "eval_response_holder", "classeval__response__holder.html", null ],
     [ "std::exception", null, [
       [ "archive_exception", "classarchive__exception.html", null ],
       [ "fm_exception", "classfm__exception.html", null ],
       [ "helpers::config_exception", "classhelpers_1_1config__exception.html", null ],
       [ "helpers::filesystem_exception", "classhelpers_1_1filesystem__exception.html", null ],
       [ "helpers::top_sort_exception", "classhelpers_1_1top__sort__exception.html", null ],
-      [ "job_exception", "classjob__exception.html", null ],
+      [ "job_exception", "classjob__exception.html", [
+        [ "job_unrecoverable_exception", "classjob__unrecoverable__exception.html", null ]
+      ] ],
       [ "sandbox_exception", "classsandbox__exception.html", null ],
       [ "std::runtime_error", null, [
         [ "config_error", "classconfig__error.html", null ]
       ] ],
       [ "task_exception", "classtask__exception.html", null ]
     ] ],
-    [ "file_manager_base", "classfile__manager__base.html", [
+    [ "file_manager_interface", "classfile__manager__interface.html", [
       [ "cache_manager", "classcache__manager.html", null ],
       [ "fallback_file_manager", "classfallback__file__manager.html", null ],
       [ "http_manager", "classhttp__manager.html", null ],
@@ -33,14 +36,14 @@ var hierarchy =
     [ "fileman_config", "structfileman__config.html", null ],
     [ "job", "classjob.html", null ],
     [ "job_client_context", "classjob__client__context.html", null ],
-    [ "job_evaluator_base", "classjob__evaluator__base.html", [
+    [ "job_evaluator_interface", "classjob__evaluator__interface.html", [
       [ "job_evaluator", "classjob__evaluator.html", null ]
     ] ],
     [ "job_metadata", "classjob__metadata.html", null ],
     [ "job_receiver", "classjob__receiver.html", null ],
     [ "log_config", "structlog__config.html", null ],
     [ "message_origin", "structmessage__origin.html", null ],
-    [ "progress_callback_base", "classprogress__callback__base.html", [
+    [ "progress_callback_interface", "classprogress__callback__interface.html", [
       [ "empty_progress_callback", "classempty__progress__callback.html", null ],
       [ "progress_callback", "classprogress__callback.html", null ]
     ] ],
@@ -62,7 +65,7 @@ var hierarchy =
       [ "root_task", "classroot__task.html", null ]
     ] ],
     [ "task_compare", "classtask__compare.html", null ],
-    [ "task_factory_base", "classtask__factory__base.html", [
+    [ "task_factory_interface", "classtask__factory__interface.html", [
       [ "task_factory", "classtask__factory.html", null ]
     ] ],
     [ "task_metadata", "classtask__metadata.html", null ],

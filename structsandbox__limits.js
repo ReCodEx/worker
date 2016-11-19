@@ -8,8 +8,8 @@ var structsandbox__limits =
       [ "MAYBE", "structsandbox__limits.html#a930e0a1e99719dc676b253b7eedc97c8a1f69ed0ede55daf320c051cfde0a6cb8", null ],
       [ "DEV", "structsandbox__limits.html#a930e0a1e99719dc676b253b7eedc97c8a33bbdd2da48323405b31292148a18e25", null ]
     ] ],
-    [ "operator!=", "structsandbox__limits.html#afee236d8a808b17527d5f6963bc3d3d3", null ],
-    [ "operator==", "structsandbox__limits.html#a4900353a62213795318a5aa2f6538849", null ],
+    [ "operator!=", "structsandbox__limits.html#aa01e365f21cf57546cbe2a319f4136a4", null ],
+    [ "operator==", "structsandbox__limits.html#aa40d405dddaa4ea652035b3a7192c788", null ],
     [ "bound_dirs", "structsandbox__limits.html#ae4eb77c46e7465768dc3b94f97f79cd3", null ],
     [ "chdir", "structsandbox__limits.html#a25ac8f2afa3bff3ab96cbac7402b3de8", null ],
     [ "cpu_time", "structsandbox__limits.html#a11ad687d4572255e3c370991e406a0fa", null ],

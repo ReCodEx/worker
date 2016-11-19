@@ -13,6 +13,7 @@ var classtask__base =
     [ "get_id", "classtask__base.html#a9e67d4dea49bcddc369ba09e86b05598", null ],
     [ "get_priority", "classtask__base.html#a167f2266cdd153a4f11f519a29b5867e", null ],
     [ "get_task_id", "classtask__base.html#a406ff20533982d8722ec5deb48d8dff8", null ],
+    [ "get_type", "classtask__base.html#a9ee6a0fa979f995b028003df332e7dc1", null ],
     [ "is_executable", "classtask__base.html#a6cfe410e96c6568fe226ef8aba51adde", null ],
     [ "run", "classtask__base.html#a0f05e5664b3c2886b4555b01a6fe8ad0", null ],
     [ "set_children_execution", "classtask__base.html#ac2dd9519d27a2903276d86b4e38b2c12", null ],

@@ -1,7 +1,7 @@
 var NAVTREE =
 [
   [ "ReCodEx - Worker", "index.html", [
-    [ "BasicWorker", "index.html", null ],
+    [ "Worker", "index.html", null ],
     [ "Namespaces", null, [
       [ "Namespace List", "namespaces.html", "namespaces" ],
       [ "Namespace Members", "namespacemembers.html", [
@@ -30,8 +30,8 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 ".html",
-"classtask__factory.html",
-"structtask__results.html#ae92ee2b6b1ea4a7a00e837ef05a3de48"
+"classtask__base.html#ac2dd9519d27a2903276d86b4e38b2c12",
+"structsandbox__results.html#a4167c3c7b827a557c2c1aa4bc4419818"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

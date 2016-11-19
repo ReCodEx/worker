@@ -10,5 +10,5 @@ var dir_b118c466441e8db851de69c6796245a3 =
     [ "task_base.h", "task__base_8h_source.html", null ],
     [ "task_factory.cpp", "task__factory_8cpp_source.html", null ],
     [ "task_factory.h", "task__factory_8h_source.html", null ],
-    [ "task_factory_base.h", "task__factory__base_8h_source.html", null ]
+    [ "task_factory_interface.h", "task__factory__interface_8h_source.html", null ]
 ];

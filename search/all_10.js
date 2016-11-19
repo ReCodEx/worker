@@ -8,6 +8,7 @@ var searchData=
   ['register_5fcommand',['register_command',['../classcommand__holder.html#aa7e0a54372918a440bb934969ca68c37',1,'command_holder']]],
   ['remote_5furl',['remote_url',['../structfileman__config.html#a0a6d93a55ebda962de59263ad5b3e8a4',1,'fileman_config']]],
   ['rename_5ftask',['rename_task',['../classrename__task.html',1,'rename_task'],['../classrename__task.html#a63043539a806601436337448cfc5ed6b',1,'rename_task::rename_task()']]],
+  ['result',['result',['../structeval__response.html#a8afcfe628dd71dd8981af58538c9cc35',1,'eval_response']]],
   ['result_5furl',['result_url',['../structeval__request.html#a508a049fcedd45e4c865705e5f5c1d31',1,'eval_request']]],
   ['rm_5ftask',['rm_task',['../classrm__task.html',1,'rm_task'],['../classrm__task.html#a26f1d59cb50d89bf48f07a38d7e593ed',1,'rm_task::rm_task()']]],
   ['root_5ftask',['root_task',['../classroot__task.html',1,'root_task'],['../classroot__task.html#aee682a74a8d4a31984a28c435864b735',1,'root_task::root_task()=delete'],['../classroot__task.html#afd8e59588281ca82f4a8aa71012025a4',1,'root_task::root_task(size_t id, std::shared_ptr&lt; task_metadata &gt; task_meta=std::make_shared&lt; task_metadata &gt;())']]],

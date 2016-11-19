@@ -5,5 +5,6 @@ var searchData=
   ['task_5fmeta_5f',['task_meta_',['../classtask__base.html#a7e920b4f1c80cc5098f3aeca734ccdb8',1,'task_base']]],
   ['tasks',['tasks',['../classjob__metadata.html#a7b24385b20350f6ea380a51b6c569530',1,'job_metadata']]],
   ['temp_5fdir',['temp_dir',['../structcreate__params.html#a9c068c392d9c8e04ecfd0f22ae58dcdb',1,'create_params']]],
-  ['time',['time',['../structsandbox__results.html#a6413e3790e164ea90684829b8e5eb140',1,'sandbox_results']]]
+  ['time',['time',['../structsandbox__results.html#a6413e3790e164ea90684829b8e5eb140',1,'sandbox_results']]],
+  ['type',['type',['../classtask__metadata.html#ac673d43d35ad2fbffe4521bc84352941',1,'task_metadata']]]
 ];

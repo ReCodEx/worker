@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['basicworker',['BasicWorker',['../index.html',1,'']]]
+  ['worker',['Worker',['../index.html',1,'']]]
 ];
