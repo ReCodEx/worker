@@ -12,8 +12,9 @@
  *	-r	ignore order of rows (rows may be permutated); this option has no effect when "-n" is used
  *
  * Exitcode:
- *  - 0: files are similar, percentage of similarity is given as double on stdout
- *  - 1: errors were present during execution of comparision, error message should be visible on stderr
+ *  - 0: files are same, percentage is given on stdout
+ *  - 1: files are similar, percentage is given on stdout
+ *  - 2: errors were present during execution of comparision, error message should be visible on stderr
  *
  * Enjoy :o)
  */
@@ -102,17 +103,17 @@ void load(FILE_DATA &data, const char *fileName, bool ignoreNewlines) {
 
 
 /*
- * Compares data sets and returns percentage of similarity.
+ * Compares data sets and returns the RES_OK or RES_WRONG result..
  */
-double compare(FILE_DATA &data1, FILE_DATA &data2) {
+int compare(FILE_DATA &data1, FILE_DATA &data2) {
 	if (data1.size() != data2.size())
-		return 0.0;
+		return RES_WRONG;
 
 	for(unsigned int i = 0; i < data1.size(); i++)
 		if (data1[i] != data2[i])
-			return 0.0;
+			return RES_WRONG;
 		
-	return 1.0;
+	return RES_OK;
 }
 
 
@@ -151,8 +152,12 @@ int main(int argc, char **argv) {
 #endif
 
 	// Compare the data sets and write results.
-	double res = compare(data1, data2);
-	printf("%lf\n", res);
+	int res = compare(data1, data2);
+	if (res == RES_OK) {
+		printf("%lf\n", 1.0);
+	} else {
+		printf("%lf\n", 0.0);
+	}
 
-	return RES_OK;
+	return res;
 }

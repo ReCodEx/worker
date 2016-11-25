@@ -11,8 +11,9 @@
  *		"r" - judge will treat tokens as real numbers and compares them accordingly (with some amount of error)
  *
  * Exitcode:
- *  - 0: files are similar, percentage of similarity is given as double on stdout
- *  - 1: errors were present during execution of comparision, error message should be visible on stderr
+ *  - 0: files are same, percentage is given on stdout
+ *  - 1: files are similar, percentage is given on stdout
+ *  - 2: errors were present during execution of comparision, error message should be visible on stderr
  *
  */
 #include <stdio.h>
@@ -26,7 +27,8 @@
 #define	FALSE		0
 
 #define	RES_OK		0
-#define	RES_ERROR	1
+#define RES_WRONG	1
+#define	RES_ERROR	2
 
 
 /*
@@ -79,9 +81,9 @@ int compareRealTokens(TOKEN *token1, TOKEN *token2) {
 
 
 /*
- * Function that compares two files. It returns similarity percentage.
+ * Function that compares two files. It returns RES_xxx values.
  */
-double compare(TOKEN_FILE *f1, TOKEN_FILE *f2, token_compare_function *comp, int ignoreNewline) {
+int compare(TOKEN_FILE *f1, TOKEN_FILE *f2, token_compare_function *comp, int ignoreNewline) {
 	
 	// Initialize token structures.
 	TOKEN token1, token2;
@@ -108,7 +110,7 @@ double compare(TOKEN_FILE *f1, TOKEN_FILE *f2, token_compare_function *comp, int
 	freeToken(&token1);
 	freeToken(&token2);
 	
-	return ((res1 == TOK_EOF) && (res2 == TOK_EOF)) ? 1.0 : 0.0;
+	return ((res1 == TOK_EOF) && (res2 == TOK_EOF)) ? RES_OK : RES_WRONG;
 }
 
 
@@ -157,14 +159,18 @@ int main(int argc, char **argv) {
 	token_compare_function *comp = tokensEqual;
 	if (realTokens)
 		comp = compareRealTokens;
-	double res = compare(f1, f2, comp, ignoreNewline);
+	int res = compare(f1, f2, comp, ignoreNewline);
 
 	// Print result similarity percentage to stdout.
-	printf("%f\n", res);
+	if (res == RES_OK) {
+		printf("%lf\n", 1.0);
+	} else {
+		printf("%lf\n", 0.0);
+	}
 
 	// Close files.
 	tfclose(f1);
 	tfclose(f2);
 
-	return RES_OK;
+	return res;
 }
