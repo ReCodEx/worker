@@ -76,6 +76,12 @@ void job::build_job()
 		throw job_exception("Job configuration has no specified hwgroup");
 	}
 
+	// check if job is meant to be processed on this worker
+	auto hw_group_it = std::find(job_meta_->hwgroups.begin(), job_meta_->hwgroups.end(), worker_config_->get_hwgroup());
+	if (hw_group_it == job_meta_->hwgroups.end()) {
+		throw job_exception("Job is not supposed to be processed on this worker, hwgroups does not match");
+	}
+
 	// create root task, which is logical root of evaluation
 	size_t id = 0;
 	root_task_ = factory_->create_internal_task(id++);
@@ -108,7 +114,7 @@ void job::build_job()
 
 			auto sandbox = task_meta->sandbox;
 
-			if (sandbox->name == "") {
+			if (sandbox->name.empty()) {
 				throw job_exception("Sandbox name cannot be empty");
 			}
 
@@ -117,12 +123,12 @@ void job::build_job()
 			auto hwit = sandbox->loaded_limits.find(worker_config_->get_hwgroup());
 			if (hwit != sandbox->loaded_limits.end()) {
 				limits = hwit->second;
-			} else {
-				throw job_exception("Worker hwgroup was not found in loaded limits");
-			}
 
-			// check and maybe modify limits
-			process_task_limits(limits);
+				// check and maybe modify limits
+				process_task_limits(limits);
+			} else {
+				limits = std::make_shared<sandbox_limits>(worker_config_->get_limits());
+			}
 
 			// go through variables parsing
 			limits->std_input = parse_job_var(limits->std_input);
