@@ -55,7 +55,7 @@ std::shared_ptr<job_metadata> get_correct_meta()
 	std::shared_ptr<job_metadata> job_meta = std::make_shared<job_metadata>();
 	job_meta->job_id = "eval5";
 	job_meta->file_server_url = "localhost";
-	job_meta->language = "cpp";
+	job_meta->hwgroups.push_back("group1");
 
 	std::shared_ptr<task_metadata> task_meta = std::make_shared<task_metadata>();
 	task_meta->task_id = "eval";
@@ -222,12 +222,8 @@ TEST(job_test, empty_submission_details)
 	// job-id is empty
 	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory, nullptr), job_exception);
 
-	// language is empty
-	job_meta->job_id = "hello-job";
-	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory, nullptr), job_exception);
-
 	// file-server-url is empty
-	job_meta->language = "cpp";
+	job_meta->job_id = "hello-job";
 	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory, nullptr), job_exception);
 
 	// cleanup after yourself
@@ -253,8 +249,8 @@ TEST(job_test, empty_tasks_details)
 	hello.close();
 
 	job_meta->job_id = "hello-job";
-	job_meta->language = "cpp";
 	job_meta->file_server_url = "localhost";
+	job_meta->hwgroups.push_back("group1");
 	auto task = std::make_shared<task_metadata>();
 	job_meta->tasks.push_back(task);
 

@@ -70,10 +70,10 @@ void job::build_job()
 	// check job info
 	if (job_meta_->job_id == "") {
 		throw job_exception("Job ID cannot be empty");
-	} else if (job_meta_->language == "") {
-		throw job_exception("Language cannot be empty");
 	} else if (job_meta_->file_server_url == "") {
 		throw job_exception("File server URL cannot be empty");
+	} else if (job_meta_->hwgroups.empty()) {
+		throw job_exception("Job configuration has no specified hwgroup");
 	}
 
 	// create root task, which is logical root of evaluation
