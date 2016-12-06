@@ -119,6 +119,11 @@ void job_evaluator::build_job()
 		throw job_unrecoverable_exception("Job configuration loading problem: " + std::string(e.what()));
 	}
 
+	// check job invariant, identifiers from broker and in configuration has to be the same
+	if (job_id_ != job_meta->job_id) {
+		throw job_unrecoverable_exception("Job identification from broker and in configuration are different");
+	}
+
 	// construct manager which is used in task factory
 	auto task_fileman = std::make_shared<fallback_file_manager>(
 		cache_fm_, std::make_shared<prefixed_file_manager>(remote_fm_, job_meta->file_server_url + "/"));
