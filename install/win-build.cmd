@@ -107,13 +107,13 @@ if not exist %NUGET% (
 :: change directory to folder with libraries and download them with NuGet
 cd %LIBS_DIR%
 echo Downloading NuGet packages...
-%NUGET% install boost -ExcludeVersion
-%NUGET% install boost_system-vc140 -ExcludeVersion
-%NUGET% install boost_filesystem-vc140 -ExcludeVersion
-%NUGET% install boost_program_options-vc140 -ExcludeVersion
-%NUGET% install rmt_zlib -ExcludeVersion
-%NUGET% install rmt_libssh2 -ExcludeVersion
-%NUGET% install rmt_curl -ExcludeVersion
+%NUGET% install boost -ExcludeVersion -Version 1.60.0
+%NUGET% install boost_system-vc140 -ExcludeVersion -Version 1.60.0
+%NUGET% install boost_filesystem-vc140 -ExcludeVersion -Version 1.60.0
+%NUGET% install boost_program_options-vc140 -ExcludeVersion -Version 1.60.0
+%NUGET% install rmt_zlib -ExcludeVersion -Version 1.2.8.6
+%NUGET% install rmt_libssh2 -ExcludeVersion -Version 1.6.0.2
+%NUGET% install rmt_curl -ExcludeVersion -Version 7.47.1
 %NUGET% install fix8.dependencies.zmq -ExcludeVersion
 
 :: move downloaded libraries to folders with more logical structure

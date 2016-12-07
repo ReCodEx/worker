@@ -12,28 +12,28 @@ install:
     cd C:\deps
 
 
-    nuget install boost -ExcludeVersion
+    nuget install boost -ExcludeVersion -Version 1.60.0
 
     mv -f ./boost/lib/native/include/ ./boost/
 
-    nuget install boost_system-vc140 -ExcludeVersion
+    nuget install boost_system-vc140 -ExcludeVersion -Version 1.60.0
 
     mv -f ./boost_system-vc140/lib/native/address-model-32/lib/* ./boost/lib/
 
-    nuget install boost_filesystem-vc140 -ExcludeVersion
+    nuget install boost_filesystem-vc140 -ExcludeVersion -Version 1.60.0
 
     mv -f ./boost_filesystem-vc140/lib/native/address-model-32/lib/* ./boost/lib/
 
-    nuget install boost_program_options-vc140 -ExcludeVersion
+    nuget install boost_program_options-vc140 -ExcludeVersion -Version 1.60.0
 
     mv -f ./boost_program_options-vc140/lib/native/address-model-32/lib/* ./boost/lib/
 
 
-    nuget install rmt_zlib -ExcludeVersion
+    nuget install rmt_zlib -ExcludeVersion -Version 1.2.8.6
 
-    nuget install rmt_libssh2 -ExcludeVersion
+    nuget install rmt_libssh2 -ExcludeVersion -Version 1.6.0.2
 
-    nuget install rmt_curl -ExcludeVersion
+    nuget install rmt_curl -ExcludeVersion -Version 7.47.1
 
 
     mkdir curl
