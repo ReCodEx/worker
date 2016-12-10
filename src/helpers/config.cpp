@@ -30,11 +30,6 @@ std::shared_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 		} else {
 			throw config_exception("Submission.job-id item not loaded properly");
 		}
-		if (submiss["language"] && submiss["language"].IsScalar()) {
-			job_meta->language = submiss["language"].as<std::string>();
-		} else {
-			throw config_exception("Submission.language item not loaded properly");
-		}
 		if (submiss["file-collector"] && submiss["file-collector"].IsScalar()) {
 			job_meta->file_server_url = submiss["file-collector"].as<std::string>();
 		} else {
@@ -43,6 +38,11 @@ std::shared_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 		if (submiss["log"] && submiss["log"].IsScalar()) {
 			job_meta->log = submiss["log"].as<bool>();
 		} // can be omitted... no throw
+		if (submiss["hw-groups"] && submiss["hw-groups"].IsSequence()) {
+			job_meta->hwgroups = submiss["hw-groups"].as<std::vector<std::string>>();
+		} else {
+			throw config_exception("Submission.hw-groups item not loaded properly");
+		}
 
 
 		// load datas for tasks and save them

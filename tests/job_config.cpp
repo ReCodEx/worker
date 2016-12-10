@@ -23,7 +23,8 @@ TEST(job_config_test, bad_format)
 	yaml = YAML::Load("---\n"
 					  "submission:\n"
 					  "    job-id: 5\n"
-					  "    language: cpp\n"
+					  "    hw-groups:\n"
+					  "        - group1\n"
 					  "    file-collector: localhost\n"
 					  "tasks: hello\n"
 					  "...\n");
@@ -47,8 +48,9 @@ TEST(job_config_test, bad_format)
 	// item job-id	missing in submission
 	yaml = YAML::Load("---\n"
 					  "submission:\n"
-					  "    language: cpp\n"
 					  "    file-collector: localhost\n"
+					  "    hw-groups:\n"
+					  "        - group1\n"
 					  "tasks:\n"
 					  "    - task-id: cp\n"
 					  "      priority: 1\n"
@@ -65,8 +67,9 @@ TEST(job_config_test, bad_format)
 	yaml = YAML::Load("---\n"
 					  "submission:\n"
 					  "    job-id: 5\n"
-					  "    language: cpp\n"
 					  "    file-collector: localhost\n"
+					  "    hw-groups:\n"
+					  "        - group1\n"
 					  "tasks:\n"
 					  "    - task-id: cp\n"
 					  "      fatal-failure: true\n"
@@ -82,8 +85,9 @@ TEST(job_config_test, bad_format)
 	yaml = YAML::Load("---\n"
 					  "submission:\n"
 					  "    job-id: 5\n"
-					  "    language: cpp\n"
 					  "    file-collector: localhost\n"
+					  "    hw-groups:\n"
+					  "        - group1\n"
 					  "tasks:\n"
 					  "    - task-id: cp\n"
 					  "      priority: 1\n"
@@ -130,8 +134,9 @@ TEST(job_config_test, correct_format)
 	auto yaml = YAML::Load("---\n"
 						   "submission:\n"
 						   "    job-id: 5\n"
-						   "    language: cpp\n"
 						   "    file-collector: localhost\n"
+						   "    hw-groups:\n"
+						   "        - group1\n"
 						   "tasks:\n"
 						   "    - task-id: cp\n"
 						   "      priority: 1\n"
@@ -183,9 +188,10 @@ TEST(job_config_test, config_data)
 	auto yaml = YAML::Load("---\n"
 						   "submission:\n"
 						   "    job-id: 5\n"
-						   "    language: cpp\n"
 						   "    file-collector: localhost\n"
 						   "    log: true\n"
+						   "    hw-groups:\n"
+						   "        - group1\n"
 						   "tasks:\n"
 						   "    - task-id: cp\n"
 						   "      priority: 1\n"
@@ -235,9 +241,10 @@ TEST(job_config_test, config_data)
 	auto result = build_job_metadata(yaml);
 
 	ASSERT_EQ(result->job_id, "5");
-	ASSERT_EQ(result->language, "cpp");
 	ASSERT_EQ(result->file_server_url, "localhost");
 	ASSERT_EQ(result->log, true);
+	ASSERT_EQ(result->hwgroups.size(), 1u);
+	ASSERT_EQ(result->hwgroups.at(0), "group1");
 
 	auto task1 = result->tasks[0];
 	ASSERT_EQ(task1->task_id, "cp");

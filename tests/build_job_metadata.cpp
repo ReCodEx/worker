@@ -11,9 +11,10 @@ TEST(job_metadata, build_all_from_yaml)
 	auto job_yaml = YAML::Load("---\n"
 							   "submission:\n"
 							   "    job-id: eval5\n"
-							   "    language: cpp\n"
 							   "    file-collector: localhost\n"
 							   "    log: false\n"
+							   "    hw-groups:\n"
+							   "        - group1\n"
 							   "tasks:\n"
 							   "    - task-id: eval\n"
 							   "      priority: 4\n"
@@ -53,8 +54,9 @@ TEST(job_metadata, build_all_from_yaml)
 
 	EXPECT_EQ(job_meta->job_id, "eval5");
 	EXPECT_EQ(job_meta->file_server_url, "localhost");
-	EXPECT_EQ(job_meta->language, "cpp");
 	EXPECT_EQ(job_meta->log, false);
+	EXPECT_EQ(job_meta->hwgroups.size(), 1u);
+	EXPECT_EQ(job_meta->hwgroups.at(0), "group1");
 	EXPECT_EQ(job_meta->tasks.size(), 1u);
 
 	auto metadata = job_meta->tasks[0];
@@ -103,8 +105,9 @@ TEST(job_metadata, queue_of_tasks)
 	auto job_yaml = YAML::Load("---\n"
 							   "submission:\n"
 							   "    job-id: 5\n"
-							   "    language: cpp\n"
 							   "    file-collector: localhost\n"
+							   "    hw-groups:\n"
+							   "        - group1\n"
 							   "tasks:\n"
 							   "    - task-id: A\n"
 							   "      type: InNeR\n"
