@@ -57,12 +57,12 @@ std::shared_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 			if (ctask["priority"] && ctask["priority"].IsScalar()) {
 				task_meta->priority = ctask["priority"].as<size_t>();
 			} else {
-				throw config_exception("Configuration task has missing priority");
+				task_meta->priority = 1; // default value
 			}
 			if (ctask["fatal-failure"] && ctask["fatal-failure"].IsScalar()) {
 				task_meta->fatal_failure = ctask["fatal-failure"].as<bool>();
 			} else {
-				throw config_exception("Configuration task has missing fatal-failure");
+				task_meta->fatal_failure = false; // default value
 			}
 			if (ctask["cmd"]) {
 				if (ctask["cmd"].IsMap()) {

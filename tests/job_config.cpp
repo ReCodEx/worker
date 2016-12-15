@@ -63,24 +63,6 @@ TEST(job_config_test, bad_format)
 					  "...\n");
 	EXPECT_THROW(build_job_metadata(yaml), config_exception);
 
-	// priority missing in internal task
-	yaml = YAML::Load("---\n"
-					  "submission:\n"
-					  "    job-id: 5\n"
-					  "    file-collector: localhost\n"
-					  "    hw-groups:\n"
-					  "        - group1\n"
-					  "tasks:\n"
-					  "    - task-id: cp\n"
-					  "      fatal-failure: true\n"
-					  "      cmd:\n"
-					  "          bin: cp\n"
-					  "          args:\n"
-					  "              - hello.cpp\n"
-					  "              - hello_world.cpp\n"
-					  "...\n");
-	EXPECT_THROW(build_job_metadata(yaml), config_exception);
-
 	// task-id missing in external task
 	yaml = YAML::Load("---\n"
 					  "submission:\n"
@@ -194,7 +176,6 @@ TEST(job_config_test, config_data)
 						   "        - group1\n"
 						   "tasks:\n"
 						   "    - task-id: cp\n"
-						   "      priority: 1\n"
 						   "      fatal-failure: true\n"
 						   "      cmd:\n"
 						   "          bin: cp\n"
@@ -248,7 +229,7 @@ TEST(job_config_test, config_data)
 
 	auto task1 = result->tasks[0];
 	ASSERT_EQ(task1->task_id, "cp");
-	ASSERT_EQ(task1->priority, 1u);
+	ASSERT_EQ(task1->priority, 1u); // default value
 	ASSERT_EQ(task1->fatal_failure, true);
 	ASSERT_EQ(task1->dependencies.size(), 0u);
 	ASSERT_EQ(task1->binary, "cp");
