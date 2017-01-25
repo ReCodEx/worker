@@ -27,8 +27,8 @@ void progress_callback::send_job_status(
 		std::vector<std::string> msg = {command_, job_id, job_status};
 		helpers::send_through_socket(socket_, msg);
 	} catch (...) {
-		logger_->warn() << "progress_callback: call of " << func_name << " failed";
-		logger_->warn() << "    -> job_id: " << job_id;
+		logger_->warn("progress_callback: call of {} failed", func_name);
+		logger_->warn("    -> job_id: {}", job_id);
 	}
 }
 
@@ -75,8 +75,8 @@ void progress_callback::send_task_status(
 		std::vector<std::string> msg = {command_, job_id, "TASK", task_id, task_status};
 		helpers::send_through_socket(socket_, msg);
 	} catch (...) {
-		logger_->warn() << "progress_callback: call of " << func_name << " failed";
-		logger_->warn() << "    -> job_id: " << job_id << "; task_id: " << task_id;
+		logger_->warn("progress_callback: call of {} failed", func_name);
+		logger_->warn("    -> job_id: {}; task_id: {}", job_id, task_id);
 	}
 }
 

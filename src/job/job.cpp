@@ -303,7 +303,7 @@ std::vector<std::pair<std::string, std::shared_ptr<task_results>>> job::run()
 		try {
 			if (task->is_executable()) {
 				auto res = task->run();
-				logger_->info() << "Task \"" << task_id << "\" ran successfully";
+				logger_->info("Task \"{}\" ran successfully", task_id);
 				progress_callback_->task_completed(job_meta_->job_id, task_id);
 
 				// if task has some results than publish them in output
@@ -311,7 +311,7 @@ std::vector<std::pair<std::string, std::shared_ptr<task_results>>> job::run()
 					results.push_back({task_id, res});
 				}
 			} else {
-				logger_->info() << "Task \"" << task_id << "\" marked as not executable, proceeding to next task";
+				logger_->info("Task \"{}\" marked as not executable, proceeding to next task", task_id);
 				progress_callback_->task_skipped(job_meta_->job_id, task_id);
 
 				// even skipped task has its own result entry
@@ -335,15 +335,15 @@ std::vector<std::pair<std::string, std::shared_ptr<task_results>>> job::run()
 			result->error_message = e.what();
 			results.push_back({task_id, result});
 
-			logger_->info() << "Task \"" << task_id << "\" failed: " << e.what();
+			logger_->info("Task \"{}\" failed: {}", task_id, e.what());
 			progress_callback_->task_failed(job_meta_->job_id, task_id);
 
 			if (task->get_fatal_failure()) {
-				logger_->info() << "Fatal failure bit set. Terminating of job execution...";
+				logger_->info("Fatal failure bit set. Terminating of job execution...");
 				break;
 			} else {
 				// set executable bit in this task and in children
-				logger_->info() << "Task children will not be executed";
+				logger_->info("Task children will not be executed");
 				task->set_execution(false);
 				task->set_children_execution(false);
 			}
@@ -376,9 +376,9 @@ void job::init_logger()
 		// Set logging level to debug
 		file_logger->set_level(log_level);
 		// Print header to log
-		file_logger->info() << "------------------------------";
-		file_logger->info() << "       Job system log";
-		file_logger->info() << "------------------------------";
+		file_logger->info("------------------------------");
+		file_logger->info("       Job system log");
+		file_logger->info("------------------------------");
 		logger_ = file_logger;
 	} catch (spdlog::spdlog_ex) {
 		// Suppose not happen. But in case, create only empty logger.

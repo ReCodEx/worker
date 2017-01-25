@@ -28,7 +28,7 @@ void job_receiver::start_receiving()
 	socket_.connect("inproc://" + JOB_SOCKET_ID);
 
 	while (true) {
-		logger_->info() << "Job-receiver: Waiting for incomings requests...";
+		logger_->info("Job-receiver: Waiting for incomings requests...");
 
 		try {
 			std::vector<std::string> message;
@@ -37,7 +37,7 @@ void job_receiver::start_receiving()
 				if (terminate) {
 					break;
 				}
-				logger_->warn() << "Job-receiver: failed to receive message. Skipping...";
+				logger_->warn("Job-receiver: failed to receive message. Skipping...");
 				continue;
 			}
 
@@ -46,7 +46,7 @@ void job_receiver::start_receiving()
 				commands_->call_function(message[0], message);
 			}
 		} catch (std::exception &e) {
-			logger_->error() << "Job-receiver: unexpected error occured: " << e.what();
+			logger_->error("Job-receiver: unexpected error occured: {}", e.what());
 		}
 	}
 }

@@ -30,7 +30,7 @@ void job_evaluator::init_progress_callback()
 
 void job_evaluator::download_submission()
 {
-	logger_->info() << "Trying to download submission archive...";
+	logger_->info("Trying to download submission archive...");
 
 	// create directory for downloaded archive
 	fs::path archive_url = archive_url_;
@@ -44,14 +44,14 @@ void job_evaluator::download_submission()
 	archive_name_ = archive_url.filename();
 	remote_fm_->get_file(archive_url.string(), (archive_path_ / archive_name_).string());
 
-	logger_->info() << "Submission archive downloaded succesfully.";
+	logger_->info("Submission archive downloaded succesfully.");
 	progress_callback_->job_archive_downloaded(job_id_);
 	return;
 }
 
 void job_evaluator::prepare_submission()
 {
-	logger_->info() << "Preparing submission for usage...";
+	logger_->info("Preparing submission for usage...");
 
 	// decompress downloaded archive
 	try {
@@ -85,13 +85,13 @@ void job_evaluator::prepare_submission()
 	}
 
 
-	logger_->info() << "Submission prepared.";
+	logger_->info("Submission prepared.");
 	return;
 }
 
 void job_evaluator::build_job()
 {
-	logger_->info() << "Building job...";
+	logger_->info("Building job...");
 
 	// find job-config.yml to load configuration
 	using namespace boost::filesystem;
@@ -102,14 +102,14 @@ void job_evaluator::build_job()
 	}
 
 	// load configuration to object
-	logger_->info() << "Loading job configuration from yaml...";
+	logger_->info("Loading job configuration from yaml...");
 	YAML::Node conf;
 	try {
 		conf = YAML::LoadFile(config_path.string());
 	} catch (YAML::Exception &e) {
 		throw job_exception("Job configuration not loaded correctly: " + std::string(e.what()));
 	}
-	logger_->info() << "Yaml job configuration loaded properly.";
+	logger_->info("Yaml job configuration loaded properly.");
 
 	// build job_metadata structure
 	std::shared_ptr<job_metadata> job_meta = nullptr;
@@ -134,15 +134,15 @@ void job_evaluator::build_job()
 	job_ = std::make_shared<job>(
 		job_meta, config_, job_temp_dir_, source_path_, results_path_, factory, progress_callback_);
 
-	logger_->info() << "Job building done.";
+	logger_->info("Job building done.");
 	return;
 }
 
 void job_evaluator::run_job()
 {
-	logger_->info() << "Ready for evaluation...";
+	logger_->info("Ready for evaluation...");
 	job_results_ = job_->run();
-	logger_->info() << "Job evaluated.";
+	logger_->info("Job evaluated.");
 }
 
 void job_evaluator::init_submission_paths()
@@ -160,51 +160,51 @@ void job_evaluator::cleanup_submission()
 	// cleanup source code directory after job evaluation
 	try {
 		if (fs::exists(source_path_)) {
-			logger_->info() << "Cleaning up source code directory...";
+			logger_->info("Cleaning up source code directory...");
 			fs::remove_all(source_path_);
 		}
 	} catch (fs::filesystem_error &e) {
-		logger_->warn() << "Source code directory not cleaned properly: " << e.what();
+		logger_->warn("Source code directory not cleaned properly: {}", e.what());
 	}
 
 	// delete submission decompressed directory
 	try {
 		if (fs::exists(submission_path_)) {
-			logger_->info() << "Cleaning up decompressed submission directory...";
+			logger_->info("Cleaning up decompressed submission directory...");
 			fs::remove_all(submission_path_);
 		}
 	} catch (fs::filesystem_error &e) {
-		logger_->warn() << "Submission directory not cleaned properly: " << e.what();
+		logger_->warn("Submission directory not cleaned properly: {}", e.what());
 	}
 
 	// delete downloaded archive directory
 	try {
 		if (fs::exists(archive_path_)) {
-			logger_->info() << "Cleaning up directory containing downloaded archive...";
+			logger_->info("Cleaning up directory containing downloaded archive...");
 			fs::remove_all(archive_path_);
 		}
 	} catch (fs::filesystem_error &e) {
-		logger_->warn() << "Archive directory not cleaned properly: " << e.what();
+		logger_->warn("Archive directory not cleaned properly: {}", e.what());
 	}
 
 	// delete temp directory
 	try {
 		if (fs::exists(job_temp_dir_)) {
-			logger_->info() << "Cleaning up temp directory for tasks...";
+			logger_->info("Cleaning up temp directory for tasks...");
 			fs::remove_all(job_temp_dir_);
 		}
 	} catch (fs::filesystem_error &e) {
-		logger_->warn() << "Temp directory not cleaned properly: " << e.what();
+		logger_->warn("Temp directory not cleaned properly: {}", e.what());
 	}
 
 	// and finally delete created results directory
 	try {
 		if (fs::exists(results_path_)) {
-			logger_->info() << "Cleaning up directory containing created results...";
+			logger_->info("Cleaning up directory containing created results...");
 			fs::remove_all(results_path_);
 		}
 	} catch (fs::filesystem_error &e) {
-		logger_->warn() << "Results directory not cleaned properly: " << e.what();
+		logger_->warn("Results directory not cleaned properly: {}", e.what());
 	}
 
 	return;
@@ -224,7 +224,7 @@ void job_evaluator::cleanup_variables()
 		job_id_ = "";
 		job_ = nullptr;
 	} catch (std::exception &e) {
-		logger_->error() << "Error in deinicialization of evaluator: " << e.what();
+		logger_->error("Error in deinicialization of evaluator: {}", e.what());
 	}
 }
 
@@ -242,11 +242,11 @@ void job_evaluator::cleanup_evaluator()
 
 void job_evaluator::push_result()
 {
-	logger_->info() << "Trying to upload results of job...";
+	logger_->info("Trying to upload results of job...");
 
 	// just checkout for errors
 	if (job_ == nullptr) {
-		logger_->error() << "Pointer to job is null.";
+		logger_->error("Pointer to job is null.");
 		return;
 	}
 
@@ -254,7 +254,7 @@ void job_evaluator::push_result()
 	fs::path result_yaml = results_path_ / "result.yml";
 	fs::path archive_path = results_path_ / "result.zip";
 
-	logger_->info() << "Building yaml results file...";
+	logger_->info("Building yaml results file...");
 	// build yaml tree
 	YAML::Node res;
 	res["job-id"] = job_id_;
@@ -305,30 +305,30 @@ void job_evaluator::push_result()
 	std::ofstream out(result_yaml.string());
 	out << res;
 	out.close();
-	logger_->info() << "Yaml result file written succesfully.";
+	logger_->info("Yaml result file written succesfully.");
 
 	// compress given result.yml file
-	logger_->info() << "Compression of results file...";
+	logger_->info("Compression of results file...");
 	try {
 		archivator::compress(results_path_.string(), archive_path.string());
 	} catch (archive_exception &e) {
-		logger_->error() << "Results file not archived properly: " << e.what();
+		logger_->error("Results file not archived properly: {}", e.what());
 		return;
 	}
-	logger_->info() << "Compression done.";
+	logger_->info("Compression done.");
 
 	// send archived result to file server
 	remote_fm_->put_file(archive_path.string(), result_url_);
 
-	logger_->info() << "Job results uploaded succesfully.";
+	logger_->info("Job results uploaded succesfully.");
 	progress_callback_->job_results_uploaded(job_id_);
 	return;
 }
 
 eval_response job_evaluator::evaluate(eval_request request)
 {
-	logger_->info() << "Request for job evaluation arrived to worker";
-	logger_->info() << "Job ID of incoming job is: " + request.job_id;
+	logger_->info("Request for job evaluation arrived to worker");
+	logger_->info("Job ID of incoming job is: {}", request.job_id);
 
 	// set all needed variables for evaluation
 	job_id_ = request.job_id;
@@ -349,20 +349,20 @@ eval_response job_evaluator::evaluate(eval_request request)
 		progress_callback_->job_finished(job_id_);
 
 	} catch (job_unrecoverable_exception &e) {
-		logger_->error() << "Job evaluator encountered unrecoverable error: " << e.what();
+		logger_->error("Job evaluator encountered unrecoverable error: {}", e.what());
 		progress_callback_->job_build_failed(job_id_);
 		progress_callback_->job_finished(job_id_);
 
 		response.set_result("FAILED", e.what());
 
 	} catch (std::exception &e) {
-		logger_->error() << "Job evaluator encountered internal error: " << e.what();
+		logger_->error("Job evaluator encountered internal error: {}", e.what());
 		progress_callback_->job_aborted(job_id_);
 
 		response.set_result("INTERNAL_ERROR", e.what());
 	}
 
-	logger_->info() << "Job (" + job_id_ + ") ended.";
+	logger_->info("Job ({}) ended.", job_id_);
 	cleanup_evaluator();
 
 	return response.get_eval_response();

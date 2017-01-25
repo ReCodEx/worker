@@ -45,16 +45,16 @@ void worker_core::run()
 	broker_->connect();
 	// start execution thread which will be receiving jobs
 	std::thread broker_thread;
-	logger_->info() << "Trying to create broker connection thread.";
+	logger_->info("Trying to create broker connection thread.");
 	try {
 		broker_thread = std::thread(std::bind(&broker_connection<connection_proxy>::receive_tasks, broker_));
 	} catch (std::system_error &e) {
-		logger_->emerg() << "Broker connection thread cannot be started: " << e.what();
+		logger_->emerg("Broker connection thread cannot be started: {}", e.what());
 		return;
 	}
-	logger_->info() << "Broker connection thread created succesfully.";
+	logger_->info("Broker connection thread created succesfully.");
 
-	logger_->info() << "Job receiver will now start receiving.";
+	logger_->info("Job receiver will now start receiving.");
 	job_receiver_->start_receiving();
 
 	broker_thread.join();
@@ -112,7 +112,7 @@ void worker_core::force_exit(std::string msg)
 	// write to log
 	if (msg != "") {
 		if (logger_ != nullptr) {
-			logger_->emerg() << msg;
+			logger_->emerg(msg);
 		}
 		std::cerr << msg << std::endl;
 	}
@@ -153,11 +153,11 @@ void worker_core::log_init()
 		logger_->set_level(helpers::get_log_level(log_conf.log_level));
 		// Print header to log
 		if (helpers::compare_log_levels(spdlog::level::notice, logger_->level()) > 0) {
-			logger_->emerg() << "--- Started ReCodEx worker ---";
+			logger_->emerg("--- Started ReCodEx worker ---");
 		} else {
-			logger_->notice() << "------------------------------";
-			logger_->notice() << "    Started ReCodEx worker";
-			logger_->notice() << "------------------------------";
+			logger_->notice("------------------------------");
+			logger_->notice("    Started ReCodEx worker");
+			logger_->notice("------------------------------");
 		}
 	} catch (spdlog::spdlog_ex &e) {
 		std::cerr << "Logger: " << e.what() << std::endl;
@@ -171,9 +171,9 @@ void worker_core::curl_init()
 {
 	// Globally init curl library
 
-	logger_->info() << "Initializing CURL...";
+	logger_->info("Initializing CURL...");
 	curl_global_init(CURL_GLOBAL_DEFAULT);
-	logger_->info() << "CURL initialized.";
+	logger_->info("CURL initialized.");
 
 	return;
 }
@@ -181,43 +181,43 @@ void worker_core::curl_init()
 void worker_core::curl_fini()
 {
 	// Clean after curl library
-	logger_->info() << "Cleanup after CURL...";
+	logger_->info("Cleanup after CURL...");
 	curl_global_cleanup();
-	logger_->info() << "CURL cleaned.";
+	logger_->info("CURL cleaned.");
 
 	return;
 }
 
 void worker_core::broker_init()
 {
-	logger_->info() << "Initializing broker connection...";
+	logger_->info("Initializing broker connection...");
 	auto broker_proxy = std::make_shared<connection_proxy>(zmq_context_);
 
 	broker_ = std::make_shared<broker_connection<connection_proxy>>(config_, broker_proxy, logger_);
-	logger_->info() << "Broker connection initialized.";
+	logger_->info("Broker connection initialized.");
 
 	return;
 }
 
 void worker_core::fileman_init()
 {
-	logger_->info() << "Initializing file managers...";
+	logger_->info("Initializing file managers...");
 	auto fileman_conf = config_->get_filemans_configs();
 	remote_fm_ = std::make_shared<http_manager>(fileman_conf, logger_);
 	cache_fm_ = std::make_shared<cache_manager>(config_->get_cache_dir(), logger_);
-	logger_->info() << "File managers initialized.";
+	logger_->info("File managers initialized.");
 
 	return;
 }
 
 void worker_core::receiver_init()
 {
-	logger_->info() << "Initializing job receiver and evaluator...";
+	logger_->info("Initializing job receiver and evaluator...");
 	auto progr_callback = std::make_shared<progress_callback>(zmq_context_, logger_);
 	auto evaluator =
 		std::make_shared<job_evaluator>(logger_, config_, remote_fm_, cache_fm_, working_directory_, progr_callback);
 	job_receiver_ = std::make_shared<job_receiver>(zmq_context_, evaluator, logger_);
-	logger_->info() << "Job receiver and evaluator initialized.";
+	logger_->info("Job receiver and evaluator initialized.");
 	return;
 }
 

@@ -24,15 +24,15 @@ namespace jobs_client_commands
 	void process_eval(const std::vector<std::string> &args, const command_context<context_t> &context)
 	{
 		if (args.size() == 4) {
-			context.logger->info() << "Job-receiver: Job evaluating request received.";
+			context.logger->info("Job-receiver: Job evaluating request received.");
 
 			eval_response response = context.evaluator->evaluate(eval_request(args[1], args[2], args[3]));
 			std::vector<std::string> reply = {"done", response.job_id, response.result, response.message};
 
 			helpers::send_through_socket(context.socket, reply);
-			context.logger->info() << "Job-receiver: Job evaluated and respond sent.";
+			context.logger->info("Job-receiver: Job evaluated and respond sent.");
 		} else {
-			context.logger->warn() << "Job-receiver: Eval command with wrong number of arguments.";
+			context.logger->warn("Job-receiver: Eval command with wrong number of arguments.");
 		}
 	}
 }
