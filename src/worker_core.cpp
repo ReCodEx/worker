@@ -49,7 +49,7 @@ void worker_core::run()
 	try {
 		broker_thread = std::thread(std::bind(&broker_connection<connection_proxy>::receive_tasks, broker_));
 	} catch (std::system_error &e) {
-		logger_->emerg("Broker connection thread cannot be started: {}", e.what());
+		logger_->critical("Broker connection thread cannot be started: {}", e.what());
 		return;
 	}
 	logger_->info("Broker connection thread created succesfully.");
@@ -112,7 +112,7 @@ void worker_core::force_exit(std::string msg)
 	// write to log
 	if (msg != "") {
 		if (logger_ != nullptr) {
-			logger_->emerg(msg);
+			logger_->critical(msg);
 		}
 		std::cerr << msg << std::endl;
 	}
@@ -143,8 +143,7 @@ void worker_core::log_init()
 			std::make_shared<spdlog::sinks::rotating_file_sink_mt>((path / log_conf.log_basename).string(),
 				log_conf.log_suffix,
 				log_conf.log_file_size,
-				log_conf.log_files_count,
-				true);
+				log_conf.log_files_count);
 		// Set queue size for asynchronous logging. It must be a power of 2.
 		spdlog::set_async_mode(1048576);
 		// Make log with name "logger"
@@ -152,12 +151,12 @@ void worker_core::log_init()
 		// Set logging level to debug
 		logger_->set_level(helpers::get_log_level(log_conf.log_level));
 		// Print header to log
-		if (helpers::compare_log_levels(spdlog::level::notice, logger_->level()) > 0) {
-			logger_->emerg("--- Started ReCodEx worker ---");
+		if (helpers::compare_log_levels(spdlog::level::info, logger_->level()) > 0) {
+			logger_->critical("--- Started ReCodEx worker ---");
 		} else {
-			logger_->notice("------------------------------");
-			logger_->notice("    Started ReCodEx worker");
-			logger_->notice("------------------------------");
+			logger_->info("------------------------------");
+			logger_->info("    Started ReCodEx worker");
+			logger_->info("------------------------------");
 		}
 	} catch (spdlog::spdlog_ex &e) {
 		std::cerr << "Logger: " << e.what() << std::endl;

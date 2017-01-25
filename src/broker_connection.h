@@ -209,7 +209,7 @@ public:
 			}
 		}
 
-		logger_->emerg("Ceasing to receive messages.");
+		logger_->critical("Ceasing to receive messages.");
 	}
 };
 
