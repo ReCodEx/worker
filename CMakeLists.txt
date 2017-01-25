@@ -245,9 +245,11 @@ if(NOT YAMLCPP_FOUND)
 	add_subdirectory(vendor/yaml-cpp)
 endif()
 
-# Include Google Test libraries and then our very own unit tests
-add_subdirectory(vendor/googletest EXCLUDE_FROM_ALL)
-add_subdirectory(tests)
+if(NOT DISABLE_TESTS)
+	# Include Google Test libraries and then our very own unit tests
+	add_subdirectory(vendor/googletest EXCLUDE_FROM_ALL)
+	add_subdirectory(tests)
+endif()
 
 # Include judges
 add_subdirectory(judges)
