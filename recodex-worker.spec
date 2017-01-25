@@ -7,6 +7,7 @@ Summary: ReCodEx worker component
 Name: %{name}
 Version: %{version}
 Release: %{release}
+Source0: %{name}-%{unmangled_version}.tar.gz
 License: MIT
 Group: Development/Libraries
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
@@ -22,7 +23,7 @@ Requires(postun): systemd
 Backend part of ReCodEx programmer testing solution.
 
 %prep
-
+%setup -n %{name}-%{unmangled_version}
 
 %build
 %cmake .
