@@ -38,7 +38,7 @@ isolate_sandbox::isolate_sandbox(
 		fs::create_directories(temp_dir_);
 	} catch (fs::filesystem_error &e) {
 		auto message = std::string("Failed to create directory for isolate meta file. Error: ") + e.what();
-		logger_->warn() << message;
+		logger_->warn(message);
 		throw sandbox_exception(message);
 	}
 
@@ -73,12 +73,12 @@ void isolate_sandbox::isolate_init()
 	int fd[2];
 	pid_t childpid;
 
-	logger_->debug() << "Initializing isolate...";
+	logger_->debug("Initializing isolate...");
 
 	// Create unnamend pipe
 	if (pipe(fd) == -1) {
 		auto message = std::string("Cannot create pipe: ") + strerror(errno);
-		logger_->warn() << message;
+		logger_->warn(message);
 		throw sandbox_exception(message);
 	}
 
@@ -87,7 +87,7 @@ void isolate_sandbox::isolate_init()
 	switch (childpid) {
 	case -1: {
 		auto message = std::string("Fork failed: ") + strerror(errno);
-		logger_->warn() << message;
+		logger_->warn(message);
 		throw sandbox_exception(message);
 	} break;
 	case 0: isolate_init_child(fd[0], fd[1]); break;
@@ -106,7 +106,7 @@ void isolate_sandbox::isolate_init()
 		}
 		if (ret == -1) {
 			auto message = "Read from pipe error.";
-			logger_->warn() << message;
+			logger_->warn(message);
 			throw sandbox_exception(message);
 		}
 
@@ -114,10 +114,10 @@ void isolate_sandbox::isolate_init()
 		waitpid(childpid, &status, 0);
 		if (WEXITSTATUS(status) != 0) {
 			auto message = "Isolate init error. Return value: " + std::to_string(WEXITSTATUS(status));
-			logger_->warn() << message;
+			logger_->warn(message);
 			throw sandbox_exception(message);
 		}
-		logger_->debug() << "Isolate initialized in " << sandboxed_dir_;
+		logger_->debug("Isolate initialized in {}", sandboxed_dir_);
 		close(fd[0]);
 		break;
 	}
@@ -136,7 +136,7 @@ void isolate_sandbox::isolate_init_child(int fd_0, int fd_1)
 	devnull = open("/dev/null", O_WRONLY);
 	if (devnull == -1) {
 		auto message = "Cannot open /dev/null file for writing.";
-		logger_->warn() << message;
+		logger_->warn(message);
 		throw sandbox_exception(message);
 	}
 	dup2(devnull, 2);
@@ -156,7 +156,7 @@ void isolate_sandbox::isolate_init_child(int fd_0, int fd_1)
 	// Never reached
 	{
 		auto message = std::string("Exec returned to child: ") + strerror(errno);
-		logger_->warn() << message;
+		logger_->warn(message);
 		throw sandbox_exception(message);
 	}
 }
@@ -165,14 +165,14 @@ void isolate_sandbox::isolate_cleanup()
 {
 	pid_t childpid;
 
-	logger_->debug() << "Cleaning up isolate...";
+	logger_->debug("Cleaning up isolate...");
 
 	childpid = fork();
 
 	switch (childpid) {
 	case -1: {
 		auto message = std::string("Fork failed: ") + strerror(errno);
-		logger_->warn() << message;
+		logger_->warn(message);
 		throw sandbox_exception(message);
 	} break;
 	case 0:
@@ -182,7 +182,7 @@ void isolate_sandbox::isolate_cleanup()
 		devnull = open("/dev/null", O_WRONLY);
 		if (devnull == -1) {
 			auto message = "Cannot open /dev/null file for writing.";
-			logger_->warn() << message;
+			logger_->warn(message);
 			throw sandbox_exception(message);
 		}
 		dup2(devnull, 2);
@@ -200,7 +200,7 @@ void isolate_sandbox::isolate_cleanup()
 		// Never reached
 		{
 			auto message = std::string("Exec returned to child: ") + strerror(errno);
-			logger_->warn() << message;
+			logger_->warn(message);
 			throw sandbox_exception(message);
 		}
 		break;
@@ -210,10 +210,10 @@ void isolate_sandbox::isolate_cleanup()
 		waitpid(childpid, &status, 0);
 		if (WEXITSTATUS(status) != 0) {
 			auto message = "Isolate cleanup error. Return value: " + std::to_string(WEXITSTATUS(status));
-			logger_->warn() << message;
+			logger_->warn(message);
 			throw sandbox_exception(message);
 		}
-		logger_->debug() << "Isolate box " << id_ << " cleaned up.";
+		logger_->debug("Isolate box {} cleaned up.", id_);
 		break;
 	}
 }
@@ -222,14 +222,14 @@ void isolate_sandbox::isolate_run(const std::string &binary, const std::vector<s
 {
 	pid_t childpid;
 
-	logger_->debug() << "Running isolate...";
+	logger_->debug("Running isolate...");
 
 	childpid = fork();
 
 	switch (childpid) {
 	case -1: {
 		auto message = std::string("Fork failed: ") + strerror(errno);
-		logger_->warn() << message;
+		logger_->warn(message);
 		throw sandbox_exception(message);
 	} break;
 	case 0: {
@@ -239,7 +239,7 @@ void isolate_sandbox::isolate_run(const std::string &binary, const std::vector<s
 		devnull = open("/dev/null", O_WRONLY);
 		if (devnull == -1) {
 			auto message = "Cannot open /dev/null file for writing.";
-			logger_->warn() << message;
+			logger_->warn(message);
 			throw sandbox_exception(message);
 		}
 		dup2(devnull, 0); // Don't allow process inside isolate to read from current standart input
@@ -251,7 +251,7 @@ void isolate_sandbox::isolate_run(const std::string &binary, const std::vector<s
 
 		// Never reached
 		auto message = std::string("Exec returned to child: ") + strerror(errno);
-		logger_->warn() << message;
+		logger_->warn(message);
 		throw sandbox_exception(message);
 	} break;
 	default: {
@@ -265,7 +265,7 @@ void isolate_sandbox::isolate_run(const std::string &binary, const std::vector<s
 		switch (controlpid) {
 		case -1: {
 			auto message = std::string("Fork failed: ") + strerror(errno);
-			logger_->warn() << message;
+			logger_->warn(message);
 			throw sandbox_exception(message);
 		} break;
 		case 0:
@@ -294,16 +294,16 @@ void isolate_sandbox::isolate_run(const std::string &binary, const std::vector<s
 			if (WIFSIGNALED(status)) {
 				auto message =
 					"Isolate process was killed by signal " + std::to_string(WTERMSIG(status)) + " due to timeout.";
-				logger_->warn() << message;
+				logger_->warn(message);
 				throw sandbox_exception(message);
 			}
 			// isolate exited, but with return value signify internal error
 			if (WEXITSTATUS(status) != 0 && WEXITSTATUS(status) != 1) {
 				auto message = "Isolate run internal error. Return value: " + std::to_string(WEXITSTATUS(status));
-				logger_->warn() << message;
+				logger_->warn(message);
 				throw sandbox_exception(message);
 			}
-			logger_->debug() << "Isolate box " << id_ << " ran successfully.";
+			logger_->debug("Isolate box {} ran successfully.", id_);
 			break;
 		}
 	} break;
@@ -394,7 +394,7 @@ char **isolate_sandbox::isolate_run_args(const std::string &binary, const std::v
 	int i = 0;
 	for (auto &it : vargs) {
 		c_args[i++] = strdup(it.c_str());
-		logger_->debug() << "  " << it;
+		logger_->debug("  {}", it);
 	}
 	c_args[i] = NULL;
 	return c_args;
@@ -444,7 +444,7 @@ sandbox_results isolate_sandbox::process_meta_file()
 		return results;
 	} else {
 		auto message = "Cannot open " + meta_file_ + " for reading.";
-		logger_->warn() << message;
+		logger_->warn(message);
 		throw sandbox_exception(message);
 	}
 }

@@ -69,7 +69,7 @@ private:
 	void reconnect()
 	{
 		socket_->reconnect_broker(config_->get_broker_uri());
-		logger_->info() << "Going to sleep for " + std::to_string(reconnect_delay.count()) + " seconds";
+		logger_->info("Going to sleep for {} seconds", reconnect_delay.count());
 		std::this_thread::sleep_for(reconnect_delay);
 
 		std::chrono::seconds max_reconnect_delay(32);
@@ -121,7 +121,7 @@ public:
 	 */
 	void connect()
 	{
-		logger_->info() << "Connecting to " << config_->get_broker_uri();
+		logger_->info("Connecting to {}", config_->get_broker_uri());
 		socket_->connect(config_->get_broker_uri());
 		send_init();
 	}
@@ -151,7 +151,7 @@ public:
 
 					broker_liveness -= 1;
 					if (broker_liveness == 0) {
-						logger_->info() << "Broker connection expired - trying to reconnect";
+						logger_->info("Broker connection expired - trying to reconnect");
 						reconnect();
 						send_init();
 						broker_liveness = config_->get_max_broker_liveness();
@@ -205,11 +205,11 @@ public:
 					socket_->send_broker(msg);
 				}
 			} catch (std::exception &e) {
-				logger_->error() << "Unexpected error while receiving tasks: " << e.what();
+				logger_->error("Unexpected error while receiving tasks: {}", e.what());
 			}
 		}
 
-		logger_->emerg() << "Ceasing to receive messages.";
+		logger_->emerg("Ceasing to receive messages.");
 	}
 };
 

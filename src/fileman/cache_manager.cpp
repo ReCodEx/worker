@@ -20,7 +20,7 @@ cache_manager::cache_manager(const std::string &caching_dir, std::shared_ptr<spd
 		}
 	} catch (fs::filesystem_error &e) {
 		auto message = "Cannot create directory " + cache_path.string() + ". Error: " + e.what();
-		logger_->warn() << message;
+		logger_->warn(message);
 		throw fm_exception(message);
 	}
 
@@ -31,11 +31,11 @@ void cache_manager::get_file(const std::string &src_name, const std::string &dst
 {
 	fs::path source_file = caching_dir_ / src_name;
 	fs::path destination_file = dst_path;
-	logger_->debug() << "Copying file " << src_name + " from cache to " + dst_path;
+	logger_->debug("Copying file {} from cache to {}", src_name, dst_path);
 
 	if (!fs::is_regular_file(source_file)) {
 		auto message = "Cache miss. File " + src_name + " is not present in cache.";
-		logger_->debug() << message;
+		logger_->debug(message);
 		throw fm_exception(message);
 	}
 
@@ -43,7 +43,7 @@ void cache_manager::get_file(const std::string &src_name, const std::string &dst
 		fs::copy_file(source_file, destination_file, fs::copy_option::overwrite_if_exists);
 	} catch (fs::filesystem_error &e) {
 		auto message = "Failed to copy file " + source_file.string() + " to " + dst_path + ". Error: " + e.what();
-		logger_->warn() << message;
+		logger_->warn(message);
 		throw fm_exception(message);
 	}
 }
@@ -52,13 +52,13 @@ void cache_manager::put_file(const std::string &src_name, const std::string &dst
 {
 	fs::path source_file(src_name);
 	fs::path destination_file = caching_dir_ / dst_name;
-	logger_->debug() << "Copying file " << src_name + " to cache with name " << dst_name;
+	logger_->debug("Copying file {} to cache with name {}", src_name, dst_name);
 
 	try {
 		fs::copy_file(source_file, destination_file, fs::copy_option::overwrite_if_exists);
 	} catch (fs::filesystem_error &e) {
 		auto message = "Failed to copy file " + src_name + " to cache. Error: " + e.what();
-		logger_->warn() << message;
+		logger_->warn(message);
 		throw fm_exception(message);
 	}
 }

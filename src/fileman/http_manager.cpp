@@ -60,13 +60,13 @@ void http_manager::get_file(const std::string &src_name, const std::string &dst_
 	CURLcode res;
 	FILE *fd;
 
-	logger_->debug() << "Downloading file " << src_name << " to " << dst_name;
+	logger_->debug("Downloading file {} to {}", src_name, dst_name);
 
 	// Open file to download
 	fd = fopen(dst_name.c_str(), "wb");
 	if (!fd) {
 		auto message = "Cannot open file " + dst_name + " for writing.";
-		logger_->warn() << message;
+		logger_->warn(message);
 		throw fm_exception(message);
 	}
 
@@ -120,7 +120,7 @@ void http_manager::get_file(const std::string &src_name, const std::string &dst_
 			curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
 			auto error_message = "Failed to download " + src_name + " to " + dst_name + ". Error: (" +
 				std::to_string(response_code) + ") " + curl_easy_strerror(res);
-			logger_->warn() << error_message;
+			logger_->warn(error_message);
 			curl_easy_cleanup(curl);
 			throw fm_exception(error_message);
 		}
@@ -137,13 +137,13 @@ void http_manager::put_file(const std::string &src_name, const std::string &dst_
 	CURLcode res;
 	FILE *fd;
 
-	logger_->debug() << "Uploading file " << src_name << " to " << dst_url;
+	logger_->debug("Uploading file {} to {}", src_name, dst_url);
 
 	// Open file to upload
 	fd = fopen(src_name.c_str(), "rb");
 	if (!fd) {
 		auto message = "Cannot open file " + src_name + " for reading.";
-		logger_->warn() << message;
+		logger_->warn(message);
 		throw fm_exception(message);
 	}
 
@@ -205,7 +205,7 @@ void http_manager::put_file(const std::string &src_name, const std::string &dst_
 			curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
 			auto message = "Failed to upload " + src_name + " to " + dst_url + ". Error: (" +
 				std::to_string(response_code) + ") " + curl_easy_strerror(res);
-			logger_->warn() << message;
+			logger_->warn(message);
 			throw fm_exception(message);
 		}
 
