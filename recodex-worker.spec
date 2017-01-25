@@ -14,16 +14,15 @@ Prefix: %{_prefix}
 Vendor: Petr Stefan <UNKNOWN>
 Url: https://github.com/ReCodEx/worker
 BuildRequires: systemd cmake
+Requires(post): systemd
+Requires(preun): systemd
+Requires(postun): systemd
 
 %description
 Backend part of ReCodEx programmer testing solution.
 
 %prep
-# Create 'recodex' user if not exist
-if ! id -u recodex > /dev/null 2>&1
-then
-	useradd --system --shell /sbin/nologin recodex
-fi
+
 
 %build
 %cmake .
@@ -35,17 +34,20 @@ mkdir -p %{buildroot}/var/log/recodex
 
 %clean
 
-%post
 
+%post
+%systemd_post 'recodex-worker@*.service'
 
 %postun
-
+%systemd_postun_with_restart 'recodex-worker@*.service'
 
 %pre
-
+getent group recodex >/dev/null || groupadd -r recodex
+getent passwd recodex >/dev/null || useradd -r -g recodex -d %{_sysconfdir}/recodex -s /sbin/nologin -c "ReCodEx Code Examiner" recodex
+exit 0
 
 %preun
-
+%systemd_preun 'recodex-worker@*.service'
 
 %files
 %defattr(-,root,root)
