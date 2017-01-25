@@ -20,8 +20,7 @@ Backend part of ReCodEx programmer testing solution.
 
 %prep
 # Create 'recodex' user if not exist
-id -u recodex > /dev/null 2>&1
-if [ $? -eq 1 ]
+if ! id -u recodex > /dev/null 2>&1
 then
 	useradd --system --shell /sbin/nologin recodex
 fi
