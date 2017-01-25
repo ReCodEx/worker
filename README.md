@@ -5,6 +5,7 @@
 [![License](http://img.shields.io/:license-mit-blue.svg)](http://badges.mit-license.org)
 [![Docs](https://img.shields.io/badge/docs-latest-brightgreen.svg)](http://recodex.github.io/worker/)
 [![Wiki](https://img.shields.io/badge/docs-wiki-orange.svg)](https://github.com/ReCodEx/wiki/wiki)
+[![COPR](https://copr.fedorainfracloud.org/coprs/semai/ReCodEx/package/recodex-worker/status_image/last_build.png)](https://copr.fedorainfracloud.org/coprs/semai/ReCodEx/)
 
 A daemon that consumes assignments from the message queue, builds and runs them 
 and then sends results back.
