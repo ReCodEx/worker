@@ -26,7 +26,7 @@ Backend part of ReCodEx programmer testing solution.
 %setup -n %{name}-%{unmangled_version}
 
 %build
-%cmake .
+%cmake -DDISABLE_TESTS=true .
 make %{?_smp_mflags}
 
 %install
