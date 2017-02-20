@@ -144,10 +144,10 @@ void worker_core::log_init()
 				log_conf.log_suffix,
 				log_conf.log_file_size,
 				log_conf.log_files_count);
-		// Set queue size for asynchronous logging. It must be a power of 2.
-		spdlog::set_async_mode(1048576);
+		// Set queue size for asynchronous logging. It must be a power of 2. Also, flush every second.
+		spdlog::set_async_mode(1048576, spdlog::async_overflow_policy::block_retry, nullptr, std::chrono::seconds(1));
 		// Make log with name "logger"
-		logger_ = std::make_shared<spdlog::logger>("logger", rotating_sink);
+		logger_ = spdlog::create("logger", rotating_sink);
 		// Set logging level to debug
 		logger_->set_level(helpers::get_log_level(log_conf.log_level));
 		// Print header to log

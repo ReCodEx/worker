@@ -1,7 +1,7 @@
 %define name recodex-worker
 %define version 1.0.0
 %define unmangled_version 1.0.0
-%define release 1
+%define release 2
 
 Summary: ReCodEx worker component
 Name: %{name}
@@ -14,7 +14,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 Prefix: %{_prefix}
 Vendor: Petr Stefan <UNKNOWN>
 Url: https://github.com/ReCodEx/worker
-BuildRequires: systemd cmake
+BuildRequires: systemd cmake zeromq-devel cppzmq-devel yaml-cpp-devel libcurl-devel spdlog-devel libarchive-devel
 Requires(post): systemd
 Requires(preun): systemd
 Requires(postun): systemd
