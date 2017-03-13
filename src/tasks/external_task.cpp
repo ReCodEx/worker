@@ -95,14 +95,17 @@ void external_task::results_output_init()
 {
 	if (sandbox_config_->output) {
 		std::string random = helpers::random_alphanum_string(10);
+		fs::path temp_dir(temp_dir_);
 		if (sandbox_config_->std_output == "") {
 			remove_stdout_ = true;
-			sandbox_config_->std_output = task_meta_->task_id + "." + random + ".output.stdout";
+			sandbox_config_->std_output =
+				(temp_dir / fs::path(task_meta_->task_id + "." + random + ".output.stdout")).string();
 		}
 
 		if (sandbox_config_->std_error == "") {
 			remove_stderr_ = true;
-			sandbox_config_->std_error = task_meta_->task_id + "." + random + ".output.stderr";
+			sandbox_config_->std_error =
+				(temp_dir / fs::path(task_meta_->task_id + "." + random + ".output.stderr")).string();
 		}
 	}
 }
@@ -113,10 +116,10 @@ std::string external_task::get_results_output()
 
 	if (sandbox_config_->output) {
 		size_t count = worker_config_->get_max_output_length();
-		std::ifstream stdout(sandbox_config_->std_output);
-		std::ifstream stderr(sandbox_config_->std_error);
-		std::copy_n(std::istreambuf_iterator<char>(stdout), count, std::back_inserter(result));
-		std::copy_n(std::istreambuf_iterator<char>(stderr), count, std::back_inserter(result));
+		std::ifstream std_out(sandbox_config_->std_output);
+		std::ifstream std_err(sandbox_config_->std_error);
+		std::copy_n(std::istreambuf_iterator<char>(std_out), count, std::back_inserter(result));
+		std::copy_n(std::istreambuf_iterator<char>(std_err), count, std::back_inserter(result));
 
 		// delete produced files
 		try {
