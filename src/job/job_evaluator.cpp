@@ -293,8 +293,8 @@ void job_evaluator::push_result()
 			subnode["exitsig"] = sandbox->exitsig;
 			subnode["killed"] = sandbox->killed;
 			subnode["message"] = sandbox->message;
-			subnode["output"] = sandbox->output;
 
+			node["output"] = sandbox->output;
 			node["sandbox_results"] = subnode;
 		}
 

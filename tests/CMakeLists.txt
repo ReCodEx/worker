@@ -121,6 +121,7 @@ add_test_suite(tasks
 	${SANDBOX_DIR}/isolate_sandbox.cpp
 	${HELPERS_DIR}/logger.cpp
 	${HELPERS_DIR}/config.cpp
+	${HELPERS_DIR}/string_utils.cpp
 	${CONFIG_DIR}/worker_config.cpp
 	tasks.cpp
 )

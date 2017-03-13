@@ -61,6 +61,16 @@ private:
 	 */
 	void sandbox_fini();
 
+	/**
+	 * @brief results_output_init
+	 */
+	void results_output_init();
+	/**
+	 * Get configuration limited content of the stdout and stderr and return it.
+	 * @return text which was produced by sandboxed program on stdout and stderr
+	 */
+	std::string get_results_output();
+
 	/** Worker default configuration */
 	std::shared_ptr<worker_config> worker_config_;
 	/** Constructed sandbox itself */
@@ -73,6 +83,10 @@ private:
 	std::shared_ptr<spdlog::logger> logger_;
 	/** Directory for temporary files */
 	std::string temp_dir_;
+	/** After execution delete stdout file produced by sandbox */
+	bool remove_stdout_ = false;
+	/** After execution delete stderr file produced by sandbox */
+	bool remove_stderr_ = false;
 };
 
 #endif // RECODEX_WORKER_EXTERNAL_TASK_HPP
