@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <spdlog/spdlog.h>
+#include "../config/sandbox_config.h"
 #include "../config/sandbox_limits.h"
 #include "../config/task_metadata.h"
 
@@ -14,6 +15,8 @@ struct create_params {
 	size_t id;
 	/** structure containing information loaded about task */
 	std::shared_ptr<task_metadata> task_meta;
+	/** general sandbox configuration */
+	std::shared_ptr<sandbox_config> sandbox_conf;
 	/** limits for sandbox */
 	std::shared_ptr<sandbox_limits> limits;
 	/** job system logger */

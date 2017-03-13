@@ -131,9 +131,9 @@ void job::build_job()
 			}
 
 			// go through variables parsing
-			limits->std_input = parse_job_var(limits->std_input);
-			limits->std_output = parse_job_var(limits->std_output);
-			limits->std_error = parse_job_var(limits->std_error);
+			sandbox->std_input = parse_job_var(sandbox->std_input);
+			sandbox->std_output = parse_job_var(sandbox->std_output);
+			sandbox->std_error = parse_job_var(sandbox->std_error);
 			limits->chdir = parse_job_var(limits->chdir);
 			std::vector<std::tuple<std::string, std::string, sandbox_limits::dir_perm>> new_bnd_dirs;
 			for (auto &bnd_dir : limits->bound_dirs) {
@@ -143,8 +143,13 @@ void job::build_job()
 			limits->bound_dirs = new_bnd_dirs;
 
 			// ... and finally construct external task from given information
-			create_params data = {
-				worker_config_->get_worker_id(), id++, task_meta, limits, logger_, working_directory_.string()};
+			create_params data = {worker_config_->get_worker_id(),
+				id++,
+				task_meta,
+				sandbox,
+				limits,
+				logger_,
+				working_directory_.string()};
 
 			task = factory_->create_sandboxed_task(data);
 

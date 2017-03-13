@@ -202,7 +202,7 @@ TEST(Tasks, TaskFactory)
 
 	// external task
 	meta->binary = "external_command";
-	create_params params = {8, 1, meta, nullptr, nullptr, ""};
+	create_params params = {8, 1, meta, nullptr, nullptr, nullptr, ""};
 	EXPECT_THROW(factory.create_sandboxed_task(params), task_exception); // Sandbox is nullptr
 	meta->sandbox = std::make_shared<sandbox_config>();
 	meta->sandbox->name = "whatever_sandbox";

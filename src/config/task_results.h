@@ -65,13 +65,17 @@ struct sandbox_results {
 	 * Default: ""
 	 */
 	std::string message;
+	/**
+	 * Output as taken from stdout and stderr.
+	 */
+	std::string output;
 
 	/**
 	 * Constructor with default values initialization.
 	 */
 	sandbox_results()
 		: exitcode(0), time(0), wall_time(0), memory(0), max_rss(0), status(isolate_status::OK), exitsig(0),
-		  killed(false), message()
+		  killed(false), message(), output()
 	{
 	}
 

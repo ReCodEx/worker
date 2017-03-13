@@ -65,6 +65,8 @@ private:
 	size_t worker_id_;
 	/** Constructed sandbox itself */
 	std::shared_ptr<sandbox_base> sandbox_;
+	/** General sandbox config */
+	std::shared_ptr<sandbox_config> sandbox_config_;
 	/** Limits for sandbox in which program will be started */
 	std::shared_ptr<sandbox_limits> limits_;
 	/** Job system logger */
