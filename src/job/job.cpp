@@ -143,7 +143,7 @@ void job::build_job()
 			limits->bound_dirs = new_bnd_dirs;
 
 			// ... and finally construct external task from given information
-			create_params data = {worker_config_->get_worker_id(),
+			create_params data = {worker_config_,
 				id++,
 				task_meta,
 				sandbox,

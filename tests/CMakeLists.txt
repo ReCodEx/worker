@@ -120,6 +120,8 @@ add_test_suite(tasks
 	${SRC_DIR}/archives/archivator.cpp
 	${SANDBOX_DIR}/isolate_sandbox.cpp
 	${HELPERS_DIR}/logger.cpp
+	${HELPERS_DIR}/config.cpp
+	${CONFIG_DIR}/worker_config.cpp
 	tasks.cpp
 )
 

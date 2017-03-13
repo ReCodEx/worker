@@ -23,7 +23,7 @@ public:
 
 	/**
 	 * Only way to construct external task is through this constructor.
-	 * Choosing propriate sandbox and constructing it is also done here.
+	 * Choosing propriate sandbox and constructing it, is also done here.
 	 * @param data Data to create external task class.
 	 * @throws task_exception if name of the sandbox in data argument is unknown.
 	 */
@@ -61,8 +61,8 @@ private:
 	 */
 	void sandbox_fini();
 
-	/** Id of this instance of worker loaded from default configuration */
-	size_t worker_id_;
+	/** Worker default configuration */
+	std::shared_ptr<worker_config> worker_config_;
 	/** Constructed sandbox itself */
 	std::shared_ptr<sandbox_base> sandbox_;
 	/** General sandbox config */

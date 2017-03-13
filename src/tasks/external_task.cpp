@@ -2,9 +2,17 @@
 #include "../sandbox/isolate_sandbox.h"
 
 external_task::external_task(const create_params &data)
-	: task_base(data.id, data.task_meta), worker_id_(data.worker_id), sandbox_(nullptr),
+	: task_base(data.id, data.task_meta), worker_config_(data.worker_conf), sandbox_(nullptr),
 	  sandbox_config_(data.sandbox_conf), limits_(data.limits), logger_(data.logger), temp_dir_(data.temp_dir)
 {
+	if (worker_config_ == nullptr) {
+		throw task_exception("No worker configuration provided.");
+	}
+
+	if (sandbox_config_ == nullptr) {
+		throw task_exception("No sandbox configuration provided.");
+	}
+
 	sandbox_check();
 }
 
@@ -35,7 +43,8 @@ void external_task::sandbox_init()
 {
 #ifndef _WIN32
 	if (task_meta_->sandbox->name == "isolate") {
-		sandbox_ = std::make_shared<isolate_sandbox>(sandbox_config_, *limits_, worker_id_, temp_dir_, logger_);
+		sandbox_ = std::make_shared<isolate_sandbox>(
+			sandbox_config_, *limits_, worker_config_->get_worker_id(), temp_dir_, logger_);
 	}
 #endif
 }

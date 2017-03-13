@@ -14,6 +14,7 @@
 #include "../src/tasks/task_factory.h"
 #include "../src/tasks/create_params.h"
 #include "../src/config/sandbox_config.h"
+#include "mocks.h"
 
 
 std::shared_ptr<task_metadata> get_task_meta()
@@ -25,7 +26,7 @@ std::shared_ptr<task_metadata> get_task_meta()
 	res->dependencies = {"dep1", "dep2", "dep3"};
 	res->binary = "command";
 	res->cmd_args = {"arg1", "arg2"};
-	res->sandbox = nullptr;
+	res->sandbox = std::make_shared<sandbox_config>();
 	return res;
 }
 
@@ -200,10 +201,14 @@ TEST(Tasks, TaskFactory)
 	task = factory.create_internal_task(0, meta);
 	EXPECT_EQ(task, nullptr);
 
+	// worker config
+	auto worker_conf = std::make_shared<mock_worker_config>();
+	EXPECT_CALL((*worker_conf), get_worker_id()).WillRepeatedly(Return(8));
+
 	// external task
 	meta->binary = "external_command";
-	create_params params = {8, 1, meta, nullptr, nullptr, nullptr, ""};
-	EXPECT_THROW(factory.create_sandboxed_task(params), task_exception); // Sandbox is nullptr
+	create_params params = {worker_conf, 1, meta, meta->sandbox, nullptr, nullptr, ""};
+	EXPECT_THROW(factory.create_sandboxed_task(params), task_exception); // Sandbox config is nullptr
 	meta->sandbox = std::make_shared<sandbox_config>();
 	meta->sandbox->name = "whatever_sandbox";
 	EXPECT_THROW(factory.create_sandboxed_task(params), task_exception); // Unknown sandbox type

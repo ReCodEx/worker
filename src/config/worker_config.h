@@ -108,6 +108,10 @@ public:
 	 */
 	virtual const sandbox_limits &get_limits() const;
 
+	/**
+	 * Get maximal length of output which can be written to the results.
+	 * @return length of output in bytes
+	 */
 	virtual size_t get_max_output_length() const;
 
 private:

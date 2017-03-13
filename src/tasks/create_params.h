@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <spdlog/spdlog.h>
+#include "../config/worker_config.h"
 #include "../config/sandbox_config.h"
 #include "../config/sandbox_limits.h"
 #include "../config/task_metadata.h"
@@ -10,7 +11,7 @@
 /** data for proper construction of @ref external_task class */
 struct create_params {
 	/** unique worker identification on this machine */
-	size_t worker_id;
+	std::shared_ptr<worker_config> worker_conf;
 	/** unique integer which means order in config file */
 	size_t id;
 	/** structure containing information loaded about task */

@@ -28,7 +28,7 @@ bool operator==(const create_params &a, const create_params &b)
 {
 	// compare all but job logger
 	return a.id == b.id && a.limits == b.limits && a.task_meta == b.task_meta && a.temp_dir == b.temp_dir &&
-		a.worker_id == b.worker_id;
+		a.worker_conf == b.worker_conf;
 }
 
 // get worker default limits
@@ -347,7 +347,7 @@ TEST(job_test, load_of_worker_defaults)
 	// - after finish, we can read the values behind pointers and check changed values
 	auto empty_task = std::make_shared<mock_task>();
 	auto empty_task2 = std::make_shared<mock_task>(2, "eval");
-	create_params params = {8,
+	create_params params = {worker_conf,
 		1,
 		job_meta->tasks[0],
 		job_meta->tasks[0]->sandbox,
@@ -752,7 +752,7 @@ TEST(job_test, job_variables)
 	// - after finish, we can read the values behind pointers and check changed values
 	auto empty_task = std::make_shared<mock_task>();
 	auto empty_task2 = std::make_shared<mock_task>(2, "eval");
-	create_params params = {8,
+	create_params params = {worker_conf,
 		1,
 		job_meta->tasks[0],
 		job_meta->tasks[0]->sandbox,
