@@ -362,14 +362,16 @@ void job::init_logger()
 
 	// Create and register logger
 	try {
-		// Create multithreaded rotating file sink. Max filesize is 1024 * 1024 and we save 5 newest files.
+		// Create multithreaded basic file sink
 		auto file_sink = std::make_shared<spdlog::sinks::simple_file_sink_mt>((result_path_ / log_name).string(), true);
 		// Set queue size for asynchronous logging. It must be a power of 2.
 		spdlog::set_async_mode(1048576);
-		// Make log with name "logger"
-		auto file_logger = std::make_shared<spdlog::logger>("logger", file_sink);
+		// Make log with name "job_logger"
+		auto file_logger = std::make_shared<spdlog::logger>("job_logger", file_sink);
 		// Set logging level to debug
 		file_logger->set_level(log_level);
+		// Set flush policy
+		file_logger->flush_on(log_level);
 		// Print header to log
 		file_logger->info("------------------------------");
 		file_logger->info("       Job system log");
