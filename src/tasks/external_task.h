@@ -62,7 +62,19 @@ private:
 	void sandbox_fini();
 
 	/**
-	 * @brief results_output_init
+	 * Initialize working directory.
+	 */
+	void working_dir_init();
+
+	/**
+	 * For the given file find appropriate path outside sandbox in the directories specified in the limits.
+	 * @param file file pointing inside sandbox
+	 * @return path of the directory and the file outside sandbox
+	 */
+	fs::path find_path_outside_sandbox(std::string file);
+
+	/**
+	 * Initialize output if requested.
 	 */
 	void results_output_init();
 	/**
@@ -83,6 +95,10 @@ private:
 	std::shared_ptr<spdlog::logger> logger_;
 	/** Directory for temporary files */
 	std::string temp_dir_;
+	/** Directory where source codes for job are located */
+	fs::path source_dir_;
+	/** Directory binded to the sandbox as default working dir */
+	fs::path working_dir_;
 	/** After execution delete stdout file produced by sandbox */
 	bool remove_stdout_ = false;
 	/** After execution delete stderr file produced by sandbox */

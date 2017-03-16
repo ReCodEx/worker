@@ -52,7 +52,7 @@ public:
 	 */
 	job(std::shared_ptr<job_metadata> job_meta,
 		std::shared_ptr<worker_config> worker_conf,
-		fs::path working_directory,
+		fs::path temporary_directory,
 		fs::path source_path,
 		fs::path result_path,
 		std::shared_ptr<task_factory_interface> factory,
@@ -128,11 +128,13 @@ private:
 	/** Pointer on default worker config. */
 	std::shared_ptr<worker_config> worker_config_;
 	/** Directory, where tasks can create their own subfolders and temporary files. */
-	fs::path working_directory_;
+	fs::path temporary_directory_;
 	/** Directory where source codes needed in job execution are stored. */
 	fs::path source_path_;
 	/** Directory where results and log of job are stored. */
 	fs::path result_path_;
+	/** Directory inside sandbox which should be bound as the working one. */
+	fs::path working_path_;
 	/** Factory for creating tasks. */
 	std::shared_ptr<task_factory_interface> factory_;
 	/** Progress callback which is called on some important points */

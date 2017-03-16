@@ -16,14 +16,16 @@ struct create_params {
 	size_t id;
 	/** structure containing information loaded about task */
 	std::shared_ptr<task_metadata> task_meta;
-	/** general sandbox configuration */
-	std::shared_ptr<sandbox_config> sandbox_conf;
 	/** limits for sandbox */
 	std::shared_ptr<sandbox_limits> limits;
 	/** job system logger */
 	std::shared_ptr<spdlog::logger> logger;
 	/** directory for optional saving temporary files during execution */
 	const std::string &temp_dir;
+	/** directory where source files given by users are located */
+	fs::path source_path;
+	/** working directory which points inside sandbox */
+	fs::path working_path;
 };
 
 

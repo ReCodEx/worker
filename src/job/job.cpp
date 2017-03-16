@@ -3,12 +3,12 @@
 
 job::job(std::shared_ptr<job_metadata> job_meta,
 	std::shared_ptr<worker_config> worker_conf,
-	fs::path working_directory,
+	fs::path temporary_directory,
 	fs::path source_path,
 	fs::path result_path,
 	std::shared_ptr<task_factory_interface> factory,
 	std::shared_ptr<progress_callback_interface> progr_callback)
-	: job_meta_(job_meta), worker_config_(worker_conf), working_directory_(working_directory),
+	: job_meta_(job_meta), worker_config_(worker_conf), temporary_directory_(temporary_directory),
 	  source_path_(source_path), result_path_(result_path), factory_(factory), progress_callback_(progr_callback)
 {
 	// check construction parameters if they are in right format
@@ -43,9 +43,12 @@ job::~job()
 
 void job::check_job_dirs()
 {
-	if (!fs::exists(working_directory_)) {
+	// initialize sandbox directory
+	working_path_ = fs::path("/evaluate");
+
+	if (!fs::exists(temporary_directory_)) {
 		throw job_exception("Working directory not exists");
-	} else if (!fs::is_directory(working_directory_)) {
+	} else if (!fs::is_directory(temporary_directory_)) {
 		throw job_exception("Working directory is not directory");
 	}
 
@@ -134,7 +137,6 @@ void job::build_job()
 			sandbox->std_input = parse_job_var(sandbox->std_input);
 			sandbox->std_output = parse_job_var(sandbox->std_output);
 			sandbox->std_error = parse_job_var(sandbox->std_error);
-			limits->chdir = parse_job_var(limits->chdir);
 			std::vector<std::tuple<std::string, std::string, sandbox_limits::dir_perm>> new_bnd_dirs;
 			for (auto &bnd_dir : limits->bound_dirs) {
 				new_bnd_dirs.push_back(std::tuple<std::string, std::string, sandbox_limits::dir_perm>{
@@ -143,8 +145,14 @@ void job::build_job()
 			limits->bound_dirs = new_bnd_dirs;
 
 			// ... and finally construct external task from given information
-			create_params data = {
-				worker_config_, id++, task_meta, sandbox, limits, logger_, working_directory_.string()};
+			create_params data = {worker_config_,
+				id++,
+				task_meta,
+				limits,
+				logger_,
+				temporary_directory_.string(),
+				source_path_,
+				working_path_};
 
 			task = factory_->create_sandboxed_task(data);
 
@@ -409,8 +417,8 @@ void job::prepare_job_vars()
 	job_variables_ = {{"WORKER_ID", std::to_string(worker_config_->get_worker_id())},
 		{"JOB_ID", job_meta_->job_id},
 		{"SOURCE_DIR", source_path_.string()},
-		{"EVAL_DIR", fs::path("/evaluate").string()},
 		{"RESULT_DIR", result_path_.string()},
+		{"EVAL_DIR", working_path_.string()},
 		{"TEMP_DIR", fs::temp_directory_path().string()},
 		{"JUDGES_DIR", fs::path("/usr/bin").string()}};
 
@@ -434,7 +442,7 @@ std::string job::parse_job_var(const std::string &src)
 			res.replace(start, end - start + 1, job_variables_.at(res.substr(start + 2, len)));
 		}
 
-		// start++; // just to be sure we're not in cycle
+		start++; // just to be sure we're not in cycle
 	}
 
 	return res;

@@ -207,7 +207,6 @@ TEST(job_config_test, config_data)
 						   "                parallel: 1\n"
 						   "                disk-size: 50\n"
 						   "                disk-files: 10\n"
-						   "                chdir: /eval\n"
 						   "                environ-variable:\n"
 						   "                    ISOLATE_BOX: /box\n"
 						   "                    ISOLATE_TMP: /tmp\n"
@@ -259,7 +258,6 @@ TEST(job_config_test, config_data)
 	ASSERT_EQ(limit1->memory_usage, 60000u);
 	ASSERT_EQ(limit1->stack_size, 50000u);
 	ASSERT_EQ(limit1->processes, 1u);
-	ASSERT_EQ(limit1->chdir, "/eval");
 	ASSERT_EQ(limit1->disk_size, 50u);
 	ASSERT_EQ(limit1->disk_files, 10u);
 	ASSERT_EQ(task2->sandbox->std_input, "01.in");

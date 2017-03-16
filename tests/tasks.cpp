@@ -27,6 +27,8 @@ std::shared_ptr<task_metadata> get_task_meta()
 	res->binary = "command";
 	res->cmd_args = {"arg1", "arg2"};
 	res->sandbox = std::make_shared<sandbox_config>();
+	res->sandbox->loaded_limits.insert(
+		std::pair<std::string, std::shared_ptr<sandbox_limits>>("group1", std::make_shared<sandbox_limits>()));
 	return res;
 }
 
@@ -207,7 +209,7 @@ TEST(Tasks, TaskFactory)
 
 	// external task
 	meta->binary = "external_command";
-	create_params params = {worker_conf, 1, meta, meta->sandbox, nullptr, nullptr, ""};
+	create_params params = {worker_conf, 1, meta, meta->sandbox->loaded_limits["group1"], nullptr, "", fs::path()};
 	EXPECT_THROW(factory.create_sandboxed_task(params), task_exception); // Sandbox config is nullptr
 	meta->sandbox = std::make_shared<sandbox_config>();
 	meta->sandbox->name = "whatever_sandbox";

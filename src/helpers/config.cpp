@@ -176,9 +176,6 @@ std::shared_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 						} else {
 							sl->disk_files = SIZE_MAX; // set undefined value (max size_t)
 						}
-						if (lim["chdir"] && lim["chdir"].IsScalar()) {
-							sl->chdir = lim["chdir"].as<std::string>();
-						}
 
 						sl->bound_dirs = helpers::get_bind_dirs(lim);
 
