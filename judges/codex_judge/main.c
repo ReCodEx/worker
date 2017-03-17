@@ -163,9 +163,9 @@ int main(int argc, char **argv) {
 
 	// Print result similarity percentage to stdout.
 	if (res == RES_OK) {
-		printf("%lf\n", 1.0);
+		printf("%lf", 1.0);
 	} else {
-		printf("%lf\n", 0.0);
+		printf("%lf", 0.0);
 	}
 
 	// Close files.

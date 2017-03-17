@@ -154,9 +154,9 @@ int main(int argc, char **argv) {
 	// Compare the data sets and write results.
 	int res = compare(data1, data2);
 	if (res == RES_OK) {
-		printf("%lf\n", 1.0);
+		printf("%lf", 1.0);
 	} else {
-		printf("%lf\n", 0.0);
+		printf("%lf", 0.0);
 	}
 
 	return res;
