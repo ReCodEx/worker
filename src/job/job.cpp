@@ -304,53 +304,58 @@ std::vector<std::pair<std::string, std::shared_ptr<task_results>>> job::run()
 		}
 
 		auto task_id = task->get_task_id();
-		try {
-			if (task->is_executable()) {
-				auto res = task->run();
-				logger_->info("Task \"{}\" ran successfully", task_id);
-				progress_callback_->task_completed(job_meta_->job_id, task_id);
+		if (task->is_executable()) {
+			std::shared_ptr<task_results> res = nullptr;
+			try {
+				res = task->run();
+			} catch (std::exception &e) {
+				throw job_unrecoverable_exception(e.what());
+			}
 
-				// if task has some results than publish them in output
-				if (res != nullptr) {
-					results.push_back({task_id, res});
+			// if task has some results then process them
+			if (res != nullptr) {
+				if (res->status == task_status::OK) {
+					// task executed successfully
+
+					logger_->info("Task \"{}\" ran successfully", task_id);
+					progress_callback_->task_completed(job_meta_->job_id, task_id);
+				} else {
+					// execution of task failed
+
+					if (task->get_type() == task_type::INNER) {
+						// evaluation just encountered internal error and its quite possible
+						// that something is very wrong in here, so be gentle and crash like a sir
+						// and try not to mess up next job execution
+						throw task_exception(res->error_message);
+					}
+
+					logger_->info("Task \"{}\" failed: {}", task_id, res->error_message);
+					progress_callback_->task_failed(job_meta_->job_id, task_id);
+
+					if (task->get_fatal_failure()) {
+						logger_->info("Fatal failure bit set. Terminating of job execution...");
+						break;
+					} else {
+						// set executable bit in this task and in children
+						logger_->info("Task children will not be executed");
+						task->set_execution(false);
+						task->set_children_execution(false);
+					}
 				}
-			} else {
-				logger_->info("Task \"{}\" marked as not executable, proceeding to next task", task_id);
-				progress_callback_->task_skipped(job_meta_->job_id, task_id);
 
-				// even skipped task has its own result entry
-				std::shared_ptr<task_results> result(new task_results());
-				result->status = task_status::SKIPPED;
-				results.push_back({task_id, result});
-
-				// we have to pass information about non-execution to children
-				task->set_children_execution(false);
+				results.push_back({task_id, res});
 			}
-		} catch (std::exception &e) {
-			if (task->get_type() == task_type::INNER) {
-				// evaluation just encountered internal error and its quite possible
-				// that something is very wrong in here, so be gentle and crash like a sir
-				// and try not to mess up next job execution
-				throw;
-			}
+		} else {
+			logger_->info("Task \"{}\" marked as not executable, proceeding to next task", task_id);
+			progress_callback_->task_skipped(job_meta_->job_id, task_id);
 
+			// even skipped task has its own result entry
 			std::shared_ptr<task_results> result(new task_results());
-			result->status = task_status::FAILED;
-			result->error_message = e.what();
+			result->status = task_status::SKIPPED;
 			results.push_back({task_id, result});
 
-			logger_->info("Task \"{}\" failed: {}", task_id, e.what());
-			progress_callback_->task_failed(job_meta_->job_id, task_id);
-
-			if (task->get_fatal_failure()) {
-				logger_->info("Fatal failure bit set. Terminating of job execution...");
-				break;
-			} else {
-				// set executable bit in this task and in children
-				logger_->info("Task children will not be executed");
-				task->set_execution(false);
-				task->set_children_execution(false);
-			}
+			// we have to pass information about non-execution to children
+			task->set_children_execution(false);
 		}
 	}
 

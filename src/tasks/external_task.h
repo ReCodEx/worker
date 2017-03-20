@@ -36,7 +36,7 @@ public:
 	/**
 	 * Runs given program and parameters in constructed sandbox.
 	 * @return @ref task_results with @a sandbox_status item properly set
-	 * @throws sandbox_exception if error occured in sandbox
+	 * @throws sandbox_exception if fatal error occured in sandbox
 	 */
 	virtual std::shared_ptr<task_results> run();
 

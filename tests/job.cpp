@@ -576,6 +576,9 @@ TEST(job_test, correctly_executed_job)
 	std::vector<std::shared_ptr<mock_task>> mock_tasks;
 	auto empty_task = std::make_shared<mock_task>();
 	auto empty_results = std::make_shared<task_results>();
+	auto failed_results = std::make_shared<task_results>();
+	failed_results->status = task_status::FAILED;
+
 	for (size_t i = 1; i < tasks_count; i++) {
 		mock_tasks.push_back(std::make_shared<mock_task>(i, job_meta->tasks[i - 1]));
 	}
@@ -603,7 +606,7 @@ TEST(job_test, correctly_executed_job)
 			EXPECT_CALL(*mock_tasks[i - 1], run()).WillOnce(Return(empty_results));
 		}
 		// task F will fail
-		EXPECT_CALL(*mock_tasks[tasks_count - 3], run()).WillOnce(Throw(task_exception()));
+		EXPECT_CALL(*mock_tasks[tasks_count - 3], run()).WillOnce(Return(failed_results));
 	}
 
 	create_directories(dir);
@@ -667,6 +670,10 @@ TEST(job_test, internal_error_job)
 	std::vector<std::shared_ptr<mock_task>> mock_tasks;
 	auto empty_task = std::make_shared<mock_task>();
 	auto empty_results = std::make_shared<task_results>();
+	auto failed_results = std::make_shared<task_results>();
+	failed_results->status = task_status::FAILED;
+	failed_results->error_message = "failed internal exec";
+
 	for (size_t i = 0; i < job_meta->tasks.size(); i++) {
 		mock_tasks.push_back(std::make_shared<mock_task>(i + 1, job_meta->tasks[i]));
 	}
@@ -693,7 +700,7 @@ TEST(job_test, internal_error_job)
 		EXPECT_CALL(*mock_tasks[0], run()).WillOnce(Return(empty_results));
 		EXPECT_CALL(*mock_tasks[1], run()).WillOnce(Return(empty_results));
 		// task D will fail
-		EXPECT_CALL(*mock_tasks[3], run()).WillOnce(Throw(task_exception()));
+		EXPECT_CALL(*mock_tasks[3], run()).WillOnce(Return(failed_results));
 	}
 
 	create_directories(dir);

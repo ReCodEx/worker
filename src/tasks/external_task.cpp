@@ -70,7 +70,7 @@ std::shared_ptr<task_results> external_task::run()
 	// initialize output from stdout and stderr
 	results_output_init();
 
-	auto res = std::shared_ptr<task_results>(new task_results());
+	std::shared_ptr<task_results> res(new task_results());
 	res->sandbox_status =
 		std::unique_ptr<sandbox_results>(new sandbox_results(sandbox_->run(task_meta_->binary, task_meta_->cmd_args)));
 
@@ -81,7 +81,8 @@ std::shared_ptr<task_results> external_task::run()
 
 	// Check if sandbox ran successfully, else report error
 	if (res->sandbox_status->status != isolate_status::OK) {
-		throw task_exception("Sandboxed program failed: " + res->sandbox_status->message);
+		res->status = task_status::FAILED;
+		res->error_message = "Sandboxed program failed: " + res->sandbox_status->message;
 	}
 
 	return res;

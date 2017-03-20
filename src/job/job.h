@@ -67,6 +67,8 @@ public:
 	 * Runs all task which are sorted in task queue and get results from all of them.
 	 * Should not throw an exception.
 	 * @return Vector with pairs task id - task_results. Values are not @a nullptr.
+	 * @throws task_exception in case of internal execution error
+	 * @throws std::exception in case of fatal error
 	 */
 	std::vector<std::pair<std::string, std::shared_ptr<task_results>>> run();
 
