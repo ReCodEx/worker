@@ -43,7 +43,7 @@ job::~job()
 
 void job::check_job_dirs()
 {
-	// initialize sandbox directory
+	// initialize default working directory inside sandbox
 	working_path_ = fs::path("/evaluate");
 
 	if (!fs::exists(temporary_directory_)) {
@@ -134,6 +134,7 @@ void job::build_job()
 			}
 
 			// go through variables parsing
+			limits->chdir = parse_job_var(limits->chdir);
 			sandbox->std_input = parse_job_var(sandbox->std_input);
 			sandbox->std_output = parse_job_var(sandbox->std_output);
 			sandbox->std_error = parse_job_var(sandbox->std_error);

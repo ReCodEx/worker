@@ -728,6 +728,7 @@ TEST(job_test, job_variables)
 	job_meta->tasks[0]->sandbox->std_error = "before_stderr_${RESULT_DIR}_after_stderr";
 
 	auto isolate_limits = job_meta->tasks[0]->sandbox->loaded_limits["group1"];
+	isolate_limits->chdir = "${EVAL_DIR}";
 	isolate_limits->bound_dirs =
 		std::vector<mytuple>{mytuple{"${TEMP_DIR}" + std::string(1, path::preferred_separator) + "recodex",
 			"${SOURCE_DIR}" + std::string(1, path::preferred_separator) + "tmp",
@@ -770,6 +771,7 @@ TEST(job_test, job_variables)
 
 	std::shared_ptr<sandbox_limits> limits = params.limits;
 	ASSERT_EQ(params.task_meta->binary, path("/evaluate/recodex").string());
+	ASSERT_EQ(path(limits->chdir).string(), path("/evaluate").string());
 	ASSERT_EQ(params.task_meta->sandbox->std_input, "before_stdin_8_after_stdin");
 	ASSERT_EQ(params.task_meta->sandbox->std_output, "before_stdout_eval5_after_stdout");
 	ASSERT_EQ(params.task_meta->sandbox->std_error, "before_stderr_" + res_dir.string() + "_after_stderr");

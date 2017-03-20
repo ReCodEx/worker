@@ -22,19 +22,10 @@ external_task::external_task(const create_params &data)
 	}
 
 	sandbox_check();
-	working_dir_init();
 }
 
 external_task::~external_task()
 {
-}
-
-void external_task::working_dir_init()
-{
-	// initialize working directory and binding of directory with source files into sandbox
-	limits_->chdir = working_dir_.string();
-	limits_->bound_dirs.push_back(std::tuple<std::string, std::string, sandbox_limits::dir_perm>(
-		source_dir_.string(), working_dir_.string(), sandbox_limits::dir_perm::RW));
 }
 
 void external_task::sandbox_check()

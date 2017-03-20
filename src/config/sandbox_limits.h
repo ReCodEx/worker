@@ -93,6 +93,16 @@ public:
 
 
 	/**
+	 * Constructor with some defaults.
+	 */
+	sandbox_limits()
+	{
+		chdir = "${EVAL_DIR}";
+		bound_dirs.push_back(std::tuple<std::string, std::string, sandbox_limits::dir_perm>(
+			"${SOURCE_DIR}", "${EVAL_DIR}", dir_perm::RW));
+	}
+
+	/**
 	 * Classical equality operator on two structures.
 	 * @param second compared structure
 	 * @return true if compared structures has same variable values

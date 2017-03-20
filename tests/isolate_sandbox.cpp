@@ -39,6 +39,8 @@ TEST(IsolateSandbox, NormalCommand)
 	limits.files_size = 0;
 	limits.processes = 0;
 	limits.share_net = false;
+	limits.chdir = "";
+	limits.bound_dirs.clear();
 	isolate_sandbox *is = nullptr;
 	EXPECT_NO_THROW(is = new isolate_sandbox(config, limits, 34, "/tmp"));
 	EXPECT_EQ(is->get_dir(), "/var/local/lib/isolate/34");
@@ -72,6 +74,8 @@ TEST(IsolateSandbox, TimeoutCommand)
 	limits.files_size = 0;
 	limits.processes = 0;
 	limits.share_net = false;
+	limits.chdir = "";
+	limits.bound_dirs.clear();
 	isolate_sandbox *is = nullptr;
 	EXPECT_NO_THROW(is = new isolate_sandbox(config, limits, 34, "/tmp"));
 	EXPECT_EQ(is->get_dir(), "/var/local/lib/isolate/34");
@@ -103,6 +107,8 @@ TEST(IsolateSandbox, NonzeroReturnCommand)
 	limits.files_size = 0;
 	limits.processes = 0;
 	limits.share_net = false;
+	limits.chdir = "";
+	limits.bound_dirs.clear();
 	isolate_sandbox *is = nullptr;
 	EXPECT_NO_THROW(is = new isolate_sandbox(config, limits, 34, "/tmp"));
 	EXPECT_EQ(is->get_dir(), "/var/local/lib/isolate/34");

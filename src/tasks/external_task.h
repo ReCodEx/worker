@@ -62,11 +62,6 @@ private:
 	void sandbox_fini();
 
 	/**
-	 * Initialize working directory.
-	 */
-	void working_dir_init();
-
-	/**
 	 * For the given file find appropriate path outside sandbox in the directories specified in the limits.
 	 * @param file file pointing inside sandbox
 	 * @return path of the directory and the file outside sandbox

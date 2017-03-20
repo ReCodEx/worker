@@ -43,6 +43,7 @@ TEST(job_metadata, build_all_from_yaml)
 							   "                parallel: 1\n"
 							   "                disk-size: 50\n"
 							   "                disk-files: 10\n"
+							   "                chdir: ${EVAL_DIR}\n"
 							   "                environ-variable:\n"
 							   "                    ISOLATE_TMP: /tmp\n"
 							   "                bound-directories:\n"
@@ -85,6 +86,7 @@ TEST(job_metadata, build_all_from_yaml)
 	EXPECT_EQ(limits->processes, 1u);
 	EXPECT_EQ(limits->disk_size, 50u);
 	EXPECT_EQ(limits->disk_files, 10u);
+	EXPECT_EQ(limits->chdir, "${EVAL_DIR}");
 	EXPECT_EQ(sandbox->std_input, "before_stdin_${WORKER_ID}_after_stdin");
 	EXPECT_EQ(sandbox->std_output, "before_stdout_${JOB_ID}_after_stdout");
 	EXPECT_EQ(sandbox->std_error, "before_stderr_${RESULT_DIR}_after_stderr");
