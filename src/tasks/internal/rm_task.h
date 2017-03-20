@@ -27,7 +27,6 @@ public:
 	 * exception is throuwn, otherwise normal result is returned. For more info about removing function see
 	 * http://www.boost.org/doc/libs/1_59_0_b1/libs/filesystem/doc/reference.html#remove_all.
 	 * @return Evaluation results to be pushed back to frontend.
-	 * @throws task_exception if any of entries cannot be deleted.
 	 */
 	virtual std::shared_ptr<task_results> run();
 };

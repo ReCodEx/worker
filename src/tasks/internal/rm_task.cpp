@@ -22,19 +22,17 @@ rm_task::~rm_task()
 
 std::shared_ptr<task_results> rm_task::run()
 {
+	std::shared_ptr<task_results> result(new task_results());
+
 	// Try to delete all items
-	bool result = true;
 	for (auto &i : task_meta_->cmd_args) {
 		try {
 			fs::remove_all(i);
 		} catch (...) {
-			result = false;
+			result->status = task_status::FAILED;
+			result->error_message = "Cannot delete all directories.";
 		}
 	}
 
-	// If anything cannot be deleted, throw exception
-	if (!result) {
-		throw task_exception("Cannot delete all directories.");
-	}
-	return std::shared_ptr<task_results>(new task_results());
+	return result;
 }

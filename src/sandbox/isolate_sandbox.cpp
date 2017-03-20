@@ -306,7 +306,7 @@ void isolate_sandbox::isolate_run(const std::string &binary, const std::vector<s
 			}
 			// isolate exited, but with return value signify internal error
 			if (WEXITSTATUS(status) != 0 && WEXITSTATUS(status) != 1) {
-				auto message = "Isolate run internal error. Return value: " + std::to_string(WEXITSTATUS(status));
+				auto message = "Isolate run into internal error. Return value: " + std::to_string(WEXITSTATUS(status));
 				logger_->warn(message);
 				throw sandbox_exception(message);
 			}

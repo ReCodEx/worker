@@ -18,10 +18,14 @@ archivate_task::~archivate_task()
 
 std::shared_ptr<task_results> archivate_task::run()
 {
+	std::shared_ptr<task_results> result(new task_results());
+
 	try {
 		archivator::compress(task_meta_->cmd_args[0], task_meta_->cmd_args[1]);
-		return std::shared_ptr<task_results>(new task_results());
 	} catch (archive_exception &e) {
-		throw task_exception(std::string("Cannot create archive. Error: ") + e.what());
+		result->status = task_status::FAILED;
+		result->error_message = std::string("Cannot create archive. Error: ") + e.what();
 	}
+
+	return result;
 }

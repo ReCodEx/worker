@@ -18,10 +18,14 @@ extract_task::~extract_task()
 
 std::shared_ptr<task_results> extract_task::run()
 {
+	std::shared_ptr<task_results> result(new task_results());
+
 	try {
 		archivator::decompress(task_meta_->cmd_args[0], task_meta_->cmd_args[1]);
-		return std::shared_ptr<task_results>(new task_results());
 	} catch (archive_exception &e) {
-		throw task_exception(std::string("Cannot extract files. Error: ") + e.what());
+		result->status = task_status::FAILED;
+		result->error_message = std::string("Cannot extract files. Error: ") + e.what();
 	}
+
+	return result;
 }

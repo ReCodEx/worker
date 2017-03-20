@@ -26,7 +26,6 @@ public:
 	/**
 	 * Run the action.
 	 * @return Evaluation results to be pushed back to frontend.
-	 * @throws task_exception on copying error.
 	 */
 	virtual std::shared_ptr<task_results> run();
 };

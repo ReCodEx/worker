@@ -19,10 +19,14 @@ fetch_task::~fetch_task()
 
 std::shared_ptr<task_results> fetch_task::run()
 {
+	std::shared_ptr<task_results> result(new task_results());
+
 	try {
 		filemanager_->get_file(task_meta_->cmd_args[0], task_meta_->cmd_args[1]);
-		return std::shared_ptr<task_results>(new task_results());
 	} catch (fm_exception &e) {
-		throw task_exception(std::string("Cannot fetch files. Error: ") + e.what());
+		result->status = task_status::FAILED;
+		result->error_message = std::string("Cannot fetch files. Error: ") + e.what();
 	}
+
+	return result;
 }

@@ -26,9 +26,8 @@ public:
 	 * Run the action. For every created directory the group write and others write permissions
 	 * are added to default ones. For more info about directory creation see
 	 * http://www.boost.org/doc/libs/1_59_0_b1/libs/filesystem/doc/reference.html#create_directories.
+	 * @note If any of directories cannot be created, all already created directories are removed.
 	 * @return Evaluation results to be pushed back to frontend.
-	 * @throws task_exception if any of directories cannot be created. When this happens, all already
-	 * created directories are removed.
 	 */
 	virtual std::shared_ptr<task_results> run();
 };

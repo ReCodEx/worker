@@ -22,12 +22,13 @@ mkdir_task::~mkdir_task()
 
 std::shared_ptr<task_results> mkdir_task::run()
 {
+	std::shared_ptr<task_results> result(new task_results());
+
 	try {
 		for (auto &i : task_meta_->cmd_args) {
 			fs::create_directories(i);
 			fs::permissions(i, fs::add_perms | fs::group_write | fs::others_write);
 		}
-		return std::shared_ptr<task_results>(new task_results());
 	} catch (fs::filesystem_error &e) {
 		// Remove already created directories
 		for (auto &i : task_meta_->cmd_args) {
@@ -36,6 +37,10 @@ std::shared_ptr<task_results> mkdir_task::run()
 			} catch (...) {
 			}
 		}
-		throw task_exception(std::string("Cannot create all directories. Error: ") + e.what());
+
+		result->status = task_status::FAILED;
+		result->error_message = std::string("Cannot create all directories. Error: ") + e.what();
 	}
+
+	return result;
 }
