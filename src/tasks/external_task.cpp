@@ -140,7 +140,7 @@ std::string external_task::get_results_output()
 		std::ifstream std_out(stdout_file_path.string());
 		std::ifstream std_err(stderr_file_path.string());
 		std_out.read(&result_stdout[0], count);
-		std_err.read(&result_stderr[1], count);
+		std_err.read(&result_stderr[0], count);
 
 		// if there was something in one of the files, write it to the result
 		if (std_out.gcount() != 0 || std_err.gcount() != 0) {
