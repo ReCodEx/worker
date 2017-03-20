@@ -312,6 +312,9 @@ std::vector<std::pair<std::string, std::shared_ptr<task_results>>> job::run()
 				throw job_unrecoverable_exception(e.what());
 			}
 
+			// add result from task into whole results set
+			results.push_back({task_id, res});
+
 			// if task has some results then process them
 			if (res != nullptr) {
 				if (res->status == task_status::OK) {
@@ -342,8 +345,6 @@ std::vector<std::pair<std::string, std::shared_ptr<task_results>>> job::run()
 						task->set_children_execution(false);
 					}
 				}
-
-				results.push_back({task_id, res});
 			}
 		} else {
 			logger_->info("Task \"{}\" marked as not executable, proceeding to next task", task_id);
