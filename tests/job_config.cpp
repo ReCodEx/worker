@@ -259,12 +259,12 @@ TEST(job_config_test, config_data)
 	ASSERT_EQ(limit1->memory_usage, 60000u);
 	ASSERT_EQ(limit1->stack_size, 50000u);
 	ASSERT_EQ(limit1->processes, 1u);
-	ASSERT_EQ(limit1->chdir, "/eval");
 	ASSERT_EQ(limit1->disk_size, 50u);
 	ASSERT_EQ(limit1->disk_files, 10u);
-	ASSERT_EQ(limit1->std_input, "01.in");
-	ASSERT_EQ(limit1->std_output, "01.out");
-	ASSERT_EQ(limit1->std_error, "01.err");
+	ASSERT_EQ(limit1->chdir, "/eval");
+	ASSERT_EQ(task2->sandbox->std_input, "01.in");
+	ASSERT_EQ(task2->sandbox->std_output, "01.out");
+	ASSERT_EQ(task2->sandbox->std_error, "01.err");
 
 	// Both combinations are valid (YAML doesn't sort them)
 	std::vector<std::pair<std::string, std::string>> expected_environ_1 = {
@@ -288,12 +288,12 @@ TEST(job_config_test, config_data)
 	ASSERT_EQ(limit2->memory_usage, SIZE_MAX);
 	ASSERT_EQ(limit2->stack_size, SIZE_MAX);
 	ASSERT_EQ(limit2->processes, SIZE_MAX);
-	ASSERT_EQ(limit2->chdir, "");
+	ASSERT_EQ(limit2->chdir, "${EVAL_DIR}");
 	ASSERT_EQ(limit2->disk_size, SIZE_MAX);
 	ASSERT_EQ(limit2->disk_files, SIZE_MAX);
 	ASSERT_EQ(limit2->environ_vars.size(), 0u);
 	ASSERT_EQ(limit2->bound_dirs.size(), 0u);
-	ASSERT_EQ(limit2->std_input, "01.in");
-	ASSERT_EQ(limit2->std_output, "01.out");
-	ASSERT_EQ(limit2->std_error, "01.err");
+	ASSERT_EQ(task2->sandbox->std_input, "01.in");
+	ASSERT_EQ(task2->sandbox->std_output, "01.out");
+	ASSERT_EQ(task2->sandbox->std_error, "01.err");
 }

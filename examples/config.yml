@@ -32,4 +32,5 @@ limits:
     disk-files: 100
     environ-variable:
         PATH: /usr/bin
+max-output-length: 1024  # in bytes
 ...

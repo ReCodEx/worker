@@ -40,6 +40,7 @@ public:
 	MOCK_CONST_METHOD0(get_worker_id, size_t());
 	MOCK_CONST_METHOD0(get_worker_description, const std::string &());
 	MOCK_CONST_METHOD0(get_limits, const sandbox_limits &());
+	MOCK_CONST_METHOD0(get_max_output_length, size_t());
 };
 
 /**

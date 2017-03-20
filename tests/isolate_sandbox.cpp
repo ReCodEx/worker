@@ -14,15 +14,20 @@ namespace fs = boost::filesystem;
 
 TEST(IsolateSandbox, BasicCreation)
 {
+	std::shared_ptr<sandbox_config> config = std::make_shared<sandbox_config>();
 	sandbox_limits limits;
-	EXPECT_NO_THROW(isolate_sandbox s(limits, 34, "/tmp"));
-	isolate_sandbox is(limits, 34, "/tmp");
+	EXPECT_NO_THROW(isolate_sandbox s(config, limits, 34, "/tmp"));
+	isolate_sandbox is(config, limits, 34, "/tmp");
 	EXPECT_EQ(is.get_dir(), "/var/local/lib/isolate/34");
-	EXPECT_THROW(isolate_sandbox s(limits, 2365, "/tmp"), sandbox_exception);
+	EXPECT_THROW(isolate_sandbox s(config, limits, 2365, "/tmp"), sandbox_exception);
 }
 
 TEST(IsolateSandbox, NormalCommand)
 {
+	std::shared_ptr<sandbox_config> config = std::make_shared<sandbox_config>();
+	config->std_input = "";
+	config->std_output = "output.txt";
+	config->std_error = "";
 	sandbox_limits limits;
 	limits.wall_time = 5.1;
 	limits.cpu_time = 5.1;
@@ -30,15 +35,14 @@ TEST(IsolateSandbox, NormalCommand)
 	limits.disk_size = 500;
 	limits.disk_files = 500;
 	limits.memory_usage = 100000;
-	limits.std_input = "";
-	limits.std_output = "output.txt";
-	limits.std_error = "";
 	limits.stack_size = 0;
 	limits.files_size = 0;
 	limits.processes = 0;
 	limits.share_net = false;
+	limits.chdir = "";
+	limits.bound_dirs.clear();
 	isolate_sandbox *is = nullptr;
-	EXPECT_NO_THROW(is = new isolate_sandbox(limits, 34, "/tmp"));
+	EXPECT_NO_THROW(is = new isolate_sandbox(config, limits, 34, "/tmp"));
 	EXPECT_EQ(is->get_dir(), "/var/local/lib/isolate/34");
 	sandbox_results results;
 	EXPECT_NO_THROW(results = is->run("/bin/ls", std::vector<std::string>{"-a", "-l", "-i"}));
@@ -55,6 +59,10 @@ TEST(IsolateSandbox, NormalCommand)
 
 TEST(IsolateSandbox, TimeoutCommand)
 {
+	std::shared_ptr<sandbox_config> config = std::make_shared<sandbox_config>();
+	config->std_input = "";
+	config->std_output = "";
+	config->std_error = "";
 	sandbox_limits limits;
 	limits.wall_time = 0.5;
 	limits.cpu_time = 0.5;
@@ -62,15 +70,14 @@ TEST(IsolateSandbox, TimeoutCommand)
 	limits.disk_size = 500;
 	limits.disk_files = 500;
 	limits.memory_usage = 100000;
-	limits.std_input = "";
-	limits.std_output = "";
-	limits.std_error = "";
 	limits.stack_size = 0;
 	limits.files_size = 0;
 	limits.processes = 0;
 	limits.share_net = false;
+	limits.chdir = "";
+	limits.bound_dirs.clear();
 	isolate_sandbox *is = nullptr;
-	EXPECT_NO_THROW(is = new isolate_sandbox(limits, 34, "/tmp"));
+	EXPECT_NO_THROW(is = new isolate_sandbox(config, limits, 34, "/tmp"));
 	EXPECT_EQ(is->get_dir(), "/var/local/lib/isolate/34");
 	sandbox_results results;
 	EXPECT_NO_THROW(results = is->run("/bin/sleep", std::vector<std::string>{"5"}));
@@ -85,6 +92,10 @@ TEST(IsolateSandbox, TimeoutCommand)
 
 TEST(IsolateSandbox, NonzeroReturnCommand)
 {
+	std::shared_ptr<sandbox_config> config = std::make_shared<sandbox_config>();
+	config->std_input = "";
+	config->std_output = "";
+	config->std_error = "";
 	sandbox_limits limits;
 	limits.wall_time = 0.5;
 	limits.cpu_time = 0.5;
@@ -92,15 +103,14 @@ TEST(IsolateSandbox, NonzeroReturnCommand)
 	limits.disk_size = 500;
 	limits.disk_files = 500;
 	limits.memory_usage = 100000;
-	limits.std_input = "";
-	limits.std_output = "";
-	limits.std_error = "";
 	limits.stack_size = 0;
 	limits.files_size = 0;
 	limits.processes = 0;
 	limits.share_net = false;
+	limits.chdir = "";
+	limits.bound_dirs.clear();
 	isolate_sandbox *is = nullptr;
-	EXPECT_NO_THROW(is = new isolate_sandbox(limits, 34, "/tmp"));
+	EXPECT_NO_THROW(is = new isolate_sandbox(config, limits, 34, "/tmp"));
 	EXPECT_EQ(is->get_dir(), "/var/local/lib/isolate/34");
 	sandbox_results results;
 	EXPECT_NO_THROW(results = is->run("/bin/false", std::vector<std::string>{}));
@@ -142,6 +152,7 @@ TEST(IsolateSandbox, BindDirsExecuteGCC)
 {
 	using sp = sandbox_limits::dir_perm;
 	auto tmp = fs::temp_directory_path();
+	std::shared_ptr<sandbox_config> config = std::make_shared<sandbox_config>();
 	sandbox_limits limits;
 	limits.wall_time = 10;
 	limits.cpu_time = 10;
@@ -160,7 +171,7 @@ TEST(IsolateSandbox, BindDirsExecuteGCC)
 	}
 
 	isolate_sandbox *is = nullptr;
-	EXPECT_NO_THROW(is = new isolate_sandbox(limits, 35, "/tmp"));
+	EXPECT_NO_THROW(is = new isolate_sandbox(config, limits, 35, "/tmp"));
 	sandbox_results results;
 	EXPECT_NO_THROW(results = is->run("/usr/bin/gcc", std::vector<std::string>{"-Wall", "-o", "test", "main.c"}));
 

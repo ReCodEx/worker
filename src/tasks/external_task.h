@@ -23,7 +23,7 @@ public:
 
 	/**
 	 * Only way to construct external task is through this constructor.
-	 * Choosing propriate sandbox and constructing it is also done here.
+	 * Choosing propriate sandbox and constructing it, is also done here.
 	 * @param data Data to create external task class.
 	 * @throws task_exception if name of the sandbox in data argument is unknown.
 	 */
@@ -61,16 +61,43 @@ private:
 	 */
 	void sandbox_fini();
 
-	/** Id of this instance of worker loaded from default configuration */
-	size_t worker_id_;
+	/**
+	 * For the given file find appropriate path outside sandbox in the directories specified in the limits.
+	 * @param file file pointing inside sandbox
+	 * @return path of the directory and the file outside sandbox
+	 */
+	fs::path find_path_outside_sandbox(std::string file);
+
+	/**
+	 * Initialize output if requested.
+	 */
+	void results_output_init();
+	/**
+	 * Get configuration limited content of the stdout and stderr and return it.
+	 * @return text which was produced by sandboxed program on stdout and stderr
+	 */
+	std::string get_results_output();
+
+	/** Worker default configuration */
+	std::shared_ptr<worker_config> worker_config_;
 	/** Constructed sandbox itself */
 	std::shared_ptr<sandbox_base> sandbox_;
+	/** General sandbox config */
+	std::shared_ptr<sandbox_config> sandbox_config_;
 	/** Limits for sandbox in which program will be started */
 	std::shared_ptr<sandbox_limits> limits_;
 	/** Job system logger */
 	std::shared_ptr<spdlog::logger> logger_;
 	/** Directory for temporary files */
 	std::string temp_dir_;
+	/** Directory where source codes for job are located */
+	fs::path source_dir_;
+	/** Directory binded to the sandbox as default working dir */
+	fs::path working_dir_;
+	/** After execution delete stdout file produced by sandbox */
+	bool remove_stdout_ = false;
+	/** After execution delete stderr file produced by sandbox */
+	bool remove_stderr_ = false;
 };
 
 #endif // RECODEX_WORKER_EXTERNAL_TASK_HPP

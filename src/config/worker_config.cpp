@@ -164,6 +164,13 @@ worker_config::worker_config(const YAML::Node &config)
 			throw config_error("Map of limits not defined properly");
 		}
 
+		// load max-output-length
+		if (config["max-output-length"] && config["max-output-length"].IsScalar()) {
+			max_output_length_ = config["max-output-length"].as<size_t>();
+		} else {
+			throw config_error("Item max-output-length not defined properly");
+		}
+
 	} catch (YAML::Exception &ex) {
 		throw config_error("Default worker configuration was not loaded: " + std::string(ex.what()));
 	}
@@ -232,4 +239,9 @@ size_t worker_config::get_max_broker_liveness() const
 std::chrono::milliseconds worker_config::get_broker_ping_interval() const
 {
 	return broker_ping_interval_;
+}
+
+size_t worker_config::get_max_output_length() const
+{
+	return max_output_length_;
 }

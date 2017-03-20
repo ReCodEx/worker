@@ -51,6 +51,7 @@ TEST(worker_config, load_yaml_basic)
 						   "        - src: /usr/share\n"
 						   "          dst: share\n"
 						   "          mode: MAYBE\n"
+						   "max-output-length: 1024\n"
 						   "...");
 
 	worker_config config(yaml);
@@ -103,6 +104,7 @@ TEST(worker_config, load_yaml_basic)
 	ASSERT_EQ(expected_filemans, config.get_filemans_configs());
 	ASSERT_EQ(std::chrono::milliseconds(5487), config.get_broker_ping_interval());
 	ASSERT_EQ((size_t) 1245, config.get_max_broker_liveness());
+	ASSERT_EQ((size_t) 1024, config.get_max_output_length());
 }
 
 /**

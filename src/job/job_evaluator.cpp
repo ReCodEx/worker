@@ -294,6 +294,7 @@ void job_evaluator::push_result()
 			subnode["killed"] = sandbox->killed;
 			subnode["message"] = sandbox->message;
 
+			node["output"] = sandbox->output;
 			node["sandbox_results"] = subnode;
 		}
 

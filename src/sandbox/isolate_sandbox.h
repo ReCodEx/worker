@@ -7,6 +7,7 @@
 #include <vector>
 #include "../helpers/logger.h"
 #include "sandbox_base.h"
+#include "../config/sandbox_config.h"
 
 /**
  * Class implementing operations with Isolate sandbox.
@@ -37,7 +38,8 @@ public:
 	 * @param temp_dir Directory to store temporary files (generated isolate's meta log)
 	 * @param logger Set system logger (optional).
 	 */
-	isolate_sandbox(sandbox_limits limits,
+	isolate_sandbox(std::shared_ptr<sandbox_config> sandbox_config,
+		sandbox_limits limits,
 		size_t id,
 		const std::string &temp_dir,
 		std::shared_ptr<spdlog::logger> logger = nullptr);
@@ -48,6 +50,8 @@ public:
 	virtual sandbox_results run(const std::string &binary, const std::vector<std::string> &arguments);
 
 private:
+	/** General sandbox configuration */
+	std::shared_ptr<sandbox_config> sandbox_config_;
 	/** Limits for sandboxed program */
 	sandbox_limits limits_;
 	/** Logger */

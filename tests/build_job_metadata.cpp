@@ -32,6 +32,7 @@ TEST(job_metadata, build_all_from_yaml)
 							   "          stdin: before_stdin_${WORKER_ID}_after_stdin\n"
 							   "          stdout: before_stdout_${JOB_ID}_after_stdout\n"
 							   "          stderr: before_stderr_${RESULT_DIR}_after_stderr\n"
+							   "          output: true\n"
 							   "          limits:\n"
 							   "              - hw-group-id: group1\n"
 							   "                time: 5\n"
@@ -86,9 +87,10 @@ TEST(job_metadata, build_all_from_yaml)
 	EXPECT_EQ(limits->disk_size, 50u);
 	EXPECT_EQ(limits->disk_files, 10u);
 	EXPECT_EQ(limits->chdir, "${EVAL_DIR}");
-	EXPECT_EQ(limits->std_input, "before_stdin_${WORKER_ID}_after_stdin");
-	EXPECT_EQ(limits->std_output, "before_stdout_${JOB_ID}_after_stdout");
-	EXPECT_EQ(limits->std_error, "before_stderr_${RESULT_DIR}_after_stderr");
+	EXPECT_EQ(sandbox->std_input, "before_stdin_${WORKER_ID}_after_stdin");
+	EXPECT_EQ(sandbox->std_output, "before_stdout_${JOB_ID}_after_stdout");
+	EXPECT_EQ(sandbox->std_error, "before_stderr_${RESULT_DIR}_after_stderr");
+	EXPECT_EQ(sandbox->output, true);
 
 	EXPECT_EQ(limits->environ_vars.size(), 1u);
 	auto envs = std::pair<std::string, std::string>{"ISOLATE_TMP", "/tmp"};

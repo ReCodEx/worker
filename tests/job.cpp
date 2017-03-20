@@ -28,7 +28,7 @@ bool operator==(const create_params &a, const create_params &b)
 {
 	// compare all but job logger
 	return a.id == b.id && a.limits == b.limits && a.task_meta == b.task_meta && a.temp_dir == b.temp_dir &&
-		a.worker_id == b.worker_id;
+		a.worker_conf == b.worker_conf;
 }
 
 // get worker default limits
@@ -65,6 +65,9 @@ std::shared_ptr<job_metadata> get_correct_meta()
 	task_meta->cmd_args = std::vector<std::string>{"-v", "-f 01.in"};
 	std::shared_ptr<sandbox_config> sandbox_conf = std::make_shared<sandbox_config>();
 	sandbox_conf->name = "fake";
+	sandbox_conf->std_input = "01.in";
+	sandbox_conf->std_output = "01.out";
+	sandbox_conf->std_error = "01.err";
 
 	// sandbox limits here are different than workers, so we can't call get_default_limits()
 	std::shared_ptr<sandbox_limits> limits = std::make_shared<sandbox_limits>();
@@ -77,9 +80,6 @@ std::shared_ptr<job_metadata> get_correct_meta()
 	limits->disk_size = 50;
 	limits->disk_files = 10;
 	limits->chdir = "/eval";
-	limits->std_input = "01.in";
-	limits->std_output = "01.out";
-	limits->std_error = "01.err";
 	limits->environ_vars = std::vector<std::pair<std::string, std::string>>{{"ISOLATE_BOX", "/box"}};
 	limits->bound_dirs = std::vector<mytuple>{mytuple{"/tmp/recodex", "/recodex/tmp", sandbox_limits::dir_perm::RW}};
 
@@ -347,8 +347,13 @@ TEST(job_test, load_of_worker_defaults)
 	// - after finish, we can read the values behind pointers and check changed values
 	auto empty_task = std::make_shared<mock_task>();
 	auto empty_task2 = std::make_shared<mock_task>(2, "eval");
-	create_params params = {
-		8, 1, job_meta->tasks[0], job_meta->tasks[0]->sandbox->loaded_limits["group1"], nullptr, dir_root.string()};
+	create_params params = {worker_conf,
+		1,
+		job_meta->tasks[0],
+		job_meta->tasks[0]->sandbox->loaded_limits["group1"],
+		nullptr,
+		dir_root.string(),
+		dir_root};
 	{
 		InSequence s;
 		EXPECT_CALL((*factory), create_internal_task(0, _)).WillOnce(Return(empty_task));
@@ -717,11 +722,13 @@ TEST(job_test, job_variables)
 
 	auto job_meta = get_correct_meta();
 	job_meta->tasks[0]->binary = "${EVAL_DIR}/recodex";
+
+	job_meta->tasks[0]->sandbox->std_input = "before_stdin_${WORKER_ID}_after_stdin";
+	job_meta->tasks[0]->sandbox->std_output = "before_stdout_${JOB_ID}_after_stdout";
+	job_meta->tasks[0]->sandbox->std_error = "before_stderr_${RESULT_DIR}_after_stderr";
+
 	auto isolate_limits = job_meta->tasks[0]->sandbox->loaded_limits["group1"];
 	isolate_limits->chdir = "${EVAL_DIR}";
-	isolate_limits->std_input = "before_stdin_${WORKER_ID}_after_stdin";
-	isolate_limits->std_output = "before_stdout_${JOB_ID}_after_stdout";
-	isolate_limits->std_error = "before_stderr_${RESULT_DIR}_after_stderr";
 	isolate_limits->bound_dirs =
 		std::vector<mytuple>{mytuple{"${TEMP_DIR}" + std::string(1, path::preferred_separator) + "recodex",
 			"${SOURCE_DIR}" + std::string(1, path::preferred_separator) + "tmp",
@@ -745,8 +752,13 @@ TEST(job_test, job_variables)
 	// - after finish, we can read the values behind pointers and check changed values
 	auto empty_task = std::make_shared<mock_task>();
 	auto empty_task2 = std::make_shared<mock_task>(2, "eval");
-	create_params params = {
-		8, 1, job_meta->tasks[0], job_meta->tasks[0]->sandbox->loaded_limits["group1"], nullptr, dir_root.string()};
+	create_params params = {worker_conf,
+		1,
+		job_meta->tasks[0],
+		job_meta->tasks[0]->sandbox->loaded_limits["group1"],
+		nullptr,
+		dir_root.string(),
+		dir_root};
 	{
 		InSequence s;
 		EXPECT_CALL((*factory), create_internal_task(0, _)).WillOnce(Return(empty_task));
@@ -759,10 +771,10 @@ TEST(job_test, job_variables)
 
 	std::shared_ptr<sandbox_limits> limits = params.limits;
 	ASSERT_EQ(params.task_meta->binary, path("/evaluate/recodex").string());
-	ASSERT_EQ(limits->std_input, "before_stdin_8_after_stdin");
-	ASSERT_EQ(limits->std_output, "before_stdout_eval5_after_stdout");
-	ASSERT_EQ(limits->std_error, "before_stderr_" + res_dir.string() + "_after_stderr");
 	ASSERT_EQ(path(limits->chdir).string(), path("/evaluate").string());
+	ASSERT_EQ(params.task_meta->sandbox->std_input, "before_stdin_8_after_stdin");
+	ASSERT_EQ(params.task_meta->sandbox->std_output, "before_stdout_eval5_after_stdout");
+	ASSERT_EQ(params.task_meta->sandbox->std_error, "before_stderr_" + res_dir.string() + "_after_stderr");
 
 	auto bnd_dirs = limits->bound_dirs;
 	ASSERT_EQ(bnd_dirs.size(), 1u);

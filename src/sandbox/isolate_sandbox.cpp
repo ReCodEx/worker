@@ -20,10 +20,17 @@
 namespace fs = boost::filesystem;
 
 
-isolate_sandbox::isolate_sandbox(
-	sandbox_limits limits, size_t id, const std::string &temp_dir, std::shared_ptr<spdlog::logger> logger)
-	: limits_(limits), logger_(logger), id_(id), isolate_binary_("isolate")
+isolate_sandbox::isolate_sandbox(std::shared_ptr<sandbox_config> sandbox_config,
+	sandbox_limits limits,
+	size_t id,
+	const std::string &temp_dir,
+	std::shared_ptr<spdlog::logger> logger)
+	: sandbox_config_(sandbox_config), limits_(limits), logger_(logger), id_(id), isolate_binary_("isolate")
 {
+	if (sandbox_config == nullptr) {
+		throw sandbox_exception("No sandbox configuration provided.");
+	}
+
 	if (logger_ == nullptr) {
 		logger_ = helpers::create_null_logger();
 	}
@@ -333,14 +340,14 @@ char **isolate_sandbox::isolate_run_args(const std::string &binary, const std::v
 	// Calculate number of required blocks - total number of bytes divided by block size (defined in sys/mount.h)
 	auto disk_size_blocks = (limits_.disk_size * 1024) / BLOCK_SIZE;
 	vargs.push_back("--quota=" + std::to_string(disk_size_blocks) + "," + std::to_string(limits_.disk_files));
-	if (!limits_.std_input.empty()) {
-		vargs.push_back("--stdin=" + limits_.std_input);
+	if (!sandbox_config_->std_input.empty()) {
+		vargs.push_back("--stdin=" + sandbox_config_->std_input);
 	}
-	if (!limits_.std_output.empty()) {
-		vargs.push_back("--stdout=" + limits_.std_output);
+	if (!sandbox_config_->std_output.empty()) {
+		vargs.push_back("--stdout=" + sandbox_config_->std_output);
 	}
-	if (!limits_.std_error.empty()) {
-		vargs.push_back("--stderr=" + limits_.std_error);
+	if (!sandbox_config_->std_error.empty()) {
+		vargs.push_back("--stderr=" + sandbox_config_->std_error);
 	}
 	if (!limits_.chdir.empty()) {
 		// path is relative to /box inside sandbox ... we want path to be relative to root (/)

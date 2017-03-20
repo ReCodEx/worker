@@ -1,7 +1,7 @@
 %define name recodex-worker
 %define version 1.0.0
 %define unmangled_version 1.0.0
-%define release 2
+%define release 3
 
 Summary: ReCodEx worker component
 Name: %{name}

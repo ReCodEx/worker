@@ -108,6 +108,12 @@ public:
 	 */
 	virtual const sandbox_limits &get_limits() const;
 
+	/**
+	 * Get maximal length of output which can be written to the results.
+	 * @return length of output in bytes
+	 */
+	virtual size_t get_max_output_length() const;
+
 private:
 	/** Unique worker number in context of one machine (0-100 preferably) */
 	size_t worker_id_;
@@ -133,6 +139,8 @@ private:
 	std::vector<fileman_config> filemans_configs_;
 	/** Default sandbox limits */
 	sandbox_limits limits_;
+	/** Maximal length of output from sandbox which can be written to the results file, in bytes. */
+	size_t max_output_length_;
 };
 
 
