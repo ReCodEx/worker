@@ -180,7 +180,11 @@ std::shared_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 							sl->chdir = lim["chdir"].as<std::string>();
 						}
 
-						sl->bound_dirs = helpers::get_bind_dirs(lim);
+						// find bound dirs from config and attach them to limits
+						auto bound_dirs = helpers::get_bind_dirs(lim);
+						for (auto &dir : bound_dirs) {
+							sl->bound_dirs.push_back(dir);
+						}
 
 						if (lim["environ-variable"] && lim["environ-variable"].IsMap()) {
 							for (auto &var : lim["environ-variable"]) {
