@@ -24,6 +24,8 @@ before_install:
   - sudo make install
   - cd ..
   - rm -rf isolate
+  # Install coveralls uploader
+  - pip install --user cpp-coveralls
 
 script:
   - mkdir build
@@ -33,4 +35,6 @@ script:
   - ctest -E tool_ --output-on-failure
 
 after_success:
-  - ctest -R tool_ --output-on-failure
+  - ctest -R tool_ --output-on-failure || true
+  - cd ${TRAVIS_BUILD_DIR}
+  - coveralls -i src --gcov-options '\-lp'

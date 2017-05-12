@@ -25,6 +25,7 @@ if(UNIX)
 	set(LIBS ${BASE_LIBS}
 		-lzmq
 		-lboost_system -lboost_filesystem -lboost_program_options
+		-lgcov --coverage
 		archive
 	)
 elseif(MSVC)
@@ -34,6 +35,9 @@ endif()
 function(add_test_suite name)
 	cmake_parse_arguments(TEST "" "WORKING_DIRECTORY" "" ${ARGN})
 	add_executable(run_test_${name} ${TEST_UNPARSED_ARGUMENTS})
+	if(UNIX)
+		set_target_properties(run_test_${name} PROPERTIES COMPILE_FLAGS "-fprofile-arcs -ftest-coverage --coverage")
+	endif()
 	target_link_libraries(run_test_${name} ${LIBS})
 	if(MSVC)
 		target_compile_definitions(run_test_${name} PRIVATE LIBARCHIVE_STATIC)
