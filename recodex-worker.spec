@@ -1,29 +1,41 @@
 %define name recodex-worker
+%define short_name worker
 %define version 1.0.0
-%define unmangled_version 1.0.0
-%define release 3
+%define unmangled_version cbc75a3a7cad53944df989efa884151bde619301
+%define release 4
+
+%define spdlog_name spdlog
+%define spdlog_version 0.13.0
 
 Summary: ReCodEx worker component
 Name: %{name}
 Version: %{version}
 Release: %{release}
-Source0: %{name}-%{unmangled_version}.tar.gz
 License: MIT
 Group: Development/Libraries
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 Prefix: %{_prefix}
 Vendor: Petr Stefan <UNKNOWN>
 Url: https://github.com/ReCodEx/worker
-BuildRequires: systemd cmake zeromq-devel cppzmq-devel yaml-cpp-devel libcurl-devel spdlog-devel libarchive-devel
+BuildRequires: systemd cmake zeromq-devel cppzmq-devel yaml-cpp-devel libcurl-devel libarchive-devel
 Requires(post): systemd
 Requires(preun): systemd
 Requires(postun): systemd
+
+#Source0: %{name}-%{unmangled_version}.tar.gz
+Source0: https://github.com/ReCodEx/%{short_name}/archive/%{unmangled_version}.tar.gz#/%{short_name}-%{unmangled_version}.tar.gz
+Source1: https://github.com/gabime/%{spdlog_name}/archive/v%{spdlog_version}.tar.gz#/%{spdlog_name}-%{spdlog_version}.tar.gz
 
 %description
 Backend part of ReCodEx programmer testing solution.
 
 %prep
-%setup -n %{name}-%{unmangled_version}
+%setup -n %{short_name}-%{unmangled_version}
+# Unpack spdlog to the right location
+%setup -n %{short_name}-%{unmangled_version} -T -D -a 1
+rmdir vendor/spdlog
+mv -f %{spdlog_name}-%{spdlog_version} vendor/spdlog
+
 
 %build
 %cmake -DDISABLE_TESTS=true .
