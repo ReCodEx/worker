@@ -153,6 +153,7 @@ if(UNIX)
 		-lcurl
 		-lzmq
 		-lboost_system -lboost_filesystem -lboost_program_options
+		-lgcov --coverage
 		archive
 	)
 elseif(MSVC)
