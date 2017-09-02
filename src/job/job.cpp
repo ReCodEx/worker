@@ -261,10 +261,8 @@ void job::process_task_limits(std::shared_ptr<sandbox_limits> limits)
 	}
 
 	// union of bound directories and environs from worker configuration and job configuration
-	limits->environ_vars.insert(
-		limits->environ_vars.end(), worker_limits.environ_vars.begin(), worker_limits.environ_vars.end());
-	limits->bound_dirs.insert(
-		limits->bound_dirs.end(), worker_limits.bound_dirs.begin(), worker_limits.bound_dirs.end());
+	limits->add_environ_vars(worker_limits.environ_vars);
+	limits->add_bound_dirs(worker_limits.bound_dirs);
 }
 
 void job::connect_tasks(
