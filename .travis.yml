@@ -36,4 +36,4 @@ script:
 after_success:
   - ctest -R tool_ --output-on-failure || true
   - cd ${TRAVIS_BUILD_DIR}
-  - coveralls -i src --gcov-options '\-lp'
+  - coveralls -i src --gcov-options '\-lp' > /dev/null
