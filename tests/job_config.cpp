@@ -197,6 +197,7 @@ TEST(job_config_test, config_data)
 						   "          stdin: 01.in\n"
 						   "          stdout: 01.out\n"
 						   "          stderr: 01.err\n"
+						   "          chdir: /eval\n"
 						   "          limits:\n"
 						   "              - hw-group-id: group1\n"
 						   "                time: 5\n"
@@ -207,7 +208,6 @@ TEST(job_config_test, config_data)
 						   "                parallel: 1\n"
 						   "                disk-size: 50\n"
 						   "                disk-files: 10\n"
-						   "                chdir: /eval\n"
 						   "                environ-variable:\n"
 						   "                    ISOLATE_BOX: /box\n"
 						   "                    ISOLATE_TMP: /tmp\n"
@@ -246,8 +246,14 @@ TEST(job_config_test, config_data)
 	ASSERT_EQ(task2->binary, "recodex");
 	ASSERT_EQ(task2->cmd_args[0], "-v");
 	ASSERT_EQ(task2->cmd_args[1], "-f 01.in");
+
 	ASSERT_NE(task2->sandbox, nullptr);
 	ASSERT_EQ(task2->sandbox->name, "fake");
+	ASSERT_EQ(task2->sandbox->std_input, "01.in");
+	ASSERT_EQ(task2->sandbox->std_output, "01.out");
+	ASSERT_EQ(task2->sandbox->std_error, "01.err");
+	ASSERT_EQ(task2->sandbox->chdir, "/eval");
+
 	ASSERT_EQ(task2->sandbox->loaded_limits.size(), 2u);
 	EXPECT_NO_THROW(task2->sandbox->loaded_limits.at("group1"));
 	EXPECT_NO_THROW(task2->sandbox->loaded_limits.at("group2"));
@@ -261,10 +267,6 @@ TEST(job_config_test, config_data)
 	ASSERT_EQ(limit1->processes, 1u);
 	ASSERT_EQ(limit1->disk_size, 50u);
 	ASSERT_EQ(limit1->disk_files, 10u);
-	ASSERT_EQ(limit1->chdir, "/eval");
-	ASSERT_EQ(task2->sandbox->std_input, "01.in");
-	ASSERT_EQ(task2->sandbox->std_output, "01.out");
-	ASSERT_EQ(task2->sandbox->std_error, "01.err");
 
 	// Both combinations are valid (YAML doesn't sort them)
 	std::vector<std::pair<std::string, std::string>> expected_environ_1 = {
@@ -289,12 +291,8 @@ TEST(job_config_test, config_data)
 	ASSERT_EQ(limit2->memory_usage, SIZE_MAX);
 	ASSERT_EQ(limit2->stack_size, SIZE_MAX);
 	ASSERT_EQ(limit2->processes, SIZE_MAX);
-	ASSERT_EQ(limit2->chdir, "${EVAL_DIR}");
 	ASSERT_EQ(limit2->disk_size, SIZE_MAX);
 	ASSERT_EQ(limit2->disk_files, SIZE_MAX);
 	ASSERT_EQ(limit2->environ_vars.size(), 0u);
 	ASSERT_EQ(limit2->bound_dirs.size(), 1u);
-	ASSERT_EQ(task2->sandbox->std_input, "01.in");
-	ASSERT_EQ(task2->sandbox->std_output, "01.out");
-	ASSERT_EQ(task2->sandbox->std_error, "01.err");
 }

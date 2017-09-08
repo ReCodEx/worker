@@ -35,9 +35,23 @@ public:
 	 */
 	bool output = false;
 	/**
+	 * Change working directory to subdirectory inside the sandbox.
+	 * @note Path must be accessible from inside of sandbox.
+	 */
+	std::string chdir;
+	/**
 	 * Associative array of loaded limits with textual index identifying its hw group.
 	 */
 	std::map<std::string, std::shared_ptr<sandbox_limits>> loaded_limits;
+
+
+	/**
+	 * Constructor with defaults.
+	 */
+	sandbox_config()
+	{
+		chdir = "${EVAL_DIR}";
+	}
 };
 
 #endif // RECODEX_WORKER_SANDBOX_CONFIG_H

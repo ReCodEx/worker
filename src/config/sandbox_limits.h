@@ -69,11 +69,6 @@ public:
 	 */
 	size_t disk_files = 0;
 	/**
-	 * Change working directory to subdirectory inside the sandbox.
-	 * @note Path must be accessible from inside of sandbox.
-	 */
-	std::string chdir;
-	/**
 	 * Limit number of processes/threads that could be created.
 	 * 0 means no limit.
 	 */
@@ -98,7 +93,6 @@ public:
 	 */
 	sandbox_limits()
 	{
-		chdir = "${EVAL_DIR}";
 		bound_dirs.push_back(std::tuple<std::string, std::string, sandbox_limits::dir_perm>(
 			"${SOURCE_DIR}", "${EVAL_DIR}", dir_perm::RW));
 	}
@@ -142,9 +136,8 @@ public:
 	{
 		return (memory_usage == second.memory_usage && cpu_time == second.cpu_time && wall_time == second.wall_time &&
 			extra_time == second.extra_time && stack_size == second.stack_size && files_size == second.files_size &&
-			disk_size == second.disk_size && disk_files == second.disk_files && chdir == second.chdir &&
-			processes == second.processes && share_net == second.share_net && environ_vars == second.environ_vars &&
-			bound_dirs == second.bound_dirs);
+			disk_size == second.disk_size && disk_files == second.disk_files && processes == second.processes &&
+			share_net == second.share_net && environ_vars == second.environ_vars && bound_dirs == second.bound_dirs);
 	}
 
 	/**

@@ -119,6 +119,9 @@ std::shared_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 				if (ctask["sandbox"]["output"] && ctask["sandbox"]["output"].IsScalar()) {
 					sandbox->output = ctask["sandbox"]["output"].as<bool>();
 				} // can be ommited... no throw
+				if (ctask["sandbox"]["chdir"] && ctask["sandbox"]["chdir"].IsScalar()) {
+					sandbox->chdir = ctask["sandbox"]["chdir"].as<std::string>();
+				} // can be ommited... no throw
 
 				// load limits... if they are supplied
 				if (ctask["sandbox"]["limits"]) {
@@ -175,9 +178,6 @@ std::shared_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 							sl->disk_files = lim["disk-files"].as<size_t>();
 						} else {
 							sl->disk_files = SIZE_MAX; // set undefined value (max size_t)
-						}
-						if (lim["chdir"] && lim["chdir"].IsScalar()) {
-							sl->chdir = lim["chdir"].as<std::string>();
 						}
 
 						// find bound dirs from config and attach them to limits

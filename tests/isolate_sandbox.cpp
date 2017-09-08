@@ -28,6 +28,7 @@ TEST(IsolateSandbox, NormalCommand)
 	config->std_input = "";
 	config->std_output = "output.txt";
 	config->std_error = "";
+	config->chdir = "";
 	sandbox_limits limits;
 	limits.wall_time = 5.1;
 	limits.cpu_time = 5.1;
@@ -39,7 +40,6 @@ TEST(IsolateSandbox, NormalCommand)
 	limits.files_size = 0;
 	limits.processes = 0;
 	limits.share_net = false;
-	limits.chdir = "";
 	limits.bound_dirs.clear();
 	isolate_sandbox *is = nullptr;
 	EXPECT_NO_THROW(is = new isolate_sandbox(config, limits, 34, "/tmp"));
@@ -63,6 +63,7 @@ TEST(IsolateSandbox, TimeoutCommand)
 	config->std_input = "";
 	config->std_output = "";
 	config->std_error = "";
+	config->chdir = "";
 	sandbox_limits limits;
 	limits.wall_time = 0.5;
 	limits.cpu_time = 0.5;
@@ -74,7 +75,6 @@ TEST(IsolateSandbox, TimeoutCommand)
 	limits.files_size = 0;
 	limits.processes = 0;
 	limits.share_net = false;
-	limits.chdir = "";
 	limits.bound_dirs.clear();
 	isolate_sandbox *is = nullptr;
 	EXPECT_NO_THROW(is = new isolate_sandbox(config, limits, 34, "/tmp"));
@@ -96,6 +96,7 @@ TEST(IsolateSandbox, NonzeroReturnCommand)
 	config->std_input = "";
 	config->std_output = "";
 	config->std_error = "";
+	config->chdir = "";
 	sandbox_limits limits;
 	limits.wall_time = 0.5;
 	limits.cpu_time = 0.5;
@@ -107,7 +108,6 @@ TEST(IsolateSandbox, NonzeroReturnCommand)
 	limits.files_size = 0;
 	limits.processes = 0;
 	limits.share_net = false;
-	limits.chdir = "";
 	limits.bound_dirs.clear();
 	isolate_sandbox *is = nullptr;
 	EXPECT_NO_THROW(is = new isolate_sandbox(config, limits, 34, "/tmp"));
@@ -153,6 +153,7 @@ TEST(IsolateSandbox, BindDirsExecuteGCC)
 	using sp = sandbox_limits::dir_perm;
 	auto tmp = fs::temp_directory_path();
 	std::shared_ptr<sandbox_config> config = std::make_shared<sandbox_config>();
+	config->chdir = "evaluate";
 	sandbox_limits limits;
 	limits.wall_time = 10;
 	limits.cpu_time = 10;
@@ -160,7 +161,6 @@ TEST(IsolateSandbox, BindDirsExecuteGCC)
 	limits.processes = 0;
 	limits.bound_dirs = {
 		std::tuple<std::string, std::string, sp>{(tmp / "recodex_35_test").string(), "evaluate", sp::RW}};
-	limits.chdir = "evaluate";
 	limits.environ_vars = {{"PATH", "/usr/bin"}};
 
 	fs::create_directories(tmp / "recodex_35_test");

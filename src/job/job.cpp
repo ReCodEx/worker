@@ -134,7 +134,7 @@ void job::build_job()
 			}
 
 			// go through variables parsing
-			limits->chdir = parse_job_var(limits->chdir);
+			sandbox->chdir = parse_job_var(sandbox->chdir);
 			sandbox->std_input = parse_job_var(sandbox->std_input);
 			sandbox->std_output = parse_job_var(sandbox->std_output);
 			sandbox->std_error = parse_job_var(sandbox->std_error);
