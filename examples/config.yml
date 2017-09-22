@@ -4,12 +4,15 @@ worker-description: "linux_worker_1"
 broker-uri: tcp://localhost:9657
 headers:
     env:
-        - c
-        - python
-        - cpp
+        - c-gcc-linux
+        - python3
+        - cxx11-gcc-linux
+        - freepascal-linux
+        - java8
+        - mono46
     threads: 1
 hwgroup: "group1"
-working-directory: /tmp/recodex
+working-directory: /var/recodex-worker
 file-managers:
     - hostname: "http://localhost:9999"  # port is optional
       username: ""  # can be ignored in specific modules
@@ -31,6 +34,7 @@ limits:
     disk-size: 1048576
     disk-files: 100
     environ-variable:
-        PATH: /usr/bin
+        HOME: /box
+        PATH: /usr/bin:/bin
 max-output-length: 1024  # in bytes
 ...
