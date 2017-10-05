@@ -18,7 +18,7 @@ namespace fs = boost::filesystem;
 static fileman_config get_recodex_config()
 {
 	fileman_config conf;
-	conf.remote_url = "https://recodex.projekty.ms.mff.cuni.cz:8082";
+	conf.remote_url = "https://recodex.mff.cuni.cz:8082";
 	conf.username = "re";
 	conf.password = "codex";
 	return conf;
