@@ -157,6 +157,7 @@ void job_evaluator::init_submission_paths()
 
 void job_evaluator::cleanup_submission()
 {
+
 	// cleanup source code directory after job evaluation
 	try {
 		if (fs::exists(source_path_)) {
@@ -236,7 +237,10 @@ void job_evaluator::prepare_evaluator()
 
 void job_evaluator::cleanup_evaluator()
 {
-	// cleanup_submission(); // TODO: just for debugging purposes
+	if (config_->get_cleanup_submission() == true) {
+		cleanup_submission();
+	}
+
 	cleanup_variables();
 }
 

@@ -65,7 +65,7 @@ install:
 - ps: >-
     cd C:\deps
 
-    Start-FileDownload 'http://curl.haxx.se/ca/cacert.pem'
+    appveyor DownloadFile 'https://curl.haxx.se/ca/cacert.pem'
 
     mv cacert.pem curl-ca-bundle.crt
 cache: C:\projects\codex_worker\CMakeCache.txt

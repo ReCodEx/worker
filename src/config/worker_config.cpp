@@ -172,6 +172,13 @@ worker_config::worker_config(const YAML::Node &config)
 			throw config_error("Item max-output-length not defined properly");
 		}
 
+		// load cleanup-submission
+		if (config["cleanup-submission"] && config["cleanup-submission"].IsScalar()) {
+			cleanup_submission_ = config["cleanup-submission"].as<bool>();
+		} else {
+			throw config_error("Item cleanup-submission not defined properly");
+		}
+
 	} catch (YAML::Exception &ex) {
 		throw config_error("Default worker configuration was not loaded: " + std::string(ex.what()));
 	}
@@ -245,4 +252,9 @@ std::chrono::milliseconds worker_config::get_broker_ping_interval() const
 size_t worker_config::get_max_output_length() const
 {
 	return max_output_length_;
+}
+
+bool worker_config::get_cleanup_submission() const
+{
+	return cleanup_submission_;
 }

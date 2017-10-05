@@ -114,6 +114,12 @@ public:
 	 */
 	virtual size_t get_max_output_length() const;
 
+	/**
+	 * Get flag which determines if cleanup is made after sumbission is evaluated.
+	 * @return
+	 */
+	virtual bool get_cleanup_submission() const;
+
 private:
 	/** Unique worker number in context of one machine (0-100 preferably) */
 	size_t worker_id_;
@@ -141,6 +147,8 @@ private:
 	sandbox_limits limits_;
 	/** Maximal length of output from sandbox which can be written to the results file, in bytes. */
 	size_t max_output_length_;
+	/** If true then all files created during evaluation of job will be deleted at the end. */
+	bool cleanup_submission_;
 };
 
 
