@@ -427,9 +427,7 @@ sandbox_results isolate_sandbox::process_meta_file()
 			} else if (first == "killed") {
 				results.killed = true;
 			} else if (first == "status") {
-				if (second == "OK") {
-					results.status = isolate_status::OK;
-				} else if (second == "RE") {
+				if (second == "RE") {
 					results.status = isolate_status::RE;
 				} else if (second == "SG") {
 					results.status = isolate_status::SG;
