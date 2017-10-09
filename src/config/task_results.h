@@ -7,7 +7,7 @@
 /**
  * Return error codes of sandbox. Code names corresponds isolate's meta file error codes.
  */
-enum class isolate_status { OK, RE, SG, TO, XX };
+enum class isolate_status { OK, RE, SG, TO, XX, UNDEF };
 
 /**
  * Status of whole task after execution.
@@ -22,7 +22,7 @@ enum class task_status { OK, FAILED, SKIPPED };
 struct sandbox_results {
 	/**
 	 * Return code of sandbox.
-	 * Default: 0
+	 * Default: -1
 	 */
 	int exitcode;
 	/**
@@ -47,7 +47,7 @@ struct sandbox_results {
 	size_t max_rss;
 	/**
 	 * Error code returned by sandbox.
-	 * Default: OK
+	 * Default: UNDEF
 	 */
 	isolate_status status;
 	/**
@@ -74,7 +74,7 @@ struct sandbox_results {
 	 * Constructor with default values initialization.
 	 */
 	sandbox_results()
-		: exitcode(0), time(0), wall_time(0), memory(0), max_rss(0), status(isolate_status::OK), exitsig(0),
+		: exitcode(-1), time(0), wall_time(0), memory(0), max_rss(0), status(isolate_status::UNDEF), exitsig(0),
 		  killed(false), message(), output()
 	{
 	}

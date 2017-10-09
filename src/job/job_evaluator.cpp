@@ -292,6 +292,7 @@ void job_evaluator::push_result()
 			case isolate_status::SG: subnode["status"] = "SG"; break;
 			case isolate_status::TO: subnode["status"] = "TO"; break;
 			case isolate_status::XX: subnode["status"] = "XX"; break;
+			case isolate_status::UNDEF: subnode["status"] = "UNDEF"; break;
 			}
 
 			subnode["exitsig"] = sandbox->exitsig;
