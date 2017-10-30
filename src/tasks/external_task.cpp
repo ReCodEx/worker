@@ -122,6 +122,12 @@ void external_task::results_output_init()
 fs::path external_task::find_path_outside_sandbox(std::string file)
 {
 	fs::path file_path = fs::path(file);
+	if (!file_path.has_root_directory()) {
+		// relative path to chdir
+		return fs::path(sandbox_config_->chdir) / file_path;
+	}
+
+	// absolute path in sandbox provided
 	fs::path sandbox_dir = file_path.parent_path();
 	for (auto &dir : limits_->bound_dirs) {
 		fs::path sandbox_dir_bound = fs::path(std::get<1>(dir));
@@ -175,8 +181,9 @@ std::string external_task::get_results_output()
 void external_task::make_binary_executable(std::string binary)
 {
 	try {
+		fs::path binary_path = find_path_outside_sandbox(binary);
 		fs::permissions(
-			fs::path(binary), fs::perms::add_perms | fs::perms::owner_exe | fs::perms::group_exe | fs::others_exe);
+			binary_path, fs::perms::add_perms | fs::perms::owner_exe | fs::perms::group_exe | fs::others_exe);
 	} catch (fs::filesystem_error &e) {
 		auto message = std::string("Failed to set executable bits for executed binary. Error: ") + e.what();
 		logger_->warn(message);
