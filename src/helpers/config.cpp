@@ -164,6 +164,11 @@ std::shared_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 						} else {
 							sl->memory_usage = SIZE_MAX; // set undefined value (max size_t)
 						}
+						if (lim["extra-memory"] && lim["extra-memory"].IsScalar()) {
+							sl->extra_memory = lim["extra-memory"].as<size_t>();
+						} else {
+							sl->extra_memory = SIZE_MAX; // set undefined value (max size_t)
+						}
 						if (lim["parallel"] && lim["parallel"].IsScalar()) { // TODO not defined properly
 							sl->processes = lim["parallel"].as<size_t>();
 						} else {

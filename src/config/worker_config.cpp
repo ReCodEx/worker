@@ -137,6 +137,9 @@ worker_config::worker_config(const YAML::Node &config)
 			if (limits["memory"] && limits["memory"].IsScalar()) {
 				limits_.memory_usage = limits["memory"].as<size_t>();
 			} // no throw... can be omitted
+			if (limits["extra-memory"] && limits["extra-memory"].IsScalar()) {
+				limits_.extra_memory = limits["extra-memory"].as<size_t>();
+			} // no throw... can be omitted
 			if (limits["parallel"] && limits["parallel"].IsScalar()) {
 				limits_.processes = limits["parallel"].as<size_t>();
 			} // no throw... can be omitted

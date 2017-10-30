@@ -3,6 +3,11 @@
 #include "../helpers/string_utils.h"
 #include <fstream>
 #include <algorithm>
+#define BOOST_FILESYSTEM_NO_DEPRECATED
+#define BOOST_NO_CXX11_SCOPED_ENUMS
+#include <boost/filesystem.hpp>
+
+namespace fs = boost::filesystem;
 
 external_task::external_task(const create_params &data)
 	: task_base(data.id, data.task_meta), worker_config_(data.worker_conf), sandbox_(nullptr),
@@ -69,6 +74,9 @@ std::shared_ptr<task_results> external_task::run()
 
 	// initialize output from stdout and stderr
 	results_output_init();
+
+	// check if binary is executable and set it otherwise
+	make_binary_executable(task_meta_->binary);
 
 	std::shared_ptr<task_results> res(new task_results());
 	res->sandbox_status =
@@ -162,4 +170,16 @@ std::string external_task::get_results_output()
 	}
 
 	return result;
+}
+
+void external_task::make_binary_executable(std::string binary)
+{
+	try {
+		fs::permissions(
+			fs::path(binary), fs::perms::add_perms | fs::perms::owner_exe | fs::perms::group_exe | fs::others_exe);
+	} catch (fs::filesystem_error &e) {
+		auto message = std::string("Failed to set executable bits for executed binary. Error: ") + e.what();
+		logger_->warn(message);
+		throw sandbox_exception(message);
+	}
 }

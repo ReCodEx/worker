@@ -69,6 +69,12 @@ private:
 	fs::path find_path_outside_sandbox(std::string file);
 
 	/**
+	 * If binary file provided as argument does not have executable flag, try to set it.
+	 * @param binary
+	 */
+	void make_binary_executable(std::string binary);
+
+	/**
 	 * Initialize output if requested.
 	 */
 	void results_output_init();

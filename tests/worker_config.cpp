@@ -38,6 +38,7 @@ TEST(worker_config, load_yaml_basic)
 						   "    extra-time: 2\n"
 						   "    stack-size: 50000\n"
 						   "    memory: 60000\n"
+						   "    extra-memory: 10000\n"
 						   "    parallel: 1\n"
 						   "    disk-size: 50\n"
 						   "    disk-files: 7\n"
@@ -61,6 +62,7 @@ TEST(worker_config, load_yaml_basic)
 
 	sandbox_limits expected_limits;
 	expected_limits.memory_usage = 60000;
+	expected_limits.extra_memory = 10000;
 	expected_limits.cpu_time = 5;
 	expected_limits.wall_time = 6;
 	expected_limits.extra_time = 2;

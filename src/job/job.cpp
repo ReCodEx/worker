@@ -238,6 +238,13 @@ void job::process_task_limits(std::shared_ptr<sandbox_limits> limits)
 			throw job_exception("memory" + msg);
 		}
 	}
+	if (limits->extra_memory == SIZE_MAX) {
+		limits->extra_memory = worker_limits.extra_memory;
+	} else {
+		if (limits->extra_memory > worker_limits.extra_memory) {
+			throw job_exception("extra-memory" + msg);
+		}
+	}
 	if (limits->processes == SIZE_MAX) {
 		limits->processes = worker_limits.processes;
 	} else {
