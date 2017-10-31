@@ -1,6 +1,7 @@
 #include "external_task.h"
 #include "../sandbox/isolate_sandbox.h"
 #include "../helpers/string_utils.h"
+#include "../helpers/filesystem.h"
 #include <fstream>
 #include <algorithm>
 #define BOOST_FILESYSTEM_NO_DEPRECATED
@@ -121,21 +122,7 @@ void external_task::results_output_init()
 
 fs::path external_task::find_path_outside_sandbox(std::string file)
 {
-	fs::path file_path = fs::path(file);
-	if (!file_path.has_root_directory()) {
-		// relative path to chdir
-		return fs::path(sandbox_config_->chdir) / file_path;
-	}
-
-	// absolute path in sandbox provided
-	fs::path sandbox_dir = file_path.parent_path();
-	for (auto &dir : limits_->bound_dirs) {
-		fs::path sandbox_dir_bound = fs::path(std::get<1>(dir));
-		if (sandbox_dir_bound == sandbox_dir) {
-			return fs::path(std::get<0>(dir)) / file_path.filename();
-		}
-	}
-	return fs::path();
+	return helpers::find_path_outside_sandbox(file, sandbox_config_->chdir, limits_->bound_dirs);
 }
 
 std::string external_task::get_results_output()

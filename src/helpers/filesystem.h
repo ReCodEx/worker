@@ -1,6 +1,7 @@
 #ifndef RECODEX_WORKER_HELPERS_FILESYSTEM_HPP
 #define RECODEX_WORKER_HELPERS_FILESYSTEM_HPP
 
+#include "../config/sandbox_limits.h"
 #define BOOST_FILESYSTEM_NO_DEPRECATED
 #define BOOST_NO_CXX11_SCOPED_ENUMS
 #include <boost/filesystem.hpp>
@@ -16,6 +17,17 @@ namespace helpers
 	 * @throws filesystem_exception with approprite description
 	 */
 	void copy_directory(const fs::path &src, const fs::path &dest);
+
+	/**
+	 * Find path outside sandbox on real filesystem, based on given path inside sandbox.
+	 * @param inside path inside sandbox which will be resolved
+	 * @param sandbox_chdir directory where sandbox is chdir-ed
+	 * @param bound_dirs directories bound to sandbox
+	 * @return path outside sandbox
+	 */
+	fs::path find_path_outside_sandbox(const std::string &inside,
+		const std::string &sandbox_chdir,
+		std::vector<std::tuple<std::string, std::string, sandbox_limits::dir_perm>> &bound_dirs);
 
 
 	/**

@@ -126,6 +126,7 @@ add_test_suite(tasks
 	${HELPERS_DIR}/logger.cpp
 	${HELPERS_DIR}/config.cpp
 	${HELPERS_DIR}/string_utils.cpp
+	${HELPERS_DIR}/filesystem.cpp
 	${CONFIG_DIR}/worker_config.cpp
 	tasks.cpp
 )
@@ -143,6 +144,11 @@ add_test_suite(progress_callback
 	${HELPERS_DIR}/zmq_socket.cpp
 	${HELPERS_DIR}/logger.cpp
 	progress_callback.cpp
+)
+
+add_test_suite(filesystem
+	${HELPERS_DIR}/filesystem.cpp
+	filesystem.cpp
 )
 
 # Tests that depend on external resources
