@@ -230,6 +230,7 @@ void isolate_sandbox::isolate_run(const std::string &binary, const std::vector<s
 	pid_t childpid;
 
 	logger_->debug("Running isolate...");
+	logger_->debug("Running the first fork");
 
 	childpid = fork();
 
@@ -241,6 +242,8 @@ void isolate_sandbox::isolate_run(const std::string &binary, const std::vector<s
 	} break;
 	case 0: {
 		//---Child---
+		logger_->debug("Returned from the first fork as child");
+
 		// Redirect stderr and stdout to /dev/null file
 		int devnull;
 		devnull = open("/dev/null", O_WRONLY);
@@ -249,7 +252,7 @@ void isolate_sandbox::isolate_run(const std::string &binary, const std::vector<s
 			logger_->warn(message);
 			throw sandbox_exception(message);
 		}
-		dup2(devnull, 0); // Don't allow process inside isolate to read from current standart input
+		dup2(devnull, 0); // Don't allow process inside isolate to read from current standard input
 		dup2(devnull, 1);
 		dup2(devnull, 2);
 
@@ -263,11 +266,15 @@ void isolate_sandbox::isolate_run(const std::string &binary, const std::vector<s
 	} break;
 	default: {
 		//---Parent---
-		/* Spawn a controll process, that will wait given timeout and then kills isolate process.
+		/* Spawn a control process, that will wait given timeout and then kills isolate process.
 		 * When a isolate process finishes before the timeout, parent thread kills control process
 		 * and calls waitpid() to remove zombie from system.
 		 */
+
+		logger_->debug("Returned from the first fork as parent");
+
 		pid_t controlpid;
+		logger_->debug("Running the second fork");
 		controlpid = fork();
 		switch (controlpid) {
 		case -1: {
@@ -278,6 +285,8 @@ void isolate_sandbox::isolate_run(const std::string &binary, const std::vector<s
 		case 0:
 			// Child---
 			{
+				logger_->debug("Returned from the second fork as child (control process)");
+
 				int remaining = max_timeout_;
 				// Sleep can be interrupted by signal, so make sure to sleep whole time
 				while (remaining > 0) {
@@ -288,6 +297,7 @@ void isolate_sandbox::isolate_run(const std::string &binary, const std::vector<s
 			break;
 		default:
 			// Parent---
+			logger_->debug("Returned from the second fork as parent");
 
 			int status;
 			// Wait for isolate process. Waitpid returns no much longer than timeout if not earlier.
