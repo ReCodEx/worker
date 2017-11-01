@@ -19,6 +19,13 @@ namespace helpers
 	void copy_directory(const fs::path &src, const fs::path &dest);
 
 	/**
+	 * Normalize dots and double dots from given path.
+	 * @param path path which will be processed
+	 * @return path without dots and double dots
+	 */
+	fs::path normalize_path(const fs::path &path);
+
+	/**
 	 * Find path outside sandbox on real filesystem, based on given path inside sandbox.
 	 * @param inside path inside sandbox which will be resolved
 	 * @param sandbox_chdir directory where sandbox is chdir-ed
