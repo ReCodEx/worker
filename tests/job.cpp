@@ -40,6 +40,7 @@ sandbox_limits get_default_limits()
 	default_limits.extra_time = 12;
 	default_limits.stack_size = 150000;
 	default_limits.memory_usage = 160000;
+	default_limits.extra_memory = 10000;
 	default_limits.processes = 11;
 	default_limits.disk_size = 150;
 	default_limits.disk_files = 17;
@@ -77,6 +78,7 @@ std::shared_ptr<job_metadata> get_correct_meta()
 	limits->extra_time = 7;
 	limits->stack_size = 50000;
 	limits->memory_usage = 60000;
+	limits->extra_memory = 10000;
 	limits->processes = 1;
 	limits->disk_size = 50;
 	limits->disk_files = 10;
@@ -98,10 +100,10 @@ std::shared_ptr<job_metadata> get_worker_default_meta()
 	auto set_limits = job_meta->tasks[0]->sandbox->loaded_limits["group1"];
 	set_limits->cpu_time = FLT_MAX;
 	set_limits->wall_time = FLT_MAX;
-	;
 	set_limits->extra_time = FLT_MAX;
 	set_limits->stack_size = SIZE_MAX;
 	set_limits->memory_usage = SIZE_MAX;
+	set_limits->extra_memory = SIZE_MAX;
 	set_limits->processes = SIZE_MAX;
 	set_limits->disk_size = SIZE_MAX;
 	set_limits->disk_files = SIZE_MAX;
@@ -374,6 +376,7 @@ TEST(job_test, load_of_worker_defaults)
 	ASSERT_EQ(limits->extra_time, 12);
 	ASSERT_EQ(limits->stack_size, 150000u);
 	ASSERT_EQ(limits->memory_usage, 160000u);
+	ASSERT_EQ(limits->extra_memory, 10000u);
 	ASSERT_EQ(limits->processes, 11u);
 	ASSERT_EQ(limits->disk_size, 150u);
 	ASSERT_EQ(limits->disk_files, 17u);

@@ -30,6 +30,7 @@ limits:
     extra-time: 2  # seconds
     stack-size: 0  # normal in KB, but 0 means no special limit
     memory: 900000  # in KB
+    extra-memory: 8  # in KB, will be added to memory limit
     parallel: 0  # time and memory limits are merged
     disk-size: 1048576
     disk-files: 100

@@ -13,4 +13,4 @@ and then sends results back.
 
 ## Documentation
 
-Feel free to read the documentation on [our wiki](https://github.com/ReCodEx/wiki/wiki/Worker).
+Feel free to read the documentation on [our wiki](https://github.com/ReCodEx/wiki/wiki/Installation#worker).

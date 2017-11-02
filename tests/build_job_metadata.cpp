@@ -41,6 +41,7 @@ TEST(job_metadata, build_all_from_yaml)
 							   "                extra-time: 7\n"
 							   "                stack-size: 50000\n"
 							   "                memory: 60000\n"
+							   "                extra-memory: 10000\n"
 							   "                parallel: 1\n"
 							   "                disk-size: 50\n"
 							   "                disk-files: 10\n"
@@ -83,6 +84,7 @@ TEST(job_metadata, build_all_from_yaml)
 	EXPECT_EQ(limits->extra_time, 7);
 	EXPECT_EQ(limits->stack_size, 50000u);
 	EXPECT_EQ(limits->memory_usage, 60000u);
+	EXPECT_EQ(limits->extra_memory, 10000u);
 	EXPECT_EQ(limits->processes, 1u);
 	EXPECT_EQ(limits->disk_size, 50u);
 	EXPECT_EQ(limits->disk_files, 10u);

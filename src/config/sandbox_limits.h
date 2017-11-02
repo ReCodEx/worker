@@ -32,6 +32,11 @@ public:
 	 */
 	size_t memory_usage = 0;
 	/**
+	 * Extra memory which will be added to memory limit before killing program.
+	 * Memory size is set in kilobytes.
+	 */
+	size_t extra_memory = 0;
+	/**
 	 * Limit total run time by CPU time. For Isolate, this is for whole control group.
 	 * Time is set in seconds and can be fractional.
 	 */
@@ -134,10 +139,11 @@ public:
 	 */
 	bool operator==(const sandbox_limits &second) const
 	{
-		return (memory_usage == second.memory_usage && cpu_time == second.cpu_time && wall_time == second.wall_time &&
-			extra_time == second.extra_time && stack_size == second.stack_size && files_size == second.files_size &&
-			disk_size == second.disk_size && disk_files == second.disk_files && processes == second.processes &&
-			share_net == second.share_net && environ_vars == second.environ_vars && bound_dirs == second.bound_dirs);
+		return (memory_usage == second.memory_usage && extra_memory == second.extra_memory &&
+			cpu_time == second.cpu_time && wall_time == second.wall_time && extra_time == second.extra_time &&
+			stack_size == second.stack_size && files_size == second.files_size && disk_size == second.disk_size &&
+			disk_files == second.disk_files && processes == second.processes && share_net == second.share_net &&
+			environ_vars == second.environ_vars && bound_dirs == second.bound_dirs);
 	}
 
 	/**

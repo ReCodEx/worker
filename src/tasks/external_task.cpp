@@ -1,8 +1,14 @@
 #include "external_task.h"
 #include "../sandbox/isolate_sandbox.h"
 #include "../helpers/string_utils.h"
+#include "../helpers/filesystem.h"
 #include <fstream>
 #include <algorithm>
+#define BOOST_FILESYSTEM_NO_DEPRECATED
+#define BOOST_NO_CXX11_SCOPED_ENUMS
+#include <boost/filesystem.hpp>
+
+namespace fs = boost::filesystem;
 
 external_task::external_task(const create_params &data)
 	: task_base(data.id, data.task_meta), worker_config_(data.worker_conf), sandbox_(nullptr),
@@ -70,6 +76,9 @@ std::shared_ptr<task_results> external_task::run()
 	// initialize output from stdout and stderr
 	results_output_init();
 
+	// check if binary is executable and set it otherwise
+	make_binary_executable(task_meta_->binary);
+
 	std::shared_ptr<task_results> res(new task_results());
 	res->sandbox_status =
 		std::unique_ptr<sandbox_results>(new sandbox_results(sandbox_->run(task_meta_->binary, task_meta_->cmd_args)));
@@ -113,15 +122,7 @@ void external_task::results_output_init()
 
 fs::path external_task::find_path_outside_sandbox(std::string file)
 {
-	fs::path file_path = fs::path(file);
-	fs::path sandbox_dir = file_path.parent_path();
-	for (auto &dir : limits_->bound_dirs) {
-		fs::path sandbox_dir_bound = fs::path(std::get<1>(dir));
-		if (sandbox_dir_bound == sandbox_dir) {
-			return fs::path(std::get<0>(dir)) / file_path.filename();
-		}
-	}
-	return fs::path();
+	return helpers::find_path_outside_sandbox(file, sandbox_config_->chdir, limits_->bound_dirs);
 }
 
 std::string external_task::get_results_output()
@@ -162,4 +163,17 @@ std::string external_task::get_results_output()
 	}
 
 	return result;
+}
+
+void external_task::make_binary_executable(std::string binary)
+{
+	try {
+		fs::path binary_path = find_path_outside_sandbox(binary);
+		fs::permissions(
+			binary_path, fs::perms::add_perms | fs::perms::owner_exe | fs::perms::group_exe | fs::others_exe);
+	} catch (fs::filesystem_error &e) {
+		auto message = std::string("Failed to set executable bits for executed binary. Error: ") + e.what();
+		logger_->warn(message);
+		throw sandbox_exception(message);
+	}
 }
