@@ -167,12 +167,26 @@ std::string external_task::get_results_output()
 
 void external_task::make_binary_executable(std::string binary)
 {
+	fs::path binary_path;
 	try {
-		fs::path binary_path = find_path_outside_sandbox(binary);
+		binary_path = find_path_outside_sandbox(binary);
+		if (binary_path.empty()) {
+			logger_->info("Path {} not found outside sandbox, executable bits will not be set", binary);
+			return;
+		}
+
+		// determine if file has executable bits set
+		fs::file_status stat = status(binary_path);
+		if (stat.permissions() & (fs::perms::owner_exe | fs::perms::group_exe | fs::perms::others_exe)) {
+			return;
+		}
+
 		fs::permissions(
 			binary_path, fs::perms::add_perms | fs::perms::owner_exe | fs::perms::group_exe | fs::others_exe);
 	} catch (fs::filesystem_error &e) {
-		auto message = std::string("Failed to set executable bits for executed binary. Error: ") + e.what();
+		auto message = std::string("Failed to set executable bits for path inside '" + binary + "' and outside '" +
+						   binary_path.string() + "'. Error: ") +
+			e.what();
 		logger_->warn(message);
 		throw sandbox_exception(message);
 	}
