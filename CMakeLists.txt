@@ -3,6 +3,9 @@ project(recodex-worker)
 set(RECODEX_VERSION 1.0.0)
 enable_testing()
 
+# Hack for old CentOS and new GCC with uncompatible ABI
+# add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
+
 set(EXEC_NAME ${PROJECT_NAME})
 set(gtest_force_shared_crt ON CACHE BOOL "Use shared (DLL) run-time lib even when Google Test is built as static lib.")
 
