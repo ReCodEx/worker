@@ -336,6 +336,70 @@ TEST(topological_sort_test, top_sort_5)
 	ASSERT_EQ(result, expected_result);
 }
 
+TEST(topological_sort_test, top_sort_6)
+{
+	// initialization
+	size_t id = 0;
+	vector<shared_ptr<task_base>> result;
+	vector<shared_ptr<task_base>> expected_result;
+
+
+	/*
+	 * TASK TREE:
+	 * note: different auto-increment order of elements than in top_sort_5
+	 *
+	 *           root
+	 *            |
+	 *   -------mkdir-------
+	 *   |      / \ \      |
+	 *   |     /  |  \     |
+	 *   |   GCC  |   \    |
+	 *   |     \  |   |    |
+	 *   |      \ |   |    |
+	 *  input---EXEC  |  expected
+	 *             \  |   /
+	 *              \ |  /
+	 *              judge
+	 *
+	 *
+	 * priority: root = 1, mkdir = 1, GCC = 100, EXEC = 90, judge = 80, input = 1, expected = 1
+	 *
+	 * expected = root, mkdir, GCC, input, EXEC, expected, judge
+	 */
+	shared_ptr<task_base> root = make_shared<test_task>(id++, std::make_shared<task_metadata>("root", 1));
+	shared_ptr<task_base> mkdir = make_shared<test_task>(id++, std::make_shared<task_metadata>("mkdir", 1));
+	shared_ptr<task_base> expected = make_shared<test_task>(id++, std::make_shared<task_metadata>("expected", 1));
+	shared_ptr<task_base> input = make_shared<test_task>(id++, std::make_shared<task_metadata>("input", 1));
+	shared_ptr<task_base> GCC = make_shared<test_task>(id++, std::make_shared<task_metadata>("GCC", 100));
+	shared_ptr<task_base> EXEC = make_shared<test_task>(id++, std::make_shared<task_metadata>("EXEC", 90));
+	shared_ptr<task_base> judge = make_shared<test_task>(id++, std::make_shared<task_metadata>("judge", 80));
+	root->add_children(mkdir);
+	mkdir->add_parent(root);
+	mkdir->add_children(input);
+	mkdir->add_children(GCC);
+	mkdir->add_children(EXEC);
+	mkdir->add_children(judge);
+	mkdir->add_children(expected);
+	GCC->add_parent(mkdir);
+	GCC->add_children(EXEC);
+	input->add_parent(mkdir);
+	input->add_children(EXEC);
+	EXEC->add_parent(mkdir);
+	EXEC->add_parent(GCC);
+	EXEC->add_children(judge);
+	expected->add_parent(mkdir);
+	expected->add_children(judge);
+	judge->add_parent(mkdir);
+	judge->add_parent(EXEC);
+	judge->add_parent(expected);
+	expected_result = {root, mkdir, GCC, expected, input, EXEC, judge};
+
+	// sort itself
+	helpers::topological_sort(root, result);
+	// and check it
+	ASSERT_EQ(result, expected_result);
+}
+
 TEST(topological_sort_test, top_sort_cycle_1)
 {
 	// initialization
