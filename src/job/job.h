@@ -100,6 +100,10 @@ private:
 	 */
 	void build_job();
 	/**
+	 * Debug print of queue of tasks.
+	 */
+	void print_job_queue();
+	/**
 	 * Check limits and in case of undefined values set worker defaults.
 	 * @param limits limits which will be checked
 	 */

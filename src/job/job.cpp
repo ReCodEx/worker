@@ -191,6 +191,9 @@ void job::build_job()
 		// something bad is happening here, stop this job evaluation
 		throw job_exception("Root task not present in first place after topological sort.");
 	}
+
+	// debug print of execution queue
+	print_job_queue();
 }
 
 void job::process_task_limits(std::shared_ptr<sandbox_limits> limits)
@@ -458,4 +461,15 @@ std::string job::parse_job_var(const std::string &src)
 	}
 
 	return res;
+}
+
+void job::print_job_queue()
+{
+	logger_->debug("Task queue linear order:");
+	for (auto &task : task_queue_) {
+		logger_->debug("  - Task '{}' with priority: {} and auto-increment id: {}",
+			task->get_task_id(),
+			task->get_priority(),
+			task->get_id());
+	}
 }
