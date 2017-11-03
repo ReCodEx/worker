@@ -41,6 +41,7 @@ void cache_manager::get_file(const std::string &src_name, const std::string &dst
 
 	try {
 		fs::copy_file(source_file, destination_file, fs::copy_option::overwrite_if_exists);
+		fs::permissions(fs::path(destination_file), fs::perms::add_perms | fs::perms::owner_write | fs::perms::group_write | fs::perms::others_write);
 	} catch (fs::filesystem_error &e) {
 		auto message = "Failed to copy file " + source_file.string() + " to " + dst_path + ". Error: " + e.what();
 		logger_->warn(message);
