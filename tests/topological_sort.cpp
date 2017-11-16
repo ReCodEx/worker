@@ -407,6 +407,7 @@ TEST(topological_sort_test, top_sort_cycle_1)
 	// initialization
 	size_t id = 0;
 	vector<shared_ptr<task_base>> result;
+	vector<shared_ptr<task_base>> expected_result;
 
 
 	/*
@@ -422,7 +423,7 @@ TEST(topological_sort_test, top_sort_cycle_1)
 	 *
 	 * priority: A = 1, B = 4, C = 6, D = 2, E = 3, F = 5, G = 7
 	 *
-	 * expected = throw top_sort_exception("Cycle detected")
+	 * expected = G, A, B, D, C, F, E
 	 */
 	shared_ptr<task_base> A = make_shared<test_task>(id++, std::make_shared<task_metadata>("A", 1));
 	shared_ptr<task_base> B = make_shared<test_task>(id++, std::make_shared<task_metadata>("B", 4));
@@ -447,8 +448,12 @@ TEST(topological_sort_test, top_sort_cycle_1)
 	G->add_parent(C);
 	G->add_children(B);
 	B->add_parent(G);
+	expected_result = {G, A, B, D, C, F, E};
 
-	EXPECT_THROW(helpers::topological_sort(A, result), helpers::top_sort_exception);
+	// sort itself
+	helpers::topological_sort(A, result);
+	// and check it
+	ASSERT_EQ(result, expected_result);
 }
 
 TEST(topological_sort_test, top_sort_cycle_2)
@@ -456,6 +461,7 @@ TEST(topological_sort_test, top_sort_cycle_2)
 	// initialization
 	size_t id = 0;
 	vector<shared_ptr<task_base>> result;
+	vector<shared_ptr<task_base>> expected_result;
 
 
 	/*
@@ -468,7 +474,7 @@ TEST(topological_sort_test, top_sort_cycle_2)
 	 *
 	 * priority: A = 1, B = 2, C = 3, D = 4
 	 *
-	 * expected = throw top_sort_exception("Cycle detected")
+	 * expected = D, A, B, C
 	 */
 	shared_ptr<task_base> A = make_shared<test_task>(id++, std::make_shared<task_metadata>("A", 1));
 	shared_ptr<task_base> B = make_shared<test_task>(id++, std::make_shared<task_metadata>("B", 2));
@@ -482,6 +488,13 @@ TEST(topological_sort_test, top_sort_cycle_2)
 	D->add_parent(C);
 	D->add_children(A);
 	A->add_parent(D);
+	expected_result = {D, A, B, C};
 
-	EXPECT_THROW(helpers::topological_sort(A, result), helpers::top_sort_exception);
+	// sort itself
+	helpers::topological_sort(A, result);
+	for (auto &i : result) {
+		std::cout << i->get_task_id() << std::endl;
+	}
+	// and check it
+	ASSERT_EQ(result, expected_result);
 }
