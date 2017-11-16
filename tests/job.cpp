@@ -552,7 +552,8 @@ TEST(job_test, correctly_executed_job)
 	 *             \
 	 *              G
 	 *
-	 * Calling order: A, B, D, C, E, F, G
+	 * Calling order: A, D, F, G, B, C, E
+	 *
 	 *
 	 * progress_callback: F will fail, G will be skipped
 	 */
@@ -598,9 +599,10 @@ TEST(job_test, correctly_executed_job)
 
 		// progress callback calling expectations
 		EXPECT_CALL(*progress_callback, job_started(_)).Times(1);
-		EXPECT_CALL(*progress_callback, task_completed(_, _)).Times(tasks_count - 3);
+		EXPECT_CALL(*progress_callback, task_completed(_, _)).Times(2);
 		EXPECT_CALL(*progress_callback, task_failed(_, _)).Times(1);
 		EXPECT_CALL(*progress_callback, task_skipped(_, _)).Times(1);
+		EXPECT_CALL(*progress_callback, task_completed(_, _)).Times(3);
 		EXPECT_CALL(*progress_callback, job_ended(_)).Times(1);
 	}
 	{ // ! out of sequence calling

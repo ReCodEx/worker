@@ -422,7 +422,7 @@ TEST(topological_sort_test, top_sort_cycle_1)
 	 *
 	 * priority: A = 1, B = 4, C = 6, D = 2, E = 3, F = 5, G = 7
 	 *
-	 * expected = throw job_exception("Cycle detected")
+	 * expected = throw top_sort_exception("Cycle detected")
 	 */
 	shared_ptr<task_base> A = make_shared<test_task>(id++, std::make_shared<task_metadata>("A", 1));
 	shared_ptr<task_base> B = make_shared<test_task>(id++, std::make_shared<task_metadata>("B", 4));
@@ -468,7 +468,7 @@ TEST(topological_sort_test, top_sort_cycle_2)
 	 *
 	 * priority: A = 1, B = 2, C = 3, D = 4
 	 *
-	 * expected = throw job_exception("Cycle detected")
+	 * expected = throw top_sort_exception("Cycle detected")
 	 */
 	shared_ptr<task_base> A = make_shared<test_task>(id++, std::make_shared<task_metadata>("A", 1));
 	shared_ptr<task_base> B = make_shared<test_task>(id++, std::make_shared<task_metadata>("B", 2));

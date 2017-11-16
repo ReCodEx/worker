@@ -1,7 +1,6 @@
 #include "topological_sort.h"
 
-typedef std::priority_queue<std::shared_ptr<task_base>, std::vector<std::shared_ptr<task_base>>, task_compare>
-	priority_queue_type;
+typedef std::priority_queue<std::shared_ptr<task_base>, std::vector<std::shared_ptr<task_base>>, task_compare> priority_queue_type;
 
 void helpers::topological_sort(std::shared_ptr<task_base> root, std::vector<std::shared_ptr<task_base>> &result)
 {
@@ -27,7 +26,7 @@ void helpers::topological_sort(std::shared_ptr<task_base> root, std::vector<std:
 		prior_queue.push(current);
 		visited.insert(current->get_task_id());
 
-		// go through all children
+		// go through children
 		for (auto &child : current->get_children()) {
 			search_stack.push_back(child);
 		}
