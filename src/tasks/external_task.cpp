@@ -149,6 +149,9 @@ std::string external_task::get_results_output()
 			result = result_stdout.substr(0, std_out.gcount()) + result_stderr.substr(0, std_err.gcount());
 		}
 
+		// filter non printable result
+		helpers::filter_non_pritable_chars(result);
+
 		// delete produced files
 		try {
 			if (remove_stdout_) {

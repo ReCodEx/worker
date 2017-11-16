@@ -12,6 +12,12 @@ namespace helpers
 	 * @return generated string
 	 */
 	std::string random_alphanum_string(size_t length);
+
+	/**
+	 * Filter non-printable characters from given string and write it back.
+	 * @param text
+	 */
+	void filter_non_pritable_chars(std::string &text);
 }
 
 
