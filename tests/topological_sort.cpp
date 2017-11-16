@@ -322,6 +322,7 @@ TEST(topological_sort_test, top_sort_5)
 	input->add_children(EXEC);
 	EXEC->add_parent(mkdir);
 	EXEC->add_parent(GCC);
+	EXEC->add_parent(input);
 	EXEC->add_children(judge);
 	expected->add_parent(mkdir);
 	expected->add_children(judge);
@@ -386,13 +387,14 @@ TEST(topological_sort_test, top_sort_6)
 	input->add_children(EXEC);
 	EXEC->add_parent(mkdir);
 	EXEC->add_parent(GCC);
+	EXEC->add_parent(input);
 	EXEC->add_children(judge);
 	expected->add_parent(mkdir);
 	expected->add_children(judge);
 	judge->add_parent(mkdir);
 	judge->add_parent(EXEC);
 	judge->add_parent(expected);
-	expected_result = {root, mkdir, GCC, expected, input, EXEC, judge};
+	expected_result = {root, mkdir, GCC, input, EXEC, expected, judge};
 
 	// sort itself
 	helpers::topological_sort(root, result);
