@@ -150,7 +150,7 @@ std::string external_task::get_results_output()
 		}
 
 		// filter non printable result
-		helpers::filter_non_pritable_chars(result);
+		helpers::filter_non_printable_chars(result);
 
 		// delete produced files
 		try {

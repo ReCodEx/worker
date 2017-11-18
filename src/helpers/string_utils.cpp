@@ -15,7 +15,7 @@ std::string helpers::random_alphanum_string(size_t length)
 	return str;
 }
 
-void helpers::filter_non_pritable_chars(std::string &text)
+void helpers::filter_non_printable_chars(std::string &text)
 {
 	text.erase(
 		std::remove_if(text.begin(),

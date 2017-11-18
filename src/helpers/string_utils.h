@@ -17,7 +17,7 @@ namespace helpers
 	 * Filter non-printable characters from given string and write it back.
 	 * @param text
 	 */
-	void filter_non_pritable_chars(std::string &text);
+	void filter_non_printable_chars(std::string &text);
 }
 
 

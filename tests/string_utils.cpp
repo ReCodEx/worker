@@ -6,7 +6,7 @@
 
 void test_filter_scenario(std::string expected, std::string text)
 {
-	helpers::filter_non_pritable_chars(text);
+	helpers::filter_non_printable_chars(text);
 	ASSERT_EQ(expected, text);
 }
 
