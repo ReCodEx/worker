@@ -58,6 +58,11 @@ public:
 	 * successfully finished.
 	 */
 	void add_parent(std::shared_ptr<task_base> add);
+	/**
+	 * Get all parents of task.
+	 * @return List of parent tasks.
+	 */
+	const std::vector<std::weak_ptr<task_base>> &get_parents();
 
 	/**
 	 * Get unique identification number.
@@ -184,17 +189,17 @@ class task_compare
 public:
 	/**
 	 * Compare @ref task_base objects by their priority and identifier. This is something like
-	 * greater than operator on @ref task_base objects.
+	 * lesser than operator on @ref task_base objects.
 	 * Its supposed that bigger number of priority is greater priority, so this tasks will be prefered.
 	 * @param a First task to compare.
 	 * @param b Second task to compare.
-	 * @return @a true if parameter a is greater than b
+	 * @return @a true if parameter a is lesser than b
 	 */
 	bool operator()(std::shared_ptr<task_base> a, std::shared_ptr<task_base> b)
 	{
-		if (a->get_priority() < b->get_priority()) {
+		if (a->get_priority() > b->get_priority()) {
 			return true;
-		} else if (a->get_priority() == b->get_priority() && a->get_id() > b->get_id()) {
+		} else if (a->get_priority() == b->get_priority() && a->get_id() < b->get_id()) {
 			return true;
 		}
 

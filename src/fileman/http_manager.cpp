@@ -130,7 +130,8 @@ void http_manager::get_file(const std::string &src_name, const std::string &dst_
 
 		// set write permissions to downloaded file
 		try {
-			fs::permissions(fs::path(dst_name), fs::perms::add_perms | fs::perms::owner_write | fs::perms::group_write | fs::perms::others_write);
+			fs::permissions(fs::path(dst_name),
+				fs::perms::add_perms | fs::perms::owner_write | fs::perms::group_write | fs::perms::others_write);
 		} catch (fs::filesystem_error &e) {
 			auto message = "Failed to set write permissions on '" + dst_name + "'. Error: " + e.what();
 			logger_->warn(message);

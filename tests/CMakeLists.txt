@@ -151,6 +151,11 @@ add_test_suite(filesystem
 	filesystem.cpp
 )
 
+add_test_suite(string_utils
+	${HELPERS_DIR}/string_utils.cpp
+	string_utils.cpp
+)
+
 # Tests that depend on external resources
 if(UNIX)
 	set(LIBS

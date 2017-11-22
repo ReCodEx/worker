@@ -16,7 +16,6 @@ namespace helpers
 	 * Its assumed that whole graph is reachable through root task.
 	 * Priorities and configuration file order are taken into account.
 	 * Bigger number of priority means greater priority and therefore appropriate task will be prefered.
-	 * @note Algorithm itself taken from: http://stackoverflow.com/a/11236027
 	 * @param root base node from which sorting starts
 	 * @param result queue of task in order of execution
 	 * @throws top_sort_exception if cycle was detected

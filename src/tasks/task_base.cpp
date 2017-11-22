@@ -34,6 +34,11 @@ void task_base::add_parent(std::shared_ptr<task_base> add)
 	return;
 }
 
+const std::vector<std::weak_ptr<task_base>> &task_base::get_parents()
+{
+	return parents_;
+}
+
 size_t task_base::get_id()
 {
 	return id_;
