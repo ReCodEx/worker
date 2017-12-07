@@ -19,6 +19,8 @@ std::shared_ptr<task_base> task_factory::create_internal_task(size_t id, std::sh
 
 	if (task_meta->binary == "cp") {
 		task = std::make_shared<cp_task>(id, task_meta);
+	} else if (task_meta->binary == "dumpdir") {
+		task = std::make_shared<dump_dir_task>(id, task_meta);
 	} else if (task_meta->binary == "mkdir") {
 		task = std::make_shared<mkdir_task>(id, task_meta);
 	} else if (task_meta->binary == "rename") {

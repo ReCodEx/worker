@@ -12,7 +12,7 @@ class cp_task : public task_base
 public:
 	/**
 	 * Constructor with initialization.
-	 * @param id Unique identificator of load order of tasks.
+	 * @param id Unique identifier of load order of tasks.
 	 * @param task_meta Variable containing further info about task. It's required that
 	 * @a cmd_args entry has just 2 arguments -
 	 * http://www.boost.org/doc/libs/1_59_0_b1/libs/filesystem/doc/reference.html#copy.

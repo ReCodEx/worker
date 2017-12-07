@@ -7,6 +7,7 @@
 #include "root_task.h"
 #include "internal/archivate_task.h"
 #include "internal/cp_task.h"
+#include "internal/dump_dir_task.h"
 #include "internal/extract_task.h"
 #include "internal/fetch_task.h"
 #include "internal/mkdir_task.h"

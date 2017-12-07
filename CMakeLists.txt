@@ -165,6 +165,8 @@ set(SOURCE_FILES
 	${TASKS_DIR}/internal/extract_task.cpp
 	${TASKS_DIR}/internal/fetch_task.h
 	${TASKS_DIR}/internal/fetch_task.cpp
+    ${TASKS_DIR}/internal/dump_dir_task.h
+    ${TASKS_DIR}/internal/dump_dir_task.cpp
 
 	${HELPERS_DIR}/filesystem.h
 	${HELPERS_DIR}/filesystem.cpp

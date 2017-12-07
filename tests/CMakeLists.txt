@@ -115,6 +115,7 @@ add_test_suite(tasks
 	${TASKS_DIR}/root_task.cpp
 	${TASKS_DIR}/external_task.cpp
 	${TASKS_DIR}/internal/cp_task.cpp
+	${TASKS_DIR}/internal/dump_dir_task.cpp
 	${TASKS_DIR}/internal/mkdir_task.cpp
 	${TASKS_DIR}/internal/rename_task.cpp
 	${TASKS_DIR}/internal/rm_task.cpp
@@ -154,6 +155,12 @@ add_test_suite(filesystem
 add_test_suite(string_utils
 	${HELPERS_DIR}/string_utils.cpp
 	string_utils.cpp
+)
+
+add_test_suite(dump_dir_task
+	${TASKS_DIR}/task_base.cpp
+	${TASKS_DIR}/internal/dump_dir_task.cpp
+	dump_dir_task.cpp
 )
 
 # Tests that depend on external resources
