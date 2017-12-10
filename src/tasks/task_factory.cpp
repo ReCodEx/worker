@@ -1,5 +1,4 @@
 #include "task_factory.h"
-#include "internal/truncate_task.h"
 
 
 task_factory::task_factory(std::shared_ptr<file_manager_interface> fileman) : fileman_(fileman)
