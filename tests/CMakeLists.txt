@@ -115,12 +115,14 @@ add_test_suite(tasks
 	${TASKS_DIR}/root_task.cpp
 	${TASKS_DIR}/external_task.cpp
 	${TASKS_DIR}/internal/cp_task.cpp
+	${TASKS_DIR}/internal/dump_dir_task.cpp
 	${TASKS_DIR}/internal/mkdir_task.cpp
 	${TASKS_DIR}/internal/rename_task.cpp
 	${TASKS_DIR}/internal/rm_task.cpp
 	${TASKS_DIR}/internal/archivate_task.cpp
 	${TASKS_DIR}/internal/extract_task.cpp
 	${TASKS_DIR}/internal/fetch_task.cpp
+	${TASKS_DIR}/internal/truncate_task.cpp
 	${SRC_DIR}/archives/archivator.cpp
 	${SANDBOX_DIR}/isolate_sandbox.cpp
 	${HELPERS_DIR}/logger.cpp
@@ -154,6 +156,18 @@ add_test_suite(filesystem
 add_test_suite(string_utils
 	${HELPERS_DIR}/string_utils.cpp
 	string_utils.cpp
+)
+
+add_test_suite(dump_dir_task
+	${TASKS_DIR}/task_base.cpp
+	${TASKS_DIR}/internal/dump_dir_task.cpp
+	dump_dir_task.cpp
+)
+
+add_test_suite(truncate_task
+	${TASKS_DIR}/task_base.cpp
+	${TASKS_DIR}/internal/truncate_task.cpp
+	truncate_task.cpp
 )
 
 # Tests that depend on external resources
