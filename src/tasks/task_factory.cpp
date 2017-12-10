@@ -1,4 +1,5 @@
 #include "task_factory.h"
+#include "internal/truncate_task.h"
 
 
 task_factory::task_factory(std::shared_ptr<file_manager_interface> fileman) : fileman_(fileman)
@@ -33,6 +34,8 @@ std::shared_ptr<task_base> task_factory::create_internal_task(size_t id, std::sh
 		task = std::make_shared<extract_task>(id, task_meta);
 	} else if (task_meta->binary == "fetch") {
 		task = std::make_shared<fetch_task>(id, task_meta, fileman_);
+	} else if (task_meta->binary == "truncate") {
+		task = std::make_shared<truncate_task>(id, task_meta);
 	} else {
 		task = nullptr;
 	}

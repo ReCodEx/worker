@@ -17,8 +17,7 @@ public:
 	 * Constructor with initialization.
 	 * @param id Unique identifier of load order of tasks.
 	 * @param task_meta Variable containing further info about task. It's required that
-	 * @a cmd_args entry has just 2 arguments -
-	 * http://www.boost.org/doc/libs/1_59_0_b1/libs/filesystem/doc/reference.html#copy.
+	 * @a cmd_args entry has 2 or 3 arguments - the source, destination, and optionally a limit
 	 * @throws task_exception on invalid number of arguments.
 	 */
 	dump_dir_task(size_t id, std::shared_ptr<task_metadata> task_meta);

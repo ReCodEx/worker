@@ -1,5 +1,4 @@
 #include <fstream>
-#include <iostream>
 #include "dump_dir_task.h"
 
 dump_dir_task::dump_dir_task(size_t id, std::shared_ptr<task_metadata> task_meta) : task_base(id, task_meta) {
