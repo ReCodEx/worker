@@ -21,7 +21,7 @@ std::shared_ptr<task_results> truncate_task::run()
 	auto results = std::make_shared<task_results>();
 
 	fs::path file(task_meta_->cmd_args[0]);
-	auto limit = static_cast<size_t>(std::stol(task_meta_->cmd_args[1]));
+	auto limit = read_task_arg<size_t>(task_meta_->cmd_args, 1, 128);
 	limit *= 1024;
 
 	if (fs::file_size(file) > limit) {

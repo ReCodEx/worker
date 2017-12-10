@@ -5,6 +5,7 @@
 #include <string>
 #include <cstdlib>
 #include <memory>
+#include <sstream>
 #include "../config/task_results.h"
 #include "../config/task_metadata.h"
 
@@ -136,7 +137,7 @@ protected:
 
 	/** Weak pointers to parents of task. */
 	std::vector<std::weak_ptr<task_base>> parents_;
-	/** Pointers to task childrens. */
+	/** Pointers to task children. */
 	std::vector<std::shared_ptr<task_base>> children_;
 };
 
@@ -180,6 +181,18 @@ protected:
 	std::string what_;
 };
 
+template <typename T> T read_task_arg(const std::vector<std::string> &args, const size_t index, const T &default_value = T())
+{
+	if (index >= args.size()) {
+		return default_value;
+	}
+
+	T value;
+	std::stringstream ss(args.at(index));
+	ss >> value;
+
+	return value;
+}
 
 /**
  * Comparator which is used for topological sorting of tasks

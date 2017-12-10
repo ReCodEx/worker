@@ -17,13 +17,9 @@ std::shared_ptr<task_results> dump_dir_task::run() {
 	auto results = std::make_shared<task_results>();
 	fs::path src_root(task_meta_->cmd_args[0]);
 	fs::path dest_root(task_meta_->cmd_args[1]);
-	auto limit_arg = task_meta_->cmd_args.size() >= 3 ? std::stoi(task_meta_->cmd_args[2]) : 0;
 
-	if (limit_arg <= 0) {
-		limit_arg = 128; // Default value
-	}
-
-	auto limit = static_cast<size_t>(limit_arg * 1024); // The argument is in kilobytes
+	auto limit = read_task_arg<size_t>(task_meta_->cmd_args, 2, 128);
+	limit *= 1024; // The argument is in kilobytes
 
 	fs::recursive_directory_iterator directory_iterator(src_root), directory_iterator_end;
 	std::vector<fs::path> paths(directory_iterator, directory_iterator_end);
