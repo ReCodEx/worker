@@ -57,7 +57,13 @@ std::shared_ptr<task_results> dump_dir_task::run() {
 		} else {
 			size_t size = fs::file_size(path);
 			if (size <= limit) {
-				copy_file(path, dest_path);
+				bool return_value = copy_file(path, dest_path);
+
+				if (!return_value) {
+					results->status = task_status::FAILED;
+					results->error_message = "Copying failed: " + path.string();
+				}
+
 				limit = size > limit ? 0 : limit - size;
 			} else {
 				std::ofstream placeholder(dest_path.string() + ".skipped", std::ios::out | std::ios::app);
