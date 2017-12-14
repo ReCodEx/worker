@@ -7,7 +7,8 @@
 
 namespace fs = boost::filesystem;
 
-class dump_dir_task_test : public ::testing::Test {
+class dump_dir_task_test : public ::testing::Test
+{
 protected:
 	fs::path root;
 	fs::path target;
@@ -28,7 +29,7 @@ protected:
 		create_file(root / "subdir" / "file_c", 1536);
 
 		task_meta = std::make_shared<task_metadata>();
-		task_meta->cmd_args = {root.string(), target.string(), "16384"};
+		task_meta->cmd_args = {root.string(), (target / "dir").string(), "16384"};
 		task = std::make_shared<dump_dir_task>(1, task_meta);
 	}
 
@@ -53,11 +54,11 @@ protected:
 TEST_F(dump_dir_task_test, everything_fits)
 {
 	auto results = task->run();
-	ASSERT_EQ(task_status::OK, results->status);
+	ASSERT_EQ(task_status::OK, results->status) << "Failed with: " + results->error_message;
 
-	ASSERT_TRUE(fs::exists(target / "file_a"));
-	ASSERT_TRUE(fs::exists(target / "file_b"));
-	ASSERT_TRUE(fs::exists(target / "subdir" / "file_c"));
+	ASSERT_TRUE(fs::exists(target / "dir" / "file_a"));
+	ASSERT_TRUE(fs::exists(target / "dir" / "file_b"));
+	ASSERT_TRUE(fs::exists(target / "dir" / "subdir" / "file_c"));
 }
 
 TEST_F(dump_dir_task_test, everything_skipped)
@@ -65,14 +66,14 @@ TEST_F(dump_dir_task_test, everything_skipped)
 	task_meta->cmd_args[2] = "1";
 
 	auto results = task->run();
-	ASSERT_EQ(task_status::OK, results->status);
+	ASSERT_EQ(task_status::OK, results->status) << "Failed with: " + results->error_message;
 
-	ASSERT_FALSE(fs::exists(target / "file_a"));
-	ASSERT_TRUE(fs::exists(target / "file_a.skipped"));
-	ASSERT_FALSE(fs::exists(target / "file_b"));
-	ASSERT_TRUE(fs::exists(target / "file_b.skipped"));
-	ASSERT_FALSE(fs::exists(target / "subdir" / "file_c"));
-	ASSERT_TRUE(fs::exists(target / "subdir" / "file_c.skipped"));
+	ASSERT_FALSE(fs::exists(target / "dir" / "file_a"));
+	ASSERT_TRUE(fs::exists(target / "dir" / "file_a.skipped"));
+	ASSERT_FALSE(fs::exists(target / "dir" / "file_b"));
+	ASSERT_TRUE(fs::exists(target / "dir" / "file_b.skipped"));
+	ASSERT_FALSE(fs::exists(target / "dir" / "subdir" / "file_c"));
+	ASSERT_TRUE(fs::exists(target / "dir" / "subdir" / "file_c.skipped"));
 }
 
 TEST_F(dump_dir_task_test, largest_skipped)
@@ -80,10 +81,10 @@ TEST_F(dump_dir_task_test, largest_skipped)
 	task_meta->cmd_args[2] = "4";
 
 	auto results = task->run();
-	ASSERT_EQ(task_status::OK, results->status);
+	ASSERT_EQ(task_status::OK, results->status) << "Failed with: " + results->error_message;
 
-	ASSERT_TRUE(fs::exists(target / "file_a"));
-	ASSERT_FALSE(fs::exists(target / "file_b"));
-	ASSERT_TRUE(fs::exists(target / "file_b.skipped"));
-	ASSERT_TRUE(fs::exists(target / "subdir" / "file_c"));
+	ASSERT_TRUE(fs::exists(target / "dir" / "file_a"));
+	ASSERT_FALSE(fs::exists(target / "dir" / "file_b"));
+	ASSERT_TRUE(fs::exists(target / "dir" / "file_b.skipped"));
+	ASSERT_TRUE(fs::exists(target / "dir" / "subdir" / "file_c"));
 }
