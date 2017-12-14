@@ -34,7 +34,7 @@ public:
 	virtual std::shared_ptr<task_results> run();
 
 private:
-	bool copy_file(const fs::path &src, const fs::path &dest);
+	boost::system::error_code copy_file(const fs::path &src, const fs::path &dest);
 };
 
 

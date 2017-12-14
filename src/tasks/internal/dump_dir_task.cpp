@@ -53,11 +53,13 @@ std::shared_ptr<task_results> dump_dir_task::run() {
 		} else {
 			size_t size = fs::file_size(path);
 			if (size <= limit) {
-				bool return_value = copy_file(path, dest_path);
+				auto return_code = copy_file(path, dest_path);
 
-				if (!return_value) {
+				if (return_code.value() != boost::system::errc::success) {
 					results->status = task_status::FAILED;
-					results->error_message = "Copying failed: " + path.string();
+					results->error_message = "Copying `" + path.string() + "` to `"
+								 + dest_path.string() +"` failed (error code "
+								 + std::to_string(return_code.value()) + ")";
 				}
 
 				limit = size > limit ? 0 : limit - size;
@@ -72,10 +74,10 @@ std::shared_ptr<task_results> dump_dir_task::run() {
 	return results;
 }
 
-bool dump_dir_task::copy_file(const fs::path &src, const fs::path &dest) {
+boost::system::error_code dump_dir_task::copy_file(const fs::path &src, const fs::path &dest) {
 	boost::system::error_code error_code;
 	fs::copy(src, dest, error_code);
 
-	return error_code.value() == boost::system::errc::success;
+	return error_code;
 }
 
