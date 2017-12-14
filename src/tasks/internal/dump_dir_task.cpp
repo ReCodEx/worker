@@ -25,23 +25,13 @@ std::shared_ptr<task_results> dump_dir_task::run()
 	fs::recursive_directory_iterator directory_iterator(src_root), directory_iterator_end;
 	std::vector<fs::path> paths(directory_iterator, directory_iterator_end);
 
+	// Drop directories from the paths
+	paths.erase(std::remove_if(paths.begin(), paths.end(), [](const fs::path &path) {
+		return fs::is_directory(path);
+	}), paths.end());
+
+	// Sort the paths by size (ascending order)
 	std::sort(paths.begin(), paths.end(), [](const fs::path &a, const fs::path &b) {
-		if (a == b) {
-			return false;
-		}
-
-		if (fs::is_directory(a) && !fs::is_directory(b)) {
-			return true;
-		}
-
-		if (fs::is_directory(b) && !fs::is_directory(a)) {
-			return false;
-		}
-
-		if (fs::is_directory(a) && fs::is_directory(b)) {
-			return a < b;
-		}
-
 		return fs::file_size(a) < fs::file_size(b);
 	});
 
@@ -49,31 +39,31 @@ std::shared_ptr<task_results> dump_dir_task::run()
 		auto relative_path = fs::path(path.string().substr(src_root.string().size()));
 		auto dest_path = dest_root / relative_path;
 
-		if (fs::is_directory(path)) {
-			auto return_code = make_dirs(dest_path);
+		if (!fs::exists(dest_path.parent_path())) {
+			auto return_code = make_dirs(dest_path.parent_path());
 			if (return_code.value() != boost::system::errc::success &&
-				return_code.value() != boost::system::errc::file_exists) {
+			    return_code.value() != boost::system::errc::file_exists) {
 				results->status = task_status::FAILED;
 				results->error_message = "Creating directory `" + dest_path.string() + "` failed (error code `" +
-					std::to_string(return_code.value()) + "`)";
+							 std::to_string(return_code.value()) + "`)";
 			}
+		}
+
+		size_t size = fs::file_size(path);
+		if (size <= limit) {
+			auto return_code = copy_file(path, dest_path);
+
+			if (return_code.value() != boost::system::errc::success) {
+				results->status = task_status::FAILED;
+				results->error_message = "Copying `" + path.string() + "` to `" + dest_path.string() +
+					"` failed (error code " + std::to_string(return_code.value()) + ")";
+			}
+
+			limit = size > limit ? 0 : limit - size;
 		} else {
-			size_t size = fs::file_size(path);
-			if (size <= limit) {
-				auto return_code = copy_file(path, dest_path);
-
-				if (return_code.value() != boost::system::errc::success) {
-					results->status = task_status::FAILED;
-					results->error_message = "Copying `" + path.string() + "` to `" + dest_path.string() +
-						"` failed (error code " + std::to_string(return_code.value()) + ")";
-				}
-
-				limit = size > limit ? 0 : limit - size;
-			} else {
-				std::ofstream placeholder(dest_path.string() + ".skipped", std::ios::out | std::ios::app);
-				placeholder << " ";
-				placeholder.close();
-			}
+			std::ofstream placeholder(dest_path.string() + ".skipped", std::ios::out | std::ios::app);
+			placeholder << " ";
+			placeholder.close();
 		}
 
 		if (results->status != task_status::OK) {
