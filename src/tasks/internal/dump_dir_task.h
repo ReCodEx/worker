@@ -11,7 +11,8 @@ namespace fs = boost::filesystem;
  * The files are taken in the order of size (ascending) and files that exceed the size limit are replaced with empty
  * files whose names are suffixed with ".skipped".
  */
-class dump_dir_task: public task_base {
+class dump_dir_task : public task_base
+{
 public:
 	/**
 	 * Constructor with initialization.
@@ -34,8 +35,9 @@ public:
 	virtual std::shared_ptr<task_results> run();
 
 private:
-	bool copy_file(const fs::path &src, const fs::path &dest);
+	boost::system::error_code copy_file(const fs::path &src, const fs::path &dest);
+	boost::system::error_code make_dirs(const fs::path &path);
 };
 
 
-#endif //RECODEX_WORKER_INTERNAL_CP_DIR_TASK_H
+#endif // RECODEX_WORKER_INTERNAL_CP_DIR_TASK_H
