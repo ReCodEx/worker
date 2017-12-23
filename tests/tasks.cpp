@@ -9,6 +9,7 @@
 #include "../src/tasks/internal/rename_task.h"
 #include "../src/tasks/internal/rm_task.h"
 #include "../src/tasks/internal/fetch_task.h"
+#include "../src/tasks/internal/exists_task.h"
 #include "../src/tasks/external_task.h"
 #include "../src/tasks/root_task.h"
 #include "../src/tasks/task_factory.h"
@@ -123,6 +124,14 @@ TEST(Tasks, InternalFetchTask)
 	EXPECT_THROW(fetch_task(1, get_one_args(), nullptr), task_exception);
 	EXPECT_THROW(fetch_task(1, get_zero_args(), nullptr), task_exception);
 	EXPECT_NO_THROW(fetch_task(1, get_two_args(), nullptr));
+}
+
+TEST(Tasks, InternalExistsTask)
+{
+	EXPECT_THROW(exists_task(1, get_zero_args()), task_exception);
+	EXPECT_THROW(exists_task(1, get_one_args()), task_exception);
+	EXPECT_NO_THROW(exists_task(1, get_two_args()));
+	EXPECT_NO_THROW(exists_task(1, get_three_args()));
 }
 
 

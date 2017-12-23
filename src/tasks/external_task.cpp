@@ -84,7 +84,7 @@ std::shared_ptr<task_results> external_task::run()
 		std::unique_ptr<sandbox_results>(new sandbox_results(sandbox_->run(task_meta_->binary, task_meta_->cmd_args)));
 
 	// get output from stdout and stderr
-	res->sandbox_status->output = get_results_output();
+	res->output = get_results_output();
 
 	sandbox_fini();
 

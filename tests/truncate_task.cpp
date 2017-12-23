@@ -47,7 +47,7 @@ TEST_F(truncate_task_test, truncate)
 	task_meta->cmd_args[1] = "2";
 	task->run();
 
-	ASSERT_EQ(2048, fs::file_size(root / "file_a"));
+	ASSERT_EQ(2048u, fs::file_size(root / "file_a"));
 }
 
 TEST_F(truncate_task_test, small_file)
@@ -55,5 +55,5 @@ TEST_F(truncate_task_test, small_file)
 	task_meta->cmd_args[1] = "32";
 	task->run();
 
-	ASSERT_EQ(16384, fs::file_size(root / "file_a"));
+	ASSERT_EQ(16384u, fs::file_size(root / "file_a"));
 }

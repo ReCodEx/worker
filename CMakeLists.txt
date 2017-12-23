@@ -169,6 +169,8 @@ set(SOURCE_FILES
 	${TASKS_DIR}/internal/dump_dir_task.cpp
 	${TASKS_DIR}/internal/truncate_task.h
 	${TASKS_DIR}/internal/truncate_task.cpp
+	${TASKS_DIR}/internal/exists_task.h
+	${TASKS_DIR}/internal/exists_task.cpp
 
 	${HELPERS_DIR}/filesystem.h
 	${HELPERS_DIR}/filesystem.cpp
