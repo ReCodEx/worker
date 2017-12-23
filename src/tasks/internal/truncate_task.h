@@ -4,7 +4,8 @@
 #include "../task_base.h"
 
 
-class truncate_task: public task_base {
+class truncate_task : public task_base
+{
 public:
 	/**
 	 * Constructor with initialization.
@@ -18,8 +19,7 @@ public:
 	virtual ~truncate_task();
 
 	virtual std::shared_ptr<task_results> run();
-
 };
 
 
-#endif //RECODEX_WORKER_TRUNCATE_TASK_H
+#endif // RECODEX_WORKER_TRUNCATE_TASK_H

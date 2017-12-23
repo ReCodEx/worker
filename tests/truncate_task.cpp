@@ -7,7 +7,8 @@
 
 namespace fs = boost::filesystem;
 
-class truncate_task_test : public ::testing::Test {
+class truncate_task_test : public ::testing::Test
+{
 protected:
 	fs::path root;
 	std::shared_ptr<truncate_task> task;

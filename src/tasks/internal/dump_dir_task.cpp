@@ -26,9 +26,8 @@ std::shared_ptr<task_results> dump_dir_task::run()
 	std::vector<fs::path> paths(directory_iterator, directory_iterator_end);
 
 	// Drop directories from the paths
-	paths.erase(std::remove_if(paths.begin(), paths.end(), [](const fs::path &path) {
-		return fs::is_directory(path);
-	}), paths.end());
+	paths.erase(std::remove_if(paths.begin(), paths.end(), [](const fs::path &path) { return fs::is_directory(path); }),
+		paths.end());
 
 	// Sort the paths by size (ascending order)
 	std::sort(paths.begin(), paths.end(), [](const fs::path &a, const fs::path &b) {
@@ -42,10 +41,10 @@ std::shared_ptr<task_results> dump_dir_task::run()
 		if (!fs::exists(dest_path.parent_path())) {
 			auto return_code = make_dirs(dest_path.parent_path());
 			if (return_code.value() != boost::system::errc::success &&
-			    return_code.value() != boost::system::errc::file_exists) {
+				return_code.value() != boost::system::errc::file_exists) {
 				results->status = task_status::FAILED;
 				results->error_message = "Creating directory `" + dest_path.string() + "` failed (error code `" +
-							 std::to_string(return_code.value()) + "`)";
+					std::to_string(return_code.value()) + "`)";
 			}
 		}
 
