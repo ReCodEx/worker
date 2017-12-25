@@ -14,6 +14,7 @@
 #include "internal/mkdir_task.h"
 #include "internal/rename_task.h"
 #include "internal/rm_task.h"
+#include "internal/exists_task.h"
 #include "../fileman/file_manager_interface.h"
 
 

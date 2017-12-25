@@ -181,7 +181,8 @@ protected:
 	std::string what_;
 };
 
-template <typename T> T read_task_arg(const std::vector<std::string> &args, const size_t index, const T &default_value = T())
+template <typename T>
+T read_task_arg(const std::vector<std::string> &args, const size_t index, const T &default_value = T())
 {
 	if (index >= args.size()) {
 		return default_value;

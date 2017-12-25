@@ -277,6 +277,10 @@ void job_evaluator::push_result()
 			node["error_message"] = i.second->error_message;
 		}
 
+		if (!i.second->output.empty()) {
+			node["output"] = i.second->output;
+		}
+
 		auto &sandbox = i.second->sandbox_status;
 		if (sandbox != nullptr) {
 			YAML::Node subnode;
@@ -298,7 +302,6 @@ void job_evaluator::push_result()
 			subnode["killed"] = sandbox->killed;
 			subnode["message"] = sandbox->message;
 
-			node["output"] = sandbox->output;
 			node["sandbox_results"] = subnode;
 		}
 

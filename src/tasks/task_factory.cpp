@@ -35,6 +35,8 @@ std::shared_ptr<task_base> task_factory::create_internal_task(size_t id, std::sh
 		task = std::make_shared<fetch_task>(id, task_meta, fileman_);
 	} else if (task_meta->binary == "truncate") {
 		task = std::make_shared<truncate_task>(id, task_meta);
+	} else if (task_meta->binary == "exists") {
+		task = std::make_shared<exists_task>(id, task_meta);
 	} else {
 		task = nullptr;
 	}
