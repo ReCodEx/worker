@@ -109,9 +109,13 @@ struct task_results {
 	 */
 	std::string error_message;
 	/**
-	 * Output as taken from stdout and stderr.
+	 * Output as taken from stdout.
 	 */
-	std::string output;
+	std::string output_stdout;
+	/**
+	 * Output as taken from stderr.
+	 */
+	std::string output_stderr;
 	/**
 	 * Pointer to @ref sandbox_results for external task results.
 	 * Default: nullptr (other types of tasks)
@@ -121,7 +125,7 @@ struct task_results {
 	/**
 	 * Constructor with default values initiazation.
 	 */
-	task_results() : status(task_status::OK), error_message(), output(), sandbox_status(nullptr)
+	task_results() : status(task_status::OK), error_message(), output_stdout(), output_stderr(), sandbox_status(nullptr)
 	{
 	}
 

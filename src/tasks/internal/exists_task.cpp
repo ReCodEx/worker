@@ -30,7 +30,7 @@ std::shared_ptr<task_results> exists_task::run()
 			if (!fs::exists(file)) {
 				result->status = task_status::FAILED;
 				result->error_message = "File/folder '" + file + "' cannot be found";
-				result->output = task_meta_->cmd_args[0];
+				result->output_stderr = task_meta_->cmd_args[0];
 				break;
 			}
 		}

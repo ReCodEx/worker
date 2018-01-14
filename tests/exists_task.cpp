@@ -64,5 +64,5 @@ TEST_F(exists_task_test, file_not_exists)
 	auto results = task->run();
 	ASSERT_EQ(task_status::FAILED, results->status);
 	ASSERT_TRUE(results->error_message.find("cannot be found") != std::string::npos);
-	ASSERT_EQ("failure message", results->output);
+	ASSERT_EQ("failure message", results->output_stderr);
 }
