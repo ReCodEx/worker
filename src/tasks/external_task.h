@@ -80,9 +80,9 @@ private:
 	void results_output_init();
 	/**
 	 * Get configuration limited content of the stdout and stderr and return it.
-	 * @return text which was produced by sandboxed program on stdout and stderr
+	 * @param result to which stdout and err will be assigned
 	 */
-	std::string get_results_output();
+	void get_results_output(std::shared_ptr<task_results> result);
 
 	/** Worker default configuration */
 	std::shared_ptr<worker_config> worker_config_;

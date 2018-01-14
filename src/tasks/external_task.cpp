@@ -84,7 +84,7 @@ std::shared_ptr<task_results> external_task::run()
 		std::unique_ptr<sandbox_results>(new sandbox_results(sandbox_->run(task_meta_->binary, task_meta_->cmd_args)));
 
 	// get output from stdout and stderr
-	res->output = get_results_output();
+	get_results_output(res);
 
 	sandbox_fini();
 
@@ -125,10 +125,8 @@ fs::path external_task::find_path_outside_sandbox(std::string file)
 	return helpers::find_path_outside_sandbox(file, sandbox_config_->chdir, limits_->bound_dirs);
 }
 
-std::string external_task::get_results_output()
+void external_task::get_results_output(std::shared_ptr<task_results> result)
 {
-	std::string result;
-
 	if (sandbox_config_->output) {
 		size_t count = worker_config_->get_max_output_length();
 		std::string result_stdout(count, 0);
@@ -144,13 +142,23 @@ std::string external_task::get_results_output()
 		std_out.read(&result_stdout[0], count);
 		std_err.read(&result_stderr[0], count);
 
-		// if there was something in one of the files, write it to the result
-		if (std_out.gcount() != 0 || std_err.gcount() != 0) {
-			result = result_stdout.substr(0, std_out.gcount()) + result_stderr.substr(0, std_err.gcount());
+		// if there was something in stdout, write it to result
+		if (std_out.gcount() != 0) {
+			result_stdout = result_stdout.substr(0, std_out.gcount());
+			// filter non printable result
+			helpers::filter_non_printable_chars(result_stdout);
+			// write to result structure
+			result->output_stdout = result_stdout;
 		}
 
-		// filter non printable result
-		helpers::filter_non_printable_chars(result);
+		// if there was something in stderr, write it to result
+		if (std_err.gcount() != 0) {
+			result_stderr = result_stderr.substr(0, std_err.gcount());
+			// filter non printable result
+			helpers::filter_non_printable_chars(result_stderr);
+			// write to result structure
+			result->output_stderr = result_stderr;
+		}
 
 		// delete produced files
 		try {
@@ -164,8 +172,6 @@ std::string external_task::get_results_output()
 			logger_->warn("Temporary sandbox output files not cleaned properly: {}", e.what());
 		}
 	}
-
-	return result;
 }
 
 void external_task::make_binary_executable(std::string binary)

@@ -277,8 +277,15 @@ void job_evaluator::push_result()
 			node["error_message"] = i.second->error_message;
 		}
 
-		if (!i.second->output.empty()) {
-			node["output"] = i.second->output;
+		if (!i.second->output_stdout.empty() || !i.second->output_stderr.empty()) {
+			YAML::Node output_node;
+			if (!i.second->output_stdout.empty()) {
+				output_node["stdout"] = i.second->output_stdout;
+			}
+			if (!i.second->output_stderr.empty()) {
+				output_node["stderr"] = i.second->output_stderr;
+			}
+			node["output"] = output_node;
 		}
 
 		auto &sandbox = i.second->sandbox_status;
