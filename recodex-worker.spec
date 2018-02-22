@@ -1,8 +1,8 @@
 %define name recodex-worker
 %define short_name worker
 %define version 1.2.0
-%define unmangled_version 99567b9ac5b83a9a1eb5015cac6d835cf14e90c6
-%define release 1
+%define unmangled_version ba766e3b1ae62ea23334f7b242f6c63764528790
+%define release 5
 
 %define spdlog_name spdlog
 %define spdlog_version 0.13.0
@@ -18,13 +18,13 @@ Prefix: %{_prefix}
 Vendor: Petr Stefan <UNKNOWN>
 Url: https://github.com/ReCodEx/worker
 BuildRequires: systemd cmake zeromq-devel cppzmq-devel yaml-cpp-devel libcurl-devel libarchive-devel
-Requires(post): systemd
-Requires(preun): systemd
-Requires(postun): systemd
+Requires: systemd isolate
 
 #Source0: %{name}-%{unmangled_version}.tar.gz
 Source0: https://github.com/ReCodEx/%{short_name}/archive/%{unmangled_version}.tar.gz#/%{short_name}-%{unmangled_version}.tar.gz
 Source1: https://github.com/gabime/%{spdlog_name}/archive/v%{spdlog_version}.tar.gz#/%{spdlog_name}-%{spdlog_version}.tar.gz
+
+%global debug_package %{nil}
 
 %description
 Backend part of ReCodEx programmer testing solution.
@@ -73,7 +73,6 @@ exit 0
 %{_bindir}/recodex-judge-shuffle
 %config(noreplace) %attr(-,recodex,recodex) %{_sysconfdir}/recodex/worker/config-1.yml
 
-#%{_unitdir}/recodex-worker@.service
 /lib/systemd/system/recodex-worker@.service
 
 %changelog
