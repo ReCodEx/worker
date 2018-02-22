@@ -1,6 +1,6 @@
 %define name recodex-worker
 %define short_name worker
-%define version 1.2.0
+%define version 1.3.0
 %define unmangled_version ba766e3b1ae62ea23334f7b242f6c63764528790
 %define release 5
 
