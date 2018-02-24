@@ -8,8 +8,18 @@
 [![Wiki](https://img.shields.io/badge/docs-wiki-orange.svg)](https://github.com/ReCodEx/wiki/wiki)
 [![COPR](https://copr.fedorainfracloud.org/coprs/semai/ReCodEx/package/recodex-worker/status_image/last_build.png)](https://copr.fedorainfracloud.org/coprs/semai/ReCodEx/)
 
-A daemon that consumes assignments from the message queue, builds and runs them 
-and then sends results back.
+The job of the worker is to securely execute a job according to its
+configuration and upload results back for latter processing. After receiving an
+evaluation request, worker has to do following:
+
+- download the archive containing submitted source files and configuration file
+- download any supplementary files based on the configuration file, such as test 
+  inputs or helper programs (this is done on demand, using a `fetch` command
+  in the assignment configuration)
+- evaluate the submission according to job configuration
+- during evaluation progress messages can be sent back to broker
+- upload the results of the evaluation to the fileserver
+- notify broker that the evaluation finished
 
 ## Installation
 
@@ -18,9 +28,9 @@ and then sends results back.
 Follows description for CentOS which will do all steps as described in _Manual Installation_.
 
 ```
-$ yum install yum-plugin-copr
-$ yum copr enable semai/ReCodEx
-$ yum install recodex-worker
+# yum install yum-plugin-copr
+# yum copr enable semai/ReCodEx
+# yum install recodex-worker
 ```
 
 ### Manual Installation
@@ -339,4 +349,4 @@ box3.cpus = 1,2,3  # assign list of processors to isolate box 3
 
 ## Documentation
 
-Feel free to read the documentation on [our wiki](https://github.com/ReCodEx/wiki/wiki/Installation#worker).
+Feel free to read the documentation on [our wiki](https://github.com/ReCodEx/wiki/wiki).
