@@ -308,6 +308,8 @@ void job_evaluator::push_result()
 			subnode["exitsig"] = sandbox->exitsig;
 			subnode["killed"] = sandbox->killed;
 			subnode["message"] = sandbox->message;
+			subnode["csw-voluntary"] = sandbox->csw_voluntary;
+			subnode["csw-forced"] = sandbox->csw_forced;
 
 			node["sandbox_results"] = subnode;
 		}

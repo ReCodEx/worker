@@ -79,7 +79,7 @@ std::shared_ptr<task_results> external_task::run()
 	// check if binary is executable and set it otherwise
 	make_binary_executable(task_meta_->binary);
 
-	std::shared_ptr<task_results> res(new task_results());
+	auto res = std::make_shared<task_results>();
 	res->sandbox_status =
 		std::unique_ptr<sandbox_results>(new sandbox_results(sandbox_->run(task_meta_->binary, task_meta_->cmd_args)));
 

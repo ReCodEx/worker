@@ -456,6 +456,10 @@ sandbox_results isolate_sandbox::process_meta_file()
 				results.memory = std::stoul(second);
 			} else if (first == "max-rss") {
 				results.max_rss = std::stoul(second);
+			} else if (first == "csw-voluntary") {
+				results.csw_voluntary = std::stoul(second);
+			} else if (first == "csw-forced") {
+				results.csw_forced = std::stoul(second);
 			}
 		}
 		return results;
