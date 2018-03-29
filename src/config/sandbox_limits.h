@@ -10,9 +10,9 @@
 
 
 /**
-* Sandbox limits which are sent to sandbox during execution of given task.
-* @note Not all sandbox implementations must follow all these parameters.
-*/
+ * Sandbox limits which are sent to sandbox during execution of given task.
+ * @note Not all sandbox implementations must follow all these parameters.
+ */
 struct sandbox_limits {
 public:
 	/**
