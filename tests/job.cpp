@@ -782,11 +782,11 @@ TEST(job_test, job_variables)
 	ASSERT_EQ(j.get_task_queue().size(), 1u);
 
 	std::shared_ptr<sandbox_limits> limits = params.limits;
-	ASSERT_EQ(params.task_meta->binary, path("/evaluate/recodex").string());
+	ASSERT_EQ(params.task_meta->binary, path("/box/recodex").string());
 	ASSERT_EQ(params.task_meta->sandbox->std_input, "before_stdin_8_after_stdin");
 	ASSERT_EQ(params.task_meta->sandbox->std_output, "before_stdout_eval5_after_stdout");
 	ASSERT_EQ(params.task_meta->sandbox->std_error, "before_stderr_" + res_dir.string() + "_after_stderr");
-	ASSERT_EQ(path(params.task_meta->sandbox->chdir).string(), path("/evaluate").string());
+	ASSERT_EQ(path(params.task_meta->sandbox->chdir).string(), path("/box").string());
 
 	auto bnd_dirs = limits->bound_dirs;
 	ASSERT_EQ(bnd_dirs.size(), 1u);

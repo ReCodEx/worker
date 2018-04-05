@@ -37,7 +37,7 @@ void job_evaluator::download_submission()
 	try {
 		fs::create_directories(archive_path_);
 	} catch (fs::filesystem_error &e) {
-		throw job_exception(std::string("Cannot create downloading library: ") + e.what());
+		throw job_exception(std::string("Cannot create archive directory for submission archives: ") + e.what());
 	}
 
 	// download a file
@@ -91,13 +91,13 @@ void job_evaluator::prepare_submission()
 
 void job_evaluator::build_job()
 {
+	namespace fs = boost::filesystem;
 	logger_->info("Building job...");
 
 	// find job-config.yml to load configuration
-	using namespace boost::filesystem;
-	path config_path(source_path_);
+	fs::path config_path(source_path_);
 	config_path /= "job-config.yml";
-	if (!exists(config_path)) {
+	if (!fs::exists(config_path)) {
 		throw job_exception("Job configuration not found");
 	}
 
@@ -110,6 +110,13 @@ void job_evaluator::build_job()
 		throw job_exception("Job configuration not loaded correctly: " + std::string(e.what()));
 	}
 	logger_->info("Yaml job configuration loaded properly.");
+
+	// copy job config to results archive
+	try {
+		fs::copy_file(config_path, results_path_);
+	} catch (fs::filesystem_error &e) {
+		logger_->warn("Copying of job-config.yml file to results archive failed.");
+	}
 
 	// build job_metadata structure
 	std::shared_ptr<job_metadata> job_meta = nullptr;

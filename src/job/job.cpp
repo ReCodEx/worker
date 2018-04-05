@@ -44,7 +44,7 @@ job::~job()
 void job::check_job_dirs()
 {
 	// initialize default working directory inside sandbox
-	working_path_ = fs::path("/evaluate");
+	working_path_ = fs::path("/box");
 
 	if (!fs::exists(temporary_directory_)) {
 		throw job_exception("Working directory not exists");
