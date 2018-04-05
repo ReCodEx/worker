@@ -10,3 +10,4 @@ doc/
 build/
 libs/
 tests/Testing/
+.vscode/

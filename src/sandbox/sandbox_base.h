@@ -10,6 +10,7 @@
 #include "spdlog/spdlog.h"
 #include "../config/sandbox_limits.h"
 #include "../config/task_results.h"
+#include "../helpers/format.h"
 
 
 /**
@@ -87,19 +88,10 @@ protected:
 };
 
 
-
-inline void format(std::ostringstream &) {}
-
-template<typename ArgT, typename...T>
-void format(std::ostringstream &oss, const ArgT &a, T...args) {
-	oss << a;
-	format(oss, args...);
-}
-
 template<typename...T>
 void log_and_throw(std::shared_ptr<spdlog::logger> logger, T...args) {
 	std::ostringstream oss;
-	format(oss, args...);
+	helpers::format(oss, args...);
 	const auto message = oss.str();
 	logger->warn(message);
 	throw sandbox_exception(message);
