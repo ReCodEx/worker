@@ -53,8 +53,9 @@ void external_task::sandbox_init()
 {
 #ifndef _WIN32
 	if (task_meta_->sandbox->name == "isolate") {
+		auto data_dir = fs::path(source_dir_) / task_meta_->test_id;
 		sandbox_ = std::make_shared<isolate_sandbox>(
-			sandbox_config_, *limits_, worker_config_->get_worker_id(), temp_dir_, logger_);
+			sandbox_config_, *limits_, worker_config_->get_worker_id(), temp_dir_, data_dir.string(), logger_);
 	}
 #endif
 }

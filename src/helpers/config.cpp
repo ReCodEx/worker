@@ -81,6 +81,9 @@ std::shared_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 			} else {
 				throw config_exception("Configuration of one task has missing cmd");
 			}
+			if (ctask["test-id"] && ctask["test-id"].IsScalar()) {
+				task_meta->test_id = ctask["test-id"].as<std::string>();
+			}
 
 			// load dependencies
 			if (ctask["dependencies"] && ctask["dependencies"].IsSequence()) {

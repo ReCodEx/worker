@@ -38,7 +38,7 @@ public:
 	 * Change working directory to subdirectory inside the sandbox.
 	 * @note Path must be accessible from inside of sandbox.
 	 */
-	std::string chdir;
+	std::string chdir = "";
 	/**
 	 * Associative array of loaded limits with textual index identifying its hw group.
 	 */
@@ -50,7 +50,6 @@ public:
 	 */
 	sandbox_config()
 	{
-		chdir = "${EVAL_DIR}";
 	}
 };
 

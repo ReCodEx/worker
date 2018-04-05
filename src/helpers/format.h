@@ -3,11 +3,14 @@
 
 #include <sstream>
 
-namespace helpers {
-	inline void format(std::ostringstream &) {}
+namespace helpers
+{
+	inline void format(std::ostringstream &)
+	{
+	}
 
-	template<typename ArgT, typename...T>
-	void format(std::ostringstream &oss, const ArgT &a, T...args) {
+	template <typename ArgT, typename... T> void format(std::ostringstream &oss, const ArgT &a, T... args)
+	{
 		oss << a;
 		format(oss, args...);
 	}

@@ -8,9 +8,7 @@ void helpers::copy_directory(const fs::path &src, const fs::path &dest)
 			throw filesystem_exception("Source directory does not exist");
 		} else if (!fs::is_directory(src)) {
 			throw filesystem_exception("Source directory is not a directory");
-		} else if (fs::exists(dest)) {
-			throw filesystem_exception("Destination directory exists");
-		} else if (!fs::create_directories(dest)) {
+		} else if (!fs::exists(dest) && !fs::create_directories(dest)) {
 			throw filesystem_exception("Destination directory cannot be created");
 		}
 

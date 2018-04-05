@@ -16,23 +16,46 @@
 #define BOOST_FILESYSTEM_NO_DEPRECATED
 #define BOOST_NO_CXX11_SCOPED_ENUMS
 #include <boost/filesystem.hpp>
+#include "../helpers/filesystem.h"
 
 namespace fs = boost::filesystem;
 
+namespace
+{
+	void move_or_throw(std::shared_ptr<spdlog::logger> logger, const std::string &from, const std::string &to)
+	{
+		try {
+			helpers::copy_directory(from, to);
+		} catch (fs::filesystem_error &e) {
+			log_and_throw(logger, "Failed moving ", from, " to ", to, ", error: ", e.what());
+		}
+
+		try {
+			fs::remove_all(from);
+		} catch (fs::filesystem_error &) {
+		}
+	}
+}
 
 isolate_sandbox::isolate_sandbox(std::shared_ptr<sandbox_config> sandbox_config,
 	sandbox_limits limits,
 	size_t id,
 	const std::string &temp_dir,
+	const std::string &data_dir,
 	std::shared_ptr<spdlog::logger> logger)
-	: sandbox_config_(sandbox_config), limits_(limits), logger_(logger), id_(id), isolate_binary_("isolate")
+	: sandbox_config_(sandbox_config), limits_(limits), logger_(logger), id_(id), isolate_binary_("isolate"),
+	  data_dir_(data_dir)
 {
-	if (sandbox_config == nullptr) {
-		throw sandbox_exception("No sandbox configuration provided.");
-	}
-
 	if (logger_ == nullptr) {
 		logger_ = helpers::create_null_logger();
+	}
+
+	if (sandbox_config_ == nullptr) {
+		log_and_throw(logger_, "No sandbox configuration provided.");
+	}
+
+	if (data_dir_ == "") {
+		logger_->info("Empty data directory for moving to sandbox.");
 	}
 
 	// Set backup limit (for killing isolate if it hasn't finished yet)
@@ -69,7 +92,19 @@ isolate_sandbox::~isolate_sandbox()
 
 sandbox_results isolate_sandbox::run(const std::string &binary, const std::vector<std::string> &arguments)
 {
+	// move data to isolate directory
+	if (data_dir_ != "") {
+		move_or_throw(logger_, data_dir_, sandboxed_dir_);
+	}
+
+	// run isolate
 	isolate_run(binary, arguments);
+
+	// move data from isolate directory back to data directory
+	if (data_dir_ != "") {
+		move_or_throw(logger_, sandboxed_dir_, data_dir_);
+	}
+
 	return process_meta_file();
 }
 
@@ -88,9 +123,7 @@ void isolate_sandbox::isolate_init()
 	childpid = fork();
 
 	switch (childpid) {
-	case -1:
-		log_and_throw(logger_, "Fork failed: ", strerror(errno));
-		break;
+	case -1: log_and_throw(logger_, "Fork failed: ", strerror(errno)); break;
 	case 0: isolate_init_child(fd[0], fd[1]); break;
 	default:
 		//---Parent---
@@ -105,6 +138,7 @@ void isolate_sandbox::isolate_init()
 			}
 			sandboxed_dir_ += std::string(buf);
 		}
+		sandboxed_dir_ += "/box";
 		if (ret == -1) {
 			log_and_throw(logger_, "Read from pipe error.");
 		}
@@ -161,9 +195,7 @@ void isolate_sandbox::isolate_cleanup()
 	childpid = fork();
 
 	switch (childpid) {
-	case -1:
-		log_and_throw(logger_, "Fork failed: ", strerror(errno));
-		break;
+	case -1: log_and_throw(logger_, "Fork failed: ", strerror(errno)); break;
 	case 0:
 		//---Child---
 		// Redirect stderr to /dev/null file
@@ -209,9 +241,7 @@ void isolate_sandbox::isolate_run(const std::string &binary, const std::vector<s
 	childpid = fork();
 
 	switch (childpid) {
-	case -1:
-		log_and_throw(logger_, "Fork failed: ", strerror(errno));
-		break;
+	case -1: log_and_throw(logger_, "Fork failed: ", strerror(errno)); break;
 	case 0: {
 		//---Child---
 		logger_->debug("Returned from the first fork as child");
@@ -245,9 +275,7 @@ void isolate_sandbox::isolate_run(const std::string &binary, const std::vector<s
 		logger_->debug("Running the second fork");
 		controlpid = fork();
 		switch (controlpid) {
-		case -1:
-			log_and_throw(logger_, "Fork failed: ", strerror(errno));
-			break;
+		case -1: log_and_throw(logger_, "Fork failed: ", strerror(errno)); break;
 		case 0:
 			// Child---
 			{

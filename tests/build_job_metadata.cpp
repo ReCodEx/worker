@@ -98,10 +98,10 @@ TEST(job_metadata, build_all_from_yaml)
 	auto envs = std::pair<std::string, std::string>{"ISOLATE_TMP", "/tmp"};
 	EXPECT_EQ(envs, limits->environ_vars[0]);
 
-	EXPECT_EQ(2u, limits->bound_dirs.size());
+	EXPECT_EQ(1u, limits->bound_dirs.size());
 	auto dirs = std::tuple<std::string, std::string, sandbox_limits::dir_perm>{
 		"path1/dir1", "path2/dir2", sandbox_limits::dir_perm::RW};
-	EXPECT_EQ(dirs, limits->bound_dirs[1]);
+	EXPECT_EQ(dirs, limits->bound_dirs[0]);
 }
 
 TEST(job_metadata, queue_of_tasks)
