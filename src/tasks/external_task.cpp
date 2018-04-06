@@ -123,7 +123,8 @@ void external_task::results_output_init()
 
 fs::path external_task::find_path_outside_sandbox(std::string file)
 {
-	return helpers::find_path_outside_sandbox(file, sandbox_config_->chdir, limits_->bound_dirs);
+	return helpers::find_path_outside_sandbox(
+		file, sandbox_config_->chdir, limits_->bound_dirs, (fs::path(source_dir_) / task_meta_->test_id).string());
 }
 
 void external_task::get_results_output(std::shared_ptr<task_results> result)
@@ -181,7 +182,7 @@ void external_task::make_binary_executable(std::string binary)
 	try {
 		binary_path = find_path_outside_sandbox(binary);
 		if (binary_path.empty()) {
-			logger_->info("Path {} not found outside sandbox, executable bits will not be set", binary);
+			logger_->info("Sandbox path {} not found in local filesystem, executable bit not set", binary);
 			return;
 		}
 
@@ -194,10 +195,12 @@ void external_task::make_binary_executable(std::string binary)
 		fs::permissions(
 			binary_path, fs::perms::add_perms | fs::perms::owner_exe | fs::perms::group_exe | fs::others_exe);
 	} catch (fs::filesystem_error &e) {
-		auto message = std::string("Failed to set executable bits for path inside '" + binary + "' and outside '" +
-						   binary_path.string() + "'. Error: ") +
-			e.what();
-		logger_->warn(message);
-		throw sandbox_exception(message);
+		log_and_throw(logger_,
+			"Failed to set executable bits for path inside '",
+			binary,
+			"' and outside '",
+			binary_path.string(),
+			"'. Error: ",
+			e.what());
 	}
 }

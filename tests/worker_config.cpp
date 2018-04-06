@@ -70,8 +70,7 @@ TEST(worker_config, load_yaml_basic)
 	expected_limits.stack_size = 50000;
 	expected_limits.disk_size = 50;
 	expected_limits.disk_files = 7;
-	expected_limits.bound_dirs = {
-		std::tuple<std::string, std::string, sp>{"/usr/local/bin", "localbin", sp::RW},
+	expected_limits.bound_dirs = {std::tuple<std::string, std::string, sp>{"/usr/local/bin", "localbin", sp::RW},
 		std::tuple<std::string, std::string, sp>{"/usr/share", "share", sp::MAYBE}};
 	if (config.get_limits().environ_vars.at(0).first == "ISOLATE_TMP") {
 		expected_limits.environ_vars = {{"ISOLATE_TMP", "/tmp"}, {"ISOLATE_BOX", "/box"}};

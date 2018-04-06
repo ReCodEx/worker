@@ -30,11 +30,13 @@ namespace helpers
 	 * @param inside path inside sandbox which will be resolved
 	 * @param sandbox_chdir directory where sandbox is chdir-ed
 	 * @param bound_dirs directories bound to sandbox
+	 * @param source_dir source directory on local filesystem
 	 * @return path outside sandbox
 	 */
-	fs::path find_path_outside_sandbox(const std::string &inside,
+	fs::path find_path_outside_sandbox(const std::string &inside_path,
 		const std::string &sandbox_chdir,
-		std::vector<std::tuple<std::string, std::string, sandbox_limits::dir_perm>> &bound_dirs);
+		std::vector<std::tuple<std::string, std::string, sandbox_limits::dir_perm>> &bound_dirs,
+		const std::string &source_dir);
 
 
 	/**
