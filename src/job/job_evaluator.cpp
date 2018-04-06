@@ -113,9 +113,9 @@ void job_evaluator::build_job()
 
 	// copy job config to results archive
 	try {
-		fs::copy_file(config_path, results_path_);
+		fs::copy_file(config_path, (fs::path(results_path_) / fs::path("job-config.yml")).string());
 	} catch (fs::filesystem_error &e) {
-		logger_->warn("Copying of job-config.yml file to results archive failed.");
+		logger_->warn("Copying of job-config.yml file to results archive failed: {}", e.what());
 	}
 
 	// build job_metadata structure
