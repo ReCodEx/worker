@@ -203,6 +203,7 @@ add_test_suite(tool_isolate_sandbox
 	isolate_sandbox.cpp
 	${SANDBOX_DIR}/isolate_sandbox.cpp
 	${HELPERS_DIR}/logger.cpp
+	${HELPERS_DIR}/filesystem.cpp
 )
 
 add_test_suite(tool_archivator

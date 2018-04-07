@@ -23,7 +23,7 @@ endif()
 set (Boost_USE_MULTITHREADED ON)
 find_package(Boost 1.53.0 REQUIRED COMPONENTS filesystem system program_options)
 include_directories(${Boost_INCLUDE_DIRS})
-	
+
 # -- cURL
 find_package(CURL REQUIRED)
 include_directories(${CURL_INCLUDE_DIRS})
@@ -63,10 +63,10 @@ endif()
 
 
 # -- ZeroMQ on Windows
-if(MSVC)	
+if(MSVC)
 	find_path(ZEROMQ_INCLUDE NAMES zmq.h PATHS ${ZMQ_INCLUDE_DIR})
 	find_library(ZEROMQ_LIB NAMES libzmq PATHS ${ZMQ_LIBRARY_DIR})
-	
+
 	if(ZEROMQ_LIB)
 		include_directories(${ZEROMQ_INCLUDE})
 	else()

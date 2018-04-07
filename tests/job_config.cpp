@@ -280,7 +280,6 @@ TEST(job_config_test, config_data)
 	}
 
 	std::vector<std::tuple<std::string, std::string, sp>> expected_bound_dirs = {
-		std::tuple<std::string, std::string, sp>{"${SOURCE_DIR}", "${EVAL_DIR}", sp::RW},
 		std::tuple<std::string, std::string, sp>{"/tmp/recodex", "/recodex/tmp", static_cast<sp>(sp::RW | sp::NOEXEC)}};
 	ASSERT_EQ(limit1->bound_dirs, expected_bound_dirs);
 
@@ -294,5 +293,5 @@ TEST(job_config_test, config_data)
 	ASSERT_EQ(limit2->disk_size, SIZE_MAX);
 	ASSERT_EQ(limit2->disk_files, SIZE_MAX);
 	ASSERT_EQ(limit2->environ_vars.size(), 0u);
-	ASSERT_EQ(limit2->bound_dirs.size(), 1u);
+	ASSERT_EQ(limit2->bound_dirs.size(), 0u);
 }

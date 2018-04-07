@@ -16,10 +16,10 @@ TEST(IsolateSandbox, BasicCreation)
 {
 	std::shared_ptr<sandbox_config> config = std::make_shared<sandbox_config>();
 	sandbox_limits limits;
-	EXPECT_NO_THROW(isolate_sandbox s(config, limits, 34, "/tmp"));
-	isolate_sandbox is(config, limits, 34, "/tmp");
-	EXPECT_EQ(is.get_dir(), "/var/local/lib/isolate/34");
-	EXPECT_THROW(isolate_sandbox s(config, limits, 2365, "/tmp"), sandbox_exception);
+	EXPECT_NO_THROW(isolate_sandbox s(config, limits, 34, "/tmp", ""));
+	isolate_sandbox is(config, limits, 34, "/tmp", "");
+	EXPECT_EQ(is.get_dir(), "/var/local/lib/isolate/34/box");
+	EXPECT_THROW(isolate_sandbox s(config, limits, 2365, "/tmp", ""), sandbox_exception);
 }
 
 TEST(IsolateSandbox, NormalCommand)
@@ -42,8 +42,8 @@ TEST(IsolateSandbox, NormalCommand)
 	limits.share_net = false;
 	limits.bound_dirs.clear();
 	isolate_sandbox *is = nullptr;
-	EXPECT_NO_THROW(is = new isolate_sandbox(config, limits, 34, "/tmp"));
-	EXPECT_EQ(is->get_dir(), "/var/local/lib/isolate/34");
+	EXPECT_NO_THROW(is = new isolate_sandbox(config, limits, 34, "/tmp", ""));
+	EXPECT_EQ(is->get_dir(), "/var/local/lib/isolate/34/box");
 	sandbox_results results;
 	EXPECT_NO_THROW(results = is->run("/bin/ls", std::vector<std::string>{"-a", "-l", "-i"}));
 	EXPECT_TRUE(fs::is_regular_file("/var/local/lib/isolate/34/box/output.txt"));
@@ -77,8 +77,8 @@ TEST(IsolateSandbox, TimeoutCommand)
 	limits.share_net = false;
 	limits.bound_dirs.clear();
 	isolate_sandbox *is = nullptr;
-	EXPECT_NO_THROW(is = new isolate_sandbox(config, limits, 34, "/tmp"));
-	EXPECT_EQ(is->get_dir(), "/var/local/lib/isolate/34");
+	EXPECT_NO_THROW(is = new isolate_sandbox(config, limits, 34, "/tmp", ""));
+	EXPECT_EQ(is->get_dir(), "/var/local/lib/isolate/34/box");
 	sandbox_results results;
 	EXPECT_NO_THROW(results = is->run("/bin/sleep", std::vector<std::string>{"5"}));
 	EXPECT_TRUE(fs::is_regular_file("/tmp/34/meta.log"));
@@ -110,8 +110,8 @@ TEST(IsolateSandbox, NonzeroReturnCommand)
 	limits.share_net = false;
 	limits.bound_dirs.clear();
 	isolate_sandbox *is = nullptr;
-	EXPECT_NO_THROW(is = new isolate_sandbox(config, limits, 34, "/tmp"));
-	EXPECT_EQ(is->get_dir(), "/var/local/lib/isolate/34");
+	EXPECT_NO_THROW(is = new isolate_sandbox(config, limits, 34, "/tmp", ""));
+	EXPECT_EQ(is->get_dir(), "/var/local/lib/isolate/34/box");
 	sandbox_results results;
 	EXPECT_NO_THROW(results = is->run("/bin/false", std::vector<std::string>{}));
 	EXPECT_TRUE(fs::is_regular_file("/tmp/34/meta.log"));
@@ -150,17 +150,15 @@ TEST(IsolateSandbox, NonzeroReturnCommand)
 
 TEST(IsolateSandbox, BindDirsExecuteGCC)
 {
-	using sp = sandbox_limits::dir_perm;
 	auto tmp = fs::temp_directory_path();
 	std::shared_ptr<sandbox_config> config = std::make_shared<sandbox_config>();
-	config->chdir = "evaluate";
+	config->chdir = "";
 	sandbox_limits limits;
 	limits.wall_time = 10;
 	limits.cpu_time = 10;
 	limits.extra_time = 1;
 	limits.processes = 0;
-	limits.bound_dirs = {
-		std::tuple<std::string, std::string, sp>{(tmp / "recodex_35_test").string(), "evaluate", sp::RW}};
+	limits.bound_dirs = {};
 	limits.environ_vars = {{"PATH", "/usr/bin"}};
 
 	fs::create_directories(tmp / "recodex_35_test");
@@ -171,7 +169,7 @@ TEST(IsolateSandbox, BindDirsExecuteGCC)
 	}
 
 	isolate_sandbox *is = nullptr;
-	EXPECT_NO_THROW(is = new isolate_sandbox(config, limits, 35, "/tmp"));
+	EXPECT_NO_THROW(is = new isolate_sandbox(config, limits, 35, tmp.string(), (tmp / "recodex_35_test").string()));
 	sandbox_results results;
 	EXPECT_NO_THROW(results = is->run("/usr/bin/gcc", std::vector<std::string>{"-Wall", "-o", "test", "main.c"}));
 

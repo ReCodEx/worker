@@ -88,8 +88,8 @@ protected:
 };
 
 
-template<typename...T>
-void log_and_throw(std::shared_ptr<spdlog::logger> logger, T...args) {
+template <typename... T> void log_and_throw(std::shared_ptr<spdlog::logger> logger, T... args)
+{
 	std::ostringstream oss;
 	helpers::format(oss, args...);
 	const auto message = oss.str();

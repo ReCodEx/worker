@@ -98,8 +98,6 @@ public:
 	 */
 	sandbox_limits()
 	{
-		bound_dirs.push_back(std::tuple<std::string, std::string, sandbox_limits::dir_perm>(
-			"${SOURCE_DIR}", "${EVAL_DIR}", dir_perm::RW));
 	}
 
 	/**

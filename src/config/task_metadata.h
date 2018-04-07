@@ -34,9 +34,10 @@ public:
 		task_type type = task_type::INNER,
 		std::string cmd = "",
 		std::vector<std::string> args = {},
-		std::shared_ptr<sandbox_config> sandbox = nullptr)
-		: task_id(task_id), priority(priority), fatal_failure(fatal), dependencies(deps), type(type), binary(cmd),
-		  cmd_args(args), sandbox(sandbox)
+		std::shared_ptr<sandbox_config> sandbox = nullptr,
+		std::string test_id = "")
+		: task_id(task_id), priority(priority), fatal_failure(fatal), dependencies(deps), test_id(test_id), type(type),
+		  binary(cmd), cmd_args(args), sandbox(sandbox)
 	{
 	}
 
@@ -48,6 +49,8 @@ public:
 	bool fatal_failure;
 	/** Dependent tasks which have to be executed before this one. */
 	std::vector<std::string> dependencies;
+	/** Test id for external tasks */
+	std::string test_id;
 
 	/** Type of this task. */
 	task_type type;

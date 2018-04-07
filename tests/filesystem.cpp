@@ -36,7 +36,7 @@ TEST(filesystem_test, normalize)
 bound_dirs_type get_default_dirs()
 {
 	bound_dirs_type dirs;
-	dirs.push_back(bound_dirs_tuple("/path/outside/sandbox", "/evaluate", sandbox_limits::dir_perm::RW));
+	dirs.push_back(bound_dirs_tuple("/path/outside/sandbox", "/inside", sandbox_limits::dir_perm::RW));
 	dirs.push_back(bound_dirs_tuple("/another/path/outside/sandbox", "/execute/dir", sandbox_limits::dir_perm::RW));
 	return dirs;
 }
@@ -44,42 +44,42 @@ bound_dirs_type get_default_dirs()
 TEST(filesystem_test, test_relative_1)
 {
 	bound_dirs_type dirs = get_default_dirs();
-	fs::path result = helpers::find_path_outside_sandbox("inside", "chdir", dirs);
+	fs::path result = helpers::find_path_outside_sandbox("inside", "chdir", dirs, "");
 	ASSERT_EQ(fs::path().string(), result.string());
 }
 
 TEST(filesystem_test, test_relative_2)
 {
 	bound_dirs_type dirs = get_default_dirs();
-	fs::path result = helpers::find_path_outside_sandbox("inside", "/evaluate", dirs);
+	fs::path result = helpers::find_path_outside_sandbox("inside", "/inside", dirs, "");
 	ASSERT_EQ((fs::path("/path/outside/sandbox") / fs::path("inside")).string(), result.string());
 }
 
 TEST(filesystem_test, test_relative_3)
 {
 	bound_dirs_type dirs = get_default_dirs();
-	fs::path result = helpers::find_path_outside_sandbox("inside/file", "/evaluate", dirs);
+	fs::path result = helpers::find_path_outside_sandbox("inside/file", "/inside", dirs, "");
 	ASSERT_EQ((fs::path("/path/outside/sandbox") / fs::path("inside") / fs::path("file")).string(), result.string());
 }
 
 TEST(filesystem_test, test_absolute_1)
 {
 	bound_dirs_type dirs = get_default_dirs();
-	fs::path result = helpers::find_path_outside_sandbox("/output.stderr", "/evaluate/test1", dirs);
+	fs::path result = helpers::find_path_outside_sandbox("/output.stderr", "/inside/test1", dirs, "");
 	ASSERT_EQ(fs::path().string(), result.string());
 }
 
 TEST(filesystem_test, test_absolute_2)
 {
 	bound_dirs_type dirs = get_default_dirs();
-	fs::path result = helpers::find_path_outside_sandbox("/evaluate/output.stderr", "/evaluate/test1", dirs);
+	fs::path result = helpers::find_path_outside_sandbox("/inside/output.stderr", "/inside/test1", dirs, "");
 	ASSERT_EQ((fs::path("/path/outside/sandbox") / fs::path("output.stderr")).string(), result.string());
 }
 
 TEST(filesystem_test, test_absolute_3)
 {
 	bound_dirs_type dirs = get_default_dirs();
-	fs::path result = helpers::find_path_outside_sandbox("/evaluate/test1/output.stderr", "/evaluate/test1", dirs);
+	fs::path result = helpers::find_path_outside_sandbox("/inside/test1/output.stderr", "/inside/test1", dirs, "");
 	ASSERT_EQ(
 		(fs::path("/path/outside/sandbox") / fs::path("test1") / fs::path("output.stderr")).string(), result.string());
 }
@@ -87,7 +87,7 @@ TEST(filesystem_test, test_absolute_3)
 TEST(filesystem_test, test_absolute_4)
 {
 	bound_dirs_type dirs = get_default_dirs();
-	fs::path result = helpers::find_path_outside_sandbox("/evaluate/test1/sub/output.stderr", "/evaluate/test1", dirs);
+	fs::path result = helpers::find_path_outside_sandbox("/inside/test1/sub/output.stderr", "/inside/test1", dirs, "");
 	ASSERT_EQ(
 		(fs::path("/path/outside/sandbox") / fs::path("test1") / fs::path("sub") / fs::path("output.stderr")).string(),
 		result.string());
@@ -96,7 +96,7 @@ TEST(filesystem_test, test_absolute_4)
 TEST(filesystem_test, test_absolute_5)
 {
 	bound_dirs_type dirs = get_default_dirs();
-	fs::path result = helpers::find_path_outside_sandbox("/execute/dir/sub/output.stderr", "/evaluate/test1", dirs);
+	fs::path result = helpers::find_path_outside_sandbox("/execute/dir/sub/output.stderr", "/inside/test1", dirs, "");
 	ASSERT_EQ((fs::path("/another/path/outside/sandbox") / fs::path("sub") / fs::path("output.stderr")).string(),
 		result.string());
 }
@@ -104,14 +104,14 @@ TEST(filesystem_test, test_absolute_5)
 TEST(filesystem_test, test_relative_6)
 {
 	bound_dirs_type dirs = get_default_dirs();
-	fs::path result = helpers::find_path_outside_sandbox("../inside", "/evaluate", dirs);
+	fs::path result = helpers::find_path_outside_sandbox("../indir", "/inside", dirs, "");
 	ASSERT_EQ(fs::path().string(), result.string());
 }
 
 TEST(filesystem_test, test_absolute_7)
 {
 	bound_dirs_type dirs = get_default_dirs();
-	fs::path result = helpers::find_path_outside_sandbox("../output.stderr", "/evaluate/test1", dirs);
+	fs::path result = helpers::find_path_outside_sandbox("../output.stderr", "/inside/test1", dirs, "");
 	ASSERT_EQ((fs::path("/path/outside/sandbox") / fs::path("output.stderr")).string(), result.string());
 }
 
@@ -119,7 +119,7 @@ TEST(filesystem_test, test_absolute_8)
 {
 	bound_dirs_type dirs = get_default_dirs();
 	fs::path result =
-		helpers::find_path_outside_sandbox("/evaluate/test1////sub/./output.stderr", "/evaluate/test1", dirs);
+		helpers::find_path_outside_sandbox("/inside/test1////sub/./output.stderr", "/inside/test1", dirs, "");
 	ASSERT_EQ(
 		(fs::path("/path/outside/sandbox") / fs::path("test1") / fs::path("sub") / fs::path("output.stderr")).string(),
 		result.string());

@@ -36,12 +36,14 @@ public:
 	 * @param limits Limits for current command.
 	 * @param id Number of current worker. This must be unique for each worker on one machine!
 	 * @param temp_dir Directory to store temporary files (generated isolate's meta log)
+	 * @param data_dit Directory containing sources which will be copied into sandbox
 	 * @param logger Set system logger (optional).
 	 */
 	isolate_sandbox(std::shared_ptr<sandbox_config> sandbox_config,
 		sandbox_limits limits,
 		size_t id,
 		const std::string &temp_dir,
+		const std::string &data_dir,
 		std::shared_ptr<spdlog::logger> logger = nullptr);
 	/**
 	 * Destructor.
@@ -66,6 +68,8 @@ private:
 	std::string meta_file_;
 	/** Maximum time to run separate isolate process */
 	int max_timeout_;
+	/** Path to the directory containing sources moved to sandbox and back */
+	std::string data_dir_;
 	/** Initialize isolate */
 	void isolate_init();
 	/** Actual code for isolate initialization inside a process. Called by isolate_init(). */
