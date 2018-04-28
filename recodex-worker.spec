@@ -1,7 +1,7 @@
 %define name recodex-worker
 %define short_name worker
-%define version 1.4.0
-%define unmangled_version d4f582aac7e986e62e0e91beb671fdcc9e0ba793
+%define version 1.4.1
+%define unmangled_version 72f6cb41b5d37b4093e3181b2e37209a6a3087f5
 %define release 1
 
 %define spdlog_name spdlog
@@ -71,6 +71,7 @@ exit 0
 %{_bindir}/recodex-judge-normal
 %{_bindir}/recodex-judge-filter
 %{_bindir}/recodex-judge-shuffle
+%{_bindir}/recodex-judge-passthrough
 %config(noreplace) %attr(-,recodex,recodex) %{_sysconfdir}/recodex/worker/config-1.yml
 
 /lib/systemd/system/recodex-worker@.service
