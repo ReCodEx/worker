@@ -133,6 +133,11 @@ void job::build_job()
 				limits = std::make_shared<sandbox_limits>(worker_config_->get_limits());
 			}
 
+			// check relativeness of working directory
+			if (!helpers::check_relative(fs::path(sandbox->working_directory))) {
+				throw job_exception("Given working directory for task '" + task_meta->task_id + "' is not relative");
+			}
+
 			// go through variables parsing
 			sandbox->chdir = parse_job_var(sandbox->chdir);
 			sandbox->std_input = parse_job_var(sandbox->std_input);
