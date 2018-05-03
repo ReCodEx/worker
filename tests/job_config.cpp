@@ -143,6 +143,7 @@ TEST(job_config_test, correct_format)
 						   "          stdin: 01.in\n"
 						   "          stdout: 01.out\n"
 						   "          stderr: 01.err\n"
+						   "          working-directory: working\n"
 						   "          limits:\n"
 						   "              - hw-group-id: group1\n"
 						   "                time: 5\n"
@@ -198,6 +199,7 @@ TEST(job_config_test, config_data)
 						   "          stdout: 01.out\n"
 						   "          stderr: 01.err\n"
 						   "          chdir: /eval\n"
+						   "          working-directory: working\n"
 						   "          limits:\n"
 						   "              - hw-group-id: group1\n"
 						   "                time: 5\n"
@@ -253,6 +255,7 @@ TEST(job_config_test, config_data)
 	ASSERT_EQ(task2->sandbox->std_output, "01.out");
 	ASSERT_EQ(task2->sandbox->std_error, "01.err");
 	ASSERT_EQ(task2->sandbox->chdir, "/eval");
+	ASSERT_EQ(task2->sandbox->working_directory, "working");
 
 	ASSERT_EQ(task2->sandbox->loaded_limits.size(), 2u);
 	EXPECT_NO_THROW(task2->sandbox->loaded_limits.at("group1"));

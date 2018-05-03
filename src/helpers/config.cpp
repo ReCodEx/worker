@@ -125,6 +125,9 @@ std::shared_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 				if (ctask["sandbox"]["chdir"] && ctask["sandbox"]["chdir"].IsScalar()) {
 					sandbox->chdir = ctask["sandbox"]["chdir"].as<std::string>();
 				} // can be ommited... no throw
+				if (ctask["sandbox"]["working-directory"] && ctask["sandbox"]["working-directory"].IsScalar()) {
+					sandbox->working_directory = ctask["sandbox"]["working-directory"].as<std::string>();
+				} // can be ommited... no throw
 
 				// load limits... if they are supplied
 				if (ctask["sandbox"]["limits"]) {

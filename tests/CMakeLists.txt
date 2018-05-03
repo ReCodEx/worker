@@ -86,6 +86,7 @@ add_test_suite(job
 	${HELPERS_DIR}/topological_sort.cpp
 	${HELPERS_DIR}/logger.cpp
 	${HELPERS_DIR}/config.cpp
+	${HELPERS_DIR}/filesystem.cpp
 	${JOB_DIR}/job.cpp
 	job.cpp
 )

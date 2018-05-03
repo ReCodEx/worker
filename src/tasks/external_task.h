@@ -96,8 +96,8 @@ private:
 	std::shared_ptr<spdlog::logger> logger_;
 	/** Directory for temporary files */
 	std::string temp_dir_;
-	/** Directory where source codes for job are located */
-	fs::path source_dir_;
+	/** Directory outside sandbox where task will be executed */
+	fs::path evaluation_dir_;
 	/** Directory binded to the sandbox as default working dir */
 	fs::path working_dir_;
 	/** After execution delete stdout file produced by sandbox */

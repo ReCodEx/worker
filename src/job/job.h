@@ -15,6 +15,7 @@ namespace fs = boost::filesystem;
 #include "spdlog/spdlog.h"
 #include "../helpers/logger.h"
 #include "../helpers/topological_sort.h"
+#include "../helpers/filesystem.h"
 #include "../config/worker_config.h"
 #include "../config/job_metadata.h"
 #include "../config/task_metadata.h"

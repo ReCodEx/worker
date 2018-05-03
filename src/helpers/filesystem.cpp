@@ -58,6 +58,21 @@ fs::path helpers::normalize_path(const fs::path &path)
 	return result;
 }
 
+bool helpers::check_relative(const fs::path &path) {
+	if(path.is_absolute()) {
+		return false;
+	}
+
+	std::vector<fs::path> path_arr(path.begin(), path.end());
+	for (auto &chunk : path_arr) {
+		if (chunk.string() == "..") {
+			return false;
+		}
+	}
+
+	return true;
+}
+
 fs::path helpers::find_path_outside_sandbox(const std::string &inside_path,
 	const std::string &sandbox_chdir,
 	std::vector<std::tuple<std::string, std::string, sandbox_limits::dir_perm>> &bound_dirs,

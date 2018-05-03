@@ -32,6 +32,24 @@ TEST(filesystem_test, normalize)
 		helpers::normalize_path(fs::path("/first////second/../third/././.")).string());
 }
 
+TEST(filesystem_test, test_check_relative)
+{
+	ASSERT_TRUE(helpers::check_relative(fs::path("")));
+	ASSERT_TRUE(helpers::check_relative(fs::path(".")));
+	ASSERT_TRUE(helpers::check_relative(fs::path("sth")));
+	ASSERT_TRUE(helpers::check_relative(fs::path("sth/sth")));
+	ASSERT_TRUE(helpers::check_relative(fs::path("./sth")));
+	ASSERT_TRUE(helpers::check_relative(fs::path("./sth/sth")));
+	ASSERT_FALSE(helpers::check_relative(fs::path("/")));
+	ASSERT_FALSE(helpers::check_relative(fs::path("/sth")));
+	ASSERT_FALSE(helpers::check_relative(fs::path("/sth/sth")));
+	ASSERT_FALSE(helpers::check_relative(fs::path("..")));
+	ASSERT_FALSE(helpers::check_relative(fs::path("../sth")));
+	ASSERT_FALSE(helpers::check_relative(fs::path("sth/..")));
+	ASSERT_FALSE(helpers::check_relative(fs::path("sth/sth/..")));
+	ASSERT_FALSE(helpers::check_relative(fs::path("sth/sth/../sth")));
+}
+
 
 bound_dirs_type get_default_dirs()
 {

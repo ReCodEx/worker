@@ -13,7 +13,7 @@ namespace fs = boost::filesystem;
 external_task::external_task(const create_params &data)
 	: task_base(data.id, data.task_meta), worker_config_(data.worker_conf), sandbox_(nullptr),
 	  sandbox_config_(data.task_meta->sandbox), limits_(data.limits), logger_(data.logger), temp_dir_(data.temp_dir),
-	  source_dir_(data.source_path), working_dir_(data.working_path)
+	  evaluation_dir_(data.source_path), working_dir_(data.working_path)
 {
 	if (worker_config_ == nullptr) {
 		throw task_exception("No worker configuration provided.");
@@ -25,6 +25,14 @@ external_task::external_task(const create_params &data)
 
 	if (sandbox_config_ == nullptr) {
 		throw task_exception("No sandbox configuration provided.");
+	}
+
+	if (!sandbox_config_->working_directory.empty()) {
+		if (!helpers::check_relative(sandbox_config_->working_directory)) {
+			throw task_exception("Given working directory in sandbox config is not relative");
+		}
+
+		evaluation_dir_ = fs::path(data.source_path) / sandbox_config_->working_directory;
 	}
 
 	sandbox_check();
@@ -53,9 +61,8 @@ void external_task::sandbox_init()
 {
 #ifndef _WIN32
 	if (task_meta_->sandbox->name == "isolate") {
-		auto data_dir = fs::path(source_dir_) / task_meta_->test_id;
 		sandbox_ = std::make_shared<isolate_sandbox>(
-			sandbox_config_, *limits_, worker_config_->get_worker_id(), temp_dir_, data_dir.string(), logger_);
+			sandbox_config_, *limits_, worker_config_->get_worker_id(), temp_dir_, evaluation_dir_.string(), logger_);
 	}
 #endif
 }
@@ -124,7 +131,7 @@ void external_task::results_output_init()
 fs::path external_task::find_path_outside_sandbox(std::string file)
 {
 	return helpers::find_path_outside_sandbox(
-		file, sandbox_config_->chdir, limits_->bound_dirs, (fs::path(source_dir_) / task_meta_->test_id).string());
+		file, sandbox_config_->chdir, limits_->bound_dirs, evaluation_dir_.string());
 }
 
 void external_task::get_results_output(std::shared_ptr<task_results> result)

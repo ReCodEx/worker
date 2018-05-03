@@ -40,6 +40,10 @@ public:
 	 */
 	std::string chdir = "";
 	/**
+	 * Working directory relative to the directory with the source files.
+	 */
+	std::string working_directory = "";
+	/**
 	 * Associative array of loaded limits with textual index identifying its hw group.
 	 */
 	std::map<std::string, std::shared_ptr<sandbox_limits>> loaded_limits;
