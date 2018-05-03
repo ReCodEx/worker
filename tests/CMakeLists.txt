@@ -69,6 +69,7 @@ add_test_suite(cache_manager
 	cache_manager.cpp
 	${FILEMAN_DIR}/cache_manager.cpp
 	${HELPERS_DIR}/logger.cpp
+	${HELPERS_DIR}/string_utils.cpp
 )
 
 add_test_suite(fallback_file_manager
