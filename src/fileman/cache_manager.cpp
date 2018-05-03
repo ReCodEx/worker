@@ -1,4 +1,5 @@
 #include "cache_manager.h"
+#include "../helpers/string_utils.h"
 
 
 cache_manager::cache_manager(std::shared_ptr<spdlog::logger> logger)
@@ -43,8 +44,10 @@ void cache_manager::get_file(const std::string &src_name, const std::string &dst
 		fs::copy_file(source_file, destination_file, fs::copy_option::overwrite_if_exists);
 		fs::permissions(fs::path(destination_file),
 			fs::perms::add_perms | fs::perms::owner_write | fs::perms::group_write | fs::perms::others_write);
+		// change last modification time of the file
+		fs::last_write_time(source_file, std::time(nullptr));
 	} catch (fs::filesystem_error &e) {
-		auto message = "Failed to copy file " + source_file.string() + " to " + dst_path + ". Error: " + e.what();
+		auto message = "Failed to copy file '" + source_file.string() + "' to '" + dst_path + "'. Error: " + e.what();
 		logger_->warn(message);
 		throw fm_exception(message);
 	}
@@ -54,10 +57,14 @@ void cache_manager::put_file(const std::string &src_name, const std::string &dst
 {
 	fs::path source_file(src_name);
 	fs::path destination_file = caching_dir_ / dst_name;
+	fs::path destination_temp_file = caching_dir_ / (dst_name + "-" + helpers::random_alphanum_string(10));
 	logger_->debug("Copying file {} to cache with name {}", src_name, dst_name);
 
 	try {
-		fs::copy_file(source_file, destination_file, fs::copy_option::overwrite_if_exists);
+		// first copy only temporary file
+		fs::copy_file(source_file, destination_temp_file, fs::copy_option::overwrite_if_exists);
+		// and then move (atomically) the file to its original destination
+		fs::rename(destination_temp_file, destination_file);
 	} catch (fs::filesystem_error &e) {
 		auto message = "Failed to copy file " + src_name + " to cache. Error: " + e.what();
 		logger_->warn(message);
