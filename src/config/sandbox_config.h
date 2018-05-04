@@ -39,6 +39,18 @@ public:
 	 */
 	bool output = false;
 	/**
+	 * File to which stdout will be copied after execution.
+	 * Global worker limit for carboncopies is applied.
+	 * @note Path is outside the sandbox.
+	 */
+	std::string carboncopy_stdout = "";
+	/**
+	 * File to which stderr will be copied after execution.
+	 * Global worker limit for carboncopies is applied.
+	 * @note Path is outside the sandbox.
+	 */
+	std::string carboncopy_stderr = "";
+	/**
 	 * Change working directory to subdirectory inside the sandbox.
 	 * @note Path must be accessible from inside of sandbox.
 	 */

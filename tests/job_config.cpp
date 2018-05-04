@@ -200,6 +200,8 @@ TEST(job_config_test, config_data)
 						   "          stdout: 01.out\n"
 						   "          stderr: 01.err\n"
 						   "          stderr-to-stdout: true\n"
+						   "          carboncopy-stdout: carbon-copy-stdout\n"
+						   "          carboncopy-stderr: carbon-copy-stderr\n"
 						   "          chdir: /eval\n"
 						   "          working-directory: working\n"
 						   "          limits:\n"
@@ -257,6 +259,8 @@ TEST(job_config_test, config_data)
 	ASSERT_EQ(task2->sandbox->std_output, "01.out");
 	ASSERT_EQ(task2->sandbox->std_error, "01.err");
 	ASSERT_TRUE(task2->sandbox->stderr_to_stdout);
+	ASSERT_EQ(task2->sandbox->carboncopy_stdout, "carbon-copy-stdout");
+	ASSERT_EQ(task2->sandbox->carboncopy_stderr, "carbon-copy-stderr");
 	ASSERT_EQ(task2->sandbox->chdir, "/eval");
 	ASSERT_EQ(task2->sandbox->working_directory, "working");
 
