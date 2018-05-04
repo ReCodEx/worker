@@ -348,6 +348,9 @@ char **isolate_sandbox::isolate_run_args(const std::string &binary, const std::v
 	if (!sandbox_config_->std_error.empty()) {
 		vargs.push_back("--stderr=" + sandbox_config_->std_error);
 	}
+	if (sandbox_config_->stderr_to_stdout) {
+		vargs.push_back("--stderr-to-stdout");
+	}
 	if (!sandbox_config_->chdir.empty()) {
 		// path is relative to /box inside sandbox ... we want path to be relative to root (/)
 		vargs.push_back("--chdir=" + (fs::path("..") / sandbox_config_->chdir).string());

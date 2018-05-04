@@ -119,6 +119,9 @@ std::shared_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 				if (ctask["sandbox"]["stderr"] && ctask["sandbox"]["stderr"].IsScalar()) {
 					sandbox->std_error = ctask["sandbox"]["stderr"].as<std::string>();
 				} // can be ommited... no throw
+				if (ctask["sandbox"]["stderr-to-stdout"] && ctask["sandbox"]["stderr-to-stdout"].IsScalar()) {
+					sandbox->stderr_to_stdout = ctask["sandbox"]["stderr-to-stdout"].as<bool>();
+				} // can be ommited... no throw
 				if (ctask["sandbox"]["output"] && ctask["sandbox"]["output"].IsScalar()) {
 					sandbox->output = ctask["sandbox"]["output"].as<bool>();
 				} // can be ommited... no throw

@@ -31,6 +31,10 @@ public:
 	 */
 	std::string std_error = "";
 	/**
+	 * If true then stderr is redirected to stdout.
+	 */
+	bool stderr_to_stdout = false;
+	/**
 	 * If true then stdout and stderr will be written in the results.
 	 */
 	bool output = false;
