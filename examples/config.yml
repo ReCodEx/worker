@@ -38,5 +38,6 @@ limits:
         HOME: /box
         PATH: /usr/bin:/bin
 max-output-length: 1024  # in bytes
+max-carboncopy-length: 1048576  # in bytes
 cleanup-submission: false  # if true, then folders with data concerning submissions will be cleared after evaluation, should be used carefully, can produce huge amount of used disk space
 ...
