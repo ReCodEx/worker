@@ -143,6 +143,8 @@ void job::build_job()
 			sandbox->std_input = parse_job_var(sandbox->std_input);
 			sandbox->std_output = parse_job_var(sandbox->std_output);
 			sandbox->std_error = parse_job_var(sandbox->std_error);
+			sandbox->carboncopy_stdout = parse_job_var(sandbox->carboncopy_stdout);
+			sandbox->carboncopy_stderr = parse_job_var(sandbox->carboncopy_stderr);
 			std::vector<std::tuple<std::string, std::string, sandbox_limits::dir_perm>> new_bnd_dirs;
 			for (auto &bnd_dir : limits->bound_dirs) {
 				new_bnd_dirs.push_back(std::tuple<std::string, std::string, sandbox_limits::dir_perm>{
