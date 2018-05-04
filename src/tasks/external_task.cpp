@@ -76,8 +76,8 @@ std::shared_ptr<task_results> external_task::run()
 {
 	sandbox_init();
 
-	// TODO: only temporary solution, should be removed
 	if (sandbox_ == nullptr) {
+		// should never happen, unless we are doomed
 		return nullptr;
 	}
 
@@ -112,14 +112,19 @@ std::shared_ptr<sandbox_limits> external_task::get_limits()
 
 void external_task::results_output_init()
 {
-	if (sandbox_config_->output) {
-		std::string random = helpers::random_alphanum_string(10);
+	std::string random = helpers::random_alphanum_string(10);
+
+	if (sandbox_config_->output || !sandbox_config_->carboncopy_stdout.empty()) {
+		// output from stdout/stderr or carboncopy of stdout was requested
 		if (sandbox_config_->std_output == "") {
 			remove_stdout_ = true;
 			std::string stdout_file = task_meta_->task_id + "." + random + ".output.stdout";
 			sandbox_config_->std_output = (working_dir_ / fs::path(stdout_file)).string();
 		}
+	}
 
+	if (sandbox_config_->output || !sandbox_config_->carboncopy_stderr.empty()) {
+		// output from stdout/stderr or carboncopy of stderr was requested
 		if (sandbox_config_->std_error == "") {
 			remove_stderr_ = true;
 			std::string stderr_file = task_meta_->task_id + "." + random + ".output.stderr";
@@ -136,20 +141,37 @@ fs::path external_task::find_path_outside_sandbox(std::string file)
 
 void external_task::get_results_output(std::shared_ptr<task_results> result)
 {
-	if (sandbox_config_->output) {
-		size_t count = worker_config_->get_max_output_length();
-		std::string result_stdout(count, 0);
-		std::string result_stderr(count, 0);
+	// files were outputted inside sandbox, so we have to find path outside sandbox
+	fs::path stdout_file_path = find_path_outside_sandbox(sandbox_config_->std_output);
+	fs::path stderr_file_path = find_path_outside_sandbox(sandbox_config_->std_error);
+	process_results_output(result, stdout_file_path, stderr_file_path);
 
-		// files were outputted inside sandbox, so we have to find path outside sandbox
-		fs::path stdout_file_path = find_path_outside_sandbox(sandbox_config_->std_output);
-		fs::path stderr_file_path = find_path_outside_sandbox(sandbox_config_->std_error);
+	// delete produced files if requested
+	try {
+		if (remove_stdout_) {
+			fs::remove(stdout_file_path);
+		}
+		if (remove_stderr_) {
+			fs::remove(stderr_file_path);
+		}
+	} catch (fs::filesystem_error &e) {
+		logger_->warn("Temporary sandbox output files not cleaned properly: {}", e.what());
+	}
+}
+
+void external_task::process_results_output(
+	std::shared_ptr<task_results> result, fs::path stdout_path, fs::path stderr_path)
+{
+	if (sandbox_config_->output) {
+		size_t max_length = worker_config_->get_max_output_length();
+		std::string result_stdout(max_length, 0);
+		std::string result_stderr(max_length, 0);
 
 		// open and read files
-		std::ifstream std_out(stdout_file_path.string());
-		std::ifstream std_err(stderr_file_path.string());
-		std_out.read(&result_stdout[0], count);
-		std_err.read(&result_stderr[0], count);
+		std::ifstream std_out(stdout_path.string());
+		std::ifstream std_err(stderr_path.string());
+		std_out.read(&result_stdout[0], max_length);
+		std_err.read(&result_stderr[0], max_length);
 
 		// if there was something in stdout, write it to result
 		if (std_out.gcount() != 0) {
@@ -169,17 +191,41 @@ void external_task::get_results_output(std::shared_ptr<task_results> result)
 			result->output_stderr = result_stderr;
 		}
 
-		// delete produced files
-		try {
-			if (remove_stdout_) {
-				fs::remove(stdout_file_path);
-			}
-			if (remove_stderr_) {
-				fs::remove(stderr_file_path);
-			}
-		} catch (fs::filesystem_error &e) {
-			logger_->warn("Temporary sandbox output files not cleaned properly: {}", e.what());
-		}
+		// be nice and close streams
+		std_out.close();
+		std_err.close();
+	}
+}
+
+void external_task::process_carboncopy_output(fs::path stdout_path, fs::path stderr_path)
+{
+	size_t max_length = worker_config_->get_max_carboncopy_length();
+	if (!sandbox_config_->carboncopy_stdout.empty()) {
+		std::ifstream infile(stdout_path.string(), std::ios::binary);
+		std::ofstream copy_file(sandbox_config_->carboncopy_stdout, std::ios::binary);
+
+		// make the copying, by reading the file in memory and writing it to the copy
+		std::string inmemory(max_length, 0);
+		infile.read(&inmemory[0], max_length);
+		copy_file.write(&inmemory[0], infile.gcount());
+
+		// some day we do not close streams... but it is not this day
+		infile.close();
+		copy_file.close();
+	}
+
+	if (!sandbox_config_->carboncopy_stderr.empty()) {
+		std::ifstream infile(stderr_path.string(), std::ios::binary);
+		std::ofstream copy_file(sandbox_config_->carboncopy_stderr, std::ios::binary);
+
+		// make the copying, by reading the file in memory and writing it to the copy
+		std::string inmemory(max_length, 0);
+		infile.read(&inmemory[0], max_length);
+		copy_file.write(&inmemory[0], infile.gcount());
+
+		// close streams, you fools
+		infile.close();
+		copy_file.close();
 	}
 }
 

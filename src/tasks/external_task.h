@@ -83,6 +83,8 @@ private:
 	 * @param result to which stdout and err will be assigned
 	 */
 	void get_results_output(std::shared_ptr<task_results> result);
+	void process_results_output(std::shared_ptr<task_results> result, fs::path stdout_path, fs::path stderr_path);
+	void process_carboncopy_output(fs::path stdout_path, fs::path stderr_path);
 
 	/** Worker default configuration */
 	std::shared_ptr<worker_config> worker_config_;
