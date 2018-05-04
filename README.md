@@ -220,6 +220,8 @@ configuration is YAML file with similar structure as job configuration. The
 default location is `/etc/recodex/worker/config-<N>.yml` where `N` is identifier
 of the particular worker instance.
 
+Example configuration file can be found in `examples/config.yml`.
+
 ### Configuration items
 
 - **worker-id** -- unique identification of worker at one server. This id is
@@ -265,53 +267,12 @@ of the particular worker instance.
 - **max-output-length** -- used for `tasks.{task}.sandbox.output` option, defined
   in bytes, applied to both stdout and stderr and is not divided, both will get
   this value
+- **max-carboncopy-length** -- used for `tasks.{task}.sandbox.carboncopy-stdout`
+  and `tasks.{task}.sandbox.carboncopy-stderr` options, specifies maximal length
+  of the files which will be copied, defined in bytes
 - **cleanup-submission** -- if set to true, then files produced during evaluation
   of submission will be deleted at the end, extra caution is advised because this
   setup can cause extensive disk usage
-
-### Example config file
-
-```{.yml}
-worker-id: 1
-broker-uri: tcp://localhost:9657
-broker-ping-interval: 10  # milliseconds
-max-broker-liveness: 10
-headers:
-    env:
-        - c
-        - cpp
-    threads: 2
-hwgroup: "group1"
-working-directory: /tmp/recodex
-file-managers:
-    - hostname: "http://localhost:9999"  # port is optional
-      username: ""  # can be ignored in specific modules
-      password: ""  # can be ignored in specific modules
-file-cache:  # only in case that there is cache module
-    cache-dir: "/tmp/recodex/cache"
-logger:
-    file: "/var/log/recodex/worker" # w/o suffix - actual names will
-	                                # be worker.log, worker.1.log,...
-    level: "debug"  # level of logging
-    max-size: 1048576  # 1 MB; max size of file before log rotation
-    rotations: 3  # number of rotations kept
-limits:
-    time: 5  # in secs
-    wall-time: 6  # seconds
-    extra-time: 2  # seconds
-    stack-size: 0  # normal in KB, but 0 means no special limit
-    memory: 50000  # in KB
-    parallel: 1
-    disk-size: 50
-    disk-files: 5
-    environ-variable:
-        ISOLATE_BOX: "/box"
-        ISOLATE_TMP: "/tmp"
-    bound-directories:
-        - src: /tmp/recodex/eval_5
-          dst: /evaluate
-          mode: RW,NOEXEC
-```
 
 ### Isolate sandbox
 

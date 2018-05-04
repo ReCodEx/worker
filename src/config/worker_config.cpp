@@ -175,6 +175,13 @@ worker_config::worker_config(const YAML::Node &config)
 			throw config_error("Item max-output-length not defined properly");
 		}
 
+		// load max-carboncopy-length
+		if (config["max-carboncopy-length"] && config["max-carboncopy-length"].IsScalar()) {
+			max_carboncopy_length_ = config["max-carboncopy-length"].as<size_t>();
+		} else {
+			throw config_error("Item max-carboncopy-length not defined properly");
+		}
+
 		// load cleanup-submission
 		if (config["cleanup-submission"] && config["cleanup-submission"].IsScalar()) {
 			cleanup_submission_ = config["cleanup-submission"].as<bool>();
@@ -255,6 +262,11 @@ std::chrono::milliseconds worker_config::get_broker_ping_interval() const
 size_t worker_config::get_max_output_length() const
 {
 	return max_output_length_;
+}
+
+size_t worker_config::get_max_carboncopy_length() const
+{
+	return max_carboncopy_length_;
 }
 
 bool worker_config::get_cleanup_submission() const

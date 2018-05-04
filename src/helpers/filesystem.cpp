@@ -58,8 +58,9 @@ fs::path helpers::normalize_path(const fs::path &path)
 	return result;
 }
 
-bool helpers::check_relative(const fs::path &path) {
-	if(path.is_absolute()) {
+bool helpers::check_relative(const fs::path &path)
+{
+	if (path.is_absolute()) {
 		return false;
 	}
 

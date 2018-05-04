@@ -115,6 +115,12 @@ public:
 	virtual size_t get_max_output_length() const;
 
 	/**
+	 * Get maximal length of output which can be copied into results folder.
+	 * @return length of output in bytes
+	 */
+	virtual size_t get_max_carboncopy_length() const;
+
+	/**
 	 * Get flag which determines if cleanup is made after sumbission is evaluated.
 	 * @return
 	 */
@@ -147,6 +153,8 @@ private:
 	sandbox_limits limits_;
 	/** Maximal length of output from sandbox which can be written to the results file, in bytes. */
 	size_t max_output_length_;
+	/** Maximal lenght of output from sandbox which can be copied into results folder, in bytes */
+	size_t max_carboncopy_length_;
 	/** If true then all files created during evaluation of job will be deleted at the end. */
 	bool cleanup_submission_;
 };
