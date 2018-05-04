@@ -57,7 +57,13 @@ void cache_manager::put_file(const std::string &src_name, const std::string &dst
 {
 	fs::path source_file(src_name);
 	fs::path destination_file = caching_dir_ / dst_name;
-	fs::path destination_temp_file = caching_dir_ / (dst_name + "-" + helpers::random_alphanum_string(10));
+	fs::path destination_temp_file;
+
+	do {
+		// generate name and check it for existance, if exists... repeat
+		destination_temp_file = caching_dir_ / (dst_name + "-" + helpers::random_alphanum_string(20) + ".tmp");
+	} while (fs::exists(destination_temp_file));
+
 	logger_->debug("Copying file {} to cache with name {}", src_name, dst_name);
 
 	try {
