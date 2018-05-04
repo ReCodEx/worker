@@ -125,6 +125,12 @@ std::shared_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 				if (ctask["sandbox"]["output"] && ctask["sandbox"]["output"].IsScalar()) {
 					sandbox->output = ctask["sandbox"]["output"].as<bool>();
 				} // can be ommited... no throw
+				if (ctask["sandbox"]["carboncopy-stdout"] && ctask["sandbox"]["carboncopy-stdout"].IsScalar()) {
+					sandbox->carboncopy_stdout = ctask["sandbox"]["carboncopy-stdout"].as<std::string>();
+				} // can be ommited... no throw
+				if (ctask["sandbox"]["carboncopy-stderr"] && ctask["sandbox"]["carboncopy-stderr"].IsScalar()) {
+					sandbox->carboncopy_stderr = ctask["sandbox"]["carboncopy-stderr"].as<std::string>();
+				} // can be ommited... no throw
 				if (ctask["sandbox"]["chdir"] && ctask["sandbox"]["chdir"].IsScalar()) {
 					sandbox->chdir = ctask["sandbox"]["chdir"].as<std::string>();
 				} // can be ommited... no throw
