@@ -143,6 +143,7 @@ TEST(job_config_test, correct_format)
 						   "          stdin: 01.in\n"
 						   "          stdout: 01.out\n"
 						   "          stderr: 01.err\n"
+						   "          stderr-to-stdout: false\n"
 						   "          working-directory: working\n"
 						   "          limits:\n"
 						   "              - hw-group-id: group1\n"
@@ -198,6 +199,7 @@ TEST(job_config_test, config_data)
 						   "          stdin: 01.in\n"
 						   "          stdout: 01.out\n"
 						   "          stderr: 01.err\n"
+						   "          stderr-to-stdout: true\n"
 						   "          chdir: /eval\n"
 						   "          working-directory: working\n"
 						   "          limits:\n"
@@ -254,6 +256,7 @@ TEST(job_config_test, config_data)
 	ASSERT_EQ(task2->sandbox->std_input, "01.in");
 	ASSERT_EQ(task2->sandbox->std_output, "01.out");
 	ASSERT_EQ(task2->sandbox->std_error, "01.err");
+	ASSERT_TRUE(task2->sandbox->stderr_to_stdout);
 	ASSERT_EQ(task2->sandbox->chdir, "/eval");
 	ASSERT_EQ(task2->sandbox->working_directory, "working");
 
