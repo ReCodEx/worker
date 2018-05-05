@@ -84,6 +84,11 @@ std::shared_ptr<task_results> external_task::run()
 	// initialize output from stdout and stderr
 	results_output_init();
 
+	// check if evaluation directory exists
+	if (!fs::exists(evaluation_dir_)) {
+		throw task_exception("Evaluation directory '" + evaluation_dir_.string() + "' of sandbox does not exists");
+	}
+
 	// check if binary is executable and set it otherwise
 	make_binary_executable(task_meta_->binary);
 
@@ -145,6 +150,7 @@ void external_task::get_results_output(std::shared_ptr<task_results> result)
 	fs::path stdout_file_path = find_path_outside_sandbox(sandbox_config_->std_output);
 	fs::path stderr_file_path = find_path_outside_sandbox(sandbox_config_->std_error);
 	process_results_output(result, stdout_file_path, stderr_file_path);
+	process_carboncopy_output(stdout_file_path, stderr_file_path);
 
 	// delete produced files if requested
 	try {
