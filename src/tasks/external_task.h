@@ -101,7 +101,7 @@ private:
 	/** Directory outside sandbox where task will be executed */
 	fs::path evaluation_dir_;
 	/** Directory binded to the sandbox as default working dir */
-	fs::path working_dir_;
+	fs::path sandbox_working_dir_;
 	/** After execution delete stdout file produced by sandbox */
 	bool remove_stdout_ = false;
 	/** After execution delete stderr file produced by sandbox */

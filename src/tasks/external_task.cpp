@@ -13,7 +13,7 @@ namespace fs = boost::filesystem;
 external_task::external_task(const create_params &data)
 	: task_base(data.id, data.task_meta), worker_config_(data.worker_conf), sandbox_(nullptr),
 	  sandbox_config_(data.task_meta->sandbox), limits_(data.limits), logger_(data.logger), temp_dir_(data.temp_dir),
-	  evaluation_dir_(data.source_path), working_dir_(data.working_path)
+	  evaluation_dir_(data.source_path), sandbox_working_dir_(data.sandbox_working_path)
 {
 	if (worker_config_ == nullptr) {
 		throw task_exception("No worker configuration provided.");
@@ -29,7 +29,7 @@ external_task::external_task(const create_params &data)
 
 	if (!sandbox_config_->working_directory.empty()) {
 		if (!helpers::check_relative(sandbox_config_->working_directory)) {
-			throw task_exception("Given working directory in sandbox config is not relative");
+			throw task_exception("Given working directory in sandbox config is not relative or contains '..'");
 		}
 
 		evaluation_dir_ = fs::path(data.source_path) / sandbox_config_->working_directory;
@@ -124,7 +124,7 @@ void external_task::results_output_init()
 		if (sandbox_config_->std_output == "") {
 			remove_stdout_ = true;
 			std::string stdout_file = task_meta_->task_id + "." + random + ".output.stdout";
-			sandbox_config_->std_output = (working_dir_ / fs::path(stdout_file)).string();
+			sandbox_config_->std_output = (sandbox_working_dir_ / fs::path(stdout_file)).string();
 		}
 	}
 
@@ -133,7 +133,7 @@ void external_task::results_output_init()
 		if (sandbox_config_->std_error == "") {
 			remove_stderr_ = true;
 			std::string stderr_file = task_meta_->task_id + "." + random + ".output.stderr";
-			sandbox_config_->std_error = (working_dir_ / fs::path(stderr_file)).string();
+			sandbox_config_->std_error = (sandbox_working_dir_ / fs::path(stderr_file)).string();
 		}
 	}
 }
