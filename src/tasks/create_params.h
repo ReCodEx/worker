@@ -25,7 +25,7 @@ struct create_params {
 	/** directory where source files given by users are located */
 	fs::path source_path;
 	/** working directory which points inside sandbox */
-	fs::path working_path;
+	fs::path sandbox_working_path;
 };
 
 

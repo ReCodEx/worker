@@ -44,7 +44,7 @@ job::~job()
 void job::check_job_dirs()
 {
 	// initialize default working directory inside sandbox
-	working_path_ = fs::path("/box");
+	sandbox_working_path_ = fs::path("/box");
 
 	if (!fs::exists(temporary_directory_)) {
 		throw job_exception("Working directory not exists");
@@ -135,7 +135,8 @@ void job::build_job()
 
 			// check relativeness of working directory
 			if (!helpers::check_relative(fs::path(sandbox->working_directory))) {
-				throw job_exception("Given working directory for task '" + task_meta->task_id + "' is not relative");
+				throw job_exception(
+					"Given working directory for task '" + task_meta->task_id + "' is not relative or contains '..'");
 			}
 
 			// go through variables parsing
@@ -160,7 +161,7 @@ void job::build_job()
 				logger_,
 				temporary_directory_.string(),
 				source_path_,
-				working_path_};
+				sandbox_working_path_};
 
 			task = factory_->create_sandboxed_task(data);
 
@@ -440,7 +441,7 @@ void job::prepare_job_vars()
 		{"JOB_ID", job_meta_->job_id},
 		{"SOURCE_DIR", source_path_.string()},
 		{"RESULT_DIR", result_path_.string()},
-		{"EVAL_DIR", working_path_.string()},
+		{"EVAL_DIR", sandbox_working_path_.string()},
 		{"TEMP_DIR", fs::temp_directory_path().string()},
 		{"JUDGES_DIR", fs::path("/usr/bin").string()}};
 
