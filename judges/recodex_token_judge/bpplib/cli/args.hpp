@@ -281,10 +281,10 @@ public:
 			const char *last = argv[0];
 			while (last[1] != 0) ++last;
 			switch (*last) {
-			case 'k': multiplier = 1024;					break;
-			case 'M': multiplier = 1024 * 1024;				break;
-			case 'G': multiplier = 1024 * 1024 * 1024;			break;
-			case 'T': multiplier = 1024LL * 1024LL * 1024LL * 1024LL;	break;
+			case 'k': multiplier = 1024;                               break;
+			case 'M': multiplier = 1024 * 1024;                        break;
+			case 'G': multiplier = 1024 * 1024 * 1024;                 break;
+			case 'T': multiplier = 1024LL * 1024LL * 1024LL * 1024LL;  break;
 			}
 
 			value_t value = std::atol(argv[0]) * multiplier;
@@ -882,18 +882,18 @@ public:
 
 
 	// Macro that will help us define all the accessor methods.
-#define ARG_ACCESSOR(TYPE)											\
-	Arg##TYPE& getArg##TYPE(const std::string &name) {				\
-		return getArgTyped<Arg##TYPE>(name);						\
-	}																\
-	const Arg##TYPE& getArg##TYPE(const std::string &name) const {	\
-		return getArgTyped<Arg##TYPE>(name);						\
+#define ARG_ACCESSOR(TYPE) \
+	Arg##TYPE& getArg##TYPE(const std::string &name) { \
+		return getArgTyped<Arg##TYPE>(name); \
+	} \
+	const Arg##TYPE& getArg##TYPE(const std::string &name) const { \
+		return getArgTyped<Arg##TYPE>(name); \
 	}
 
-#define ARG_ACCESSOR_FULL(TYPE)													\
-	ARG_ACCESSOR(TYPE)															\
-	Arg##TYPE::value_t getValue##TYPE(const std::string &name) const {			\
-		return getArgTyped<Arg##TYPE>(name).getValue();							\
+#define ARG_ACCESSOR_FULL(TYPE) \
+	ARG_ACCESSOR(TYPE) \
+	Arg##TYPE::value_t getValue##TYPE(const std::string &name) const { \
+		return getArgTyped<Arg##TYPE>(name).getValue(); \
 	}
 
 

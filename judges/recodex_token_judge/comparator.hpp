@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <string>
 #include <limits>
+#include <memory>
 #include <cmath>
 #include <cstdlib>
 #include <cstdint>
@@ -86,50 +87,36 @@ private:
 			return token[1];
 		}
 
-		void makeLowerCase()
-		{
-			std::transform(token[0].begin(), token[0].end(), token[0].begin(), std::tolower);
-			std::transform(token[1].begin(), token[1].end(), token[1].begin(), std::tolower);
-		}
 
-		bool compareLengths() const
-		{
-			return first().length() == second().length();
-		}
-
-		bool compare()
-		{
-			if (!compareLengths()) return false;
-			for (offset_t i = 0; i < first().length(); ++i) {
-				if (first()[i] != second()[i]) return false;
-			}
-			return true;
-		}
-
+		/**
+		 * Atempt to parse both tokens as integers.
+		 * \param num1 Result number of the first token.
+		 * \param num2 Result number of the second token.
+		 * \return True if both values are ints, false otherwise.
+		 */
 		bool tryGetInts(long int &num1, long int &num2)
 		{
-			&long int res[2] = {num1, num2};
-			for (int i = 0; i < 2; ++i) {
-				const char *end;
-				std::strtol(token[i].c_str(), &end);
-				if (end - token[i].c_str() != token[i].length()) return false;
-			}
-			return true;
+			return try_get_int(first(), num1) && try_get_int(second(), num2);
 		}
 
+
+		/**
+		 * Atempt to parse both tokens as doubles.
+		 * \param num1 Result number of the first token.
+		 * \param num2 Result number of the second token.
+		 * \return True if both values are doubles, false otherwise.
+		 */
 		bool tryGetFloats(double &num1, double &num2)
 		{
-			&double res[2] = {num1, num2};
-			for (int i = 0; i < 2; ++i) {
-				const char *end;
-				std::strtod(token[i].c_str(), &end);
-				if (end - token[i].c_str() != token[i].length()) return false;
-			}
-			return true;
+			return try_get_double(first(), num1) && try_get_double(second(), num2);
 		}
 	};
 
 
+	/**
+	 * Direct comparison of both strings as const-chars. Saves time as the const chars may point directly to mmaped
+	 * data.
+	 */
 	bool compareDirect(const char_t *t1, offset_t len1, const char_t *t2, offset_t len2) const
 	{
 		if (len1 != len2) return false;
@@ -139,6 +126,11 @@ private:
 		return true;
 	}
 
+
+	/**
+	 * Direct comparison of both strings as const-chars. Saves time as the const chars may point directly to mmaped
+	 * data. Each char is lowercased just before comparison.
+	 */
 	bool compareDirectLowercased(const char_t *t1, offset_t len1, const char_t *t2, offset_t len2) const
 	{
 		if (len1 != len2) return false;
@@ -149,9 +141,9 @@ private:
 	}
 
 
-	bool mIgnoreCase;
-	bool mNumeric;
-	double mFloatTolerance;
+	bool mIgnoreCase;        ///< Flag indicating that token comparisons should ignore letter case.
+	bool mNumeric;           ///< Flag indicating that the comparator should compare numeric tokens (ints and doubles) as numbers.
+	double mFloatTolerance;  ///< Float tolerance used for double tokens when numeric comparisons are allowed.
 
 public:
 	TokenComparator(bool ignoreCase = false, bool numeric = false, double floatTolerance = 0.0)
@@ -174,6 +166,10 @@ public:
 		return mFloatTolerance;
 	}
 
+
+	/**
+	 * The main function that compares two tokens based on internal flags.
+	 */
 	bool compare(const char_t *t1, offset_t len1, const char_t *t2, offset_t len2) const
 	{
 		if (mNumeric && len1 < 32 && len2 < 32) { // no number should have more than 32 chars
@@ -208,13 +204,13 @@ public:
 	typedef typename Reader<CHAR, OFFSET>::Line line_t;
 
 private:
-	TokenComparator<CHAR, OFFSET> &mTokenComparator;
-	bool mSchuffledTokens;
+	TokenComparator<CHAR, OFFSET> &mTokenComparator;  ///< Token comparator used for comparing tokens on the lines.
+	bool mShuffledTokens;                             ///< Whether the tokens on each line may be in arbitrary order. 
 
 	static result_t computeResult(std::size_t errors, std::size_t total)
 	{
 		double res = (double) std::numeric_limits<result_t>::max() * (double) errors / (double) total;
-		return std::round(res);
+		return (result_t) std::round(res);
 	}
 
 	template <typename T>
@@ -223,7 +219,7 @@ private:
 		static offset_t lastLineErrorLogged = 0;
 
 		if (lastLineErrorLogged != line) {
-			bpp::log().error() << line ": ";
+			bpp::log().error() << line << ": ";
 			lastLineErrorLogged = line;
 		} else {
 			bpp::log().error() << "\t";
@@ -243,7 +239,8 @@ private:
 
 
 	template <typename T, bool LOGGING>
-	std::size_t checkMapValues(const std::map<T, int> &mapValues, offset_t line, const std::string &caption = "token")
+	std::size_t checkMapValues(
+		const std::map<T, int> &mapValues, offset_t line, const std::string &caption = "token") const
 	{
 		std::size_t errorCount = 0;
 		for (auto &&it : mapValues) {
@@ -308,36 +305,32 @@ private:
 	}
 
 
-	class LCSComparator
-	{
-	public:
-		static bool compare(const line_t &seq1, std::size_t i1, const line_t &seq2, std::size_t i2)
-		{
-			return seq1[i1] == seq2[i2];
-		}
-	};
-
 	template <bool LOGGING = false> result_t compareOrdered(const line_t &line1, const line_t &line2) const
 	{
-		std::size_t lcs = bpp::longest_common_subsequence_length<line_t, std::size_t, LCSComparator>(line1, line2);
+		TokenComparator<CHAR, OFFSET> &comparator = mTokenComparator;
+		std::size_t lcs = bpp::longest_common_subsequence_length(
+			line1, line2, [&comparator](const line_t &line1, std::size_t i1, const line_t &line2, std::size_t i2) {
+				return comparator.compare(
+					line1.getCString(i1), line1[i1].length(), line2.getCString(i2), line2[i2].length());
+			});
 		return computeResult(lcs - line1.size() + lcs - line2.size(), line1.size() + line2.size());
 	}
 
 
 public:
-	LineComparator(TokenComparator<CHAR, OFFSET> &tokenComparator, bool schuffledTokens)
-		: mTokenComparator(tokenComparator), mSchuffledTokens(schuffledTokens)
+	LineComparator(TokenComparator<CHAR, OFFSET> &tokenComparator, bool shuffledTokens)
+		: mTokenComparator(tokenComparator), mShuffledTokens(shuffledTokens)
 	{
 	}
 
 	result_t compare(const line_t &line1, const line_t &line2) const
 	{
-		return (mSchuffledTokens) ? compareUnordered<false>(line1, line2) : compareOrdered<false>(line1, line2);
+		return (mShuffledTokens) ? compareUnordered<false>(line1, line2) : compareOrdered<false>(line1, line2);
 	}
 
 	result_t compareAndLog(const line_t &line1, const line_t &line2) const
 	{
-		return (mSchuffledTokens) ? compareUnordered<true>(line1, line2) : compareOrdered<true>(line1, line2);
+		return (mShuffledTokens) ? compareUnordered<true>(line1, line2) : compareOrdered<true>(line1, line2);
 	}
 };
 

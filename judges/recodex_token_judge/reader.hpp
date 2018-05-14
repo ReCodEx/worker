@@ -3,11 +3,15 @@
 
 
 #include <system/mmap_file.hpp>
+#include <misc/ptr_fix.hpp>
+
+#include <memory>
 #include <string>
 #include <vector>
 #include <limits>
 #include <cstdint>
 #include <cctype>
+#include <cstddef>
 
 
 /**
@@ -52,12 +56,12 @@ public:
 
 		offset_t lineNumber() const
 		{
-			return mLine;
+			return mLineNumber;
 		}
 
 		offset_t charNumber() const
 		{
-			return mChar;
+			return mCharNumber;
 		}
 	};
 
@@ -68,19 +72,18 @@ public:
 	 */
 	class Line
 	{
-		friend Reader<CHAR, OFFSET>;
+		friend class Reader<CHAR, OFFSET>;
 
 	private:
-		Reader &mReader;
+		Reader<CHAR, OFFSET> &mReader;
 		offset_t mLineNumber;
 		std::vector<TokenRef> mTokens;
 
-		// Line must be constructed by the Reader ...
-		Line(Reader &reader, offset_t lineNumber) : mReader(reader), mLineNumber(lineNumber)
+	public:
+		Line(Reader<CHAR, OFFSET> &reader, offset_t lineNumber) : mReader(reader), mLineNumber(lineNumber)
 		{
 		}
 
-	public:
 		/**
 		 * Get the number of the line in the original file.
 		 */
@@ -282,13 +285,13 @@ public:
 				// A regular token was encountered -- add it to the list.
 				offset_t start = mOffset;
 				skipToken();
-				line.mTokens.push_back(TokenRef(start, mOffset - start, mLineNumber, mOffset - mLineOffset + 1));
+				line->mTokens.push_back(TokenRef(start, mOffset - start, mLineNumber, mOffset - mLineOffset + 1));
 			} else if (isCommentStart()) {
 				// Comment was encountered, rest of the line is ignored.
 				skipRestOfLine();
 
 				if (mIgnoreLineEnds) continue; // new lines are ignored, lets continue loading tokens
-				if (!line.mTokens.empty() || !mIgnoreEmptyLines) break; // line is non-empty or we return empty lines
+				if (!line->mTokens.empty() || !mIgnoreEmptyLines) break; // line is non-empty or we return empty lines
 			}
 			if (eol()) {
 				// End of line was encountered.

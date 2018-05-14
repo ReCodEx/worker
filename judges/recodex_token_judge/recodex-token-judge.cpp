@@ -1,5 +1,6 @@
 #include "reader.hpp"
 #include "comparator.hpp"
+#include "judge.hpp"
 
 #include <cli/args.hpp>
 #include <cli/logger.hpp>
@@ -8,14 +9,9 @@
 #include <iostream>
 
 
-template <class READER, class LINE_COMPARATOR>
-bool compareOrderedLines(READER &correctReader, READER &resultReader, LINE_COMPARATOR &lineComparator)
-{
-	return true;
-}
-
-
-
+/**
+ * Application entry point.
+ */
 int main(int argc, char *argv[])
 {
 	/*
@@ -48,10 +44,10 @@ int main(int argc, char *argv[])
 
 		// Comparisson strategies
 		args.registerArg(bpp::make_unique<bpp::ProgramArguments::ArgBool>(
-			"schuffled-tokens", "Tokens on a line may appear in any order."));
+			"shuffled-tokens", "Tokens on a line may appear in any order."));
 		args.registerArg(
-			bpp::make_unique<bpp::ProgramArguments::ArgBool>("schuffled-lines", "Lines may appear in any order."));
-		args.getArg("schuffled-lines").conflictsWith("ignore-line-ends");
+			bpp::make_unique<bpp::ProgramArguments::ArgBool>("shuffled-lines", "Lines may appear in any order."));
+		args.getArg("shuffled-lines").conflictsWith("ignore-line-ends");
 
 		// Log args
 		args.registerArg(
@@ -70,7 +66,7 @@ int main(int argc, char *argv[])
 		// Initialize logging ...
 		bpp::log(bpp::make_unique<bpp::Logger>(std::cerr));
 		if (args.getArg("log-limit").isPresent()) {
-			bpp::log().restrictSize((std::size_t)args.getArgInt("log-limit").getValue());
+			bpp::log().restrictSize((std::size_t) args.getArgInt("log-limit").getValue());
 		}
 
 
@@ -81,7 +77,7 @@ int main(int argc, char *argv[])
 		Reader<> resultReader(args.getArgBool("ignore-empty-lines").getValue(),
 			args.getArgBool("allow-comments").getValue(),
 			args.getArgBool("ignore-line-ends").getValue());
-		
+
 		correctReader.open(args[0]);
 		resultReader.open(args[1]);
 
@@ -91,11 +87,13 @@ int main(int argc, char *argv[])
 			args.getArgBool("numeric").getValue(),
 			args.getArgFloat("float-tolerance").getValue());
 
-		LineComparator<> lineComparator(tokenComparator, args.getArgBool("schuffled-tokens").getValue());
+		LineComparator<> lineComparator(tokenComparator, args.getArgBool("shuffled-tokens").getValue());
 
 
-		// Execute selected comparisson strategy ...
-		bool correct = compareOrderedLines(correctReader, resultReader, lineComparator);
+		// Create main judge and execute it ...
+		Judge<Reader<>, LineComparator<>> judge(
+			args.getArgBool("shuffled-lines").getValue(), correctReader, resultReader, lineComparator);
+		bool correct = judge.compare();
 		std::cout << (correct ? 1.0 : 0.0) << std::endl;
 
 

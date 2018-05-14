@@ -199,15 +199,14 @@ public:
 	{
 		return write<T>(data);
 	}
-
-
-	template<>
-	Logger& operator<< <LogSeverity>(const LogSeverity& data)
-	{
-		return setSeverity(data);
-	}
-
 };
+
+
+template<>
+Logger& Logger::operator<< <LogSeverity>(const LogSeverity& data)
+{
+	return setSeverity(data);
+}
 
 
 
