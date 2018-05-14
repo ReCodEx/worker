@@ -5,11 +5,14 @@ void helpers::copy_directory(const fs::path &src, const fs::path &dest)
 {
 	try {
 		if (!fs::exists(src)) {
-			throw filesystem_exception("Source directory does not exist");
+			throw filesystem_exception(
+				"helpers::copy_directory: Source directory does not exist '" + src.string() + "'");
 		} else if (!fs::is_directory(src)) {
-			throw filesystem_exception("Source directory is not a directory");
+			throw filesystem_exception(
+				"helpers::copy_directory: Source directory is not a directory '" + src.string() + "'");
 		} else if (!fs::exists(dest) && !fs::create_directories(dest)) {
-			throw filesystem_exception("Destination directory cannot be created");
+			throw filesystem_exception(
+				"helpers::copy_directory: Destination directory cannot be created '" + dest.string() + "'");
 		}
 
 		fs::directory_iterator endit;
@@ -21,7 +24,7 @@ void helpers::copy_directory(const fs::path &src, const fs::path &dest)
 			}
 		}
 	} catch (fs::filesystem_error &e) {
-		throw filesystem_exception("Error in copying directories: " + std::string(e.what()));
+		throw filesystem_exception("helpers::copy_directory: Error in copying directories: " + std::string(e.what()));
 	}
 
 	return;
@@ -56,6 +59,22 @@ fs::path helpers::normalize_path(const fs::path &path)
 		result /= chunk;
 	}
 	return result;
+}
+
+bool helpers::check_relative(const fs::path &path)
+{
+	if (path.is_absolute()) {
+		return false;
+	}
+
+	std::vector<fs::path> path_arr(path.begin(), path.end());
+	for (auto &chunk : path_arr) {
+		if (chunk.string() == "..") {
+			return false;
+		}
+	}
+
+	return true;
 }
 
 fs::path helpers::find_path_outside_sandbox(const std::string &inside_path,

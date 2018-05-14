@@ -31,14 +31,34 @@ public:
 	 */
 	std::string std_error = "";
 	/**
+	 * If true then stderr is redirected to stdout.
+	 */
+	bool stderr_to_stdout = false;
+	/**
 	 * If true then stdout and stderr will be written in the results.
 	 */
 	bool output = false;
+	/**
+	 * File to which stdout will be copied after execution.
+	 * Global worker limit for carboncopies is applied.
+	 * @note Path is outside the sandbox.
+	 */
+	std::string carboncopy_stdout = "";
+	/**
+	 * File to which stderr will be copied after execution.
+	 * Global worker limit for carboncopies is applied.
+	 * @note Path is outside the sandbox.
+	 */
+	std::string carboncopy_stderr = "";
 	/**
 	 * Change working directory to subdirectory inside the sandbox.
 	 * @note Path must be accessible from inside of sandbox.
 	 */
 	std::string chdir = "";
+	/**
+	 * Working directory relative to the directory with the source files.
+	 */
+	std::string working_directory = "";
 	/**
 	 * Associative array of loaded limits with textual index identifying its hw group.
 	 */

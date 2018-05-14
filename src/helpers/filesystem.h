@@ -26,6 +26,13 @@ namespace helpers
 	fs::path normalize_path(const fs::path &path);
 
 	/**
+	 * Check if given path is relative and do not contain any ".." element.
+	 * @param path path to be checked
+	 * @return true if path is relative and without double dots
+	 */
+	bool check_relative(const fs::path &path);
+
+	/**
 	 * Find path outside sandbox on real filesystem, based on given path inside sandbox.
 	 * @param inside path inside sandbox which will be resolved
 	 * @param sandbox_chdir directory where sandbox is chdir-ed

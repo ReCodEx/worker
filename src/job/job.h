@@ -15,6 +15,7 @@ namespace fs = boost::filesystem;
 #include "spdlog/spdlog.h"
 #include "../helpers/logger.h"
 #include "../helpers/topological_sort.h"
+#include "../helpers/filesystem.h"
 #include "../config/worker_config.h"
 #include "../config/job_metadata.h"
 #include "../config/task_metadata.h"
@@ -140,7 +141,7 @@ private:
 	/** Directory where results and log of job are stored. */
 	fs::path result_path_;
 	/** Directory inside sandbox which should be bound as the working one. */
-	fs::path working_path_;
+	fs::path sandbox_working_path_;
 	/** Factory for creating tasks. */
 	std::shared_ptr<task_factory_interface> factory_;
 	/** Progress callback which is called on some important points */
