@@ -57,6 +57,7 @@ protected:
 	std::size_t mMaxLength;							///< Log length restrictoin.
 
 	std::stringstream mAccumulator;					///< String buffer where the data are accumulated.
+	std::size_t mAccumulatorSize;                    ///< Number of chars in accumulator.
 	std::vector<Block> mLog;						///< Log as a sequence of Blocks.
 	std::map<LogSeverity, std::size_t> mLengths;	///< How many bytes has each severity level of the log.
 
@@ -66,15 +67,16 @@ protected:
 	 */
 	void flushAccumulator()
 	{
-		std::string acu = mAccumulator.str();
-		if (acu.length() > 0) {
+		if (mAccumulatorSize > 0) {
 			// Something was accumulated ... save another block.
+			std::string acu = mAccumulator.str();
 			mLog.push_back(Block());
 			mLog.back().severity = mSeverity;
 			mLog.back().data = acu;
 			mLengths[mSeverity] += acu.length();
+			mAccumulator.str(std::string());
+			mAccumulatorSize = 0;
 		}
-		mAccumulator.str(std::string());;
 	}
 
 
@@ -150,6 +152,7 @@ public:
 	Logger& write(const T& data)
 	{
 		mAccumulator << data;
+		mAccumulatorSize = mAccumulator.tellp();
 		return *this;
 	}
 
@@ -183,13 +186,37 @@ public:
 		clear();
 	}
 
+
+	/**
+	 * Return number of chars logged so far.
+	 * \param severity Applied severiry level. Only messages with this level and above are counted.
+	 */
+	std::size_t size(LogSeverity severity = LogSeverity::ANY) const
+	{
+		std::size_t size = 0;
+		for (std::size_t i = (std::size_t)LogSeverity::UNDEFINED; i <= (std::size_t)severity; ++i) {
+			LogSeverity s = (LogSeverity)i;
+			auto it = mLengths.find(s);
+			if (it != mLengths.end()) {
+				size += it->second;
+			}
+
+			if (s == mSeverity) {
+				size += mAccumulatorSize;
+			}
+		}
+		return size;
+	}
+
+
 	/**
 	 * Empty the log, discard all data.
 	 */
 	void clear()
 	{
 		mLog.clear();
-		mAccumulator.str(std::string());;
+		mAccumulator.str(std::string());
+		mAccumulatorSize = 0;
 		mLengths.clear();
 	}
 

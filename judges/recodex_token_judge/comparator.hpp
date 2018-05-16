@@ -141,9 +141,9 @@ private:
 	}
 
 
-	bool mIgnoreCase;        ///< Flag indicating that token comparisons should ignore letter case.
-	bool mNumeric;           ///< Flag indicating that the comparator should compare numeric tokens (ints and doubles) as numbers.
-	double mFloatTolerance;  ///< Float tolerance used for double tokens when numeric comparisons are allowed.
+	bool mIgnoreCase; ///< Flag indicating that token comparisons should ignore letter case.
+	bool mNumeric; ///< Flag indicating that the comparator should compare numeric tokens (ints and doubles) as numbers.
+	double mFloatTolerance; ///< Float tolerance used for double tokens when numeric comparisons are allowed.
 
 public:
 	TokenComparator(bool ignoreCase = false, bool numeric = false, double floatTolerance = 0.0)
@@ -169,6 +169,11 @@ public:
 
 	/**
 	 * The main function that compares two tokens based on internal flags.
+	 * \param t1 Pointer to the raw data representing the first token.
+	 * \param len1 Number of characters of the first token (tokens are not null-terminated).
+	 * \param t2 Pointer to the raw data representing the second token.
+	 * \param len2 Number of characters of the second token (tokens are not null-terminated).
+	 * \return True if the tokens are matching, false otherwise.
 	 */
 	bool compare(const char_t *t1, offset_t len1, const char_t *t2, offset_t len2) const
 	{
@@ -204,15 +209,19 @@ public:
 	typedef typename Reader<CHAR, OFFSET>::Line line_t;
 
 private:
-	TokenComparator<CHAR, OFFSET> &mTokenComparator;  ///< Token comparator used for comparing tokens on the lines.
-	bool mShuffledTokens;                             ///< Whether the tokens on each line may be in arbitrary order. 
+	TokenComparator<CHAR, OFFSET> &mTokenComparator; ///< Token comparator used for comparing tokens on the lines.
+	bool mShuffledTokens; ///< Whether the tokens on each line may be in arbitrary order.
 
-	static result_t computeResult(std::size_t errors, std::size_t total)
-	{
-		double res = (double) std::numeric_limits<result_t>::max() * (double) errors / (double) total;
-		return (result_t) std::round(res);
-	}
+	// static result_t computeResult(std::size_t errors, std::size_t total)
+	//{
+	//	double res = (double) std::numeric_limits<result_t>::max() * (double) errors / (double) total;
+	//	return (result_t) std::round(res);
+	//}
 
+
+	/**
+	 *
+	 */
 	template <typename T>
 	void logError(const T &value, int diff, offset_t line, const std::string &caption = "token") const
 	{
@@ -238,11 +247,14 @@ private:
 	}
 
 
+	/**
+	 *
+	 */
 	template <typename T, bool LOGGING>
-	std::size_t checkMapValues(
+	result_t checkMapValues(
 		const std::map<T, int> &mapValues, offset_t line, const std::string &caption = "token") const
 	{
-		std::size_t errorCount = 0;
+		result_t errorCount = 0;
 		for (auto &&it : mapValues) {
 			if (it.second != 0) ++errorCount;
 			if (LOGGING) {
@@ -253,6 +265,9 @@ private:
 	}
 
 
+	/**
+	 *
+	 */
 	template <bool LOGGING = false> result_t compareUnordered(const line_t &line1, const line_t &line2) const
 	{
 		std::map<std::string, int> stringTokens;
@@ -261,7 +276,7 @@ private:
 
 		// Fill in the sets with the first line ...
 		for (offset_t i = 0; line1.size(); ++i) {
-			std::string token = line1.getString(i);
+			std::string token = line1.getTokenAsString(i);
 			if (mTokenComparator.numeric()) {
 				long int ival;
 				double dval;
@@ -279,7 +294,7 @@ private:
 
 		// Compare the second line with assets stored in maps ...
 		for (offset_t i = 0; line2.size(); ++i) {
-			std::string token = line2.getString(i);
+			std::string token = line2.getTokenAsString(i);
 			if (mTokenComparator.numeric()) {
 				long int ival;
 				double dval;
@@ -295,25 +310,35 @@ private:
 			}
 		}
 
-		std::size_t errorCount = checkMapValues<std::string, LOGGING>(stringTokens, line2.lineNumber(), "token");
+		result_t errorCount = checkMapValues<std::string, LOGGING>(stringTokens, line2.lineNumber(), "token");
 		if (mTokenComparator.numeric()) {
 			errorCount += checkMapValues<long int, LOGGING>(intTokens, line2.lineNumber(), "int");
 			errorCount += checkMapValues<double, LOGGING>(doubleTokens, line2.lineNumber(), "float");
 		}
 
-		return computeResult(errorCount, line1.size() + line2.size());
+		return (result_t) errorCount;
 	}
 
 
+	/**
+	 * Apply LCS algorithm to find the best matching between the two lines
+	 * and determine the error as the number of tokens not present in the common subequence.
+	 * \return Number of errors (i.e., 0 == lines match completely).
+	 */
 	template <bool LOGGING = false> result_t compareOrdered(const line_t &line1, const line_t &line2) const
 	{
 		TokenComparator<CHAR, OFFSET> &comparator = mTokenComparator;
 		std::size_t lcs = bpp::longest_common_subsequence_length(
 			line1, line2, [&comparator](const line_t &line1, std::size_t i1, const line_t &line2, std::size_t i2) {
 				return comparator.compare(
-					line1.getCString(i1), line1[i1].length(), line2.getCString(i2), line2[i2].length());
+					line1.getToken(i1), line1[i1].length(), line2.getToken(i2), line2[i2].length());
 			});
-		return computeResult(lcs - line1.size() + lcs - line2.size(), line1.size() + line2.size());
+
+		if (LOGGING) {
+			// TODO
+		}
+
+		return (result_t)(lcs - line1.size() + lcs - line2.size());
 	}
 
 
@@ -323,11 +348,20 @@ public:
 	{
 	}
 
+	/**
+	 * Compare the lines only and return the number of errors.
+	 * \return Zero if the lines match completely, number of mismatched tokens otherwise.
+	 */
 	result_t compare(const line_t &line1, const line_t &line2) const
 	{
 		return (mShuffledTokens) ? compareUnordered<false>(line1, line2) : compareOrdered<false>(line1, line2);
 	}
 
+
+	/**
+	 * Compare the lines and log all the mismatched tokens to global log.
+	 * \return Zero if the lines match completely, number of mismatched tokens otherwise.
+	 */
 	result_t compareAndLog(const line_t &line1, const line_t &line2) const
 	{
 		return (mShuffledTokens) ? compareUnordered<true>(line1, line2) : compareOrdered<true>(line1, line2);

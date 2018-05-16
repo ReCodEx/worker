@@ -78,11 +78,42 @@ public:
 		Reader<CHAR, OFFSET> &mReader;
 		offset_t mLineNumber;
 		std::vector<TokenRef> mTokens;
+		const char_t *mRawData;
+		offset_t mRawLength;
 
 	public:
-		Line(Reader<CHAR, OFFSET> &reader, offset_t lineNumber) : mReader(reader), mLineNumber(lineNumber)
+		Line(Reader<CHAR, OFFSET> &reader, offset_t lineNumber, const char_t *rawData, offset_t rawLength = 0)
+			: mReader(reader), mLineNumber(lineNumber), mRawData(rawData), mRawLength(rawLength)
 		{
 		}
+
+
+		/**
+		 * Return const char pointer to the raw line data.
+		 */
+		const char_t *getRawLine() const
+		{
+			return mRawData;
+		}
+
+
+		/**
+		 * Get the length of raw line string.
+		 */
+		offset_t getRawLength() const
+		{
+			return mRawLength;
+		}
+
+
+		/**
+		 * Return the raw line as string object.
+		 */
+		std::string getRawLineAsString() const
+		{
+			return std::string(getRawLine(), getRawLength());
+		}
+
 
 		/**
 		 * Get the number of the line in the original file.
@@ -113,16 +144,25 @@ public:
 		/**
 		 * Get raw token string as plain old const char pointer (not necesarly null-terminated).
 		 */
-		const char_t *getCString(std::size_t idx) const
+		const char_t *getToken(std::size_t idx) const
 		{
 			return mReader.getToken(mTokens[idx]);
 		}
 
 
 		/**
+		 * Return length of a token with given index.
+		 */
+		offset_t getTokenLength(std::size_t idx) const
+		{
+			return mTokens[idx].length();
+		}
+
+
+		/**
 		 * Return the token as a copy wrapped in std string.
 		 */
-		std::string getString(std::size_t idx) const
+		std::string getTokenAsString(std::size_t idx) const
 		{
 			return mReader.getToken(mTokens[idx]);
 		}
@@ -277,7 +317,8 @@ public:
 			return std::unique_ptr<Line>();
 		}
 
-		auto line = bpp::make_unique<Line>(*this, mLineNumber);
+		offset_t startOffset = mOffset;
+		auto line = bpp::make_unique<Line>(*this, mLineNumber, mData + mOffset);
 		while (!eof()) {
 			skipWhitespace();
 
@@ -300,6 +341,7 @@ public:
 			}
 		}
 
+		line->mRawLength = mOffset - startOffset;
 		return line;
 	}
 };
