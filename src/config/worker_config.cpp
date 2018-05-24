@@ -153,7 +153,7 @@ worker_config::worker_config(const YAML::Node &config)
 			try {
 				auto bound_dirs = helpers::get_bind_dirs(limits);
 				limits_.add_bound_dirs(bound_dirs);
-			} catch (helpers::config_exception e) {
+			} catch (helpers::config_exception &e) {
 				throw config_error(e.what());
 			}
 

@@ -300,7 +300,7 @@ void job::connect_tasks(
 				auto ptr = unconn_tasks.at(depend.at(i));
 				ptr->add_children(elem.second);
 				elem.second->add_parent(ptr);
-			} catch (std::out_of_range) {
+			} catch (std::out_of_range &) {
 				throw job_exception("Non existing task-id (" + depend.at(i) + ") in dependency list");
 			}
 		}
@@ -408,7 +408,7 @@ void job::init_logger()
 		file_logger->info("       Job system log");
 		file_logger->info("------------------------------");
 		logger_ = file_logger;
-	} catch (spdlog::spdlog_ex) {
+	} catch (spdlog::spdlog_ex &) {
 		// Suppose not happen. But in case, create only empty logger.
 		logger_ = helpers::create_null_logger();
 	}
