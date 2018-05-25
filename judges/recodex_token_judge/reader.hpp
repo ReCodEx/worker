@@ -327,18 +327,20 @@ public:
 				offset_t start = mOffset;
 				skipToken();
 				line->mTokens.push_back(TokenRef(start, mOffset - start, mLineNumber, mOffset - mLineOffset + 1));
-			} else if (isCommentStart()) {
-				// Comment was encountered, rest of the line is ignored.
-				skipRestOfLine();
+				continue; // let's go read another token
+			} else if (!isCommentStart() && !eol()) {
+				throw bpp::RuntimeError("Something is wrong since this Reader state is deamed impossible.");
+			}
 
-				if (mIgnoreLineEnds) continue; // new lines are ignored, lets continue loading tokens
-				if (!line->mTokens.empty() || !mIgnoreEmptyLines) break; // line is non-empty or we return empty lines
-			}
-			if (eol()) {
-				// End of line was encountered.
-				skipRestOfLine();
-				if (!mIgnoreLineEnds) break;
-			}
+			// Here we are at the end of a line or start of a comment ...
+			skipRestOfLine();
+			if (mIgnoreLineEnds) continue; // new lines are ignored, lets continue loading tokens
+			if (!line->mTokens.empty() || !mIgnoreEmptyLines) break; // line is non-empty or we return empty lines
+		}
+
+		if (line->mTokens.empty() && mIgnoreEmptyLines) {
+			// The last line of the file was empty, we should skip it as well ...
+			return std::unique_ptr<Line>();
 		}
 
 		line->mRawLength = mOffset - startOffset;

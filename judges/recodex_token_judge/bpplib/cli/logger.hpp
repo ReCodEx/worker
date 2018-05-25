@@ -152,7 +152,7 @@ public:
 	Logger& write(const T& data)
 	{
 		mAccumulator << data;
-		mAccumulatorSize = mAccumulator.tellp();
+		mAccumulatorSize = (std::size_t)mAccumulator.tellp();
 		return *this;
 	}
 
@@ -206,6 +206,16 @@ public:
 			}
 		}
 		return size;
+	}
+
+
+	/**
+	 * Check whether the size of the log (for selected severity and above) is full (exceeds the size restriction).
+	 * \param severity Applied severiry level. Only messages with this level and above are counted.
+	 */
+	bool isFull(LogSeverity severity = LogSeverity::ANY) const
+	{
+		return mMaxLength <= size(severity);
 	}
 
 

@@ -108,7 +108,6 @@ int main(int argc, char *argv[])
 	} catch (std::exception &e) {
 		std::cout << 0.0 << std::endl;
 		std::cerr << "Error: " << e.what() << std::endl << std::endl;
-		args.printUsage(std::cerr);
 		return 2;
 	}
 

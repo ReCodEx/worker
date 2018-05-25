@@ -25,7 +25,7 @@ template <typename STRING> bool try_get_int(const STRING &str, long int &res)
 {
 	char *end;
 	res = std::strtol(str.c_str(), &end, 10);
-	return (end - str.c_str() == str.length());
+	return (end - str.c_str() == (int)str.length());
 }
 
 
@@ -38,7 +38,7 @@ template <typename STRING> bool try_get_double(const STRING &str, double &res)
 {
 	char *end;
 	res = std::strtod(str.c_str(), &end);
-	return (end - str.c_str() == str.length());
+	return (end - str.c_str() == (int)str.length());
 }
 
 
@@ -212,15 +212,14 @@ private:
 	TokenComparator<CHAR, OFFSET> &mTokenComparator; ///< Token comparator used for comparing tokens on the lines.
 	bool mShuffledTokens; ///< Whether the tokens on each line may be in arbitrary order.
 
-	// static result_t computeResult(std::size_t errors, std::size_t total)
-	//{
-	//	double res = (double) std::numeric_limits<result_t>::max() * (double) errors / (double) total;
-	//	return (result_t) std::round(res);
-	//}
-
-
 	/**
-	 *
+	 * Log one error of unordered token comparisson (a token is superfluous or missing).
+	 * \tparam T Type of the token value.
+	 * \param value The value to be logged.
+	 * \param diff The difference (how many times the token was recorded or expected).
+	 *        If lower than zero, token was missing, otherwise the token is supefluous.
+	 * \param line The index of the line where the error occured.
+	 * \param caption Additional caption describing the type of the token in the log (e.g., 'token', 'int', ...).
 	 */
 	template <typename T>
 	void logError(const T &value, int diff, offset_t line, const std::string &caption = "token") const
@@ -248,7 +247,12 @@ private:
 
 
 	/**
-	 *
+	 * Perform verification of map of valued from the unordered comparisson and log all errors.
+	 * \tparam T Type of the token value.
+	 * \tparam LOGGING If false, the check is performed silently. Otherwise, the errors are logged using bpp::log().
+	 * \param mapValues The the map of values and their diffs to be checked.
+	 * \param line The index of the line where the error occured.
+	 * \param caption Additional caption describing the type of the token in the log (e.g., 'token', 'int', ...).
 	 */
 	template <typename T, bool LOGGING>
 	result_t checkMapValues(
@@ -256,7 +260,7 @@ private:
 	{
 		result_t errorCount = 0;
 		for (auto &&it : mapValues) {
-			if (it.second != 0) ++errorCount;
+			errorCount += std::abs(it.second);
 			if (LOGGING) {
 				logError(it.first, it.second, line, caption);
 			}
@@ -266,7 +270,11 @@ private:
 
 
 	/**
-	 *
+	 * Perform the unordered comparisson (the tokens on line may be in any order).
+	 * \tparam LOGGING If false, the check is performed silently. Otherwise, the errors are logged using bpp::log().
+	 * \param line1 The first line (correct) passed from the reader.
+	 * \param line2 The second line (result) passed from the reader.
+	 * \return Number of errors (i.e., 0 == lines match completely).
 	 */
 	template <bool LOGGING = false> result_t compareUnordered(const line_t &line1, const line_t &line2) const
 	{
@@ -323,6 +331,9 @@ private:
 	/**
 	 * Apply LCS algorithm to find the best matching between the two lines
 	 * and determine the error as the number of tokens not present in the common subequence.
+	 * \tparam LOGGING If false, the check is performed silently. Otherwise, the errors are logged using bpp::log().
+	 * \param line1 The first line (correct) passed from the reader.
+	 * \param line2 The second line (result) passed from the reader.
 	 * \return Number of errors (i.e., 0 == lines match completely).
 	 */
 	template <bool LOGGING = false> result_t compareOrdered(const line_t &line1, const line_t &line2) const
@@ -334,11 +345,14 @@ private:
 					line1.getToken(i1), line1[i1].length(), line2.getToken(i2), line2[i2].length());
 			});
 
-		if (LOGGING) {
+		result_t res = (result_t)(line1.size() - lcs + line2.size() - lcs);
+		if (LOGGING && res) {
 			// TODO
+			bpp::log().error() << "-" << line1.lineNumber() << ": " << line1.getRawLineAsString();
+			bpp::log().error() << "+" << line2.lineNumber() << ": " << line2.getRawLineAsString();
 		}
 
-		return (result_t)(lcs - line1.size() + lcs - line2.size());
+		return res;
 	}
 
 

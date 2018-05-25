@@ -17,6 +17,7 @@ template <class READER, class LINE_COMPARATOR> class Judge
 {
 public:
 	typedef READER reader_t;
+	typedef typename READER::Line line_t;
 	typedef LINE_COMPARATOR line_comparator_t;
 	typedef typename LINE_COMPARATOR::result_t score_t;
 
@@ -69,9 +70,6 @@ private:
 			mCorrectLine = std::move(mCorrectLinesBuffer.front());
 			mCorrectLinesBuffer.erase(mCorrectLinesBuffer.begin());
 		}
-		if (!mCorrectLine) {
-			throw bpp::RuntimeError("Error has occured while reading the file with correct answers.");
-		}
 	}
 
 
@@ -86,9 +84,6 @@ private:
 			// If the buffer is not empty, return its first line and remove it from the buffer...
 			mResultLine = std::move(mResultLinesBuffer.front());
 			mResultLinesBuffer.erase(mResultLinesBuffer.begin());
-		}
-		if (!mResultLine) {
-			throw bpp::RuntimeError("Error has occured while reading the results file which is being tested.");
 		}
 	}
 
@@ -112,7 +107,9 @@ private:
 			(!mResultReader.eof() || !mResultLinesBuffer.empty())) {
 			// Read following lines from the readers.
 			readNextLines();
-			if (!mLineComparator.compare(*mCorrectLine.get(), *mResultLine.get())) return false;
+			if (!mCorrectLine && !mResultLine) return true; // both files have termineated
+			if (!mCorrectLine || !mResultLine) return false; // one of the files have termineated
+			if (mLineComparator.compare(*mCorrectLine.get(), *mResultLine.get()) != 0) return false;
 		}
 		return true;
 	}
@@ -155,14 +152,14 @@ private:
 
 		// Count stats of actual state of the result lines buffer...
 		tokens = chars = 0;
-		for (auto &&it : mCorrectLinesBuffer) {
+		for (auto &&it : mResultLinesBuffer) {
 			tokens += it->size();
 			chars += it->getRawLength();
 		}
 
 		// Read result file until the end or the limits are reached.
-		while (!mResultReader.eof() && mResultLinesBuffer.size() < mCorrectLinesBuffer.size() && tokens < MAX_TOKENS &&
-			chars < MAX_CHARS) {
+		while (
+			!mResultReader.eof() && mResultLinesBuffer.size() < MAX_LINES && tokens < MAX_TOKENS && chars < MAX_CHARS) {
 			mResultLinesBuffer.push_back(mResultReader.readLine());
 			tokens += mResultLinesBuffer.back()->size();
 			chars += mResultLinesBuffer.back()->getRawLength();
@@ -184,23 +181,25 @@ private:
 		for (std::size_t c = 0; c < sizeC; ++c) {
 			lcsMatrix[(c + 1) * (sizeR + 1)].score =
 				lcsMatrix[c * (sizeR + 1)].score + mCorrectLinesBuffer[c]->size() + 1;
+			lcsMatrix[(c + 1) * (sizeR + 1)].dc = -1;
 		}
-		for (std::size_t r = 1; r <= sizeR; ++r) {
+		for (std::size_t r = 0; r < sizeR; ++r) {
 			lcsMatrix[r + 1].score = lcsMatrix[r].score + mResultLinesBuffer[r]->size() + 1;
+			lcsMatrix[r + 1].dr = -1;
 		}
 
 
 		// Fill in the LCS matrix by dynamic programming
-		std::size_t i = sizeR + 1; // current position in matrix (i == (c+1)*(sizeR+1) + (r+1))
+		std::size_t i = sizeR + 2; // current position in matrix (i == (c+1)*(sizeR+1) + (r+1))
 		for (std::size_t c = 0; c < sizeC; ++c) {
 			for (std::size_t r = 0; r < sizeR; ++r) {
 				lcsMatrix[i].comparisonResult =
 					mLineComparator.compare(*mCorrectLinesBuffer[c].get(), *mResultLinesBuffer[r].get());
 
 				// Compute score for each of three possibilities ...
-				score_t upperScore = lcsMatrix[i - sizeR].score + mCorrectLinesBuffer[c]->size() + 1;
+				score_t upperScore = lcsMatrix[i - sizeR - 1].score + mCorrectLinesBuffer[c]->size() + 1;
 				score_t leftScore = lcsMatrix[i - 1].score + mResultLinesBuffer[r]->size() + 1;
-				score_t upperLeftScore = lcsMatrix[i - sizeR - 1].score + lcsMatrix[i].comparisonResult;
+				score_t upperLeftScore = lcsMatrix[i - sizeR - 2].score + lcsMatrix[i].comparisonResult;
 
 				// Find the best option (with the lowest score).
 				if (upperLeftScore <= leftScore && upperLeftScore <= upperScore) {
@@ -223,27 +222,60 @@ private:
 	}
 
 
-	void collectDiffRecords(const std::vector<LCSNode> &lcsMatrix, std::vector<Diff> &diff)
+	/**
+	 * 
+	 */
+	void collectDiffRecords(const std::vector<LCSNode> &lcsMatrix,
+		std::vector<Diff> &diff,
+		std::size_t &lastMatchedCorrect,
+		std::size_t &lastMatchedResult)
 	{
 		std::size_t sizeC = mCorrectLinesBuffer.size();
 		std::size_t sizeR = mResultLinesBuffer.size();
 		std::size_t c = sizeC;
 		std::size_t r = sizeR;
 
-		while (c > 0 && r > 0) {
-			const LCSNode &node = lcsMatrix[(c + 1) * (sizeR + 1) + r + 1];
+		while (c > 0 || r > 0) {
+			const LCSNode &node = lcsMatrix[c * (sizeR + 1) + r];
 
 			if (node.dc == 0 || node.dr == 0 ||
 				node.comparisonResult != 0) { // either one line is skipped or the the lines do not match completely
-				diff.push_back(Diff(node.dc ? c : Diff::NO_IDX, node.dr ? r : Diff::NO_IDX));
+				diff.push_back(Diff(node.dc ? c - 1 : Diff::NO_IDX, node.dr ? r - 1 : Diff::NO_IDX));
+			} else if (node.dc != 0 && node.dr != 0 && node.comparisonResult == 0) {
+				if (lastMatchedCorrect == Diff::NO_IDX) lastMatchedCorrect = c - 1;
+				if (lastMatchedResult == Diff::NO_IDX) lastMatchedResult = r - 1;
 			}
+
 			c += node.dc;
 			r += node.dr;
 		}
 	}
 
 
-	void processAndLogDiffs(const std::vector<Diff> &diff)
+	/**
+	 *
+	 */
+	void logImpairedCorrectLine(const line_t &line) const
+	{
+		bpp::log().error() << "-" << line.lineNumber() << ": " << line.getRawLineAsString();
+	}
+
+
+	/**
+	 *
+	 */
+	void logImpairedResultLine(const line_t &line) const
+	{
+		bpp::log().error() << "+" << line.lineNumber() << ": " << line.getRawLineAsString();
+	}
+
+
+	/**
+	 *
+	 */
+	void processAndLogDiffs(
+		const std::vector<Diff> &diff, std::size_t lastMatchedCorrect, std::size_t lastMatchedResult)
+
 	{
 		std::size_t i = diff.size();
 		std::size_t lastCorrect = Diff::NO_IDX;
@@ -258,17 +290,24 @@ private:
 				lastResult = diff[i].result;
 			} else if (diff[i].correct != Diff::NO_IDX) {
 				// Correct line was skipped...
-				bpp::log().error() << "-" << mCorrectLinesBuffer[diff[i].correct]->lineNumber() << ": "
-								   << mCorrectLinesBuffer[diff[i].correct]->getRawLineAsString();
+				logImpairedCorrectLine(*mCorrectLinesBuffer[diff[i].correct].get());
 				lastCorrect = diff[i].correct;
 			} else {
 				// Result line was skipped...
-				bpp::log().error() << "+" << mResultLinesBuffer[diff[i].result]->lineNumber() << ": "
-								   << mResultLinesBuffer[diff[i].result]->getRawLineAsString();
+				logImpairedResultLine(*mResultLinesBuffer[diff[i].result].get());
 				lastResult = diff[i].result;
 			}
 			if (diff[i].correct == mCorrectLinesBuffer.size() - 1 || diff[i].result == mResultLinesBuffer.size() - 1)
 				break;
+		}
+
+		if (lastMatchedCorrect != Diff::NO_IDX) {
+			lastCorrect =
+				(lastCorrect != Diff::NO_IDX) ? std::max(lastCorrect, lastMatchedCorrect) : lastMatchedCorrect;
+		}
+
+		if (lastMatchedResult != Diff::NO_IDX) {
+			lastResult = (lastResult != Diff::NO_IDX) ? std::max(lastResult, lastMatchedResult) : lastMatchedResult;
 		}
 
 		if (lastCorrect != Diff::NO_IDX) {
@@ -278,6 +317,43 @@ private:
 			mResultLinesBuffer.erase(mResultLinesBuffer.begin(), mResultLinesBuffer.begin() + lastResult + 1);
 		}
 	}
+
+
+	/**
+	 *
+	 */
+	bool logImpairedCorrectTrailing()
+	{
+		// Check correct file remains ...
+		bool reportedAny = false;
+		while (!mCorrectReader.eof() && !bpp::log().isFull(bpp::LogSeverity::ERROR)) {
+			readNextCorrectLine();
+			if (mCorrectLine) {
+				logImpairedCorrectLine(*mCorrectLine.get());
+				reportedAny = true;
+			}
+		}
+		return reportedAny;
+	}
+
+
+	/**
+	 *
+	 */
+	bool logImpairedResultTrailing()
+	{
+		// Check result file remains ...
+		bool reportedAny = false;
+		while (!mResultReader.eof() && !bpp::log().isFull(bpp::LogSeverity::ERROR)) {
+			readNextResultLine();
+			if (mResultLine) {
+				logImpairedResultLine(*mResultLine.get());
+				reportedAny = true;
+			}
+		}
+		return reportedAny;
+	}
+
 
 	/**
 	 *
@@ -290,15 +366,34 @@ private:
 		if (lastLinesMatching && mCorrectReader.eof() && mResultReader.eof()) return true;
 
 		if (!lastLinesMatching) {
-			std::vector<LCSNode> lcsMatrix;
-			std::vector<Diff> diff;
-			fillBuffers();
-			computeLCSMatrix(lcsMatrix);
-			collectDiffRecords(lcsMatrix, diff);
-			processAndLogDiffs(diff);
-		}
+			while (!bpp::log().isFull(bpp::LogSeverity::ERROR)) {
+				std::vector<LCSNode> lcsMatrix;
+				std::vector<Diff> diff;
+				fillBuffers();
 
-		return false;
+				// If one of the buffers is empty, wrap it up ...
+				if ((mCorrectReader.eof() && mCorrectLinesBuffer.empty()) || (mResultReader.eof() && mResultLinesBuffer.empty())) {
+					logImpairedCorrectTrailing();
+					logImpairedResultTrailing();
+					break;
+				}
+
+				computeLCSMatrix(lcsMatrix);
+
+				std::size_t lastMatchedCorrect = Diff::NO_IDX;
+				std::size_t lastMatchedResult = Diff::NO_IDX;
+				collectDiffRecords(lcsMatrix, diff, lastMatchedCorrect, lastMatchedResult);
+				processAndLogDiffs(diff, lastMatchedCorrect, lastMatchedResult);
+
+				if (mCorrectReader.eof() && mCorrectLinesBuffer.empty() && mResultReader.eof() &&
+					mResultLinesBuffer.empty())
+					break;
+			}
+
+			return false;
+		} else {
+			return !logImpairedCorrectTrailing() && !logImpairedResultTrailing();			
+		}
 	}
 
 
