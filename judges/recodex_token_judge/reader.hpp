@@ -164,7 +164,7 @@ public:
 		 */
 		std::string getTokenAsString(std::size_t idx) const
 		{
-			return mReader.getToken(mTokens[idx]);
+			return std::string(getToken(idx), getTokenLength(idx));
 		}
 	};
 
@@ -333,9 +333,11 @@ public:
 			}
 
 			// Here we are at the end of a line or start of a comment ...
+			bool comment = isCommentStart();
 			skipRestOfLine();
 			if (mIgnoreLineEnds) continue; // new lines are ignored, lets continue loading tokens
-			if (!line->mTokens.empty() || !mIgnoreEmptyLines) break; // line is non-empty or we return empty lines
+			if (!line->mTokens.empty() || (!mIgnoreEmptyLines && !comment))
+				break; // line is non-empty or we return empty lines
 		}
 
 		if (line->mTokens.empty() && mIgnoreEmptyLines) {

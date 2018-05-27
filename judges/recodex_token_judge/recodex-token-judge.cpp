@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
 			0.0,
 			1.0));
 
-		// Comparisson strategies
+		// Comparison strategies
 		args.registerArg(bpp::make_unique<bpp::ProgramArguments::ArgBool>(
 			"shuffled-tokens", "Tokens on a line may appear in any order."));
 		args.registerArg(

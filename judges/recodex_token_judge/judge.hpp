@@ -28,6 +28,7 @@ private:
 	struct LCSNode {
 		score_t comparisonResult; ///< Result from the comparator of the corresonding two lines.
 		score_t score; ///< Actual total score of the LCS found in this node.
+		score_t totalTokens; ///< Number of tokens on both compared lines.
 
 		// relative offset to previous node
 		std::int16_t dr;
@@ -40,7 +41,9 @@ private:
 	struct Diff {
 		static const std::size_t NO_IDX = ~(std::size_t) 0;
 		std::size_t correct, result; //< Indices to line buffers (~0 means no index)
-		Diff(std::size_t _correct, std::size_t _result) : correct(_correct), result(_result)
+		bool match; //< Whether this diff should be treated as matched lines (both indices must be set)s
+		Diff(std::size_t _correct, std::size_t _result, bool _match = false)
+			: correct(_correct), result(_result), match(_match)
 		{
 		}
 	};
@@ -51,15 +54,17 @@ private:
 	reader_t &mResultReader;
 	line_comparator_t mLineComparator;
 
+	// Buffer holding last correct line from each reader.
 	std::unique_ptr<typename reader_t::Line> mCorrectLine;
 	std::unique_ptr<typename reader_t::Line> mResultLine;
 
+	// Buffers that cache lines from the reader if an error is found and LCS has to be computed...
 	std::vector<std::unique_ptr<typename reader_t::Line>> mCorrectLinesBuffer;
 	std::vector<std::unique_ptr<typename reader_t::Line>> mResultLinesBuffer;
 
 
 	/**
-	 *
+	 * Load next line into mCorrectLine buffer.
 	 */
 	void readNextCorrectLine()
 	{
@@ -74,7 +79,7 @@ private:
 
 
 	/**
-	 *
+	 * Load next line into mResultLine buffer.
 	 */
 	void readNextResultLine()
 	{
@@ -89,7 +94,7 @@ private:
 
 
 	/**
-	 *
+	 * Load next lines to both correct and result line buffers.
 	 */
 	void readNextLines()
 	{
@@ -99,7 +104,10 @@ private:
 
 
 	/**
-	 *
+	 * Read lines from both files and compare them. This is repeated until one of the files is processed,
+	 * or mismatchin pair of lines is found.
+	 * \return True if all lines (at least from one file) were matched correctly, false if mismatching pair was found.
+	 *		Note that the last processed pair of lines is kept in line buffers.
 	 */
 	bool skipMatchingLeadingLines()
 	{
@@ -168,7 +176,10 @@ private:
 
 
 	/**
-	 *
+	 * Compute dynamic-programming matrix that will allow us to compute line-based LCS.
+	 * The algorithm differs from regular LCS as it uses weight based comparison of lines
+	 * since another LCS is used to compute difference between two lines.
+	 * \param lcsMatrix The computed matrix stored linearly in a vector.
 	 */
 	void computeLCSMatrix(std::vector<LCSNode> &lcsMatrix)
 	{
@@ -188,13 +199,13 @@ private:
 			lcsMatrix[r + 1].dr = -1;
 		}
 
-
 		// Fill in the LCS matrix by dynamic programming
 		std::size_t i = sizeR + 2; // current position in matrix (i == (c+1)*(sizeR+1) + (r+1))
 		for (std::size_t c = 0; c < sizeC; ++c) {
 			for (std::size_t r = 0; r < sizeR; ++r) {
 				lcsMatrix[i].comparisonResult =
 					mLineComparator.compare(*mCorrectLinesBuffer[c].get(), *mResultLinesBuffer[r].get());
+				lcsMatrix[i].totalTokens = mCorrectLinesBuffer[c]->size() + mResultLinesBuffer[r]->size();
 
 				// Compute score for each of three possibilities ...
 				score_t upperScore = lcsMatrix[i - sizeR - 1].score + mCorrectLinesBuffer[c]->size() + 1;
@@ -209,7 +220,6 @@ private:
 				} else if (leftScore <= upperScore) {
 					lcsMatrix[i].dr = -1;
 					lcsMatrix[i].score = leftScore;
-
 				} else {
 					lcsMatrix[i].dc = -1;
 					lcsMatrix[i].score = upperScore;
@@ -223,7 +233,13 @@ private:
 
 
 	/**
-	 * 
+	 * Reconstruct LCS from the matrix and derive the diff records.
+	 * \param lcsMatrix The dynamic programming matrix computed by computeLCSMatrix() method.
+	 * \param diff A list of diff records. Each diff record is a pair of indices to correct and result
+	 *             line buffers respectively. If one of the indices is set, the record indicates missing/superfluous
+	 * line. If both indices are set, the line match was establish, but there are some tokens mismatch on the lines.
+	 * \param lastMatchedCorrect Index of the last matched line in the correct buffer.
+	 * \param lastMatchedCorrect Index of the last matched line in the result buffer.
 	 */
 	void collectDiffRecords(const std::vector<LCSNode> &lcsMatrix,
 		std::vector<Diff> &diff,
@@ -240,7 +256,11 @@ private:
 
 			if (node.dc == 0 || node.dr == 0 ||
 				node.comparisonResult != 0) { // either one line is skipped or the the lines do not match completely
-				diff.push_back(Diff(node.dc ? c - 1 : Diff::NO_IDX, node.dr ? r - 1 : Diff::NO_IDX));
+				diff.push_back(Diff(node.dc ? c - 1 : Diff::NO_IDX,
+					node.dr ? r - 1 : Diff::NO_IDX,
+					node.dc != 0 && node.dr != 0 &&
+						node.comparisonResult * 3 <
+							node.totalTokens)); // we condsider lines matched if error rate is < 1/3
 			} else if (node.dc != 0 && node.dr != 0 && node.comparisonResult == 0) {
 				if (lastMatchedCorrect == Diff::NO_IDX) lastMatchedCorrect = c - 1;
 				if (lastMatchedResult == Diff::NO_IDX) lastMatchedResult = r - 1;
@@ -253,7 +273,7 @@ private:
 
 
 	/**
-	 *
+	 * Log a line from correct file wich was not paired with any results line.
 	 */
 	void logImpairedCorrectLine(const line_t &line) const
 	{
@@ -262,7 +282,7 @@ private:
 
 
 	/**
-	 *
+	 * Log a line from results file wich was not paired with any correct line.
 	 */
 	void logImpairedResultLine(const line_t &line) const
 	{
@@ -271,36 +291,45 @@ private:
 
 
 	/**
-	 *
+	 * Process the diff records produced by collectDiffRecords() and log them properly.
+	 * Finally, remove all processed lines from the line buffers.
+	 * \param diff The list of diff records to be logged.
+	 * \param lastMatchedCorrect Last matched line from the correct lines buffer.
+	 * \param lastMatchedResult Last matched line from the result lines buffer.
 	 */
 	void processAndLogDiffs(
 		const std::vector<Diff> &diff, std::size_t lastMatchedCorrect, std::size_t lastMatchedResult)
 
 	{
 		std::size_t i = diff.size();
-		std::size_t lastCorrect = Diff::NO_IDX;
-		std::size_t lastResult = Diff::NO_IDX;
+		std::size_t lastCorrect = Diff::NO_IDX; // last encountered line idx from the correct buffer
+		std::size_t lastResult = Diff::NO_IDX; // last encountered line idx from the results buffer
 		while (i > 0) {
 			--i;
-			if (diff[i].correct != Diff::NO_IDX && diff[i].result != Diff::NO_IDX) {
+			if (diff[i].match) {
 				// Lines are matched but not entirely the same, re-check them and print out the differences...
 				mLineComparator.compareAndLog(
 					*mCorrectLinesBuffer[diff[i].correct].get(), *mResultLinesBuffer[diff[i].result].get());
 				lastCorrect = diff[i].correct;
 				lastResult = diff[i].result;
-			} else if (diff[i].correct != Diff::NO_IDX) {
-				// Correct line was skipped...
-				logImpairedCorrectLine(*mCorrectLinesBuffer[diff[i].correct].get());
-				lastCorrect = diff[i].correct;
 			} else {
-				// Result line was skipped...
-				logImpairedResultLine(*mResultLinesBuffer[diff[i].result].get());
-				lastResult = diff[i].result;
+				if (diff[i].correct != Diff::NO_IDX) {
+					// Correct line was skipped...
+					logImpairedCorrectLine(*mCorrectLinesBuffer[diff[i].correct].get());
+					lastCorrect = diff[i].correct;
+				}
+				if (diff[i].result != Diff::NO_IDX) {
+					// Result line was skipped...
+					logImpairedResultLine(*mResultLinesBuffer[diff[i].result].get());
+					lastResult = diff[i].result;
+				}
 			}
+
 			if (diff[i].correct == mCorrectLinesBuffer.size() - 1 || diff[i].result == mResultLinesBuffer.size() - 1)
-				break;
+				break; // at least one of the buffers were depleated
 		}
 
+		// Make sure we have the indices of the last processed lines correct.
 		if (lastMatchedCorrect != Diff::NO_IDX) {
 			lastCorrect =
 				(lastCorrect != Diff::NO_IDX) ? std::max(lastCorrect, lastMatchedCorrect) : lastMatchedCorrect;
@@ -310,6 +339,7 @@ private:
 			lastResult = (lastResult != Diff::NO_IDX) ? std::max(lastResult, lastMatchedResult) : lastMatchedResult;
 		}
 
+		// Remove processed lines from the line buffers.
 		if (lastCorrect != Diff::NO_IDX) {
 			mCorrectLinesBuffer.erase(mCorrectLinesBuffer.begin(), mCorrectLinesBuffer.begin() + lastCorrect + 1);
 		}
@@ -320,7 +350,8 @@ private:
 
 
 	/**
-	 *
+	 * Log any trailing lines from the correct file which were not paired with result file lines.
+	 * \return True if any lines were logged (i.e., the files do not match).
 	 */
 	bool logImpairedCorrectTrailing()
 	{
@@ -338,7 +369,8 @@ private:
 
 
 	/**
-	 *
+	 * Log any trailing lines from the results file which were not paired with correct file lines.
+	 * \return True if any lines were logged (i.e., the files do not match).
 	 */
 	bool logImpairedResultTrailing()
 	{
@@ -356,7 +388,8 @@ private:
 
 
 	/**
-	 *
+	 * Compare both files under the assumptions that the line ordering has to be preserved.
+	 * \return True if both files match, false if errors were found.
 	 */
 	bool compareOrdered()
 	{
@@ -369,36 +402,45 @@ private:
 			while (!bpp::log().isFull(bpp::LogSeverity::ERROR)) {
 				std::vector<LCSNode> lcsMatrix;
 				std::vector<Diff> diff;
+
+				// First, we load something to compare.
 				fillBuffers();
 
-				// If one of the buffers is empty, wrap it up ...
-				if ((mCorrectReader.eof() && mCorrectLinesBuffer.empty()) || (mResultReader.eof() && mResultLinesBuffer.empty())) {
+				// If one of the buffers is empty, wrap it up and terminate...
+				if ((mCorrectReader.eof() && mCorrectLinesBuffer.empty()) ||
+					(mResultReader.eof() && mResultLinesBuffer.empty())) {
 					logImpairedCorrectTrailing();
 					logImpairedResultTrailing();
 					break;
 				}
 
+				// Prepare dynamic-programming matrix from which we reconstruct LCS
 				computeLCSMatrix(lcsMatrix);
 
+				// Reconstruct LCS, derive diff records from it, and log the diffs.
 				std::size_t lastMatchedCorrect = Diff::NO_IDX;
 				std::size_t lastMatchedResult = Diff::NO_IDX;
 				collectDiffRecords(lcsMatrix, diff, lastMatchedCorrect, lastMatchedResult);
 				processAndLogDiffs(diff, lastMatchedCorrect, lastMatchedResult);
 
+				// Are we done?
 				if (mCorrectReader.eof() && mCorrectLinesBuffer.empty() && mResultReader.eof() &&
 					mResultLinesBuffer.empty())
 					break;
 			}
 
+			// If we get here, at least one line was in mismatch...
 			return false;
 		} else {
-			return !logImpairedCorrectTrailing() && !logImpairedResultTrailing();			
+			// All lines were matched correctly, lets check if there is something left in any of the the files ...
+			return !logImpairedCorrectTrailing() && !logImpairedResultTrailing();
 		}
 	}
 
 
 	/**
-	 *
+	 * Compare both files without any regards to line ordering.
+	 * \return True if both files match, false if errors were found.
 	 */
 	bool compareUnordered()
 	{
