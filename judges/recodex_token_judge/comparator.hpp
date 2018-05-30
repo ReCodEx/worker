@@ -219,20 +219,10 @@ private:
 	 * \param value The value to be logged.
 	 * \param diff The difference (how many times the token was recorded or expected).
 	 *        If lower than zero, token was missing, otherwise the token is supefluous.
-	 * \param line The index of the line where the error occured.
 	 * \param quote Whether the token value should be quoted (strings are quoted, ints and floats are not).
 	 */
-	template <typename T> void logUnorderedError(const T &value, int diff, offset_t line, bool quote) const
+	template <typename T> void logUnorderedError(const T &value, int diff, bool quote) const
 	{
-		static offset_t lastLineErrorLogged = 0;
-
-		if (lastLineErrorLogged != line) {
-			bpp::log().error() << line << ": ";
-			lastLineErrorLogged = line;
-		} else {
-			bpp::log().error() << "\t";
-		}
-
 		if (diff < 0) {
 			bpp::log().error() << "unexpected " << (quote ? "'" : "") << value << (quote ? "'" : "");
 		} else {
@@ -242,7 +232,6 @@ private:
 		if (std::abs(diff) > 1) {
 			bpp::log().warning() << " (" << std::abs(diff) << "x)";
 		}
-		bpp::log().error() << "\n";
 	}
 
 
@@ -251,20 +240,132 @@ private:
 	 * \tparam T Type of the token value.
 	 * \tparam LOGGING If false, the check is performed silently. Otherwise, the errors are logged using bpp::log().
 	 * \param mapValues The the map of values and their diffs to be checked.
+	 * \param errorCount Accumulator incremented every time an error is encountererd.
 	 * \param line The index of the line where the error occured.
 	 * \param quote Whether the token value should be quoted (strings are quoted, ints and floats are not).
 	 */
 	template <typename T, bool LOGGING>
-	result_t checkMapValues(const std::map<T, int> &mapValues, offset_t line, bool quote) const
+	void checkMapValues(const std::map<T, int> &mapValues, result_t &errorCount, offset_t line, bool quote) const
 	{
-		result_t errorCount = 0;
 		for (auto &&it : mapValues) {
+			if (LOGGING && it.second != 0) {
+				// Ensure correct prefix and separation of individual errors ...
+				if (errorCount == 0) {
+					bpp::log().error() << line << ": ";
+				} else {
+					bpp::log().error() << ", ";
+				}
+
+				// Log this error ...
+				logUnorderedError(it.first, it.second, quote);
+			}
 			errorCount += std::abs(it.second);
-			if (LOGGING) {
-				logUnorderedError(it.first, it.second, line, quote);
+		}
+	}
+
+
+	/**
+	 * Filter token map, remove empty (zero occurences) records.
+	 * \tparam T Type of the keys in the token map.
+	 * \param m A map to be filtered.
+	 */
+	template <typename T> static void mapRemoveEmpty(std::map<T, int> &m)
+	{
+		for (auto it = m.begin(); it != m.end(); ++it) {
+			if (it->second == 0) {
+				m.erase(it);
 			}
 		}
-		return errorCount;
+	}
+
+
+	/**
+	 * Try convert double precision flost to integral type if it is possible without losses.
+	 * \param x Double to be converted.
+	 * \param res Reference where the result will be stored in case of successful conversion.
+	 * \return True if the float represents an integer which will fit given type T, false otherwise.
+	 */
+	template <typename T> static bool tryFloat2Int(double x, T &res)
+	{
+		if (std::floor(x) != x) return false;
+		if ((double) std::numeric_limits<T>::max() < x || (double) std::numeric_limits<T>::min() > x) return false;
+
+		res = (T) x;
+		return true;
+	}
+
+
+	/**
+	 * Get the iterator to a record in double tokens, which is closest to given key (within float tolerance)
+	 * and which has count with the same sign as D.
+	 * \tparam D Sing of the count value, incidently identifying from which file the token is.
+	 * \param tokens Map of double tokens and their counts.
+	 * \param key Key being searched in the map.
+	 * \return Iterator into the double tokens (end iterator if no valid record is found).
+	 */
+	template <int D> std::map<double, int>::iterator findClosest(std::map<double, int> &tokens, double key) const
+	{
+		// Compute key range by given tolerance...
+		const double epsilon = mTokenComparator.floatTolerance();
+		double lower = key * (1 - epsilon) / (1 + epsilon);
+		double upper = key * (1 + epsilon) / (1 - epsilon);
+
+		// Find the best candidate closest to key...
+		auto it = tokens.upper_bound(lower);
+		auto bestIt = tokens.end();
+		while (it != tokens.end() && it->first <= upper) {
+			if (it->second != 0 && it->second / std::abs(it->second) == D) {
+				// The iterator points to a relevant value ...
+				if (bestIt == tokens.end() || std::abs(it->first - key) < std::abs(bestIt->first - key)) {
+					bestIt = it; // value closer to key was found
+				} else
+					break; // once the distance between it and key starts to grow, it will never be better
+			}
+			++it;
+		}
+		return bestIt;
+	}
+
+
+	/**
+	 * Fill token maps with values from a line.
+	 * \tparam D Increment/decrement (+1/-1) value which is added to counter for each token found.
+	 * \param line Parsed line being processed.
+	 * \param stringTokens Map with string tokens to be filled up.
+	 * \param intTokens Map with integer tokens to be filled up.
+	 * \param handleDoubles Lambda callback which handles double values (since they require more
+	 *                      attention and have to be handled differently for correst and result lines).
+	 */
+	template <int D, typename FNC>
+	void fillMaps(const line_t &line,
+		std::map<std::string, int> &stringTokens,
+		std::map<long long int, int> &intTokens,
+		const FNC &&handleDoubles) const
+	{
+		// Fill in the sets with the first line ...
+		for (offset_t i = 0; i < line.size(); ++i) {
+			std::string token = line.getTokenAsString(i);
+			if (mTokenComparator.numeric()) {
+				// Try to process the token as a number first ...
+				long int ival;
+				double dval;
+				if (try_get_int(token, ival)) {
+					intTokens[ival] += D;
+				} else if (try_get_double(token, dval)) {
+					if (tryFloat2Int(dval, ival)) { // check whether it is not integer after all ...
+						intTokens[ival] += D;
+					} else {
+						handleDoubles(dval);
+					}
+				} else {
+					// If everything fails, it is a string token ...
+					stringTokens[token] += D;
+				}
+			} else {
+				// Regular string tokens only.
+				stringTokens[token] += D;
+			}
+		}
 	}
 
 
@@ -277,50 +378,54 @@ private:
 	 */
 	template <bool LOGGING = false> result_t compareUnordered(const line_t &line1, const line_t &line2) const
 	{
+		// Token maps hold tokens represented by they type as keys and occurence counters as values.
 		std::map<std::string, int> stringTokens;
-		std::map<long int, int> intTokens;
+		std::map<long long int, int> intTokens;
 		std::map<double, int> doubleTokens;
 
-		// Fill in the sets with the first line ...
-		for (offset_t i = 0; line1.size(); ++i) {
-			std::string token = line1.getTokenAsString(i);
-			if (mTokenComparator.numeric()) {
-				long int ival;
-				double dval;
-				if (try_get_int(token, ival)) {
-					intTokens[ival]++;
-				} else if (try_get_double(token, dval)) {
-					doubleTokens[dval]++;
-				} else {
-					stringTokens[token]++;
-				}
+		// Fill and cross fill token maps ...
+		fillMaps<1>(line1, stringTokens, intTokens, [&](double dval) { doubleTokens[dval]++; });
+		fillMaps<-1>(line2, stringTokens, intTokens, [&](double dval) {
+			auto it = findClosest<1>(doubleTokens, dval);
+			if (it != doubleTokens.end()) {
+				it->second -= 1;
 			} else {
-				stringTokens[token]++;
+				doubleTokens[dval]--;
+			}
+		});
+
+		// If some tolerance is set, we need to crossmatch ints and doubles ...
+		if (mTokenComparator.floatTolerance() > 0.0 && !doubleTokens.empty() && !intTokens.empty()) {
+			// Remove zero occurences to optimize searches...
+			mapRemoveEmpty(doubleTokens);
+
+			for (auto &&iTok : intTokens) {
+				// Try to match this int with closest double within tolerance
+				while (iTok.second != 0) {
+					// direction (whether we look for result or correct records)
+					int D = -iTok.second / std::abs(iTok.second);
+
+					// Find closest double from appropriate file (1 = correct, -1 = result)
+					auto iterDbl = (D > 0) ? findClosest<1>(doubleTokens, (double) iTok.first) :
+											 findClosest<-1>(doubleTokens, (double) iTok.first);
+					if (iterDbl == doubleTokens.end()) break; // no matching double key was found
+
+					// Pair integer with double record (update their counts).
+					iTok.second += D;
+					iterDbl->second -= D;
+				}
 			}
 		}
 
-		// Compare the second line with assets stored in maps ...
-		for (offset_t i = 0; line2.size(); ++i) {
-			std::string token = line2.getTokenAsString(i);
-			if (mTokenComparator.numeric()) {
-				long int ival;
-				double dval;
-				if (try_get_int(token, ival)) {
-					intTokens[ival]--;
-				} else if (try_get_double(token, dval)) {
-					doubleTokens[dval]--;
-				} else {
-					stringTokens[token]--;
-				}
-			} else {
-				stringTokens[token]--;
-			}
-		}
-
-		result_t errorCount = checkMapValues<std::string, LOGGING>(stringTokens, line2.lineNumber(), true);
+		// Count errors and optionally log them ...
+		result_t errorCount = 0;
+		checkMapValues<std::string, LOGGING>(stringTokens, errorCount, line2.lineNumber(), true);
 		if (mTokenComparator.numeric()) {
-			errorCount += checkMapValues<long int, LOGGING>(intTokens, line2.lineNumber(), false);
-			errorCount += checkMapValues<double, LOGGING>(doubleTokens, line2.lineNumber(), false);
+			checkMapValues<long long int, LOGGING>(intTokens, errorCount, line2.lineNumber(), false);
+			checkMapValues<double, LOGGING>(doubleTokens, errorCount, line2.lineNumber(), false);
+		}
+		if (LOGGING && errorCount > 0) {
+			bpp::log().error() << "\n"; // all checkMapValues log errors on one line, so let's end it
 		}
 
 		return (result_t) errorCount;

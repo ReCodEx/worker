@@ -326,7 +326,7 @@ public:
 				// A regular token was encountered -- add it to the list.
 				offset_t start = mOffset;
 				skipToken();
-				line->mTokens.push_back(TokenRef(start, mOffset - start, mLineNumber, mOffset - mLineOffset + 1));
+				line->mTokens.push_back(TokenRef(start, mOffset - start, mLineNumber, start - mLineOffset + 1));
 				continue; // let's go read another token
 			} else if (!isCommentStart() && !eol()) {
 				throw bpp::RuntimeError("Something is wrong since this Reader state is deamed impossible.");
@@ -335,9 +335,14 @@ public:
 			// Here we are at the end of a line or start of a comment ...
 			bool comment = isCommentStart();
 			skipRestOfLine();
-			if (mIgnoreLineEnds) continue; // new lines are ignored, lets continue loading tokens
+			if (mIgnoreLineEnds) continue; // new lines are ignored, lets continue read tokens
 			if (!line->mTokens.empty() || (!mIgnoreEmptyLines && !comment))
 				break; // line is non-empty or we return empty lines
+			
+			// If we got here, an empty line or a comment line was read (which we skipped).
+			line->mLineNumber = mLineNumber;
+			line->mRawData = mData + mOffset;
+			startOffset = mOffset;
 		}
 
 		if (line->mTokens.empty() && mIgnoreEmptyLines) {

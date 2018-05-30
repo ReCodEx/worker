@@ -5,6 +5,7 @@ load bats-shared
 @test "allow comments" {
 	run $EXE_FILE --allow-comments $CORRECT_FILE $RESULT_FILE
 	[ "$status" -eq 0 ]
+	[ "${lines[0]}" -eq 1 ]
 }
 
 @test "allow comments (negative test)" {

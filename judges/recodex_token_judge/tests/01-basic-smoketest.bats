@@ -12,4 +12,5 @@ load bats-shared
 @test "simple token comparisson" {
 	run $EXE_FILE $CORRECT_FILE $RESULT_FILE
 	[ "$status" -eq 0 ]
+	[ "${lines[0]}" -eq 1 ]
 }

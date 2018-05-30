@@ -11,7 +11,8 @@
 
 
 /**
- * Encapsulate an algorithm for comparing lines like a diff utility does.
+ * Encapsulate an algorithm for comparing all lines in given files.
+ * The judge gets a line comparator and two file readers.
  */
 template <class READER, class LINE_COMPARATOR> class Judge
 {

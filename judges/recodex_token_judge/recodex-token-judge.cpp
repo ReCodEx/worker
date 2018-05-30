@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
 			false,
 			0.0001,
 			0.0,
-			1.0));
+			0.9));
 
 		// Comparison strategies
 		args.registerArg(bpp::make_unique<bpp::ProgramArguments::ArgBool>(
