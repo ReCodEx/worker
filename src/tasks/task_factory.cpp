@@ -13,9 +13,7 @@ std::shared_ptr<task_base> task_factory::create_internal_task(size_t id, std::sh
 {
 	std::shared_ptr<task_base> task;
 
-	if (task_meta == nullptr) {
-		return std::make_shared<root_task>(id);
-	}
+	if (task_meta == nullptr) { return std::make_shared<root_task>(id); }
 
 	if (task_meta->binary == "cp") {
 		task = std::make_shared<cp_task>(id, task_meta);

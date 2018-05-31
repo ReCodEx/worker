@@ -14,6 +14,6 @@ namespace helpers
 		oss << a;
 		format(oss, args...);
 	}
-}
+} // namespace helpers
 
 #endif // RECODEX_WORKER_HELPERS_FORMAT_H

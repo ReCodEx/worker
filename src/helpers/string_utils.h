@@ -18,7 +18,7 @@ namespace helpers
 	 * @param text
 	 */
 	void filter_non_printable_chars(std::string &text);
-}
+} // namespace helpers
 
 
 #endif // RECODEX_WORKER_HELPERS_CONFIG_H

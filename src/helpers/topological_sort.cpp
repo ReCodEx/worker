@@ -19,18 +19,14 @@ void helpers::topological_sort(std::shared_ptr<task_base> root, std::vector<std:
 		search_stack.pop_back();
 
 		// if visited, continue
-		if (visited.find(current->get_task_id()) != visited.end()) {
-			continue;
-		}
+		if (visited.find(current->get_task_id()) != visited.end()) { continue; }
 
 		// not visited, insert into queue
 		prior_queue.push(current);
 		visited.insert(current->get_task_id());
 
 		// go through children
-		for (auto &child : current->get_children()) {
-			search_stack.push_back(child);
-		}
+		for (auto &child : current->get_children()) { search_stack.push_back(child); }
 	}
 
 	// fill search stack from previously created priority queue
@@ -56,9 +52,7 @@ void helpers::topological_sort(std::shared_ptr<task_base> root, std::vector<std:
 
 			// not visited yet, make new priority queue of parents and fill it into stack
 			priority_queue_type task_queue;
-			for (auto &parent : current->get_parents()) {
-				task_queue.push(parent.lock());
-			}
+			for (auto &parent : current->get_parents()) { task_queue.push(parent.lock()); }
 			while (!task_queue.empty()) {
 				search_stack.push_back(task_queue.top());
 				task_queue.pop();

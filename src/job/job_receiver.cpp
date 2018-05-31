@@ -11,9 +11,7 @@ job_receiver::job_receiver(std::shared_ptr<zmq::context_t> context,
 	std::shared_ptr<spdlog::logger> logger)
 	: socket_(*context, ZMQ_PAIR), evaluator_(evaluator), logger_(logger)
 {
-	if (logger_ == nullptr) {
-		logger_ = helpers::create_null_logger();
-	}
+	if (logger_ == nullptr) { logger_ = helpers::create_null_logger(); }
 
 	// init depandent command structure
 	job_client_context dependent_context = {evaluator_, socket_};
@@ -34,17 +32,13 @@ void job_receiver::start_receiving()
 			std::vector<std::string> message;
 			bool terminate;
 			if (!helpers::recv_from_socket(socket_, message, &terminate)) {
-				if (terminate) {
-					break;
-				}
+				if (terminate) { break; }
 				logger_->warn("Job-receiver: failed to receive message. Skipping...");
 				continue;
 			}
 
 			// Invoke command callback
-			if (!message.empty()) {
-				commands_->call_function(message[0], message);
-			}
+			if (!message.empty()) { commands_->call_function(message[0], message); }
 		} catch (std::exception &e) {
 			logger_->error("Job-receiver: unexpected error occured: {}", e.what());
 		}

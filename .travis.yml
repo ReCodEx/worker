@@ -3,7 +3,10 @@ dist: trusty
 language: cpp
 
 before_install:
+  # Install bats testing suite
+  - sudo add-apt-repository ppa:duggan/bats --yes
   - sudo apt-get update -qq
+  - sudo apt-get install -qq bats  
   # Install ZeroMQ
   - sudo apt-get install -y libzmq3-dev libzmq3
   # Install Boost
@@ -32,6 +35,8 @@ script:
   - cmake ..
   - make
   - ctest -E tool_ --output-on-failure
+  - cd ./judges/recodex_token_judge
+  - bats ../../../judges/recodex_token_judge/tests
 
 after_success:
   - ctest -R tool_ --output-on-failure || true

@@ -492,9 +492,7 @@ TEST(topological_sort_test, top_sort_cycle_2)
 
 	// sort itself
 	helpers::topological_sort(A, result);
-	for (auto &i : result) {
-		std::cout << i->get_task_id() << std::endl;
-	}
+	for (auto &i : result) { std::cout << i->get_task_id() << std::endl; }
 	// and check it
 	ASSERT_EQ(result, expected_result);
 }

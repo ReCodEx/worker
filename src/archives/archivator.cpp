@@ -43,9 +43,7 @@ void archivator::compress(const std::string &dir, const std::string &destination
 	}
 
 	a = archive_write_new();
-	if (a == NULL) {
-		throw archive_exception("Cannot create destination archive.");
-	}
+	if (a == NULL) { throw archive_exception("Cannot create destination archive."); }
 	if (archive_write_set_format_zip(a) != ARCHIVE_OK) {
 		throw archive_exception("Cannot set ZIP format on destination archive.");
 	}
@@ -63,9 +61,7 @@ void archivator::compress(const std::string &dir, const std::string &destination
 		archive_entry_set_perm(entry, 0644);
 
 		r = archive_write_header(a, entry);
-		if (r < ARCHIVE_OK) {
-			throw archive_exception(archive_error_string(a));
-		}
+		if (r < ARCHIVE_OK) { throw archive_exception(archive_error_string(a)); }
 
 		std::ifstream ifs((file.first).string(), std::ios::in | std::ios::binary);
 		if (ifs.is_open()) {
@@ -83,9 +79,7 @@ void archivator::compress(const std::string &dir, const std::string &destination
 				}
 
 				r = archive_write_data(a, buff, static_cast<size_t>(ifs.gcount()));
-				if (r < ARCHIVE_OK) {
-					throw archive_exception(archive_error_string(a));
-				}
+				if (r < ARCHIVE_OK) { throw archive_exception(archive_error_string(a)); }
 			}
 		} else {
 			throw archive_exception("Cannot open file " + (file.first).string() + " for reading.");
@@ -119,9 +113,7 @@ void archivator::decompress(const std::string &filename, const std::string &dest
 	flags |= ARCHIVE_EXTRACT_SECURE_NODOTDOT;
 
 	a = archive_read_new();
-	if (a == NULL) {
-		throw archive_exception("Cannot create source archive.");
-	}
+	if (a == NULL) { throw archive_exception("Cannot create source archive."); }
 	if (archive_read_support_format_all(a) != ARCHIVE_OK) {
 		throw archive_exception("Cannot set formats for source archive.");
 	}
@@ -129,9 +121,7 @@ void archivator::decompress(const std::string &filename, const std::string &dest
 		throw archive_exception("Cannot set compression methods for source archive.");
 	}
 	ext = archive_write_disk_new();
-	if (ext == NULL) {
-		throw archive_exception("Cannot allocate archive entry.");
-	}
+	if (ext == NULL) { throw archive_exception("Cannot allocate archive entry."); }
 	if (archive_write_disk_set_options(ext, flags) != ARCHIVE_OK) {
 		throw archive_exception("Cannot set options for writing to disk.");
 	}
@@ -140,18 +130,12 @@ void archivator::decompress(const std::string &filename, const std::string &dest
 	}
 
 	r = archive_read_open_filename(a, filename.c_str(), 10240);
-	if (r < ARCHIVE_OK) {
-		throw archive_exception("Cannot open source archive.");
-	}
+	if (r < ARCHIVE_OK) { throw archive_exception("Cannot open source archive."); }
 
 	while (true) {
 		r = archive_read_next_header(a, &entry);
-		if (r == ARCHIVE_EOF) {
-			break;
-		}
-		if (r < ARCHIVE_OK) {
-			throw archive_exception(archive_error_string(a));
-		}
+		if (r == ARCHIVE_EOF) { break; }
+		if (r < ARCHIVE_OK) { throw archive_exception(archive_error_string(a)); }
 
 		const char *current_file = archive_entry_pathname(entry);
 		const std::string full_path = (fs::path(destination) / current_file).string();
@@ -166,18 +150,12 @@ void archivator::decompress(const std::string &filename, const std::string &dest
 		}
 
 		r = archive_write_header(ext, entry);
-		if (r < ARCHIVE_OK) {
-			throw archive_exception(archive_error_string(ext));
-		}
+		if (r < ARCHIVE_OK) { throw archive_exception(archive_error_string(ext)); }
 
-		if (archive_entry_size(entry) > 0) {
-			copy_data(a, ext);
-		}
+		if (archive_entry_size(entry) > 0) { copy_data(a, ext); }
 
 		r = archive_write_finish_entry(ext);
-		if (r < ARCHIVE_OK) {
-			throw archive_exception(archive_error_string(ext));
-		}
+		if (r < ARCHIVE_OK) { throw archive_exception(archive_error_string(ext)); }
 	}
 
 	archive_read_close(a);
@@ -196,15 +174,9 @@ void archivator::copy_data(archive *ar, archive *aw)
 
 	while (true) {
 		r = archive_read_data_block(ar, &buff, &size, &offset);
-		if (r == ARCHIVE_EOF) {
-			break;
-		}
-		if (r < ARCHIVE_OK) {
-			throw archive_exception(archive_error_string(ar));
-		}
+		if (r == ARCHIVE_EOF) { break; }
+		if (r < ARCHIVE_OK) { throw archive_exception(archive_error_string(ar)); }
 		r = archive_write_data_block(aw, buff, size, offset);
-		if (r < ARCHIVE_OK) {
-			throw archive_exception(archive_error_string(aw));
-		}
+		if (r < ARCHIVE_OK) { throw archive_exception(archive_error_string(aw)); }
 	}
 }

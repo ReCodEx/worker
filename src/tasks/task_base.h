@@ -184,9 +184,7 @@ protected:
 template <typename T>
 T read_task_arg(const std::vector<std::string> &args, const size_t index, const T &default_value = T())
 {
-	if (index >= args.size()) {
-		return default_value;
-	}
+	if (index >= args.size()) { return default_value; }
 
 	T value;
 	std::stringstream ss(args.at(index));

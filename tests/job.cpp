@@ -497,9 +497,7 @@ TEST(job_test, correctly_built_queue)
 	auto factory = std::make_shared<mock_task_factory>();
 	std::vector<std::shared_ptr<mock_task>> mock_tasks;
 	auto empty_task = std::make_shared<mock_task>();
-	for (int i = 1; i < 8; i++) {
-		mock_tasks.push_back(std::make_shared<mock_task>(i, job_meta->tasks[i - 1]));
-	}
+	for (int i = 1; i < 8; i++) { mock_tasks.push_back(std::make_shared<mock_task>(i, job_meta->tasks[i - 1])); }
 	{
 		InSequence s;
 		// expect root task to be created

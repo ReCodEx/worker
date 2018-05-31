@@ -85,9 +85,7 @@ void worker_core::parse_params()
 		force_exit();
 	}
 
-	if (vm.count("config")) {
-		config_filename_ = vm["config"].as<std::string>();
-	}
+	if (vm.count("config")) { config_filename_ = vm["config"].as<std::string>(); }
 
 	return;
 }
@@ -111,9 +109,7 @@ void worker_core::force_exit(std::string msg)
 {
 	// write to log
 	if (msg != "") {
-		if (logger_ != nullptr) {
-			logger_->critical(msg);
-		}
+		if (logger_ != nullptr) { logger_->critical(msg); }
 		std::cerr << msg << std::endl;
 	}
 
@@ -128,9 +124,7 @@ void worker_core::log_init()
 	// Try to create target directory for logs
 	auto path = fs::path(log_conf.log_path);
 	try {
-		if (!fs::is_directory(path)) {
-			fs::create_directories(path);
-		}
+		if (!fs::is_directory(path)) { fs::create_directories(path); }
 	} catch (fs::filesystem_error &e) {
 		std::cerr << "Logger: " << e.what() << std::endl;
 		throw;

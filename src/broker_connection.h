@@ -51,14 +51,10 @@ private:
 		const worker_config::header_map_t &headers = config_->get_headers();
 		std::vector<std::string> msg = {"init", config_->get_hwgroup()};
 
-		for (auto &it : headers) {
-			msg.push_back(it.first + "=" + it.second);
-		}
+		for (auto &it : headers) { msg.push_back(it.first + "=" + it.second); }
 		msg.push_back("");
 		msg.push_back("description=" + config_->get_worker_description());
-		if (!current_job_.empty()) {
-			msg.push_back("current_job=" + current_job_);
-		}
+		if (!current_job_.empty()) { msg.push_back("current_job=" + current_job_); }
 
 		socket_->send_broker(msg);
 	}
@@ -73,9 +69,7 @@ private:
 		std::this_thread::sleep_for(reconnect_delay);
 
 		std::chrono::seconds max_reconnect_delay(32);
-		if (reconnect_delay < max_reconnect_delay) {
-			reconnect_delay *= 2;
-		}
+		if (reconnect_delay < max_reconnect_delay) { reconnect_delay *= 2; }
 	}
 
 	/**
@@ -97,9 +91,7 @@ public:
 		std::shared_ptr<spdlog::logger> logger = nullptr)
 		: config_(config), socket_(socket), logger_(logger), current_job_("")
 	{
-		if (logger_ == nullptr) {
-			logger_ = helpers::create_null_logger();
-		}
+		if (logger_ == nullptr) { logger_ = helpers::create_null_logger(); }
 
 		// prepare dependent context for commands (in this class)
 		broker_connection_context<proxy> dependent_context = {socket_, config_, current_job_};
@@ -160,9 +152,7 @@ public:
 					poll_limit -= poll_duration;
 				}
 
-				if (terminate) {
-					break;
-				}
+				if (terminate) { break; }
 
 				if (result.test(message_origin::BROKER)) {
 					broker_liveness = config_->get_max_broker_liveness();
@@ -170,13 +160,9 @@ public:
 
 					socket_->recv_broker(msg, &terminate);
 
-					if (terminate) {
-						break;
-					}
+					if (terminate) { break; }
 
-					if (msg.size() >= 2 && msg.at(0) == "eval") {
-						current_job_ = msg.at(1);
-					}
+					if (msg.size() >= 2 && msg.at(0) == "eval") { current_job_ = msg.at(1); }
 
 					broker_cmds_->call_function(msg.at(0), msg);
 				}
@@ -184,13 +170,9 @@ public:
 				if (result.test(message_origin::JOBS)) {
 					socket_->recv_jobs(msg, &terminate);
 
-					if (terminate) {
-						break;
-					}
+					if (terminate) { break; }
 
-					if (msg.size() >= 1 && msg.at(0) == "done") {
-						current_job_ = "";
-					}
+					if (msg.size() >= 1 && msg.at(0) == "done") { current_job_ = ""; }
 
 					jobs_server_cmds_->call_function(msg.at(0), msg);
 				}
@@ -198,9 +180,7 @@ public:
 				if (result.test(message_origin::PROGRESS)) {
 					socket_->recv_progress(msg, &terminate);
 
-					if (terminate) {
-						break;
-					}
+					if (terminate) { break; }
 
 					socket_->send_broker(msg);
 				}

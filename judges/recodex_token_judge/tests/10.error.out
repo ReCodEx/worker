@@ -1,0 +1,7 @@
+0
+-1: first row 42
++2: first
+3: unexpected 'row'
++4: 42 pzr
+-4: kzr pzr # this is the end
++5: kzr

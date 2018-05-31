@@ -35,7 +35,7 @@ namespace
 		} catch (fs::filesystem_error &) {
 		}
 	}
-}
+} // namespace
 
 isolate_sandbox::isolate_sandbox(std::shared_ptr<sandbox_config> sandbox_config,
 	sandbox_limits limits,
@@ -46,17 +46,11 @@ isolate_sandbox::isolate_sandbox(std::shared_ptr<sandbox_config> sandbox_config,
 	: sandbox_config_(sandbox_config), limits_(limits), logger_(logger), id_(id), isolate_binary_("isolate"),
 	  data_dir_(data_dir)
 {
-	if (logger_ == nullptr) {
-		logger_ = helpers::create_null_logger();
-	}
+	if (logger_ == nullptr) { logger_ = helpers::create_null_logger(); }
 
-	if (sandbox_config_ == nullptr) {
-		log_and_throw(logger_, "No sandbox configuration provided.");
-	}
+	if (sandbox_config_ == nullptr) { log_and_throw(logger_, "No sandbox configuration provided."); }
 
-	if (data_dir_ == "") {
-		logger_->info("Empty data directory for moving to sandbox.");
-	}
+	if (data_dir_ == "") { logger_->info("Empty data directory for moving to sandbox."); }
 
 	// Set backup limit (for killing isolate if it hasn't finished yet)
 	max_timeout_ = limits_.wall_time > limits_.cpu_time ? limits_.wall_time : limits_.cpu_time;
@@ -93,17 +87,13 @@ isolate_sandbox::~isolate_sandbox()
 sandbox_results isolate_sandbox::run(const std::string &binary, const std::vector<std::string> &arguments)
 {
 	// move data to isolate directory
-	if (data_dir_ != "") {
-		move_or_throw(logger_, data_dir_, sandboxed_dir_);
-	}
+	if (data_dir_ != "") { move_or_throw(logger_, data_dir_, sandboxed_dir_); }
 
 	// run isolate
 	isolate_run(binary, arguments);
 
 	// move data from isolate directory back to data directory
-	if (data_dir_ != "") {
-		move_or_throw(logger_, sandboxed_dir_, data_dir_);
-	}
+	if (data_dir_ != "") { move_or_throw(logger_, sandboxed_dir_, data_dir_); }
 
 	return process_meta_file();
 }
@@ -116,9 +106,7 @@ void isolate_sandbox::isolate_init()
 	logger_->debug("Initializing isolate...");
 
 	// Create unnamend pipe
-	if (pipe(fd) == -1) {
-		log_and_throw(logger_, "Cannot create pipe: ", strerror(errno));
-	}
+	if (pipe(fd) == -1) { log_and_throw(logger_, "Cannot create pipe: ", strerror(errno)); }
 
 	childpid = fork();
 
@@ -133,15 +121,11 @@ void isolate_sandbox::isolate_init()
 		char buf[256];
 		int ret;
 		while ((ret = read(fd[0], (void *) buf, 256)) > 0) {
-			if (buf[ret - 1] == '\n') {
-				buf[ret - 1] = '\0';
-			}
+			if (buf[ret - 1] == '\n') { buf[ret - 1] = '\0'; }
 			sandboxed_dir_ += std::string(buf);
 		}
 		sandboxed_dir_ += "/box";
-		if (ret == -1) {
-			log_and_throw(logger_, "Read from pipe error.");
-		}
+		if (ret == -1) { log_and_throw(logger_, "Read from pipe error."); }
 
 		int status;
 		waitpid(childpid, &status, 0);
@@ -165,9 +149,7 @@ void isolate_sandbox::isolate_init_child(int fd_0, int fd_1)
 	// Redirect stderr to /dev/null file
 	int devnull;
 	devnull = open("/dev/null", O_WRONLY);
-	if (devnull == -1) {
-		log_and_throw(logger_, "Cannot open /dev/null file for writing.");
-	}
+	if (devnull == -1) { log_and_throw(logger_, "Cannot open /dev/null file for writing."); }
 	dup2(devnull, 2);
 
 	// Exec isolate init command
@@ -201,9 +183,7 @@ void isolate_sandbox::isolate_cleanup()
 		// Redirect stderr to /dev/null file
 		int devnull;
 		devnull = open("/dev/null", O_WRONLY);
-		if (devnull == -1) {
-			log_and_throw(logger_, "Cannot open /dev/null file for writing.");
-		}
+		if (devnull == -1) { log_and_throw(logger_, "Cannot open /dev/null file for writing."); }
 		dup2(devnull, 2);
 
 		// Exec isolate cleanup command
@@ -249,9 +229,7 @@ void isolate_sandbox::isolate_run(const std::string &binary, const std::vector<s
 		// Redirect stderr and stdout to /dev/null file
 		int devnull;
 		devnull = open("/dev/null", O_WRONLY);
-		if (devnull == -1) {
-			log_and_throw(logger_, "Cannot open /dev/null file for writing.");
-		}
+		if (devnull == -1) { log_and_throw(logger_, "Cannot open /dev/null file for writing."); }
 		dup2(devnull, 0); // Don't allow process inside isolate to read from current standard input
 		dup2(devnull, 1);
 		dup2(devnull, 2);
@@ -283,9 +261,7 @@ void isolate_sandbox::isolate_run(const std::string &binary, const std::vector<s
 
 				int remaining = max_timeout_;
 				// Sleep can be interrupted by signal, so make sure to sleep whole time
-				while (remaining > 0) {
-					remaining = sleep(remaining);
-				}
+				while (remaining > 0) { remaining = sleep(remaining); }
 				kill(childpid, SIGKILL);
 			}
 			break;
@@ -330,27 +306,15 @@ char **isolate_sandbox::isolate_run_args(const std::string &binary, const std::v
 	vargs.push_back("--time=" + std::to_string(limits_.cpu_time));
 	vargs.push_back("--wall-time=" + std::to_string(limits_.wall_time));
 	vargs.push_back("--extra-time=" + std::to_string(limits_.extra_time));
-	if (limits_.stack_size != 0) {
-		vargs.push_back("--stack=" + std::to_string(limits_.stack_size));
-	}
-	if (limits_.files_size != 0) {
-		vargs.push_back("--fsize=" + std::to_string(limits_.files_size));
-	}
+	if (limits_.stack_size != 0) { vargs.push_back("--stack=" + std::to_string(limits_.stack_size)); }
+	if (limits_.files_size != 0) { vargs.push_back("--fsize=" + std::to_string(limits_.files_size)); }
 	// Calculate number of required blocks - total number of bytes divided by block size (defined in sys/mount.h)
 	auto disk_size_blocks = (limits_.disk_size * 1024) / BLOCK_SIZE;
 	vargs.push_back("--quota=" + std::to_string(disk_size_blocks) + "," + std::to_string(limits_.disk_files));
-	if (!sandbox_config_->std_input.empty()) {
-		vargs.push_back("--stdin=" + sandbox_config_->std_input);
-	}
-	if (!sandbox_config_->std_output.empty()) {
-		vargs.push_back("--stdout=" + sandbox_config_->std_output);
-	}
-	if (!sandbox_config_->std_error.empty()) {
-		vargs.push_back("--stderr=" + sandbox_config_->std_error);
-	}
-	if (sandbox_config_->stderr_to_stdout) {
-		vargs.push_back("--stderr-to-stdout");
-	}
+	if (!sandbox_config_->std_input.empty()) { vargs.push_back("--stdin=" + sandbox_config_->std_input); }
+	if (!sandbox_config_->std_output.empty()) { vargs.push_back("--stdout=" + sandbox_config_->std_output); }
+	if (!sandbox_config_->std_error.empty()) { vargs.push_back("--stderr=" + sandbox_config_->std_error); }
+	if (sandbox_config_->stderr_to_stdout) { vargs.push_back("--stderr-to-stdout"); }
 	if (!sandbox_config_->chdir.empty()) {
 		// path is relative to /box inside sandbox ... we want path to be relative to root (/)
 		vargs.push_back("--chdir=" + (fs::path("..") / sandbox_config_->chdir).string());
@@ -360,30 +324,16 @@ char **isolate_sandbox::isolate_run_args(const std::string &binary, const std::v
 	} else {
 		vargs.push_back("--processes=" + std::to_string(limits_.processes));
 	}
-	if (limits_.share_net) {
-		vargs.push_back("--share-net");
-	}
-	for (auto &i : limits_.environ_vars) {
-		vargs.push_back("--env=" + i.first + "=" + i.second);
-	}
+	if (limits_.share_net) { vargs.push_back("--share-net"); }
+	for (auto &i : limits_.environ_vars) { vargs.push_back("--env=" + i.first + "=" + i.second); }
 	for (auto &i : limits_.bound_dirs) {
 		std::string mode = "";
 		auto flags = std::get<2>(i);
-		if (flags & sandbox_limits::dir_perm::RW) {
-			mode += ":rw";
-		}
-		if (flags & sandbox_limits::dir_perm::NOEXEC) {
-			mode += ":noexec";
-		}
-		if (flags & sandbox_limits::dir_perm::FS) {
-			mode += ":fs";
-		}
-		if (flags & sandbox_limits::dir_perm::MAYBE) {
-			mode += ":maybe";
-		}
-		if (flags & sandbox_limits::dir_perm::DEV) {
-			mode += ":dev";
-		}
+		if (flags & sandbox_limits::dir_perm::RW) { mode += ":rw"; }
+		if (flags & sandbox_limits::dir_perm::NOEXEC) { mode += ":noexec"; }
+		if (flags & sandbox_limits::dir_perm::FS) { mode += ":fs"; }
+		if (flags & sandbox_limits::dir_perm::MAYBE) { mode += ":maybe"; }
+		if (flags & sandbox_limits::dir_perm::DEV) { mode += ":dev"; }
 		vargs.push_back(std::string("--dir=") + std::get<1>(i) + "=" + std::get<0>(i) + mode);
 	}
 	// Bind /etc/alternatives directory if exists
@@ -394,9 +344,7 @@ char **isolate_sandbox::isolate_run_args(const std::string &binary, const std::v
 	vargs.push_back("--run");
 	vargs.push_back("--");
 	vargs.push_back(binary);
-	for (auto &i : arguments) {
-		vargs.push_back(i);
-	}
+	for (auto &i : arguments) { vargs.push_back(i); }
 
 	// Convert string to char ** for execv call
 	char **c_args = new char *[vargs.size() + 1];

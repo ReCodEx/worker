@@ -65,9 +65,7 @@ std::shared_ptr<task_results> dump_dir_task::run()
 			placeholder.close();
 		}
 
-		if (results->status != task_status::OK) {
-			break;
-		}
+		if (results->status != task_status::OK) { break; }
 	}
 
 	return results;

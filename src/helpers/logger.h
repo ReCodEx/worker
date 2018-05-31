@@ -37,7 +37,7 @@ namespace helpers
 	 * @return difference
 	 */
 	int compare_log_levels(spdlog::level::level_enum first, spdlog::level::level_enum second);
-}
+} // namespace helpers
 
 
 #endif // RECODEX_WORKER_HELPERS_LOGGER_H

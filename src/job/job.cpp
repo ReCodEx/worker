@@ -117,9 +117,7 @@ void job::build_job()
 
 			auto sandbox = task_meta->sandbox;
 
-			if (sandbox->name.empty()) {
-				throw job_exception("Sandbox name cannot be empty");
-			}
+			if (sandbox->name.empty()) { throw job_exception("Sandbox name cannot be empty"); }
 
 			// first we have to get appropriate hwgroup limits
 			std::shared_ptr<sandbox_limits> limits;
@@ -173,9 +171,7 @@ void job::build_job()
 
 			task = factory_->create_internal_task(id++, task_meta);
 
-			if (task == nullptr) {
-				throw job_exception("Unknown internal task: " + task_meta->binary);
-			}
+			if (task == nullptr) { throw job_exception("Unknown internal task: " + task_meta->binary); }
 		}
 
 		// add newly created task to container ready for connect with other tasks
@@ -206,9 +202,7 @@ void job::build_job()
 
 void job::process_task_limits(std::shared_ptr<sandbox_limits> limits)
 {
-	if (limits == nullptr) {
-		throw job_exception("Internal error. Nullptr dereference in process_task_limits.");
-	}
+	if (limits == nullptr) { throw job_exception("Internal error. Nullptr dereference in process_task_limits."); }
 
 	auto worker_limits = worker_config_->get_limits();
 	std::string msg = " item is bigger than default worker value";
@@ -217,65 +211,47 @@ void job::process_task_limits(std::shared_ptr<sandbox_limits> limits)
 	if (limits->cpu_time == FLT_MAX) {
 		limits->cpu_time = worker_limits.cpu_time;
 	} else {
-		if (limits->cpu_time > worker_limits.cpu_time) {
-			throw job_exception("time" + msg);
-		}
+		if (limits->cpu_time > worker_limits.cpu_time) { throw job_exception("time" + msg); }
 	}
 	if (limits->wall_time == FLT_MAX) {
 		limits->wall_time = worker_limits.wall_time;
 	} else {
-		if (limits->wall_time > worker_limits.wall_time) {
-			throw job_exception("wall-time" + msg);
-		}
+		if (limits->wall_time > worker_limits.wall_time) { throw job_exception("wall-time" + msg); }
 	}
 	if (limits->extra_time == FLT_MAX) {
 		limits->extra_time = worker_limits.extra_time;
 	} else {
-		if (limits->extra_time > worker_limits.extra_time) {
-			throw job_exception("extra-time" + msg);
-		}
+		if (limits->extra_time > worker_limits.extra_time) { throw job_exception("extra-time" + msg); }
 	}
 	if (limits->stack_size == SIZE_MAX) {
 		limits->stack_size = worker_limits.stack_size;
 	} else {
-		if (limits->stack_size > worker_limits.stack_size) {
-			throw job_exception("stack-size" + msg);
-		}
+		if (limits->stack_size > worker_limits.stack_size) { throw job_exception("stack-size" + msg); }
 	}
 	if (limits->memory_usage == SIZE_MAX) {
 		limits->memory_usage = worker_limits.memory_usage;
 	} else {
-		if (limits->memory_usage > worker_limits.memory_usage) {
-			throw job_exception("memory" + msg);
-		}
+		if (limits->memory_usage > worker_limits.memory_usage) { throw job_exception("memory" + msg); }
 	}
 	if (limits->extra_memory == SIZE_MAX) {
 		limits->extra_memory = worker_limits.extra_memory;
 	} else {
-		if (limits->extra_memory > worker_limits.extra_memory) {
-			throw job_exception("extra-memory" + msg);
-		}
+		if (limits->extra_memory > worker_limits.extra_memory) { throw job_exception("extra-memory" + msg); }
 	}
 	if (limits->processes == SIZE_MAX) {
 		limits->processes = worker_limits.processes;
 	} else {
-		if (limits->processes > worker_limits.processes) {
-			throw job_exception("parallel" + msg);
-		}
+		if (limits->processes > worker_limits.processes) { throw job_exception("parallel" + msg); }
 	}
 	if (limits->disk_size == SIZE_MAX) {
 		limits->disk_size = worker_limits.disk_size;
 	} else {
-		if (limits->disk_size > worker_limits.disk_size) {
-			throw job_exception("disk-size" + msg);
-		}
+		if (limits->disk_size > worker_limits.disk_size) { throw job_exception("disk-size" + msg); }
 	}
 	if (limits->disk_files == SIZE_MAX) {
 		limits->disk_files = worker_limits.disk_files;
 	} else {
-		if (limits->disk_files > worker_limits.disk_files) {
-			throw job_exception("disk-files" + msg);
-		}
+		if (limits->disk_files > worker_limits.disk_files) { throw job_exception("disk-files" + msg); }
 	}
 
 	// union of bound directories and environs from worker configuration and job configuration
@@ -315,9 +291,7 @@ std::vector<std::pair<std::string, std::shared_ptr<task_results>>> job::run()
 	// simply run all tasks in given topological order
 	for (auto &task : task_queue_) {
 		// we don't want nullptr dereference
-		if (task == nullptr) {
-			continue;
-		}
+		if (task == nullptr) { continue; }
 
 		auto task_id = task->get_task_id();
 		if (task->is_executable()) {
@@ -416,9 +390,7 @@ void job::init_logger()
 
 void job::init_progress_callback()
 {
-	if (progress_callback_ == nullptr) {
-		progress_callback_ = std::make_shared<empty_progress_callback>();
-	}
+	if (progress_callback_ == nullptr) { progress_callback_ = std::make_shared<empty_progress_callback>(); }
 }
 
 void job::cleanup_job()
@@ -456,9 +428,7 @@ std::string job::parse_job_var(const std::string &src)
 	while ((start = res.find("${", start)) != std::string::npos) {
 		size_t end = res.find("}", start + 1);
 		size_t len = end - start - 2;
-		if (end == std::string::npos) {
-			throw job_exception("Not closed variable name: " + res.substr(start));
-		}
+		if (end == std::string::npos) { throw job_exception("Not closed variable name: " + res.substr(start)); }
 
 		if (job_variables_.find(res.substr(start + 2, len)) != job_variables_.end()) {
 			// we found variable and can replace it in string

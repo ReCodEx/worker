@@ -15,17 +15,11 @@ external_task::external_task(const create_params &data)
 	  sandbox_config_(data.task_meta->sandbox), limits_(data.limits), logger_(data.logger), temp_dir_(data.temp_dir),
 	  evaluation_dir_(data.source_path), sandbox_working_dir_(data.sandbox_working_path)
 {
-	if (worker_config_ == nullptr) {
-		throw task_exception("No worker configuration provided.");
-	}
+	if (worker_config_ == nullptr) { throw task_exception("No worker configuration provided."); }
 
-	if (limits_ == nullptr) {
-		throw task_exception("No limits provided.");
-	}
+	if (limits_ == nullptr) { throw task_exception("No limits provided."); }
 
-	if (sandbox_config_ == nullptr) {
-		throw task_exception("No sandbox configuration provided.");
-	}
+	if (sandbox_config_ == nullptr) { throw task_exception("No sandbox configuration provided."); }
 
 	if (!sandbox_config_->working_directory.empty()) {
 		if (!helpers::check_relative(sandbox_config_->working_directory)) {
@@ -47,14 +41,10 @@ void external_task::sandbox_check()
 	bool found = false;
 
 #ifndef _WIN32
-	if (task_meta_->sandbox->name == "isolate") {
-		found = true;
-	}
+	if (task_meta_->sandbox->name == "isolate") { found = true; }
 #endif
 
-	if (found == false) {
-		throw task_exception("Unknown sandbox type: " + task_meta_->sandbox->name);
-	}
+	if (found == false) { throw task_exception("Unknown sandbox type: " + task_meta_->sandbox->name); }
 }
 
 void external_task::sandbox_init()
@@ -154,12 +144,8 @@ void external_task::get_results_output(std::shared_ptr<task_results> result)
 
 	// delete produced files if requested
 	try {
-		if (remove_stdout_) {
-			fs::remove(stdout_file_path);
-		}
-		if (remove_stderr_) {
-			fs::remove(stderr_file_path);
-		}
+		if (remove_stdout_) { fs::remove(stdout_file_path); }
+		if (remove_stderr_) { fs::remove(stderr_file_path); }
 	} catch (fs::filesystem_error &e) {
 		logger_->warn("Temporary sandbox output files not cleaned properly: {}", e.what());
 	}
@@ -247,9 +233,7 @@ void external_task::make_binary_executable(std::string binary)
 
 		// determine if file has executable bits set
 		fs::file_status stat = status(binary_path);
-		if (stat.permissions() & (fs::perms::owner_exe | fs::perms::group_exe | fs::perms::others_exe)) {
-			return;
-		}
+		if (stat.permissions() & (fs::perms::owner_exe | fs::perms::group_exe | fs::perms::others_exe)) { return; }
 
 		fs::permissions(
 			binary_path, fs::perms::add_perms | fs::perms::owner_exe | fs::perms::group_exe | fs::others_exe);

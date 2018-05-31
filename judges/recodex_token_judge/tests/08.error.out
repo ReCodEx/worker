@@ -1,0 +1,3 @@
+0
+1: unexpected 'foo' (2x), missing 'spam'
+2: unexpected 'blob' (2x), missing 'goo' (2x)
