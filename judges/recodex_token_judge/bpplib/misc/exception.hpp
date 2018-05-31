@@ -14,112 +14,140 @@
 namespace bpp
 {
 
-/**
- * \brief Specific exception that behaves like a stream, so it can cummulate
- *		error messages more easily.
- */
-class StreamException : public std::exception
-{
-protected:
-	std::string mMessage;	///< Internal buffer where the message is kept.
-
-public:
-	StreamException() : std::exception() {}
-	StreamException(const char *msg) : std::exception(), mMessage(msg) {}
-	StreamException(const std::string &msg) : std::exception(), mMessage(msg) {}
-	virtual ~StreamException() throw() {}
-
-	virtual const char* what() const throw()
+	/**
+	 * \brief Specific exception that behaves like a stream, so it can cummulate
+	 *		error messages more easily.
+	 */
+	class StreamException : public std::exception
 	{
-		return mMessage.c_str();
-	}
+	protected:
+		std::string mMessage; ///< Internal buffer where the message is kept.
 
-	// Overloading << operator that uses stringstream to append data to mMessage.
-	template<typename T>
-	StreamException& operator<<(const T &data)
+	public:
+		StreamException() : std::exception()
+		{
+		}
+		StreamException(const char *msg) : std::exception(), mMessage(msg)
+		{
+		}
+		StreamException(const std::string &msg) : std::exception(), mMessage(msg)
+		{
+		}
+		virtual ~StreamException() throw()
+		{
+		}
+
+		virtual const char *what() const throw()
+		{
+			return mMessage.c_str();
+		}
+
+		// Overloading << operator that uses stringstream to append data to mMessage.
+		template <typename T> StreamException &operator<<(const T &data)
+		{
+			std::stringstream stream;
+			stream << mMessage << data;
+			mMessage = stream.str();
+			return *this;
+		}
+	};
+
+
+	/**
+	 * \brief A stream exception that is base for all runtime errors.
+	 */
+	class RuntimeError : public StreamException
 	{
-		std::stringstream stream;
-		stream << mMessage << data;
-		mMessage = stream.str();
-		return *this;
-	}
-};
+	public:
+		RuntimeError() : StreamException()
+		{
+		}
+		RuntimeError(const char *msg) : StreamException(msg)
+		{
+		}
+		RuntimeError(const std::string &msg) : StreamException(msg)
+		{
+		}
+		virtual ~RuntimeError() throw()
+		{
+		}
 
 
-/**
- * \brief A stream exception that is base for all runtime errors.
- */
-class RuntimeError : public StreamException
-{
-public:
-	RuntimeError() : StreamException() {}
-	RuntimeError(const char *msg) : StreamException(msg) {}
-	RuntimeError(const std::string &msg) : StreamException(msg) {}
-	virtual ~RuntimeError() throw() {}
+		// Overloading << operator that uses stringstream to append data to mMessage.
+		template <typename T> RuntimeError &operator<<(const T &data)
+		{
+			std::stringstream stream;
+			stream << mMessage << data;
+			mMessage = stream.str();
+			return *this;
+		}
+	};
 
 
-	// Overloading << operator that uses stringstream to append data to mMessage.
-	template<typename T>
-	RuntimeError& operator<<(const T &data)
+	/**
+	 * \brief A special type of runtime error representing error in logic of the
+	 *		application/algorithm/utility... (e.g., invokation of a method when
+	 *		the object is in indesirable state or an invalid configuration of
+	 *		an utility.
+	 */
+	class LogicError : public RuntimeError
 	{
-		std::stringstream stream;
-		stream << mMessage << data;
-		mMessage = stream.str();
-		return *this;
-	}
-};
+	public:
+		LogicError() : RuntimeError()
+		{
+		}
+		LogicError(const char *msg) : RuntimeError(msg)
+		{
+		}
+		LogicError(const std::string &msg) : RuntimeError(msg)
+		{
+		}
+		virtual ~LogicError() throw()
+		{
+		}
 
 
-/**
- * \brief A special type of runtime error representing error in logic of the
- *		application/algorithm/utility... (e.g., invokation of a method when
- *		the object is in indesirable state or an invalid configuration of
- *		an utility.
- */
-class LogicError : public RuntimeError
-{
-public:
-	LogicError() : RuntimeError() {}
-	LogicError(const char *msg) : RuntimeError(msg) {}
-	LogicError(const std::string &msg) : RuntimeError(msg) {}
-	virtual ~LogicError() throw() {}
+		// Overloading << operator that uses stringstream to append data to mMessage.
+		template <typename T> LogicError &operator<<(const T &data)
+		{
+			std::stringstream stream;
+			stream << mMessage << data;
+			mMessage = stream.str();
+			return *this;
+		}
+	};
 
 
-	// Overloading << operator that uses stringstream to append data to mMessage.
-	template<typename T>
-	LogicError& operator<<(const T &data)
+	/**
+	 * \brief Internal error that indicate missing implementation or virtual function override.
+	 */
+	class NotImplementedError : public RuntimeError
 	{
-		std::stringstream stream;
-		stream << mMessage << data;
-		mMessage = stream.str();
-		return *this;
-	}
-};
+	public:
+		NotImplementedError() : RuntimeError()
+		{
+		}
+		NotImplementedError(const char *msg) : RuntimeError(msg)
+		{
+		}
+		NotImplementedError(const std::string &msg) : RuntimeError(msg)
+		{
+		}
+		virtual ~NotImplementedError() throw()
+		{
+		}
 
 
-/**
-* \brief Internal error that indicate missing implementation or virtual function override.
-*/
-class NotImplementedError : public RuntimeError
-{
-public:
-	NotImplementedError() : RuntimeError() {}
-	NotImplementedError(const char *msg) : RuntimeError(msg) {}
-	NotImplementedError(const std::string &msg) : RuntimeError(msg) {}
-	virtual ~NotImplementedError() throw() {}
+		// Overloading << operator that uses stringstream to append data to mMessage.
+		template <typename T> NotImplementedError &operator<<(const T &data)
+		{
+			std::stringstream stream;
+			stream << mMessage << data;
+			mMessage = stream.str();
+			return *this;
+		}
+	};
 
 
-	// Overloading << operator that uses stringstream to append data to mMessage.
-	template<typename T>
-	NotImplementedError& operator<<(const T &data)
-	{
-		std::stringstream stream;
-		stream << mMessage << data;
-		mMessage = stream.str();
-		return *this;
-	}
-};
-
-
-}
+} // namespace bpp
 #endif

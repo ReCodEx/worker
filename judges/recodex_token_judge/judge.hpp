@@ -135,9 +135,7 @@ private:
 		const std::size_t MAX_CHARS = 10000; // amount of chars affect aggregated complexities of token comarisons
 
 		// Fill in the first correct line which already has been loaded.
-		if (mCorrectLine) {
-			mCorrectLinesBuffer.insert(mCorrectLinesBuffer.begin(), std::move(mCorrectLine));
-		}
+		if (mCorrectLine) { mCorrectLinesBuffer.insert(mCorrectLinesBuffer.begin(), std::move(mCorrectLine)); }
 
 		// Count stats of actual state of the correct lines buffer...
 		std::size_t tokens = 0, chars = 0;
@@ -155,9 +153,7 @@ private:
 		}
 
 		// Fill in the first result line which already has been loaded.
-		if (mResultLine) {
-			mResultLinesBuffer.insert(mResultLinesBuffer.begin(), std::move(mResultLine));
-		}
+		if (mResultLine) { mResultLinesBuffer.insert(mResultLinesBuffer.begin(), std::move(mResultLine)); }
 
 		// Count stats of actual state of the result lines buffer...
 		tokens = chars = 0;

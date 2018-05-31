@@ -181,9 +181,7 @@ public:
 			TokenPair tokenPair(t1, len1, t2, len2);
 
 			long int i1, i2;
-			if (tokenPair.tryGetInts(i1, i2)) {
-				return i1 == i2;
-			}
+			if (tokenPair.tryGetInts(i1, i2)) { return i1 == i2; }
 
 			double d1, d2;
 			if (tokenPair.tryGetFloats(d1, d2)) {
@@ -229,9 +227,7 @@ private:
 			bpp::log().error() << "missing " << (quote ? "'" : "") << value << (quote ? "'" : "");
 		}
 
-		if (std::abs(diff) > 1) {
-			bpp::log().warning() << " (" << std::abs(diff) << "x)";
-		}
+		if (std::abs(diff) > 1) { bpp::log().warning() << " (" << std::abs(diff) << "x)"; }
 	}
 
 
@@ -272,9 +268,7 @@ private:
 	template <typename T> static void mapRemoveEmpty(std::map<T, int> &m)
 	{
 		for (auto it = m.begin(); it != m.end(); ++it) {
-			if (it->second == 0) {
-				m.erase(it);
-			}
+			if (it->second == 0) { m.erase(it); }
 		}
 	}
 

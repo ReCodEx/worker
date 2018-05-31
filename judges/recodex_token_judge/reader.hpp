@@ -313,9 +313,7 @@ public:
 	 */
 	std::unique_ptr<Line> readLine()
 	{
-		if (eof()) {
-			return std::unique_ptr<Line>();
-		}
+		if (eof()) { return std::unique_ptr<Line>(); }
 
 		offset_t startOffset = mOffset;
 		auto line = bpp::make_unique<Line>(*this, mLineNumber, mData + mOffset);
@@ -338,7 +336,7 @@ public:
 			if (mIgnoreLineEnds) continue; // new lines are ignored, lets continue read tokens
 			if (!line->mTokens.empty() || (!mIgnoreEmptyLines && !comment))
 				break; // line is non-empty or we return empty lines
-			
+
 			// If we got here, an empty line or a comment line was read (which we skipped).
 			line->mLineNumber = mLineNumber;
 			line->mRawData = mData + mOffset;
