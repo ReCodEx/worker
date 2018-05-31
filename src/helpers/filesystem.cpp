@@ -55,23 +55,17 @@ fs::path helpers::normalize_path(const fs::path &path)
 
 	// construct resulting path
 	fs::path result;
-	for (auto &chunk : result_arr) {
-		result /= chunk;
-	}
+	for (auto &chunk : result_arr) { result /= chunk; }
 	return result;
 }
 
 bool helpers::check_relative(const fs::path &path)
 {
-	if (path.is_absolute()) {
-		return false;
-	}
+	if (path.is_absolute()) { return false; }
 
 	std::vector<fs::path> path_arr(path.begin(), path.end());
 	for (auto &chunk : path_arr) {
-		if (chunk.string() == "..") {
-			return false;
-		}
+		if (chunk.string() == "..") { return false; }
 	}
 
 	return true;
@@ -89,18 +83,14 @@ fs::path helpers::find_path_outside_sandbox(const std::string &inside_path,
 	} else {
 		// for absolute paths remove /box prefix if any
 		std::string box_path = "/box";
-		if (inside_path.find(box_path) == 0) {
-			file_path = fs::path(inside_path.substr(box_path.length()));
-		}
+		if (inside_path.find(box_path) == 0) { file_path = fs::path(inside_path.substr(box_path.length())); }
 	}
 	file_path = normalize_path(file_path);
 	auto file_path_string = file_path.string();
 
 	// try to find the file in main source directory
 	auto source_path = fs::path(source_dir) / file_path;
-	if (fs::exists(source_path)) {
-		return source_path;
-	}
+	if (fs::exists(source_path)) { return source_path; }
 
 	// try to find the file in sandbox bound directories (absolute path in sandbox provided)
 	for (auto &dir : bound_dirs) {

@@ -30,17 +30,13 @@ namespace broker_commands
 	{
 		std::vector<std::string> reply = {"init", context.config->get_hwgroup()};
 
-		for (auto &it : context.config->get_headers()) {
-			reply.push_back(it.first + "=" + it.second);
-		}
+		for (auto &it : context.config->get_headers()) { reply.push_back(it.first + "=" + it.second); }
 		reply.push_back("");
 		reply.push_back("description=" + context.config->get_worker_description());
-		if (!context.current_job.empty()) {
-			reply.push_back("current_job=" + context.current_job);
-		}
+		if (!context.current_job.empty()) { reply.push_back("current_job=" + context.current_job); }
 
 		context.sockets->send_broker(reply);
 	}
-}
+} // namespace broker_commands
 
 #endif // RECODEX_WORKER_BROKER_COMMANDS_H

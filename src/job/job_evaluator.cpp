@@ -14,18 +14,14 @@ job_evaluator::job_evaluator(std::shared_ptr<spdlog::logger> logger,
 	: working_directory_(working_directory), job_(nullptr), job_results_(), remote_fm_(remote_fm), cache_fm_(cache_fm),
 	  logger_(logger), config_(config), progress_callback_(progr_callback)
 {
-	if (logger_ == nullptr) {
-		logger_ = helpers::create_null_logger();
-	}
+	if (logger_ == nullptr) { logger_ = helpers::create_null_logger(); }
 
 	init_progress_callback();
 }
 
 void job_evaluator::init_progress_callback()
 {
-	if (progress_callback_ == nullptr) {
-		progress_callback_ = std::make_shared<empty_progress_callback>();
-	}
+	if (progress_callback_ == nullptr) { progress_callback_ = std::make_shared<empty_progress_callback>(); }
 }
 
 void job_evaluator::download_submission()
@@ -97,9 +93,7 @@ void job_evaluator::build_job()
 	// find job-config.yml to load configuration
 	fs::path config_path(source_path_);
 	config_path /= "job-config.yml";
-	if (!fs::exists(config_path)) {
-		throw job_exception("Job configuration not found");
-	}
+	if (!fs::exists(config_path)) { throw job_exception("Job configuration not found"); }
 
 	// load configuration to object
 	logger_->info("Loading job configuration from yaml...");
@@ -244,9 +238,7 @@ void job_evaluator::prepare_evaluator()
 
 void job_evaluator::cleanup_evaluator()
 {
-	if (config_->get_cleanup_submission() == true) {
-		cleanup_submission();
-	}
+	if (config_->get_cleanup_submission() == true) { cleanup_submission(); }
 
 	cleanup_variables();
 }
@@ -280,18 +272,12 @@ void job_evaluator::push_result()
 		case task_status::SKIPPED: node["status"] = "SKIPPED"; break;
 		}
 
-		if (!i.second->error_message.empty()) {
-			node["error_message"] = i.second->error_message;
-		}
+		if (!i.second->error_message.empty()) { node["error_message"] = i.second->error_message; }
 
 		if (!i.second->output_stdout.empty() || !i.second->output_stderr.empty()) {
 			YAML::Node output_node;
-			if (!i.second->output_stdout.empty()) {
-				output_node["stdout"] = i.second->output_stdout;
-			}
-			if (!i.second->output_stderr.empty()) {
-				output_node["stderr"] = i.second->output_stderr;
-			}
+			if (!i.second->output_stdout.empty()) { output_node["stdout"] = i.second->output_stdout; }
+			if (!i.second->output_stderr.empty()) { output_node["stderr"] = i.second->output_stderr; }
 			node["output"] = output_node;
 		}
 

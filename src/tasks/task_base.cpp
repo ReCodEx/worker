@@ -11,9 +11,7 @@ task_base::~task_base()
 
 void task_base::add_children(std::shared_ptr<task_base> add)
 {
-	if (add == nullptr) {
-		return;
-	}
+	if (add == nullptr) { return; }
 
 	children_.push_back(add);
 	return;
@@ -26,9 +24,7 @@ const std::vector<std::shared_ptr<task_base>> &task_base::get_children()
 
 void task_base::add_parent(std::shared_ptr<task_base> add)
 {
-	if (add == nullptr) {
-		return;
-	}
+	if (add == nullptr) { return; }
 
 	parents_.push_back(add);
 	return;
@@ -92,7 +88,5 @@ void task_base::set_execution(bool set)
 
 void task_base::set_children_execution(bool set)
 {
-	for (auto &i : children_) {
-		i->set_execution(set);
-	}
+	for (auto &i : children_) { i->set_execution(set); }
 }

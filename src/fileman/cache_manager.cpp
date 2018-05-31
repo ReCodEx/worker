@@ -9,16 +9,12 @@ cache_manager::cache_manager(std::shared_ptr<spdlog::logger> logger)
 
 cache_manager::cache_manager(const std::string &caching_dir, std::shared_ptr<spdlog::logger> logger) : logger_(logger)
 {
-	if (logger_ == nullptr) {
-		logger_ = helpers::create_null_logger();
-	}
+	if (logger_ == nullptr) { logger_ = helpers::create_null_logger(); }
 
 	fs::path cache_path(caching_dir);
 
 	try {
-		if (!fs::is_directory(cache_path)) {
-			fs::create_directories(cache_path);
-		}
+		if (!fs::is_directory(cache_path)) { fs::create_directories(cache_path); }
 	} catch (fs::filesystem_error &e) {
 		auto message = "Cannot create directory " + cache_path.string() + ". Error: " + e.what();
 		logger_->warn(message);

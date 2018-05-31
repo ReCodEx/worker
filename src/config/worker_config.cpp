@@ -22,20 +22,14 @@ worker_config::worker_config(const YAML::Node &config)
 			max_broker_liveness_ = config["max-broker-liveness"].as<size_t>();
 		}
 
-		if (!config["headers"].IsMap()) {
-			throw config_error("Headers are not a map");
-		}
+		if (!config["headers"].IsMap()) { throw config_error("Headers are not a map"); }
 
 		for (auto entry : config["headers"]) {
-			if (!entry.first.IsScalar()) {
-				throw config_error("A header key is not scalar");
-			}
+			if (!entry.first.IsScalar()) { throw config_error("A header key is not scalar"); }
 
 			if (entry.second.IsSequence()) {
 				for (auto value : entry.second) {
-					if (!value.IsScalar()) {
-						throw config_error("A header value is not scalar");
-					}
+					if (!value.IsScalar()) { throw config_error("A header value is not scalar"); }
 
 					headers_.insert(std::make_pair(entry.first.as<std::string>(), value.as<std::string>()));
 				}

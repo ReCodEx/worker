@@ -35,6 +35,6 @@ namespace jobs_client_commands
 			context.logger->warn("Job-receiver: Eval command with wrong number of arguments.");
 		}
 	}
-}
+} // namespace jobs_client_commands
 
 #endif // RECODEX_WORKER_JOBS_CLIENT_COMMANDS_H

@@ -27,9 +27,7 @@ std::shared_ptr<task_results> truncate_task::run()
 		boost::system::error_code error_code;
 		fs::resize_file(file, limit, error_code);
 
-		if (error_code.value() != boost::system::errc::success) {
-			results->status = task_status::FAILED;
-		}
+		if (error_code.value() != boost::system::errc::success) { results->status = task_status::FAILED; }
 	}
 
 	return results;

@@ -23,6 +23,6 @@ namespace helpers
 	 * @return true on success, false otherwise
 	 */
 	bool recv_from_socket(zmq::socket_t &socket, std::vector<std::string> &target, bool *terminate = nullptr);
-}
+} // namespace helpers
 
 #endif // RECODEX_HELPERS_ZMQ_SOCKET_H

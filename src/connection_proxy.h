@@ -97,17 +97,11 @@ public:
 			return;
 		}
 
-		if (items_[0].revents & ZMQ_POLLIN) {
-			result.set(message_origin::BROKER, true);
-		}
+		if (items_[0].revents & ZMQ_POLLIN) { result.set(message_origin::BROKER, true); }
 
-		if (items_[1].revents & ZMQ_POLLIN) {
-			result.set(message_origin::JOBS, true);
-		}
+		if (items_[1].revents & ZMQ_POLLIN) { result.set(message_origin::JOBS, true); }
 
-		if (items_[2].revents & ZMQ_POLLIN) {
-			result.set(message_origin::PROGRESS, true);
-		}
+		if (items_[2].revents & ZMQ_POLLIN) { result.set(message_origin::PROGRESS, true); }
 	}
 
 	/**

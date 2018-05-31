@@ -86,6 +86,6 @@ namespace helpers
 		/** Textual description of error. */
 		std::string what_;
 	};
-}
+} // namespace helpers
 
 #endif // RECODEX_WORKER_HELPERS_FILESYSTEM_HPP

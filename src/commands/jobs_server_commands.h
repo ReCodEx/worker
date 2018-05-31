@@ -21,6 +21,6 @@ namespace jobs_server_commands
 	{
 		context.sockets->send_broker(args);
 	}
-}
+} // namespace jobs_server_commands
 
 #endif // RECODEX_WORKER_JOBS_SERVER_COMMANDS_H

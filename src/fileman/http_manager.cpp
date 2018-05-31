@@ -49,9 +49,7 @@ http_manager::http_manager(std::shared_ptr<spdlog::logger> logger) : logger_(log
 http_manager::http_manager(const std::vector<fileman_config> &configs, std::shared_ptr<spdlog::logger> logger)
 	: configs_(configs), logger_(logger)
 {
-	if (logger_ == nullptr) {
-		logger_ = helpers::create_null_logger();
-	}
+	if (logger_ == nullptr) { logger_ = helpers::create_null_logger(); }
 }
 
 void http_manager::get_file(const std::string &src_name, const std::string &dst_name)
@@ -207,9 +205,7 @@ void http_manager::put_file(const std::string &src_name, const std::string &dst_
 const fileman_config *http_manager::find_config(const std::string &url) const
 {
 	for (const auto &item : configs_) {
-		if (url.compare(0, item.remote_url.size(), item.remote_url) == 0) {
-			return &item;
-		}
+		if (url.compare(0, item.remote_url.size(), item.remote_url) == 0) { return &item; }
 	}
 
 	return nullptr;

@@ -108,9 +108,7 @@ public:
 	void add_environ_vars(std::vector<std::pair<std::string, std::string>> &vars)
 	{
 		for (auto &var : vars) {
-			if (std::find(environ_vars.begin(), environ_vars.end(), var) != environ_vars.end()) {
-				continue;
-			}
+			if (std::find(environ_vars.begin(), environ_vars.end(), var) != environ_vars.end()) { continue; }
 			environ_vars.push_back(var);
 		}
 	}
@@ -123,9 +121,7 @@ public:
 	void add_bound_dirs(std::vector<std::tuple<std::string, std::string, dir_perm>> &dirs)
 	{
 		for (auto &dir : dirs) {
-			if (std::find(bound_dirs.begin(), bound_dirs.end(), dir) != bound_dirs.end()) {
-				continue;
-			}
+			if (std::find(bound_dirs.begin(), bound_dirs.end(), dir) != bound_dirs.end()) { continue; }
 			bound_dirs.push_back(dir);
 		}
 	}

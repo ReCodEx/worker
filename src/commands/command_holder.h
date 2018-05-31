@@ -57,9 +57,7 @@ public:
 	command_context(const context_t &dependent_context, std::shared_ptr<spdlog::logger> logger)
 		: context_t(dependent_context), logger(logger)
 	{
-		if (this->logger == nullptr) {
-			logger = helpers::create_null_logger();
-		}
+		if (this->logger == nullptr) { logger = helpers::create_null_logger(); }
 	}
 
 	/** System logger. */
@@ -101,9 +99,7 @@ public:
 	void call_function(const std::string &command, const std::vector<std::string> &args)
 	{
 		auto it = functions_.find(command);
-		if (it != functions_.end()) {
-			(it->second)(args, context_);
-		}
+		if (it != functions_.end()) { (it->second)(args, context_); }
 	}
 	/**
 	 * Register new command with a callback.
