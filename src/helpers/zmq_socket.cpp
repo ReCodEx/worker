@@ -21,7 +21,7 @@ bool helpers::recv_from_socket(zmq::socket_t &socket, std::vector<std::string> &
 
 		try {
 			retval = socket.recv(&msg);
-		} catch (zmq::error_t) {
+		} catch (zmq::error_t &) {
 			if (terminate != nullptr) { *terminate = true; }
 			retval = false;
 		}

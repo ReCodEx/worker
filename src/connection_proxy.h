@@ -92,7 +92,7 @@ public:
 			auto time_after_poll = std::chrono::system_clock::now();
 
 			elapsed_time = std::chrono::duration_cast<std::chrono::milliseconds>(time_after_poll - time_before_poll);
-		} catch (zmq::error_t) {
+		} catch (zmq::error_t &) {
 			terminate = true;
 			return;
 		}
