@@ -326,7 +326,7 @@ public:
 				skipToken();
 				line->mTokens.push_back(TokenRef(start, mOffset - start, mLineNumber, start - mLineOffset + 1));
 				continue; // let's go read another token
-			} else if (!isCommentStart() && !eol()) {
+			} else if (!isCommentStart() && !eol() && !eof()) {
 				throw bpp::RuntimeError("Something is wrong since this Reader state is deamed impossible.");
 			}
 
