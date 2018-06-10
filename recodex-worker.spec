@@ -2,7 +2,7 @@
 %define short_name worker
 %define version 1.4.1
 %define unmangled_version 161293a97cf3f11694100473ed72517e8047ecd1
-%define release 3
+%define release 4
 
 %define spdlog_name spdlog
 %define spdlog_version 0.13.0
