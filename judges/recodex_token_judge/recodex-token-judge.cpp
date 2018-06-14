@@ -28,7 +28,10 @@ int main(int argc, char *argv[])
 			"allow-comments", "Lines starting with '#' are ignored completely."));
 		args.registerArg(bpp::make_unique<bpp::ProgramArguments::ArgBool>(
 			"ignore-line-ends", "New lines characters are treated as regular whitespace."));
-		args.getArg("ignore-empty-lines").conflictsWith("ignore-line-ends");
+		args.registerArg(bpp::make_unique<bpp::ProgramArguments::ArgBool>("ignore-trailing-whitespace",
+			"Any whitespace (i.e., empty lines or comments if allowed) at the end of files is ignored."));
+		args.getArg("ignore-empty-lines").conflictsWith("ignore-line-ends").conflictsWith("ignore-trailing-whitespace");
+		args.getArg("ignore-line-ends").conflictsWith("ignore-trailing-whitespace");
 
 		// Token comparator args
 		args.registerArg(bpp::make_unique<bpp::ProgramArguments::ArgBool>(
@@ -73,10 +76,12 @@ int main(int argc, char *argv[])
 		// Open data readers ...
 		Reader<> correctReader(args.getArgBool("ignore-empty-lines").getValue(),
 			args.getArgBool("allow-comments").getValue(),
-			args.getArgBool("ignore-line-ends").getValue());
+			args.getArgBool("ignore-line-ends").getValue(),
+			args.getArgBool("ignore-trailing-whitespace").getValue());
 		Reader<> resultReader(args.getArgBool("ignore-empty-lines").getValue(),
 			args.getArgBool("allow-comments").getValue(),
-			args.getArgBool("ignore-line-ends").getValue());
+			args.getArgBool("ignore-line-ends").getValue(),
+			args.getArgBool("ignore-trailing-whitespace").getValue());
 
 		correctReader.open(args[0]);
 		resultReader.open(args[1]);

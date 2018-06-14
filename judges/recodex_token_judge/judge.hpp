@@ -274,7 +274,7 @@ private:
 	 */
 	void logImpairedCorrectLine(const line_t &line) const
 	{
-		bpp::log().error() << "-" << line.lineNumber() << ": " << line.getRawLineAsString();
+		bpp::log().error() << "-" << line.lineNumber() << ": " << line.getRawLineAsString() << "\n";
 	}
 
 
@@ -283,7 +283,7 @@ private:
 	 */
 	void logImpairedResultLine(const line_t &line) const
 	{
-		bpp::log().error() << "+" << line.lineNumber() << ": " << line.getRawLineAsString();
+		bpp::log().error() << "+" << line.lineNumber() << ": " << line.getRawLineAsString() << "\n";
 	}
 
 
