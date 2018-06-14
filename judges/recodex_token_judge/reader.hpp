@@ -174,6 +174,7 @@ private:
 	bool mIgnoreEmptyLines; ///< Empty lines are skipped completely.
 	bool mAllowComments; ///< Allow comments (lines starting with '#'), which are completely skipped.
 	bool mIgnoreLineEnds; ///< Treat end lines as regular whitespace.
+	bool mIgnoreTrailingWhitespace; ///< All whitespace (empty lines) at the end of the file is ignored
 
 	char_t *mData; ///< Mmaped data of the file.
 	offset_t mOffset; ///< Offset from the beginning of the file (currently processed).
@@ -248,9 +249,9 @@ private:
 	}
 
 public:
-	Reader(bool ignoreEmptyLines, bool allowComments, bool ignoreLineEnds)
+	Reader(bool ignoreEmptyLines, bool allowComments, bool ignoreLineEnds, bool ignoreTrailingWhitespace)
 		: mIgnoreEmptyLines(ignoreEmptyLines), mAllowComments(allowComments), mIgnoreLineEnds(ignoreLineEnds),
-		  mData(nullptr), mOffset(0), mLength(0)
+		  mIgnoreTrailingWhitespace(ignoreTrailingWhitespace), mData(nullptr), mOffset(0), mLength(0)
 	{
 	}
 
@@ -275,6 +276,13 @@ public:
 		mLength = mFile.length() / sizeof(char_t);
 		mLineNumber = 1;
 		mLineOffset = 0;
+
+		if (mIgnoreTrailingWhitespace) {
+			// Reduce the file length to ignore all whitespace at the end ...
+			while (mLength > 0 && std::isspace(mData[mLength - 1])) {
+				--mLength;
+			}
+		}
 	}
 
 
@@ -313,7 +321,9 @@ public:
 	 */
 	std::unique_ptr<Line> readLine()
 	{
-		if (eof()) { return std::unique_ptr<Line>(); }
+		if (eof()) {
+			return std::unique_ptr<Line>();
+		}
 
 		offset_t startOffset = mOffset;
 		auto line = bpp::make_unique<Line>(*this, mLineNumber, mData + mOffset);
@@ -348,7 +358,8 @@ public:
 			return std::unique_ptr<Line>();
 		}
 
-		line->mRawLength = mOffset - startOffset;
+		line->mRawLength =
+			line->mTokens.size() > 0 ? line->mTokens.back().charNumber() + line->mTokens.back().length() : 0;
 		return line;
 	}
 };
