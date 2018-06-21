@@ -79,7 +79,7 @@ template <typename context_t> class command_holder
 {
 public:
 	/** Type of callback function for easier use. */
-	typedef std::function<void(const std::vector<std::string> &, const command_context<context_t> &)> callback_fn;
+	using callback_fn = std::function<void(const std::vector<std::string> &, const command_context<context_t> &)>;
 
 	/**
 	 * Constructor with initialization of dependent (templated) part of context and logger.

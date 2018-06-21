@@ -2,6 +2,7 @@
 #define RECODEX_WORKER_SANDBOX_CONFIG_H
 
 #include <map>
+#include <memory>
 #include "sandbox_limits.h"
 
 
@@ -68,9 +69,7 @@ public:
 	/**
 	 * Constructor with defaults.
 	 */
-	sandbox_config()
-	{
-	}
+	sandbox_config() = default;
 };
 
 #endif // RECODEX_WORKER_SANDBOX_CONFIG_H

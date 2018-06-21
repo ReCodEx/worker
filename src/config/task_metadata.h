@@ -27,16 +27,16 @@ public:
 	 * @param args arguments supplied for command, default = none
 	 * @param sandbox configuration of sandbox, shared pointer, its data can be changed! default = nullptr
 	 */
-	task_metadata(std::string task_id = "",
+	task_metadata(const std::string &task_id = "",
 		size_t priority = 0,
 		bool fatal = false,
 		std::vector<std::string> deps = {},
 		task_type type = task_type::INNER,
-		std::string cmd = "",
+		const std::string &cmd = "",
 		std::vector<std::string> args = {},
 		std::shared_ptr<sandbox_config> sandbox = nullptr,
 		std::string test_id = "")
-		: task_id(task_id), priority(priority), fatal_failure(fatal), dependencies(deps), test_id(test_id), type(type),
+		: task_id(task_id), priority(priority), dependencies(deps), test_id(test_id), type(type), fatal_failure(fatal),
 		  binary(cmd), cmd_args(args), sandbox(sandbox)
 	{
 	}
@@ -45,8 +45,6 @@ public:
 	std::string task_id;
 	/** Priority of task among all others. Bigger priority number == greater priority. */
 	size_t priority;
-	/** If true than failure of task will end execution of whole job. */
-	bool fatal_failure;
 	/** Dependent tasks which have to be executed before this one. */
 	std::vector<std::string> dependencies;
 	/** Test id for external tasks */
@@ -54,6 +52,8 @@ public:
 
 	/** Type of this task. */
 	task_type type;
+	/** If true than failure of task will end execution of whole job. */
+	bool fatal_failure;
 
 	/** Command which will be executed within this task. */
 	std::string binary;

@@ -105,7 +105,7 @@ void worker_core::load_config()
 	return;
 }
 
-void worker_core::force_exit(std::string msg)
+void worker_core::force_exit(const std::string &msg)
 {
 	// write to log
 	if (msg != "") {

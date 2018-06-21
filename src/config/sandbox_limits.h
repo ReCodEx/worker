@@ -52,6 +52,11 @@ public:
 	 */
 	float extra_time = 0;
 	/**
+	 * Allow to share host computers network. Otherwise, dedicated
+	 * local interface will be created.
+	 */
+	bool share_net = false;
+	/**
 	 * Limit stack size. This is additional memory limit, 0 is no special limit for stack,
 	 * global memory rules will aply. Otherwise, max stack size is @a stack_size kilobytes.
 	 */
@@ -79,11 +84,6 @@ public:
 	 */
 	size_t processes = 0;
 	/**
-	 * Allow to share host computers network. Otherwise, dedicated
-	 * local interface will be created.
-	 */
-	bool share_net = false;
-	/**
 	 * Set environment variables before run command inside the sandbox.
 	 */
 	std::vector<std::pair<std::string, std::string>> environ_vars;
@@ -96,9 +96,7 @@ public:
 	/**
 	 * Constructor with some defaults.
 	 */
-	sandbox_limits()
-	{
-	}
+	sandbox_limits() = default;
 
 	/**
 	 * Insert environment variables which are not present yet.

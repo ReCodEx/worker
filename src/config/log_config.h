@@ -2,7 +2,7 @@
 #define RECODEX_WORKER_LOG_CONFIG_H
 
 #include "spdlog/spdlog.h"
-
+#include <string>
 
 /**
  * Structure which stores all information needed to initialize logger.
@@ -18,9 +18,9 @@ public:
 	/** Level of logging. Log levels are taken from spdlog. */
 	std::string log_level = "debug";
 	/** File size of one log file. */
-	int log_file_size = 1024 * 1024;
+	size_t log_file_size = 1024 * 1024;
 	/** Number of rotations which will be used. */
-	int log_files_count = 3;
+	size_t log_files_count = 3;
 
 	/**
 	 * Classical equality operator on log_config structures.

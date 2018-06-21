@@ -24,7 +24,7 @@ struct message_origin {
 	/**
 	 * A set of origins from which there are incoming messages
 	 */
-	typedef std::bitset<3> set;
+	using set = std::bitset<3>;
 };
 
 /**

@@ -1,9 +1,7 @@
 #include "worker_config.h"
 #include "../helpers/config.h"
 
-worker_config::worker_config()
-{
-}
+worker_config::worker_config() = default;
 
 worker_config::worker_config(const YAML::Node &config)
 {
@@ -153,8 +151,7 @@ worker_config::worker_config(const YAML::Node &config)
 
 			if (limits["environ-variable"] && limits["environ-variable"].IsMap()) {
 				for (const auto &var : limits["environ-variable"]) {
-					limits_.environ_vars.push_back(
-						std::make_pair(var.first.as<std::string>(), var.second.as<std::string>()));
+					limits_.environ_vars.emplace_back(var.first.as<std::string>(), var.second.as<std::string>());
 				}
 			} // no throw... can be omitted
 
@@ -188,9 +185,7 @@ worker_config::worker_config(const YAML::Node &config)
 	}
 }
 
-worker_config::~worker_config()
-{
-}
+worker_config::~worker_config() = default;
 
 size_t worker_config::get_worker_id() const
 {
