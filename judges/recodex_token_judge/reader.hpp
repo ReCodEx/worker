@@ -325,7 +325,6 @@ public:
 			return std::unique_ptr<Line>();
 		}
 
-		offset_t startOffset = mOffset;
 		auto line = bpp::make_unique<Line>(*this, mLineNumber, mData + mOffset);
 		while (!eof()) {
 			skipWhitespace();
@@ -350,7 +349,6 @@ public:
 			// If we got here, an empty line or a comment line was read (which we skipped).
 			line->mLineNumber = mLineNumber;
 			line->mRawData = mData + mOffset;
-			startOffset = mOffset;
 		}
 
 		if (line->mTokens.empty() && mIgnoreEmptyLines) {
@@ -359,7 +357,7 @@ public:
 		}
 
 		line->mRawLength =
-			line->mTokens.size() > 0 ? line->mTokens.back().charNumber() + line->mTokens.back().length() : 0;
+			line->mTokens.size() > 0 ? line->mTokens.back().charNumber() + line->mTokens.back().length() - 1 : 0;
 		return line;
 	}
 };
