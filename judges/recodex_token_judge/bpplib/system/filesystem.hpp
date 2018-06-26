@@ -45,9 +45,7 @@ namespace bpp
 		FileError(const std::string &msg) : RuntimeError(msg)
 		{
 		}
-		virtual ~FileError() throw()
-		{
-		}
+		~FileError() noexcept override = default;
 
 
 		// Overloading << operator that uses stringstream to append data to mMessage.

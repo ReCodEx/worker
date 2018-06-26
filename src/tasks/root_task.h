@@ -26,13 +26,13 @@ public:
 	/**
 	 * Empty destructor.
 	 */
-	virtual ~root_task();
+	~root_task() override = default;
 
 	/**
 	 * Empty function. Has to be stated for completeness.
 	 * @return Always @a nullptr.
 	 */
-	virtual std::shared_ptr<task_results> run();
+	std::shared_ptr<task_results> run() override;
 };
 
 #endif // RECODEX_WORKER_FAKE_TASK_HPP

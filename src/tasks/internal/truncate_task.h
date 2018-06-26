@@ -15,10 +15,15 @@ public:
 	 * @throws task_exception on invalid number of arguments.
 	 */
 	truncate_task(size_t id, std::shared_ptr<task_metadata> task_meta);
-
-	virtual ~truncate_task();
-
-	virtual std::shared_ptr<task_results> run();
+	/**
+	 * Destructor.
+	 */
+	~truncate_task() override = default;
+	/**
+	 * Run the action.
+	 * @return Evaluation results to be pushed back to frontend.
+	 */
+	std::shared_ptr<task_results> run() override;
 };
 
 

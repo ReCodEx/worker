@@ -184,6 +184,7 @@ set(SOURCE_FILES
 	${HELPERS_DIR}/logger.cpp
 	${HELPERS_DIR}/string_utils.h
 	${HELPERS_DIR}/string_utils.cpp
+	${HELPERS_DIR}/format.h
 
 	${CONFIG_DIR}/worker_config.cpp
 	${CONFIG_DIR}/worker_config.h

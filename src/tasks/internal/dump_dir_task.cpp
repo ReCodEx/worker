@@ -9,10 +9,6 @@ dump_dir_task::dump_dir_task(size_t id, std::shared_ptr<task_metadata> task_meta
 	}
 }
 
-dump_dir_task::~dump_dir_task()
-{
-}
-
 std::shared_ptr<task_results> dump_dir_task::run()
 {
 	auto results = std::make_shared<task_results>();

@@ -206,8 +206,8 @@ std::shared_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 
 						if (lim["environ-variable"] && lim["environ-variable"].IsMap()) {
 							for (auto &var : lim["environ-variable"]) {
-								sl->environ_vars.push_back(
-									std::make_pair(var.first.as<std::string>(), var.second.as<std::string>()));
+								sl->environ_vars.emplace_back(
+									var.first.as<std::string>(), var.second.as<std::string>());
 							}
 						}
 
@@ -292,7 +292,7 @@ std::vector<std::tuple<std::string, std::string, sandbox_limits::dir_perm>> help
 						mode = static_cast<sandbox_limits::dir_perm>(mode | sandbox_limits::dir_perm::DEV);
 					}
 				} // no throw... can be omitted
-				bound_dirs.push_back(std::tuple<std::string, std::string, sandbox_limits::dir_perm>{src, dst, mode});
+				bound_dirs.emplace_back(src, dst, mode);
 			}
 		}
 	} // can be omitted... no throw

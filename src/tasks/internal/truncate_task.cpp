@@ -11,9 +11,6 @@ truncate_task::truncate_task(size_t id, std::shared_ptr<task_metadata> task_meta
 	}
 }
 
-truncate_task::~truncate_task()
-{
-}
 
 std::shared_ptr<task_results> truncate_task::run()
 {

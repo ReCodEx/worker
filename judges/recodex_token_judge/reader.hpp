@@ -23,8 +23,8 @@
 template <typename CHAR = char, typename OFFSET = std::uint32_t> class Reader
 {
 public:
-	typedef CHAR char_t;
-	typedef OFFSET offset_t;
+	using char_t = CHAR;
+	using offset_t = OFFSET;
 
 
 	/**

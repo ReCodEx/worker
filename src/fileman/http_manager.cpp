@@ -14,27 +14,31 @@ namespace fs = boost::filesystem;
 #pragma warning(disable : 4996)
 #endif
 
-
-/* If you want run this program on Windows with libcurl as a
-   DLL, you MUST also provide a read callback with CURLOPT_READFUNCTION.
-   Failing to do so will give you a crash since a DLL may not use the
-   variable's memory when passed in to it from an app like this. */
-static size_t fread_wrapper(void *ptr, size_t size, size_t nmemb, FILE *stream)
+namespace
 {
-	return fread(ptr, size, nmemb, stream);
-}
 
-// And the same for writing ...
-static size_t fwrite_wrapper(void *ptr, size_t size, size_t nmemb, FILE *stream)
-{
-	return fwrite(ptr, size, nmemb, stream);
-}
+	/* If you want run this program on Windows with libcurl as a
+	   DLL, you MUST also provide a read callback with CURLOPT_READFUNCTION.
+	   Failing to do so will give you a crash since a DLL may not use the
+	   variable's memory when passed in to it from an app like this. */
+	static size_t fread_wrapper(void *ptr, size_t size, size_t nmemb, FILE *stream)
+	{
+		return fread(ptr, size, nmemb, stream);
+	}
 
-// Nothing write callback
-size_t write_callback(char *, size_t size, size_t nmemb, void *)
-{
-	return size * nmemb;
-}
+	// And the same for writing ...
+	static size_t fwrite_wrapper(void *ptr, size_t size, size_t nmemb, FILE *stream)
+	{
+		return fwrite(ptr, size, nmemb, stream);
+	}
+
+	// Nothing write callback
+	size_t write_callback(char *, size_t size, size_t nmemb, void *)
+	{
+		return size * nmemb;
+	}
+
+} // namespace
 
 // Tweak for older libcurls
 #ifndef CURL_HTTP_VERSION_2_0

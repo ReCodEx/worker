@@ -21,7 +21,7 @@ public:
 	/**
 	 * Destructor.
 	 */
-	virtual ~mkdir_task();
+	~mkdir_task() override = default;
 	/**
 	 * Run the action. For every created directory the group write and others write permissions
 	 * are added to default ones. For more info about directory creation see
@@ -29,7 +29,7 @@ public:
 	 * @note If any of directories cannot be created, all already created directories are removed.
 	 * @return Evaluation results to be pushed back to frontend.
 	 */
-	virtual std::shared_ptr<task_results> run();
+	std::shared_ptr<task_results> run() override;
 };
 
 #endif // RECODEX_WORKER_INTERNAL_MKDIR_TASK_H

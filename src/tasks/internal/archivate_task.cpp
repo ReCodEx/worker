@@ -11,11 +11,6 @@ archivate_task::archivate_task(size_t id, std::shared_ptr<task_metadata> task_me
 }
 
 
-archivate_task::~archivate_task()
-{
-}
-
-
 std::shared_ptr<task_results> archivate_task::run()
 {
 	std::shared_ptr<task_results> result(new task_results());

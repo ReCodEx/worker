@@ -22,12 +22,12 @@ public:
 	/**
 	 * Destructor.
 	 */
-	virtual ~extract_task();
+	~extract_task() override = default;
 	/**
 	 * Run the action.
 	 * @return Evaluation results to be pushed back to frontend.
 	 */
-	virtual std::shared_ptr<task_results> run();
+	std::shared_ptr<task_results> run() override;
 };
 
 #endif // RECODEX_WORKER_INTERNAL_EXTRACT_TASK_H

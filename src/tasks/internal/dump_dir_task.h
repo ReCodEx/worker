@@ -26,13 +26,13 @@ public:
 	/**
 	 * Destructor.
 	 */
-	virtual ~dump_dir_task();
+	~dump_dir_task() override = default;
 
 	/**
 	 * Run the action.
 	 * @return Evaluation results to be pushed back to frontend.
 	 */
-	virtual std::shared_ptr<task_results> run();
+	std::shared_ptr<task_results> run() override;
 
 private:
 	boost::system::error_code copy_file(const fs::path &src, const fs::path &dest);

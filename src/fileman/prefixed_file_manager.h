@@ -28,6 +28,10 @@ public:
 	 *				 method and destination name in put_file() method.
 	 */
 	prefixed_file_manager(std::shared_ptr<file_manager_interface> fm, const std::string &prefix);
+	/**
+	 * Destructor
+	 */
+	~prefixed_file_manager() override = default;
 
 	/**
 	 * Get file. This method has same semantics and arguments as underlying
@@ -37,7 +41,7 @@ public:
 	 * @param src_name Source file - same as underlying file manager
 	 * @param dst_name Destination file - same as underlying file manager
 	 */
-	virtual void get_file(const std::string &src_name, const std::string &dst_name);
+	void get_file(const std::string &src_name, const std::string &dst_name) override;
 
 	/**
 	 * Put file. This method has same semantics and arguments as underlying
@@ -47,7 +51,7 @@ public:
 	 * @param src_name Source file - same as underlying file manager
 	 * @param dst_name Destination file - same as underlying file manager
 	 */
-	virtual void put_file(const std::string &src_name, const std::string &dst_name);
+	void put_file(const std::string &src_name, const std::string &dst_name) override;
 };
 
 

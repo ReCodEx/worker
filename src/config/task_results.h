@@ -24,66 +24,66 @@ struct sandbox_results {
 	 * Return code of sandbox.
 	 * Default: 0
 	 */
-	int exitcode;
+	int exitcode = 0;
 	/**
 	 * Total run time of program inside the sandbox.
 	 * Default: 0 (s)
 	 */
-	float time;
+	float time = 0;
 	/**
 	 * Total run time (wall clock) of program inside the sandbox.
 	 * Default: 0 (s)
 	 */
-	float wall_time;
-	/**
-	 * Amount of memory used by program inside the sandbox.
-	 * Default: 0 (kB)
-	 */
-	size_t memory;
-	/**
-	 * Maximum resident set size of the process.
-	 * Default: 0 (kB)
-	 */
-	size_t max_rss;
-	/**
-	 * Error code returned by sandbox.
-	 * Default: OK
-	 */
-	isolate_status status;
-	/**
-	 * Signal, which killed the process.
-	 * Default: 0
-	 */
-	int exitsig;
+	float wall_time = 0;
 	/**
 	 * Flag if program exited normaly or was killed.
 	 * Default: false
 	 */
-	bool killed;
+	bool killed = false;
+	/**
+	 * Amount of memory used by program inside the sandbox.
+	 * Default: 0 (kB)
+	 */
+	size_t memory = 0;
+	/**
+	 * Maximum resident set size of the process.
+	 * Default: 0 (kB)
+	 */
+	size_t max_rss = 0;
+	/**
+	 * Error code returned by sandbox.
+	 * Default: OK
+	 */
+	isolate_status status = isolate_status::OK;
+	/**
+	 * Signal, which killed the process.
+	 * Default: 0
+	 */
+	int exitsig = 0;
 	/**
 	 * Error message of the sandbox.
 	 * Default: ""
 	 */
-	std::string message;
+	std::string message = "";
 	/**
 	 * Number of voluntary context switches.
 	 * Default: 0
 	 */
-	size_t csw_voluntary;
+	size_t csw_voluntary = 0;
 	/**
 	 * Number of forced context switches.
 	 * Default: 0
 	 */
-	size_t csw_forced;
+	size_t csw_forced = 0;
 
 	/**
 	 * Constructor with default values initialization.
 	 */
-	sandbox_results()
-		: exitcode(0), time(0), wall_time(0), memory(0), max_rss(0), status(isolate_status::OK), exitsig(0),
-		  killed(false), message(), csw_voluntary(0), csw_forced(0)
-	{
-	}
+	sandbox_results() = default;
+	/**
+	 * Destructor
+	 */
+	~sandbox_results() = default;
 
 	/**
 	 * Defaulted copy constructor.
@@ -112,7 +112,7 @@ struct task_results {
 	 * Status of task after execution.
 	 * Default: OK
 	 */
-	task_status status;
+	task_status status = task_status::OK;
 	/**
 	 * Error message if the task failed.
 	 * Default: ""
@@ -130,14 +130,16 @@ struct task_results {
 	 * Pointer to @ref sandbox_results for external task results.
 	 * Default: nullptr (other types of tasks)
 	 */
-	std::unique_ptr<sandbox_results> sandbox_status;
+	std::unique_ptr<sandbox_results> sandbox_status = nullptr;
 
 	/**
 	 * Constructor with default values initiazation.
 	 */
-	task_results() : status(task_status::OK), error_message(), output_stdout(), output_stderr(), sandbox_status(nullptr)
-	{
-	}
+	task_results() = default;
+	/**
+	 * Destructor
+	 */
+	~task_results() = default;
 
 	/**
 	 * Defaulted copy constructor.

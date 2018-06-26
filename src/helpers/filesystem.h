@@ -69,15 +69,13 @@ namespace helpers
 		/**
 		 * Stated for completion.
 		 */
-		virtual ~filesystem_exception()
-		{
-		}
+		~filesystem_exception() override = default;
 
 		/**
 		 * Returns description of exception.
 		 * @return c-style string
 		 */
-		virtual const char *what() const noexcept
+		const char *what() const noexcept override
 		{
 			return what_.c_str();
 		}

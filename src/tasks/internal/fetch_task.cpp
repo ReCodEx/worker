@@ -12,11 +12,6 @@ fetch_task::fetch_task(
 }
 
 
-fetch_task::~fetch_task()
-{
-}
-
-
 std::shared_ptr<task_results> fetch_task::run()
 {
 	std::shared_ptr<task_results> result(new task_results());

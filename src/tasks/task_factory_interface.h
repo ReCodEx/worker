@@ -16,9 +16,7 @@ public:
 	/**
 	 * Virtual destructor for proper destruction of inherited classes.
 	 */
-	virtual ~task_factory_interface()
-	{
-	}
+	virtual ~task_factory_interface() = default;
 
 	/**
 	 * Create internal task. This could be one of predefined operations like move or copy file,

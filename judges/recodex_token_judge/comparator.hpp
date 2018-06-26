@@ -48,15 +48,15 @@ template <typename STRING> bool try_get_double(const STRING &str, double &res)
 template <typename CHAR = char, typename OFFSET = std::uint32_t> class TokenComparator
 {
 public:
-	typedef CHAR char_t;
-	typedef OFFSET offset_t;
+	using char_t = CHAR;
+	using offset_t = OFFSET;
 
 private:
 	/**
 	 * Internal structure where tokens are loaded if more commplex comparison is required.
 	 */
 	struct TokenPair {
-		typedef std::basic_string<CHAR, std::char_traits<CHAR>, std::allocator<CHAR>> string_t;
+		using string_t = std::basic_string<CHAR, std::char_traits<CHAR>, std::allocator<CHAR>>;
 
 	public:
 		string_t token[2];
@@ -201,11 +201,11 @@ public:
 template <typename CHAR = char, typename OFFSET = std::uint32_t, typename RESULT = std::uint32_t> class LineComparator
 {
 public:
-	typedef CHAR char_t;
-	typedef OFFSET offset_t;
-	typedef RESULT result_t;
-	typedef typename Reader<CHAR, OFFSET>::Line line_t;
-	typedef typename Reader<CHAR, OFFSET>::TokenRef token_t;
+	using char_t = CHAR;
+	using offset_t = OFFSET;
+	using result_t = RESULT;
+	using line_t = typename Reader<CHAR, OFFSET>::Line;
+	using token_t = typename Reader<CHAR, OFFSET>::TokenRef;
 
 private:
 	TokenComparator<CHAR, OFFSET> &mTokenComparator; ///< Token comparator used for comparing tokens on the lines.

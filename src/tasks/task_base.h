@@ -36,7 +36,7 @@ public:
 	/**
 	 * Virtual destructor.
 	 */
-	virtual ~task_base();
+	virtual ~task_base() = default;
 
 	/**
 	 * This method runs operation which this task is supposed to do.
@@ -154,6 +154,7 @@ public:
 	task_exception() : what_("Generic task exception")
 	{
 	}
+
 	/**
 	 * Exception with some brief description.
 	 * @param what textual description of a problem
@@ -161,17 +162,17 @@ public:
 	task_exception(const std::string &what) : what_(what)
 	{
 	}
+
 	/**
 	 * Virtual destructor.
 	 */
-	virtual ~task_exception()
-	{
-	}
+	~task_exception() override = default;
+
 	/**
 	 * Return description of this exception.
 	 * @return Cause description as C string.
 	 */
-	virtual const char *what() const noexcept
+	const char *what() const noexcept override
 	{
 		return what_.c_str();
 	}
@@ -207,7 +208,7 @@ public:
 	 * @param b Second task to compare.
 	 * @return @a true if parameter a is lesser than b
 	 */
-	bool operator()(std::shared_ptr<task_base> a, std::shared_ptr<task_base> b)
+	bool operator()(const std::shared_ptr<task_base> &a, const std::shared_ptr<task_base> &b)
 	{
 		if (a->get_priority() > b->get_priority()) {
 			return true;

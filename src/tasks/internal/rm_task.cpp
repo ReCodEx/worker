@@ -13,11 +13,6 @@ rm_task::rm_task(size_t id, std::shared_ptr<task_metadata> task_meta) : task_bas
 }
 
 
-rm_task::~rm_task()
-{
-}
-
-
 std::shared_ptr<task_results> rm_task::run()
 {
 	std::shared_ptr<task_results> result(new task_results());

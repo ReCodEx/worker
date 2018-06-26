@@ -13,11 +13,6 @@ exists_task::exists_task(size_t id, std::shared_ptr<task_metadata> task_meta) : 
 }
 
 
-exists_task::~exists_task()
-{
-}
-
-
 std::shared_ptr<task_results> exists_task::run()
 {
 	std::shared_ptr<task_results> result(new task_results());

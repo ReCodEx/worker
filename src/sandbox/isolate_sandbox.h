@@ -48,8 +48,8 @@ public:
 	/**
 	 * Destructor.
 	 */
-	virtual ~isolate_sandbox();
-	virtual sandbox_results run(const std::string &binary, const std::vector<std::string> &arguments);
+	~isolate_sandbox() override;
+	sandbox_results run(const std::string &binary, const std::vector<std::string> &arguments) override;
 
 private:
 	/** General sandbox configuration */

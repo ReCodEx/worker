@@ -5,10 +5,6 @@ task_base::task_base(size_t id, std::shared_ptr<task_metadata> task_meta)
 {
 }
 
-task_base::~task_base()
-{
-}
-
 void task_base::add_children(std::shared_ptr<task_base> add)
 {
 	if (add == nullptr) { return; }

@@ -14,9 +14,7 @@ public:
 	/**
 	 * Virtual destructor for proper destruction of inherited classes.
 	 */
-	virtual ~job_evaluator_interface()
-	{
-	}
+	virtual ~job_evaluator_interface() = default;
 
 	/**
 	 * Process an "eval" request

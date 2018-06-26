@@ -13,11 +13,6 @@ mkdir_task::mkdir_task(size_t id, std::shared_ptr<task_metadata> task_meta) : ta
 }
 
 
-mkdir_task::~mkdir_task()
-{
-}
-
-
 std::shared_ptr<task_results> mkdir_task::run()
 {
 	std::shared_ptr<task_results> result(new task_results());

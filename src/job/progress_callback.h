@@ -58,18 +58,18 @@ public:
 	 * @param context zmq context structure
 	 * @param logger pointer to logging class
 	 */
-	progress_callback(std::shared_ptr<zmq::context_t> context, std::shared_ptr<spdlog::logger> logger);
+	progress_callback(const std::shared_ptr<zmq::context_t> &context, std::shared_ptr<spdlog::logger> logger);
 
-	virtual void job_archive_downloaded(const std::string &job_id);
-	virtual void job_build_failed(const std::string &job_id);
-	virtual void job_finished(const std::string &job_id);
-	virtual void job_results_uploaded(const std::string &job_id);
-	virtual void job_started(const std::string &job_id);
-	virtual void job_ended(const std::string &job_id);
-	virtual void job_aborted(const std::string &job_id);
-	virtual void task_completed(const std::string &job_id, const std::string &task_id);
-	virtual void task_failed(const std::string &job_id, const std::string &task_id);
-	virtual void task_skipped(const std::string &job_id, const std::string &task_id);
+	void job_archive_downloaded(const std::string &job_id) override;
+	void job_build_failed(const std::string &job_id) override;
+	void job_finished(const std::string &job_id) override;
+	void job_results_uploaded(const std::string &job_id) override;
+	void job_started(const std::string &job_id) override;
+	void job_ended(const std::string &job_id) override;
+	void job_aborted(const std::string &job_id) override;
+	void task_completed(const std::string &job_id, const std::string &task_id) override;
+	void task_failed(const std::string &job_id, const std::string &task_id) override;
+	void task_skipped(const std::string &job_id, const std::string &task_id) override;
 };
 
 #endif // RECODEX_WORKER_PROGRESS_CALLBACK_H

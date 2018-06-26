@@ -25,12 +25,12 @@ public:
 	/**
 	 * Destructor.
 	 */
-	virtual ~fetch_task();
+	~fetch_task() override = default;
 	/**
 	 * Run the action.
 	 * @return Evaluation results to be pushed back to frontend.
 	 */
-	virtual std::shared_ptr<task_results> run();
+	std::shared_ptr<task_results> run() override;
 
 private:
 	/** Pointer to filemanager instance. */

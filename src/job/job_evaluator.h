@@ -52,7 +52,7 @@ public:
 	/**
 	 * Process an "eval" request
 	 */
-	virtual eval_response evaluate(eval_request request);
+	eval_response evaluate(eval_request request) override;
 
 private:
 	/**

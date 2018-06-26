@@ -32,10 +32,6 @@ external_task::external_task(const create_params &data)
 	sandbox_check();
 }
 
-external_task::~external_task()
-{
-}
-
 void external_task::sandbox_check()
 {
 	bool found = false;
@@ -128,7 +124,7 @@ void external_task::results_output_init()
 	}
 }
 
-fs::path external_task::find_path_outside_sandbox(std::string file)
+fs::path external_task::find_path_outside_sandbox(const std::string &file)
 {
 	return helpers::find_path_outside_sandbox(
 		file, sandbox_config_->chdir, limits_->bound_dirs, evaluation_dir_.string());
@@ -152,7 +148,7 @@ void external_task::get_results_output(std::shared_ptr<task_results> result)
 }
 
 void external_task::process_results_output(
-	std::shared_ptr<task_results> result, fs::path stdout_path, fs::path stderr_path)
+	const std::shared_ptr<task_results> &result, const fs::path &stdout_path, const fs::path &stderr_path)
 {
 	if (sandbox_config_->output) {
 		size_t max_length = worker_config_->get_max_output_length();
@@ -189,7 +185,7 @@ void external_task::process_results_output(
 	}
 }
 
-void external_task::process_carboncopy_output(fs::path stdout_path, fs::path stderr_path)
+void external_task::process_carboncopy_output(const fs::path &stdout_path, const fs::path &stderr_path)
 {
 	size_t max_length = worker_config_->get_max_carboncopy_length();
 	if (!sandbox_config_->carboncopy_stdout.empty()) {
@@ -221,7 +217,7 @@ void external_task::process_carboncopy_output(fs::path stdout_path, fs::path std
 	}
 }
 
-void external_task::make_binary_executable(std::string binary)
+void external_task::make_binary_executable(const std::string &binary)
 {
 	fs::path binary_path;
 	try {

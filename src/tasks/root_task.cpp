@@ -4,10 +4,6 @@ root_task::root_task(size_t id, std::shared_ptr<task_metadata> task_meta) : task
 {
 }
 
-root_task::~root_task()
-{
-}
-
 std::shared_ptr<task_results> root_task::run()
 {
 	// Nothing to do here... if evaluation will be recursive,

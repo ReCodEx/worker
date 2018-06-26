@@ -16,11 +16,6 @@ cp_task::cp_task(size_t id, std::shared_ptr<task_metadata> task_meta) : task_bas
 }
 
 
-cp_task::~cp_task()
-{
-}
-
-
 std::shared_ptr<task_results> cp_task::run()
 {
 	std::shared_ptr<task_results> result(new task_results());
