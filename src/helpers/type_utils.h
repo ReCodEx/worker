@@ -1,9 +1,6 @@
 #ifndef RECODEX_WORKER_HELPERS_TYPE_UTILS_HPP
 #define RECODEX_WORKER_HELPERS_TYPE_UTILS_HPP
 
-// shitty Windows and their own shitty min() and max() macros
-#define NOMINMAX
-
 #include <cmath>
 #include <limits>
 #include <type_traits>

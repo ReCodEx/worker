@@ -31,23 +31,23 @@ include_directories(${CURL_INCLUDE_DIRS})
 # -- Yaml-cpp
 # find the yaml-cpp include directory
 find_path(YAMLCPP_INCLUDE_DIR yaml-cpp/yaml.h
-		  PATH_SUFFIXES include
-		  PATHS
-		  ~/Library/Frameworks/yaml-cpp/include/
-		  /Library/Frameworks/yaml-cpp/include/
-		  /usr/local/include/
-		  /usr/include/
-		  /sw/yaml-cpp/         # Fink
-		  /opt/local/yaml-cpp/  # DarwinPorts
-		  /opt/csw/yaml-cpp/    # Blastwave
-		  /opt/yaml-cpp/
-		  ${YAMLCPP_DIR}/include/)
+		PATH_SUFFIXES include
+		PATHS
+		~/Library/Frameworks/yaml-cpp/include/
+		/Library/Frameworks/yaml-cpp/include/
+		/usr/local/include/
+		/usr/include/
+		/sw/yaml-cpp/         # Fink
+		/opt/local/yaml-cpp/  # DarwinPorts
+		/opt/csw/yaml-cpp/    # Blastwave
+		/opt/yaml-cpp/
+		${YAMLCPP_DIR}/include/)
 
 # find the yaml-cpp library
 find_library(YAMLCPP_LIBRARY
-			 NAMES ${YAMLCPP_STATIC} yaml-cpp
-			 PATH_SUFFIXES lib64 lib
-			 PATHS ~/Library/Frameworks
+			NAMES ${YAMLCPP_STATIC} yaml-cpp
+			PATH_SUFFIXES lib64 lib
+			PATHS ~/Library/Frameworks
 					/Library/Frameworks
 					/usr/local
 					/usr
@@ -97,10 +97,10 @@ endif()
 
 # Use C++11
 if(UNIX)
-    #-Wno-deprecated-declarations hides warning in yaml-cpp (using std::auto_ptr)
+	#-Wno-deprecated-declarations hides warning in yaml-cpp (using std::auto_ptr)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wno-deprecated-declarations")
 elseif(MSVC)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP /D NOMINMAX")
 endif()
 
 
@@ -242,7 +242,7 @@ if(UNIX)
 	target_link_libraries(${EXEC_NAME} -lzmq)
 	target_link_libraries(${EXEC_NAME} pthread)
 elseif(MSVC)
-	target_link_libraries(${EXEC_NAME} ${ZEROMQ_LIB})	
+	target_link_libraries(${EXEC_NAME} ${ZEROMQ_LIB})
 endif()
 
 
@@ -330,3 +330,4 @@ add_custom_target(lines
 	COMMENT "Counting lines"
 	VERBATIM
 )
+
