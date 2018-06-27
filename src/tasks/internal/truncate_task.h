@@ -1,7 +1,7 @@
 #ifndef RECODEX_WORKER_TRUNCATE_TASK_H
 #define RECODEX_WORKER_TRUNCATE_TASK_H
 
-#include "../task_base.h"
+#include "tasks/task_base.h"
 
 
 class truncate_task : public task_base

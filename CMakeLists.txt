@@ -184,6 +184,7 @@ set(SOURCE_FILES
 	${HELPERS_DIR}/logger.cpp
 	${HELPERS_DIR}/string_utils.h
 	${HELPERS_DIR}/string_utils.cpp
+	${HELPERS_DIR}/type_utils.h
 	${HELPERS_DIR}/format.h
 
 	${CONFIG_DIR}/worker_config.cpp
@@ -213,6 +214,8 @@ set(SOURCE_FILES
 	${COMMAND_DIR}/jobs_server_commands.h
 	${COMMAND_DIR}/jobs_client_commands.h
 )
+
+include_directories(AFTER, ${SRC_DIR})
 
 
 add_executable(${EXEC_NAME} ${SOURCE_FILES})

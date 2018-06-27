@@ -5,9 +5,9 @@
 
 #include <memory>
 #include <vector>
-#include "../helpers/logger.h"
+#include "helpers/logger.h"
 #include "sandbox_base.h"
-#include "../config/sandbox_config.h"
+#include "config/sandbox_config.h"
 
 /**
  * Class implementing operations with Isolate sandbox.

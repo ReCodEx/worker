@@ -1,8 +1,8 @@
 #ifndef RECODEX_WORKER_INTERNAL_FETCH_TASK_H
 #define RECODEX_WORKER_INTERNAL_FETCH_TASK_H
 
-#include "../task_base.h"
-#include "../../fileman/file_manager_interface.h"
+#include "tasks/task_base.h"
+#include "fileman/file_manager_interface.h"
 #include <memory>
 
 

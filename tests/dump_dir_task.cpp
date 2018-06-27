@@ -3,7 +3,7 @@
 #include <boost/filesystem.hpp>
 #include <fstream>
 #include <memory>
-#include "../src/tasks/internal/dump_dir_task.h"
+#include "tasks/internal/dump_dir_task.h"
 
 namespace fs = boost::filesystem;
 

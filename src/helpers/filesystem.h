@@ -1,7 +1,7 @@
 #ifndef RECODEX_WORKER_HELPERS_FILESYSTEM_HPP
 #define RECODEX_WORKER_HELPERS_FILESYSTEM_HPP
 
-#include "../config/sandbox_limits.h"
+#include "config/sandbox_limits.h"
 #define BOOST_FILESYSTEM_NO_DEPRECATED
 #define BOOST_NO_CXX11_SCOPED_ENUMS
 #include <boost/filesystem.hpp>

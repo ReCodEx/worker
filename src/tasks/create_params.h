@@ -3,10 +3,10 @@
 
 #include <memory>
 #include <spdlog/spdlog.h>
-#include "../config/worker_config.h"
-#include "../config/sandbox_config.h"
-#include "../config/sandbox_limits.h"
-#include "../config/task_metadata.h"
+#include "config/worker_config.h"
+#include "config/sandbox_config.h"
+#include "config/sandbox_limits.h"
+#include "config/task_metadata.h"
 
 /** data for proper construction of @ref external_task class */
 struct create_params {

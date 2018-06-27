@@ -8,7 +8,7 @@
 #define BOOST_NO_CXX11_SCOPED_ENUMS
 #include <boost/filesystem.hpp>
 
-#include "../src/fileman/http_manager.h"
+#include "fileman/http_manager.h"
 
 using namespace testing;
 using namespace std;

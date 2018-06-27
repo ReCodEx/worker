@@ -14,7 +14,7 @@ namespace fs = boost::filesystem;
 
 #include "log_config.h"
 #include "fileman_config.h"
-#include "../sandbox/sandbox_base.h"
+#include "sandbox/sandbox_base.h"
 
 
 /**

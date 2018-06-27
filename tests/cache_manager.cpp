@@ -5,7 +5,7 @@
 #include <boost/filesystem.hpp>
 #include <fstream>
 
-#include "../src/fileman/cache_manager.h"
+#include "fileman/cache_manager.h"
 
 using namespace testing;
 using namespace std;

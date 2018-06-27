@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-#include "../src/helpers/string_utils.h"
+#include "helpers/string_utils.h"
 
 
 void test_filter_scenario(std::string expected, std::string text)

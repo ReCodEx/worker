@@ -1,5 +1,5 @@
 #include "worker_config.h"
-#include "../helpers/config.h"
+#include "helpers/config.h"
 
 worker_config::worker_config() = default;
 

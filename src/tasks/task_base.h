@@ -6,8 +6,8 @@
 #include <cstdlib>
 #include <memory>
 #include <sstream>
-#include "../config/task_results.h"
-#include "../config/task_metadata.h"
+#include "config/task_results.h"
+#include "config/task_metadata.h"
 
 
 /**

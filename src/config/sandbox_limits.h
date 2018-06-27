@@ -7,6 +7,7 @@
 #include <tuple>
 #include <utility>
 #include <algorithm>
+#include "helpers/type_utils.h"
 
 
 /**
@@ -132,10 +133,11 @@ public:
 	bool operator==(const sandbox_limits &second) const
 	{
 		return (memory_usage == second.memory_usage && extra_memory == second.extra_memory &&
-			cpu_time == second.cpu_time && wall_time == second.wall_time && extra_time == second.extra_time &&
-			stack_size == second.stack_size && files_size == second.files_size && disk_size == second.disk_size &&
-			disk_files == second.disk_files && processes == second.processes && share_net == second.share_net &&
-			environ_vars == second.environ_vars && bound_dirs == second.bound_dirs);
+			helpers::almost_equal(cpu_time, second.cpu_time) && helpers::almost_equal(wall_time, second.wall_time) &&
+			helpers::almost_equal(extra_time, second.extra_time) && stack_size == second.stack_size &&
+			files_size == second.files_size && disk_size == second.disk_size && disk_files == second.disk_files &&
+			processes == second.processes && share_net == second.share_net && environ_vars == second.environ_vars &&
+			bound_dirs == second.bound_dirs);
 	}
 
 	/**

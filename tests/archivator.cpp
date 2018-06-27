@@ -2,7 +2,7 @@
 #include <gmock/gmock.h>
 #include <fstream>
 
-#include "../src/archives/archivator.h"
+#include "archives/archivator.h"
 
 #define BOOST_FILESYSTEM_NO_DEPRECATED
 #define BOOST_NO_CXX11_SCOPED_ENUMS

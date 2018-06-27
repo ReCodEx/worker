@@ -1,7 +1,7 @@
 #include "external_task.h"
-#include "../sandbox/isolate_sandbox.h"
-#include "../helpers/string_utils.h"
-#include "../helpers/filesystem.h"
+#include "sandbox/isolate_sandbox.h"
+#include "helpers/string_utils.h"
+#include "helpers/filesystem.h"
 #include <fstream>
 #include <algorithm>
 #define BOOST_FILESYSTEM_NO_DEPRECATED

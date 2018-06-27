@@ -8,9 +8,9 @@
 #include <vector>
 #include <sstream>
 #include "spdlog/spdlog.h"
-#include "../config/sandbox_limits.h"
-#include "../config/task_results.h"
-#include "../helpers/format.h"
+#include "config/sandbox_limits.h"
+#include "config/task_results.h"
+#include "helpers/format.h"
 
 
 /**

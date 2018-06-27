@@ -10,13 +10,13 @@
 using namespace boost::filesystem;
 
 #include "mocks.h"
-#include "../src/job/job.h"
-#include "../src/job/job_exception.h"
-#include "../src/helpers/config.h"
+#include "job/job.h"
+#include "job/job_exception.h"
+#include "helpers/config.h"
 
-#include "../src/tasks/task_factory_interface.h"
-#include "../src/tasks/external_task.h"
-#include "../src/config/worker_config.h"
+#include "tasks/task_factory_interface.h"
+#include "tasks/external_task.h"
+#include "config/worker_config.h"
 
 
 using namespace testing;

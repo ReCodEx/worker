@@ -2,19 +2,19 @@
 #include <gmock/gmock.h>
 #include <memory>
 
-#include "../src/tasks/internal/archivate_task.h"
-#include "../src/tasks/internal/cp_task.h"
-#include "../src/tasks/internal/extract_task.h"
-#include "../src/tasks/internal/mkdir_task.h"
-#include "../src/tasks/internal/rename_task.h"
-#include "../src/tasks/internal/rm_task.h"
-#include "../src/tasks/internal/fetch_task.h"
-#include "../src/tasks/internal/exists_task.h"
-#include "../src/tasks/external_task.h"
-#include "../src/tasks/root_task.h"
-#include "../src/tasks/task_factory.h"
-#include "../src/tasks/create_params.h"
-#include "../src/config/sandbox_config.h"
+#include "tasks/internal/archivate_task.h"
+#include "tasks/internal/cp_task.h"
+#include "tasks/internal/extract_task.h"
+#include "tasks/internal/mkdir_task.h"
+#include "tasks/internal/rename_task.h"
+#include "tasks/internal/rm_task.h"
+#include "tasks/internal/fetch_task.h"
+#include "tasks/internal/exists_task.h"
+#include "tasks/external_task.h"
+#include "tasks/root_task.h"
+#include "tasks/task_factory.h"
+#include "tasks/create_params.h"
+#include "config/sandbox_config.h"
 #include "mocks.h"
 
 

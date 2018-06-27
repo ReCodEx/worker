@@ -2,7 +2,7 @@
 #define RECODEX_WORKER_INTERNAL_CP_DIR_TASK_H
 
 #include <boost/filesystem.hpp>
-#include "../task_base.h"
+#include "tasks/task_base.h"
 
 namespace fs = boost::filesystem;
 

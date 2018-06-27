@@ -10,7 +10,7 @@ namespace fs = boost::filesystem;
 #include <fstream>
 #include <iostream>
 
-#include "../src/sandbox/isolate_sandbox.h"
+#include "sandbox/isolate_sandbox.h"
 
 TEST(IsolateSandbox, BasicCreation)
 {

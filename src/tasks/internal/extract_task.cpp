@@ -1,5 +1,5 @@
 #include "extract_task.h"
-#include "../../archives/archivator.h"
+#include "archives/archivator.h"
 
 
 extract_task::extract_task(size_t id, std::shared_ptr<task_metadata> task_meta) : task_base(id, task_meta)

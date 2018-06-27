@@ -5,7 +5,7 @@
 #include <fstream>
 #include <vector>
 #include <utility>
-#include "../helpers/logger.h"
+#include "helpers/logger.h"
 
 #define BOOST_FILESYSTEM_NO_DEPRECATED
 #define BOOST_NO_CXX11_SCOPED_ENUMS
@@ -13,11 +13,11 @@
 namespace fs = boost::filesystem;
 
 #include "job.h"
-#include "../config/worker_config.h"
-#include "../fileman/file_manager_interface.h"
-#include "../tasks/task_factory.h"
-#include "../archives/archivator.h"
-#include "../helpers/filesystem.h"
+#include "config/worker_config.h"
+#include "fileman/file_manager_interface.h"
+#include "tasks/task_factory.h"
+#include "archives/archivator.h"
+#include "helpers/filesystem.h"
 #include "job_evaluator_interface.h"
 
 

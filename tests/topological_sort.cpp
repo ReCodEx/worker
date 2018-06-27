@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-#include "../src/helpers/topological_sort.h"
+#include "helpers/topological_sort.h"
 
 class test_task : public task_base
 {

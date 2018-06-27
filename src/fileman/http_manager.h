@@ -4,8 +4,8 @@
 #include <string>
 #include <memory>
 #include "file_manager_interface.h"
-#include "../helpers/logger.h"
-#include "../config/fileman_config.h"
+#include "helpers/logger.h"
+#include "config/fileman_config.h"
 
 
 /**

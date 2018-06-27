@@ -1,5 +1,6 @@
 #include "job.h"
 #include "job_exception.h"
+#include "helpers/type_utils.h"
 
 job::job(std::shared_ptr<job_metadata> job_meta,
 	std::shared_ptr<worker_config> worker_conf,
@@ -206,17 +207,17 @@ void job::process_task_limits(const std::shared_ptr<sandbox_limits> &limits)
 	std::string msg = " item is bigger than default worker value";
 
 	// we have to load defaults from worker_config if necessary and check for bigger limits than in worker_config
-	if (limits->cpu_time == FLT_MAX) {
+	if (helpers::almost_equal(limits->cpu_time, FLT_MAX)) {
 		limits->cpu_time = worker_limits.cpu_time;
 	} else {
 		if (limits->cpu_time > worker_limits.cpu_time) { throw job_exception("time" + msg); }
 	}
-	if (limits->wall_time == FLT_MAX) {
+	if (helpers::almost_equal(limits->wall_time, FLT_MAX)) {
 		limits->wall_time = worker_limits.wall_time;
 	} else {
 		if (limits->wall_time > worker_limits.wall_time) { throw job_exception("wall-time" + msg); }
 	}
-	if (limits->extra_time == FLT_MAX) {
+	if (helpers::almost_equal(limits->extra_time, FLT_MAX)) {
 		limits->extra_time = worker_limits.extra_time;
 	} else {
 		if (limits->extra_time > worker_limits.extra_time) { throw job_exception("extra-time" + msg); }

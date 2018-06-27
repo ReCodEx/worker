@@ -1,7 +1,7 @@
 #include "progress_callback.h"
-#include "../helpers/zmq_socket.h"
-#include "../helpers/logger.h"
-#include "../connection_proxy.h"
+#include "helpers/zmq_socket.h"
+#include "helpers/logger.h"
+#include "connection_proxy.h"
 
 progress_callback::progress_callback(
 	const std::shared_ptr<zmq::context_t> &context, std::shared_ptr<spdlog::logger> logger)

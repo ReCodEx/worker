@@ -5,8 +5,8 @@
 #include <memory>
 #include "task_base.h"
 #include "create_params.h"
-#include "../sandbox/sandbox_base.h"
-#include "../config/sandbox_limits.h"
+#include "sandbox/sandbox_base.h"
+#include "config/sandbox_limits.h"
 
 
 /**

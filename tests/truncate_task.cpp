@@ -3,7 +3,7 @@
 #include <boost/filesystem.hpp>
 #include <fstream>
 #include <memory>
-#include "../src/tasks/internal/truncate_task.h"
+#include "tasks/internal/truncate_task.h"
 
 namespace fs = boost::filesystem;
 

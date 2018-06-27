@@ -12,12 +12,12 @@
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-#include "../src/config/worker_config.h"
-#include "../src/broker_connection.h"
-#include "../src/fileman/file_manager_interface.h"
-#include "../src/tasks/task_factory_interface.h"
-#include "../src/job/progress_callback_interface.h"
-#include "../src/job/job_evaluator_interface.h"
+#include "config/worker_config.h"
+#include "broker_connection.h"
+#include "fileman/file_manager_interface.h"
+#include "tasks/task_factory_interface.h"
+#include "job/progress_callback_interface.h"
+#include "job/job_evaluator_interface.h"
 
 using namespace testing;
 

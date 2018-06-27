@@ -3,8 +3,8 @@
 
 #include <memory>
 #include <yaml-cpp/yaml.h>
-#include "../config/job_metadata.h"
-#include "../config/task_metadata.h"
+#include "config/job_metadata.h"
+#include "config/task_metadata.h"
 
 
 namespace helpers

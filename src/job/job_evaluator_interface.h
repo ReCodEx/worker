@@ -1,8 +1,8 @@
 #ifndef RECODEX_WORKER_JOB_EVALUATOR_BASE_H
 #define RECODEX_WORKER_JOB_EVALUATOR_BASE_H
 
-#include "../eval_request.h"
-#include "../eval_response.h"
+#include "eval_request.h"
+#include "eval_response.h"
 
 
 /**

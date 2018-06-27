@@ -5,9 +5,9 @@
 #include <chrono>
 
 #include "mocks.h"
-#include "../src/job/job_receiver.h"
-#include "../src/eval_request.h"
-#include "../src/connection_proxy.h"
+#include "job/job_receiver.h"
+#include "eval_request.h"
+#include "connection_proxy.h"
 
 using namespace testing;
 

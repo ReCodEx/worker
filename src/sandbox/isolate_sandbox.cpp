@@ -16,7 +16,7 @@
 #define BOOST_FILESYSTEM_NO_DEPRECATED
 #define BOOST_NO_CXX11_SCOPED_ENUMS
 #include <boost/filesystem.hpp>
-#include "../helpers/filesystem.h"
+#include "helpers/filesystem.h"
 
 namespace fs = boost::filesystem;
 
