@@ -97,7 +97,7 @@ TEST(Archivator, CompressAbsolutePath)
 
 	ASSERT_NO_THROW(archivator::decompress(result_path.string(), fs::temp_directory_path().string()));
 	ASSERT_TRUE(fs::is_regular_file(extracted_path / "test_file.txt"));
-	ASSERT_EQ((size_t) 7, fs::file_size(extracted_path / "test_file.txt"));
+	ASSERT_EQ((std::size_t) 7, fs::file_size(extracted_path / "test_file.txt"));
 
 	fs::remove_all(archive_path);
 	fs::remove_all(extracted_path);

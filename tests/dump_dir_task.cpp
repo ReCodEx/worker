@@ -41,10 +41,10 @@ protected:
 		fs::remove(target);
 	}
 
-	void create_file(const fs::path &path, size_t size)
+	void create_file(const fs::path &path, std::size_t size)
 	{
 		std::ofstream f(path.string());
-		for (size_t i = 0; i < size; i++) { f << "a"; }
+		for (std::size_t i = 0; i < size; i++) { f << "a"; }
 		f.close();
 	}
 };

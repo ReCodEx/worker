@@ -44,12 +44,12 @@ struct sandbox_results {
 	 * Amount of memory used by program inside the sandbox.
 	 * Default: 0 (kB)
 	 */
-	size_t memory = 0;
+	std::size_t memory = 0;
 	/**
 	 * Maximum resident set size of the process.
 	 * Default: 0 (kB)
 	 */
-	size_t max_rss = 0;
+	std::size_t max_rss = 0;
 	/**
 	 * Error code returned by sandbox.
 	 * Default: OK
@@ -69,12 +69,12 @@ struct sandbox_results {
 	 * Number of voluntary context switches.
 	 * Default: 0
 	 */
-	size_t csw_voluntary = 0;
+	std::size_t csw_voluntary = 0;
 	/**
 	 * Number of forced context switches.
 	 * Default: 0
 	 */
-	size_t csw_forced = 0;
+	std::size_t csw_forced = 0;
 
 	/**
 	 * Constructor with default values initialization.

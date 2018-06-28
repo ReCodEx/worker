@@ -43,7 +43,7 @@ namespace bpp
 #ifdef _WIN32
 		typedef LONGLONG length_t;
 #else
-		using length_t = size_t;
+		using length_t = std::size_t;
 #endif
 
 		void *mData; ///< Pointer to memory area where the file is mapped.

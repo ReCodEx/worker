@@ -21,19 +21,19 @@ namespace
 	   DLL, you MUST also provide a read callback with CURLOPT_READFUNCTION.
 	   Failing to do so will give you a crash since a DLL may not use the
 	   variable's memory when passed in to it from an app like this. */
-	static size_t fread_wrapper(void *ptr, size_t size, size_t nmemb, FILE *stream)
+	static std::size_t fread_wrapper(void *ptr, std::size_t size, std::size_t nmemb, FILE *stream)
 	{
 		return fread(ptr, size, nmemb, stream);
 	}
 
 	// And the same for writing ...
-	static size_t fwrite_wrapper(void *ptr, size_t size, size_t nmemb, FILE *stream)
+	static std::size_t fwrite_wrapper(void *ptr, std::size_t size, std::size_t nmemb, FILE *stream)
 	{
 		return fwrite(ptr, size, nmemb, stream);
 	}
 
 	// Nothing write callback
-	size_t write_callback(char *, size_t size, size_t nmemb, void *)
+	std::size_t write_callback(char *, std::size_t size, std::size_t nmemb, void *)
 	{
 		return size * nmemb;
 	}

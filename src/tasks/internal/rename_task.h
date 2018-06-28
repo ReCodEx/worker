@@ -21,7 +21,7 @@ public:
 	 * for more info.
 	 * @throws task_exception when no argument provided.
 	 */
-	rename_task(size_t id, std::shared_ptr<task_metadata> task_meta);
+	rename_task(std::size_t id, std::shared_ptr<task_metadata> task_meta);
 	/**
 	 * Destructor.
 	 */

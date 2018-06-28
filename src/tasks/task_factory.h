@@ -47,7 +47,7 @@ public:
 	 * is returned.
 	 */
 	std::shared_ptr<task_base> create_internal_task(
-		size_t id, std::shared_ptr<task_metadata> task_meta = nullptr) override;
+		std::size_t id, std::shared_ptr<task_metadata> task_meta = nullptr) override;
 
 	/**
 	 * Created task which will run in sandboxed environment.

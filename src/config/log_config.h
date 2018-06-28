@@ -18,9 +18,9 @@ public:
 	/** Level of logging. Log levels are taken from spdlog. */
 	std::string log_level = "debug";
 	/** File size of one log file. */
-	size_t log_file_size = 1024 * 1024;
+	std::size_t log_file_size = 1024 * 1024;
 	/** Number of rotations which will be used. */
-	size_t log_files_count = 3;
+	std::size_t log_files_count = 3;
 
 	/**
 	 * Classical equality operator on log_config structures.

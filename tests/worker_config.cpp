@@ -98,7 +98,7 @@ TEST(worker_config, load_yaml_basic)
 	expected_filemans.push_back(expected_fileman);
 
 	ASSERT_STREQ("tcp://localhost:1234", config.get_broker_uri().c_str());
-	ASSERT_EQ((size_t) 8, config.get_worker_id());
+	ASSERT_EQ((std::size_t) 8, config.get_worker_id());
 	ASSERT_EQ("/tmp/working_dir", config.get_working_directory());
 	ASSERT_STREQ("/tmp/isoeval/cache", config.get_cache_dir().c_str());
 	ASSERT_EQ(expected_headers, config.get_headers());
@@ -107,9 +107,9 @@ TEST(worker_config, load_yaml_basic)
 	ASSERT_EQ(expected_log, config.get_log_config());
 	ASSERT_EQ(expected_filemans, config.get_filemans_configs());
 	ASSERT_EQ(std::chrono::milliseconds(5487), config.get_broker_ping_interval());
-	ASSERT_EQ((size_t) 1245, config.get_max_broker_liveness());
-	ASSERT_EQ((size_t) 1024, config.get_max_output_length());
-	ASSERT_EQ((size_t) 1048576, config.get_max_carboncopy_length());
+	ASSERT_EQ((std::size_t) 1245, config.get_max_broker_liveness());
+	ASSERT_EQ((std::size_t) 1024, config.get_max_output_length());
+	ASSERT_EQ((std::size_t) 1048576, config.get_max_carboncopy_length());
 	ASSERT_EQ(true, config.get_cleanup_submission());
 }
 

@@ -32,7 +32,7 @@ public:
 	 * @param id Unique identificator of load order of tasks.
 	 * @param task_meta Variable containing further info about task.
 	 */
-	task_base(size_t id, std::shared_ptr<task_metadata> task_meta);
+	task_base(std::size_t id, std::shared_ptr<task_metadata> task_meta);
 	/**
 	 * Virtual destructor.
 	 */
@@ -70,7 +70,7 @@ public:
 	 * This number expresses order in job configuration.
 	 * @return Task's identification number.
 	 */
-	size_t get_id();
+	std::size_t get_id();
 	/**
 	 * Unique task ID which was stated in job configuration.
 	 * @return Unique textual description of current task.
@@ -81,7 +81,7 @@ public:
 	 * Lower number = higher priority.
 	 * @return Priority.
 	 */
-	size_t get_priority();
+	std::size_t get_priority();
 	/**
 	 * Get failing policy. If @a true than failure of this task will cause
 	 * mmediate exit of job evaluation.
@@ -129,7 +129,7 @@ public:
 
 protected:
 	/** Unique integer ID of task. */
-	size_t id_;
+	std::size_t id_;
 	/** Information about this task loaded from configuration file. */
 	std::shared_ptr<task_metadata> task_meta_;
 	/** If true task can be executed safely, otherwise its not wise. */
@@ -183,7 +183,7 @@ protected:
 };
 
 template <typename T>
-T read_task_arg(const std::vector<std::string> &args, const size_t index, const T &default_value = T())
+T read_task_arg(const std::vector<std::string> &args, const std::size_t index, const T &default_value = T())
 {
 	if (index >= args.size()) { return default_value; }
 

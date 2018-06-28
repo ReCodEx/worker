@@ -74,7 +74,7 @@ void archivator::compress(const std::string &dir, const std::string &destination
 					throw archive_exception("Error reading input file.");
 				}
 
-				r = archive_write_data(a.get(), buff, static_cast<size_t>(ifs.gcount()));
+				r = archive_write_data(a.get(), buff, static_cast<std::size_t>(ifs.gcount()));
 				if (r < ARCHIVE_OK) { throw archive_exception(archive_error_string(a.get())); }
 			}
 		} else {
@@ -157,10 +157,10 @@ void archivator::decompress(const std::string &filename, const std::string &dest
 
 void archivator::copy_data(archive *ar, archive *aw)
 {
-	int64_t r;
+	std::int64_t r;
 	const void *buff;
-	size_t size;
-	int64_t offset;
+	std::size_t size;
+	std::int64_t offset;
 
 	while (true) {
 		r = archive_read_data_block(ar, &buff, &size, &offset);

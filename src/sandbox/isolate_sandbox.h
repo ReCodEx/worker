@@ -41,7 +41,7 @@ public:
 	 */
 	isolate_sandbox(std::shared_ptr<sandbox_config> sandbox_config,
 		sandbox_limits limits,
-		size_t id,
+		std::size_t id,
 		const std::string &temp_dir,
 		const std::string &data_dir,
 		std::shared_ptr<spdlog::logger> logger = nullptr);
@@ -59,7 +59,7 @@ private:
 	/** Logger */
 	std::shared_ptr<spdlog::logger> logger_;
 	/** Identifier of this isolate's instance. Must be unique on each server. */
-	size_t id_;
+	std::size_t id_;
 	/** Name of isolate binary - defaults "isolate" */
 	std::string isolate_binary_;
 	/** Path to temporary directory used by sandboxes. Subdir with "id_" value will be created. */

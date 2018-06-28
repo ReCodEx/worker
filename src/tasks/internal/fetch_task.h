@@ -21,7 +21,7 @@ public:
 	 * @throws task_exception on invalid number of arguments.
 	 */
 	fetch_task(
-		size_t id, std::shared_ptr<task_metadata> task_meta, std::shared_ptr<file_manager_interface> filemanager);
+		std::size_t id, std::shared_ptr<task_metadata> task_meta, std::shared_ptr<file_manager_interface> filemanager);
 	/**
 	 * Destructor.
 	 */

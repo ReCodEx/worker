@@ -1,6 +1,6 @@
 #include "task_base.h"
 
-task_base::task_base(size_t id, std::shared_ptr<task_metadata> task_meta)
+task_base::task_base(std::size_t id, std::shared_ptr<task_metadata> task_meta)
 	: id_(id), task_meta_(task_meta), execute_(true)
 {
 }

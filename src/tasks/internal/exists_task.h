@@ -17,7 +17,7 @@ public:
 	 * @a cmd_args entry has at least one argument - names of files/folders which should be checked.
 	 * @throws task_exception when wrong arguments provided.
 	 */
-	exists_task(size_t id, std::shared_ptr<task_metadata> task_meta);
+	exists_task(std::size_t id, std::shared_ptr<task_metadata> task_meta);
 	/**
 	 * Destructor.
 	 */

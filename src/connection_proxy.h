@@ -19,7 +19,7 @@ static const std::string PROGRESS_SOCKET_ID = "progress";
 class connection_proxy
 {
 private:
-	static const size_t socket_count_ = 3;
+	static const std::size_t socket_count_ = 3;
 	zmq::socket_t broker_;
 	zmq::socket_t jobs_;
 	zmq::socket_t progress_;

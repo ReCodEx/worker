@@ -28,7 +28,7 @@ public:
 	 * @param sandbox configuration of sandbox, shared pointer, its data can be changed! default = nullptr
 	 */
 	task_metadata(const std::string &task_id = "",
-		size_t priority = 0,
+		std::size_t priority = 0,
 		bool fatal = false,
 		std::vector<std::string> deps = {},
 		task_type type = task_type::INNER,
@@ -44,7 +44,7 @@ public:
 	/** Unique identifier of task in job. */
 	std::string task_id;
 	/** Priority of task among all others. Bigger priority number == greater priority. */
-	size_t priority;
+	std::size_t priority;
 	/** Dependent tasks which have to be executed before this one. */
 	std::vector<std::string> dependencies;
 	/** Test id for external tasks */

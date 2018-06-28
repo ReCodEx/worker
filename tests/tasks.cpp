@@ -138,7 +138,7 @@ TEST(Tasks, InternalExistsTask)
 class test_task_base : public task_base
 {
 public:
-	test_task_base(size_t id, std::shared_ptr<task_metadata> task_meta) : task_base(id, task_meta)
+	test_task_base(std::size_t id, std::shared_ptr<task_metadata> task_meta) : task_base(id, task_meta)
 	{
 	}
 	virtual ~test_task_base()
@@ -157,8 +157,8 @@ TEST(Tasks, TaskBase)
 	std::vector<std::string> dep{"dep1", "dep2", "dep3"};
 	EXPECT_EQ(base.get_dependencies(), dep);
 	EXPECT_EQ(base.get_fatal_failure(), false);
-	EXPECT_EQ(base.get_id(), static_cast<size_t>(1));
-	EXPECT_EQ(base.get_priority(), static_cast<size_t>(3));
+	EXPECT_EQ(base.get_id(), static_cast<std::size_t>(1));
+	EXPECT_EQ(base.get_priority(), static_cast<std::size_t>(3));
 	EXPECT_EQ(base.get_task_id(), "id2");
 	EXPECT_TRUE(base.get_children().empty());
 	auto children = std::shared_ptr<task_base>(new test_task_base(2, get_task_meta()));

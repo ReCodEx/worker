@@ -151,7 +151,7 @@ void external_task::process_results_output(
 	const std::shared_ptr<task_results> &result, const fs::path &stdout_path, const fs::path &stderr_path)
 {
 	if (sandbox_config_->output) {
-		size_t max_length = worker_config_->get_max_output_length();
+		std::size_t max_length = worker_config_->get_max_output_length();
 		std::string result_stdout(max_length, 0);
 		std::string result_stderr(max_length, 0);
 
@@ -187,7 +187,7 @@ void external_task::process_results_output(
 
 void external_task::process_carboncopy_output(const fs::path &stdout_path, const fs::path &stderr_path)
 {
-	size_t max_length = worker_config_->get_max_carboncopy_length();
+	std::size_t max_length = worker_config_->get_max_carboncopy_length();
 	if (!sandbox_config_->carboncopy_stdout.empty()) {
 		std::ifstream infile(stdout_path.string(), std::ios::binary);
 		std::ofstream copy_file(sandbox_config_->carboncopy_stdout, std::ios::binary);

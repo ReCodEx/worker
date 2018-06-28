@@ -1,6 +1,6 @@
 #include "root_task.h"
 
-root_task::root_task(size_t id, std::shared_ptr<task_metadata> task_meta) : task_base(id, task_meta)
+root_task::root_task(std::size_t id, std::shared_ptr<task_metadata> task_meta) : task_base(id, task_meta)
 {
 }
 

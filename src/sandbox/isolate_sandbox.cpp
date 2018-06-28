@@ -39,7 +39,7 @@ namespace
 
 isolate_sandbox::isolate_sandbox(std::shared_ptr<sandbox_config> sandbox_config,
 	sandbox_limits limits,
-	size_t id,
+	std::size_t id,
 	const std::string &temp_dir,
 	const std::string &data_dir,
 	std::shared_ptr<spdlog::logger> logger)
@@ -366,8 +366,8 @@ sandbox_results isolate_sandbox::process_meta_file()
 	if (meta_stream.is_open()) {
 		std::string line;
 		while (std::getline(meta_stream, line)) {
-			size_t pos = line.find(':');
-			size_t value_size = line.size() - (pos + 1);
+			std::size_t pos = line.find(':');
+			std::size_t value_size = line.size() - (pos + 1);
 			auto first = line.substr(0, pos);
 			auto second = line.substr(pos + 1, value_size);
 			if (first == "time") {

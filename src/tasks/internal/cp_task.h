@@ -18,7 +18,7 @@ public:
 	 * http://www.boost.org/doc/libs/1_59_0_b1/libs/filesystem/doc/reference.html#copy.
 	 * @throws task_exception on invalid number of arguments.
 	 */
-	cp_task(size_t id, std::shared_ptr<task_metadata> task_meta);
+	cp_task(std::size_t id, std::shared_ptr<task_metadata> task_meta);
 	/**
 	 * Destructor.
 	 */

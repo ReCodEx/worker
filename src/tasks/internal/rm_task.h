@@ -17,7 +17,7 @@ public:
 	 * @a cmd_args entry has at least one argument - names of files and directories to be removed.
 	 * @throws task_exception when no argument provided.
 	 */
-	rm_task(size_t id, std::shared_ptr<task_metadata> task_meta);
+	rm_task(std::size_t id, std::shared_ptr<task_metadata> task_meta);
 	/**
 	 * Destructor.
 	 */

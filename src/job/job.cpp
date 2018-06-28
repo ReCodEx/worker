@@ -87,7 +87,7 @@ void job::build_job()
 	}
 
 	// create root task, which is logical root of evaluation
-	size_t id = 0;
+	std::size_t id = 0;
 	root_task_ = factory_->create_internal_task(id++);
 
 	// construct all tasks with their ids and check if they have all datas, but do not connect them
@@ -423,10 +423,10 @@ std::string job::parse_job_var(const std::string &src)
 {
 	std::string res = src;
 
-	size_t start = 0;
+	std::size_t start = 0;
 	while ((start = res.find("${", start)) != std::string::npos) {
-		size_t end = res.find('}', start + 1);
-		size_t len = end - start - 2;
+		std::size_t end = res.find('}', start + 1);
+		std::size_t len = end - start - 2;
 		if (end == std::string::npos) { throw job_exception("Not closed variable name: " + res.substr(start)); }
 
 		if (job_variables_.find(res.substr(start + 2, len)) != job_variables_.end()) {

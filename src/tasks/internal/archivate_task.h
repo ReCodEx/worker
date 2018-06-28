@@ -18,7 +18,7 @@ public:
 	 * For more info about archivation see @ref archivator class.
 	 * @throws task_exception on invalid number of arguments.
 	 */
-	archivate_task(size_t id, std::shared_ptr<task_metadata> task_meta);
+	archivate_task(std::size_t id, std::shared_ptr<task_metadata> task_meta);
 	/**
 	 * Destructor.
 	 */

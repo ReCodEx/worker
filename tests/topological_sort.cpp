@@ -7,7 +7,7 @@ class test_task : public task_base
 {
 public:
 	test_task() = delete;
-	test_task(size_t id, std::shared_ptr<task_metadata> task_meta = std::make_shared<task_metadata>())
+	test_task(std::size_t id, std::shared_ptr<task_metadata> task_meta = std::make_shared<task_metadata>())
 		: task_base(id, task_meta)
 	{
 	}
@@ -26,7 +26,7 @@ using namespace std;
 TEST(topological_sort_test, top_sort_1)
 {
 	// initialization
-	size_t id = 0;
+	std::size_t id = 0;
 	vector<shared_ptr<task_base>> result;
 	vector<shared_ptr<task_base>> expected;
 
@@ -84,8 +84,8 @@ TEST(topological_sort_test, top_sort_1)
 TEST(topological_sort_test, top_sort_2)
 {
 	// initialization
-	size_t id = 0;
-	map<string, size_t> eff_ind;
+	std::size_t id = 0;
+	map<string, std::size_t> eff_ind;
 	vector<shared_ptr<task_base>> result;
 	vector<shared_ptr<task_base>> expected;
 
@@ -153,7 +153,7 @@ TEST(topological_sort_test, top_sort_2)
 TEST(topological_sort_test, top_sort_3)
 {
 	// initialization
-	size_t id = 0;
+	std::size_t id = 0;
 	vector<shared_ptr<task_base>> result;
 	vector<shared_ptr<task_base>> expected;
 
@@ -224,7 +224,7 @@ TEST(topological_sort_test, top_sort_3)
 TEST(topological_sort_test, top_sort_4)
 {
 	// initialization
-	size_t id = 0;
+	std::size_t id = 0;
 	vector<shared_ptr<task_base>> result;
 	vector<shared_ptr<task_base>> expected;
 
@@ -276,7 +276,7 @@ TEST(topological_sort_test, top_sort_4)
 TEST(topological_sort_test, top_sort_5)
 {
 	// initialization
-	size_t id = 0;
+	std::size_t id = 0;
 	vector<shared_ptr<task_base>> result;
 	vector<shared_ptr<task_base>> expected_result;
 
@@ -340,7 +340,7 @@ TEST(topological_sort_test, top_sort_5)
 TEST(topological_sort_test, top_sort_6)
 {
 	// initialization
-	size_t id = 0;
+	std::size_t id = 0;
 	vector<shared_ptr<task_base>> result;
 	vector<shared_ptr<task_base>> expected_result;
 
@@ -405,7 +405,7 @@ TEST(topological_sort_test, top_sort_6)
 TEST(topological_sort_test, top_sort_cycle_1)
 {
 	// initialization
-	size_t id = 0;
+	std::size_t id = 0;
 	vector<shared_ptr<task_base>> result;
 	vector<shared_ptr<task_base>> expected_result;
 
@@ -459,7 +459,7 @@ TEST(topological_sort_test, top_sort_cycle_1)
 TEST(topological_sort_test, top_sort_cycle_2)
 {
 	// initialization
-	size_t id = 0;
+	std::size_t id = 0;
 	vector<shared_ptr<task_base>> result;
 	vector<shared_ptr<task_base>> expected_result;
 

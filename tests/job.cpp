@@ -115,7 +115,7 @@ std::shared_ptr<job_metadata> get_worker_default_meta()
 }
 
 std::shared_ptr<task_metadata> get_simple_task(
-	const std::string &name, size_t priority, const std::vector<std::string> &deps)
+	const std::string &name, std::size_t priority, const std::vector<std::string> &deps)
 {
 	std::shared_ptr<task_metadata> task = std::make_shared<task_metadata>();
 	task->task_id = name;
@@ -564,7 +564,7 @@ TEST(job_test, correctly_executed_job)
 	job_meta->tasks.push_back(get_simple_task("F", 3, {"D"}));
 	job_meta->tasks.push_back(get_simple_task("G", 7, {"F"}));
 
-	size_t tasks_count = job_meta->tasks.size() + 1;
+	std::size_t tasks_count = job_meta->tasks.size() + 1;
 
 	auto worker_conf = std::make_shared<mock_worker_config>();
 	auto default_limits = get_default_limits();
@@ -581,7 +581,7 @@ TEST(job_test, correctly_executed_job)
 	auto failed_results = std::make_shared<task_results>();
 	failed_results->status = task_status::FAILED;
 
-	for (size_t i = 1; i < tasks_count; i++) {
+	for (std::size_t i = 1; i < tasks_count; i++) {
 		mock_tasks.push_back(std::make_shared<mock_task>(i, job_meta->tasks[i - 1]));
 	}
 	{
@@ -589,7 +589,7 @@ TEST(job_test, correctly_executed_job)
 		// expect root task to be created
 		EXPECT_CALL((*factory), create_internal_task(0, _)).WillOnce(Return(empty_task));
 
-		for (size_t i = 1; i < tasks_count; i++) {
+		for (std::size_t i = 1; i < tasks_count; i++) {
 			// expect tasks A to G to be created
 			EXPECT_CALL((*factory), create_internal_task(i, job_meta->tasks[i - 1]))
 				.WillOnce(Return(mock_tasks[i - 1]));
@@ -604,7 +604,7 @@ TEST(job_test, correctly_executed_job)
 		EXPECT_CALL(*progress_callback, job_ended(_)).Times(1);
 	}
 	{ // ! out of sequence calling
-		for (size_t i = 1; i < tasks_count - 2; i++) {
+		for (std::size_t i = 1; i < tasks_count - 2; i++) {
 			// expect tasks A to G will be executed each at once
 			EXPECT_CALL(*mock_tasks[i - 1], run()).WillOnce(Return(empty_results));
 		}
@@ -677,7 +677,7 @@ TEST(job_test, internal_error_job)
 	failed_results->status = task_status::FAILED;
 	failed_results->error_message = "failed internal exec";
 
-	for (size_t i = 0; i < job_meta->tasks.size(); i++) {
+	for (std::size_t i = 0; i < job_meta->tasks.size(); i++) {
 		mock_tasks.push_back(std::make_shared<mock_task>(i + 1, job_meta->tasks[i]));
 	}
 
@@ -686,7 +686,7 @@ TEST(job_test, internal_error_job)
 		// expect root task to be created
 		EXPECT_CALL((*factory), create_internal_task(0, _)).WillOnce(Return(empty_task));
 
-		for (size_t i = 0; i < mock_tasks.size(); i++) {
+		for (std::size_t i = 0; i < mock_tasks.size(); i++) {
 			// expect tasks to be created
 			EXPECT_CALL((*factory), create_internal_task(i + 1, job_meta->tasks[i])).WillOnce(Return(mock_tasks[i]));
 		}

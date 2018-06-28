@@ -13,11 +13,11 @@ worker_config::worker_config(const YAML::Node &config)
 		}
 
 		if (config["broker-ping-interval"] && config["broker-ping-interval"].IsScalar()) {
-			broker_ping_interval_ = std::chrono::milliseconds(config["broker-ping-interval"].as<size_t>());
+			broker_ping_interval_ = std::chrono::milliseconds(config["broker-ping-interval"].as<std::size_t>());
 		}
 
 		if (config["max-broker-liveness"] && config["max-broker-liveness"].IsScalar()) {
-			max_broker_liveness_ = config["max-broker-liveness"].as<size_t>();
+			max_broker_liveness_ = config["max-broker-liveness"].as<std::size_t>();
 		}
 
 		if (!config["headers"].IsMap()) { throw config_error("Headers are not a map"); }
@@ -56,7 +56,7 @@ worker_config::worker_config(const YAML::Node &config)
 
 		// load worker-id
 		if (config["worker-id"] && config["worker-id"].IsScalar()) {
-			worker_id_ = config["worker-id"].as<size_t>();
+			worker_id_ = config["worker-id"].as<std::size_t>();
 		} else {
 			throw config_error("Item worker-id not defined properly");
 		}
@@ -104,10 +104,10 @@ worker_config::worker_config(const YAML::Node &config)
 				log_config_.log_level = config["logger"]["level"].as<std::string>();
 			} // no throw... can be omitted
 			if (config["logger"]["max-size"] && config["logger"]["max-size"].IsScalar()) {
-				log_config_.log_file_size = config["logger"]["max-size"].as<size_t>();
+				log_config_.log_file_size = config["logger"]["max-size"].as<std::size_t>();
 			} // no throw... can be omitted
 			if (config["logger"]["rotations"] && config["logger"]["rotations"].IsScalar()) {
-				log_config_.log_files_count = config["logger"]["rotations"].as<size_t>();
+				log_config_.log_files_count = config["logger"]["rotations"].as<std::size_t>();
 			} // no throw... can be omitted
 		} // no throw... can be omitted
 
@@ -124,22 +124,22 @@ worker_config::worker_config(const YAML::Node &config)
 				limits_.extra_time = limits["extra-time"].as<float>();
 			} // no throw... can be omitted
 			if (limits["stack-size"] && limits["stack-size"].IsScalar()) {
-				limits_.stack_size = limits["stack-size"].as<size_t>();
+				limits_.stack_size = limits["stack-size"].as<std::size_t>();
 			} // no throw... can be omitted
 			if (limits["memory"] && limits["memory"].IsScalar()) {
-				limits_.memory_usage = limits["memory"].as<size_t>();
+				limits_.memory_usage = limits["memory"].as<std::size_t>();
 			} // no throw... can be omitted
 			if (limits["extra-memory"] && limits["extra-memory"].IsScalar()) {
-				limits_.extra_memory = limits["extra-memory"].as<size_t>();
+				limits_.extra_memory = limits["extra-memory"].as<std::size_t>();
 			} // no throw... can be omitted
 			if (limits["parallel"] && limits["parallel"].IsScalar()) {
-				limits_.processes = limits["parallel"].as<size_t>();
+				limits_.processes = limits["parallel"].as<std::size_t>();
 			} // no throw... can be omitted
 			if (limits["disk-size"] && limits["disk-size"].IsScalar()) {
-				limits_.disk_size = limits["disk-size"].as<size_t>();
+				limits_.disk_size = limits["disk-size"].as<std::size_t>();
 			} // no throw... can be omitted
 			if (limits["disk-files"] && limits["disk-files"].IsScalar()) {
-				limits_.disk_files = limits["disk-files"].as<size_t>();
+				limits_.disk_files = limits["disk-files"].as<std::size_t>();
 			} // no throw... can be omitted
 
 			try {
@@ -161,14 +161,14 @@ worker_config::worker_config(const YAML::Node &config)
 
 		// load max-output-length
 		if (config["max-output-length"] && config["max-output-length"].IsScalar()) {
-			max_output_length_ = config["max-output-length"].as<size_t>();
+			max_output_length_ = config["max-output-length"].as<std::size_t>();
 		} else {
 			throw config_error("Item max-output-length not defined properly");
 		}
 
 		// load max-carboncopy-length
 		if (config["max-carboncopy-length"] && config["max-carboncopy-length"].IsScalar()) {
-			max_carboncopy_length_ = config["max-carboncopy-length"].as<size_t>();
+			max_carboncopy_length_ = config["max-carboncopy-length"].as<std::size_t>();
 		} else {
 			throw config_error("Item max-carboncopy-length not defined properly");
 		}

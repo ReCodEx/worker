@@ -375,7 +375,7 @@ namespace bpp
 
 				if (getAsUint() > (std::uint64_t) std::numeric_limits<std::size_t>::max())
 					throw(bpp::ArgumentException()
-						<< "Unable to convert int argument '" << this->getName() << "' to size_t.");
+						<< "Unable to convert int argument '" << this->getName() << "' to std::size_t.");
 				return (std::size_t) mValue;
 			}
 

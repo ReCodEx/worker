@@ -7,7 +7,7 @@
 namespace fs = boost::filesystem;
 
 
-cp_task::cp_task(size_t id, std::shared_ptr<task_metadata> task_meta) : task_base(id, task_meta)
+cp_task::cp_task(std::size_t id, std::shared_ptr<task_metadata> task_meta) : task_base(id, task_meta)
 {
 	if (task_meta_->cmd_args.size() != 2) {
 		throw task_exception(

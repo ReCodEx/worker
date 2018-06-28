@@ -17,7 +17,7 @@ public:
 	 * @a cmd_args entry has at least one argument - names of directories to be created.
 	 * @throws task_exception when no argument provided.
 	 */
-	mkdir_task(size_t id, std::shared_ptr<task_metadata> task_meta);
+	mkdir_task(std::size_t id, std::shared_ptr<task_metadata> task_meta);
 	/**
 	 * Destructor.
 	 */

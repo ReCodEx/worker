@@ -7,7 +7,7 @@
 namespace fs = boost::filesystem;
 
 
-mkdir_task::mkdir_task(size_t id, std::shared_ptr<task_metadata> task_meta) : task_base(id, task_meta)
+mkdir_task::mkdir_task(std::size_t id, std::shared_ptr<task_metadata> task_meta) : task_base(id, task_meta)
 {
 	if (task_meta_->cmd_args.empty()) { throw task_exception("At least one argument required."); }
 }

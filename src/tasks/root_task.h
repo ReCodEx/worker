@@ -22,7 +22,7 @@ public:
 	 * @param id Unique identificator of load order of tasks.
 	 * @param task_meta Variable containing further info about task.
 	 */
-	root_task(size_t id, std::shared_ptr<task_metadata> task_meta = std::make_shared<task_metadata>());
+	root_task(std::size_t id, std::shared_ptr<task_metadata> task_meta = std::make_shared<task_metadata>());
 	/**
 	 * Empty destructor.
 	 */

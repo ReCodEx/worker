@@ -46,7 +46,7 @@ public:
 	 * Get worker ID which has to be unique at least in context of one machine.
 	 * @return integer which can be used also as identifier/index of sandbox
 	 */
-	virtual size_t get_worker_id() const;
+	virtual std::size_t get_worker_id() const;
 	/**
 	 * Get worker human readable description (name), which will be shown in broker logs.
 	 * @return string with the description
@@ -78,7 +78,7 @@ public:
 	 * Get the maximum number of pings in a row without response before the broker is considered disconnected.
 	 * @return broker liveness integer
 	 */
-	virtual size_t get_max_broker_liveness() const;
+	virtual std::size_t get_max_broker_liveness() const;
 
 	/**
 	 * Get the interval between pings sent to the broker.
@@ -112,13 +112,13 @@ public:
 	 * Get maximal length of output which can be written to the results.
 	 * @return length of output in bytes
 	 */
-	virtual size_t get_max_output_length() const;
+	virtual std::size_t get_max_output_length() const;
 
 	/**
 	 * Get maximal length of output which can be copied into results folder.
 	 * @return length of output in bytes
 	 */
-	virtual size_t get_max_carboncopy_length() const;
+	virtual std::size_t get_max_carboncopy_length() const;
 
 	/**
 	 * Get flag which determines if cleanup is made after sumbission is evaluated.
@@ -128,7 +128,7 @@ public:
 
 private:
 	/** Unique worker number in context of one machine (0-100 preferably) */
-	size_t worker_id_ = 0;
+	std::size_t worker_id_ = 0;
 	/** Human readable description of the worker for logging purposes */
 	std::string worker_description_ = "";
 	/** Working directory of whole worker used as base directory for all temporary files */
@@ -140,7 +140,7 @@ private:
 	/** Hwgroup which is sent to broker and is used in job configuration to select right limits */
 	std::string hwgroup_ = {};
 	/** Maximum number of pings in a row without response before the broker is considered disconnected */
-	size_t max_broker_liveness_ = 4;
+	std::size_t max_broker_liveness_ = 4;
 	/** How often should the worker ping the broker */
 	std::chrono::milliseconds broker_ping_interval_ = std::chrono::milliseconds(1000);
 	/** The caching directory path */
@@ -152,9 +152,9 @@ private:
 	/** Default sandbox limits */
 	sandbox_limits limits_ = {};
 	/** Maximal length of output from sandbox which can be written to the results file, in bytes. */
-	size_t max_output_length_ = 0;
+	std::size_t max_output_length_ = 0;
 	/** Maximal lenght of output from sandbox which can be copied into results folder, in bytes */
-	size_t max_carboncopy_length_ = 0;
+	std::size_t max_carboncopy_length_ = 0;
 	/** If true then all files created during evaluation of job will be deleted at the end. */
 	bool cleanup_submission_ = true;
 };
