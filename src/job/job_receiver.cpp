@@ -1,12 +1,12 @@
 #include "job_receiver.h"
-#include "../connection_proxy.h"
-#include "../eval_request.h"
-#include "../eval_response.h"
-#include "../helpers/zmq_socket.h"
-#include "../commands/jobs_client_commands.h"
+#include "connection_proxy.h"
+#include "eval_request.h"
+#include "eval_response.h"
+#include "helpers/zmq_socket.h"
+#include "commands/jobs_client_commands.h"
 
 
-job_receiver::job_receiver(std::shared_ptr<zmq::context_t> context,
+job_receiver::job_receiver(const std::shared_ptr<zmq::context_t> &context,
 	std::shared_ptr<job_evaluator_interface> evaluator,
 	std::shared_ptr<spdlog::logger> logger)
 	: socket_(*context, ZMQ_PAIR), evaluator_(evaluator), logger_(logger)

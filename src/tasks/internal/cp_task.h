@@ -1,7 +1,7 @@
 #ifndef RECODEX_WORKER_INTERNAL_CP_TASK_H
 #define RECODEX_WORKER_INTERNAL_CP_TASK_H
 
-#include "../task_base.h"
+#include "tasks/task_base.h"
 
 
 /**
@@ -18,16 +18,16 @@ public:
 	 * http://www.boost.org/doc/libs/1_59_0_b1/libs/filesystem/doc/reference.html#copy.
 	 * @throws task_exception on invalid number of arguments.
 	 */
-	cp_task(size_t id, std::shared_ptr<task_metadata> task_meta);
+	cp_task(std::size_t id, std::shared_ptr<task_metadata> task_meta);
 	/**
 	 * Destructor.
 	 */
-	virtual ~cp_task();
+	~cp_task() override = default;
 	/**
 	 * Run the action.
 	 * @return Evaluation results to be pushed back to frontend.
 	 */
-	virtual std::shared_ptr<task_results> run();
+	std::shared_ptr<task_results> run() override;
 };
 
 #endif // RECODEX_WORKER_INTERNAL_CP_TASK_H

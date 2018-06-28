@@ -43,7 +43,7 @@ namespace bpp
 #ifdef _WIN32
 		typedef LONGLONG length_t;
 #else
-		typedef size_t length_t;
+		using length_t = std::size_t;
 #endif
 
 		void *mData; ///< Pointer to memory area where the file is mapped.
@@ -123,7 +123,7 @@ namespace bpp
 				throw RuntimeError("Cannot mmap the file.");
 			}
 #endif
-		};
+		}
 
 
 		/**
@@ -189,7 +189,8 @@ namespace bpp
 			if (!opened()) throw RuntimeError("The file must be opened before prepopulation.");
 
 			// Traverse the mapped file accessing first dword on each page.
-			unsigned x, *data = (unsigned *) getData();
+			unsigned x = 0;
+			auto *data = (unsigned *) getData();
 			for (length_t i = 0; i < mLength / 4096; ++i) {
 				x ^= *data; // read from page
 				data += 4096 / sizeof(unsigned); // move to another page

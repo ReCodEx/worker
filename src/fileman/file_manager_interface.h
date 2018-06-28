@@ -17,9 +17,7 @@ public:
 	/**
 	 * Destructor.
 	 */
-	virtual ~file_manager_interface()
-	{
-	}
+	virtual ~file_manager_interface() = default;
 
 	/**
 	 * Get the file.
@@ -53,22 +51,20 @@ public:
 	 * Constructor with custom string.
 	 * @param what String with description of failure.
 	 */
-	fm_exception(std::string what) : what_(what)
+	fm_exception(const std::string &what) : what_(what)
 	{
 	}
 
 	/**
 	 * Destructor.
 	 */
-	virtual ~fm_exception()
-	{
-	}
+	~fm_exception() override = default;
 
 	/**
 	 * Get failure description.
 	 * @return Stored string.
 	 */
-	virtual const char *what() const noexcept
+	const char *what() const noexcept override
 	{
 		return what_.c_str();
 	}

@@ -8,9 +8,9 @@
 #include <vector>
 #include <sstream>
 #include "spdlog/spdlog.h"
-#include "../config/sandbox_limits.h"
-#include "../config/task_results.h"
-#include "../helpers/format.h"
+#include "config/sandbox_limits.h"
+#include "config/task_results.h"
+#include "helpers/format.h"
 
 
 /**
@@ -22,9 +22,8 @@ public:
 	/**
 	 * Destructor.
 	 */
-	virtual ~sandbox_base()
-	{
-	}
+	virtual ~sandbox_base() = default;
+
 	/**
 	 * Get sandboxed directory (to copy files inside, ...)
 	 */
@@ -32,6 +31,7 @@ public:
 	{
 		return sandboxed_dir_;
 	}
+
 	/**
 	 * Run sandbox.
 	 * @param binary Name of binary to run. Must be accessible from inside the sandbox.
@@ -61,6 +61,7 @@ public:
 	sandbox_exception() : what_("Generic sandbox exception")
 	{
 	}
+
 	/**
 	 * Constructor with custom error message.
 	 * @param what Custom message.
@@ -68,16 +69,16 @@ public:
 	sandbox_exception(const std::string &what) : what_(what)
 	{
 	}
+
 	/**
 	 * Destructor.
 	 */
-	virtual ~sandbox_exception()
-	{
-	}
+	~sandbox_exception() override = default;
+
 	/**
 	 * Get message describing the issue.
 	 */
-	virtual const char *what() const noexcept
+	const char *what() const noexcept override
 	{
 		return what_.c_str();
 	}

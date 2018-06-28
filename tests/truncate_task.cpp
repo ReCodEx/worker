@@ -3,7 +3,7 @@
 #include <boost/filesystem.hpp>
 #include <fstream>
 #include <memory>
-#include "../src/tasks/internal/truncate_task.h"
+#include "tasks/internal/truncate_task.h"
 
 namespace fs = boost::filesystem;
 
@@ -32,10 +32,10 @@ protected:
 		fs::remove(root);
 	}
 
-	void create_file(const fs::path &path, size_t size)
+	void create_file(const fs::path &path, std::size_t size)
 	{
 		std::ofstream f(path.string());
-		for (size_t i = 0; i < size; i++) { f << "a"; }
+		for (std::size_t i = 0; i < size; i++) { f << "a"; }
 		f.close();
 	}
 };

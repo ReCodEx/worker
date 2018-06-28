@@ -7,6 +7,7 @@
 #include <tuple>
 #include <utility>
 #include <algorithm>
+#include "helpers/type_utils.h"
 
 
 /**
@@ -30,12 +31,12 @@ public:
 	 * Limit memory usage. For Isolate, this limits whole control group (--cg-mem switch).
 	 * Memory size is set in kilobytes.
 	 */
-	size_t memory_usage = 0;
+	std::size_t memory_usage = 0;
 	/**
 	 * Extra memory which will be added to memory limit before killing program.
 	 * Memory size is set in kilobytes.
 	 */
-	size_t extra_memory = 0;
+	std::size_t extra_memory = 0;
 	/**
 	 * Limit total run time by CPU time. For Isolate, this is for whole control group.
 	 * Time is set in seconds and can be fractional.
@@ -52,37 +53,37 @@ public:
 	 */
 	float extra_time = 0;
 	/**
+	 * Allow to share host computers network. Otherwise, dedicated
+	 * local interface will be created.
+	 */
+	bool share_net = false;
+	/**
 	 * Limit stack size. This is additional memory limit, 0 is no special limit for stack,
 	 * global memory rules will aply. Otherwise, max stack size is @a stack_size kilobytes.
 	 */
-	size_t stack_size = 0;
+	std::size_t stack_size = 0;
 	/**
 	 * Limit size of created files. This could be useful, if your filesystem doesn't support
 	 * quotas. 0 means not set.
 	 * @warning This option is deprecated! Use @ref disk_size and @ref disk_files instead.
 	 */
-	size_t files_size = 0;
+	std::size_t files_size = 0;
 	/**
 	 * Set disk quota to given number of kilobytes.
 	 * @warning Underlying filesystem must support quotas.
 	 */
-	size_t disk_size = 0;
+	std::size_t disk_size = 0;
 	/**
 	 * Set disk quota to given number of files. Actual implementation may vary, for example
 	 * on Linux with ext4 filesystem this should be maximum number of used inodes.
 	 * @warning Underlying filesystem must support quotas.
 	 */
-	size_t disk_files = 0;
+	std::size_t disk_files = 0;
 	/**
 	 * Limit number of processes/threads that could be created.
 	 * 0 means no limit.
 	 */
-	size_t processes = 0;
-	/**
-	 * Allow to share host computers network. Otherwise, dedicated
-	 * local interface will be created.
-	 */
-	bool share_net = false;
+	std::size_t processes = 0;
 	/**
 	 * Set environment variables before run command inside the sandbox.
 	 */
@@ -96,9 +97,7 @@ public:
 	/**
 	 * Constructor with some defaults.
 	 */
-	sandbox_limits()
-	{
-	}
+	sandbox_limits() = default;
 
 	/**
 	 * Insert environment variables which are not present yet.
@@ -134,10 +133,11 @@ public:
 	bool operator==(const sandbox_limits &second) const
 	{
 		return (memory_usage == second.memory_usage && extra_memory == second.extra_memory &&
-			cpu_time == second.cpu_time && wall_time == second.wall_time && extra_time == second.extra_time &&
-			stack_size == second.stack_size && files_size == second.files_size && disk_size == second.disk_size &&
-			disk_files == second.disk_files && processes == second.processes && share_net == second.share_net &&
-			environ_vars == second.environ_vars && bound_dirs == second.bound_dirs);
+			helpers::almost_equal(cpu_time, second.cpu_time) && helpers::almost_equal(wall_time, second.wall_time) &&
+			helpers::almost_equal(extra_time, second.extra_time) && stack_size == second.stack_size &&
+			files_size == second.files_size && disk_size == second.disk_size && disk_files == second.disk_files &&
+			processes == second.processes && share_net == second.share_net && environ_vars == second.environ_vars &&
+			bound_dirs == second.bound_dirs);
 	}
 
 	/**

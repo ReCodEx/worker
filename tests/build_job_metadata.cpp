@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-#include "../src/helpers/config.h"
+#include "helpers/config.h"
 
 using namespace testing;
 using namespace std;

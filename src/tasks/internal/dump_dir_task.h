@@ -2,7 +2,7 @@
 #define RECODEX_WORKER_INTERNAL_CP_DIR_TASK_H
 
 #include <boost/filesystem.hpp>
-#include "../task_base.h"
+#include "tasks/task_base.h"
 
 namespace fs = boost::filesystem;
 
@@ -21,18 +21,18 @@ public:
 	 * @a cmd_args entry has 2 or 3 arguments - the source, destination, and optionally a limit
 	 * @throws task_exception on invalid number of arguments.
 	 */
-	dump_dir_task(size_t id, std::shared_ptr<task_metadata> task_meta);
+	dump_dir_task(std::size_t id, std::shared_ptr<task_metadata> task_meta);
 
 	/**
 	 * Destructor.
 	 */
-	virtual ~dump_dir_task();
+	~dump_dir_task() override = default;
 
 	/**
 	 * Run the action.
 	 * @return Evaluation results to be pushed back to frontend.
 	 */
-	virtual std::shared_ptr<task_results> run();
+	std::shared_ptr<task_results> run() override;
 
 private:
 	boost::system::error_code copy_file(const fs::path &src, const fs::path &dest);

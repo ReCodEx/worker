@@ -44,9 +44,7 @@ namespace bpp
 		ArgumentException(const std::string &msg) : RuntimeError(msg)
 		{
 		}
-		virtual ~ArgumentException() throw()
-		{
-		}
+		~ArgumentException() noexcept override = default;
 
 		/*
 		 * Overloading << operator that uses stringstream to append data to mMessage.
@@ -106,26 +104,26 @@ namespace bpp
 				// Constraint checks are done only if the argument is present.
 				if (isPresent()) {
 					// Check for collisions.
-					for (auto it = mConflictsWith.begin(); it != mConflictsWith.end(); ++it) {
-						if (arguments.find(*it) == arguments.end())
+					for (const auto &it : mConflictsWith) {
+						if (arguments.find(it) == arguments.end())
 							throw(ArgumentException()
-								<< "Internal Error: Argument '" << mName << "' has unspecified argument '" << *it
+								<< "Internal Error: Argument '" << mName << "' has unspecified argument '" << it
 								<< "' on its collision list.");
 
-						if (arguments.find(*it)->second->isPresent())
+						if (arguments.find(it)->second->isPresent())
 							throw(ArgumentException()
-								<< "The argument '" << mName << "' conflicts with argument '" << *it << "'.");
+								<< "The argument '" << mName << "' conflicts with argument '" << it << "'.");
 					}
 
 					// Check for requirements.
-					for (auto it = mRequiresAlso.begin(); it != mRequiresAlso.end(); ++it) {
-						if (arguments.find(*it) == arguments.end())
+					for (const auto & it : mRequiresAlso) {
+						if (arguments.find(it) == arguments.end())
 							throw(ArgumentException()
-								<< "Internal Error: Argument '" << mName << "' has unspecified argument '" << *it
+								<< "Internal Error: Argument '" << mName << "' has unspecified argument '" << it
 								<< "' on its requirements list.");
 
-						if (!arguments.find(*it)->second->isPresent())
-							throw(ArgumentException() << "The argument '" << *it << "' is also required when '" << mName
+						if (!arguments.find(it)->second->isPresent())
+							throw(ArgumentException() << "The argument '" << it << "' is also required when '" << mName
 													  << "' was specified.");
 					}
 				}
@@ -161,9 +159,7 @@ namespace bpp
 			}
 
 			// Enforce virtual destructor for descendants.
-			virtual ~ArgBase()
-			{
-			}
+			virtual ~ArgBase() = default;
 
 
 			/**
@@ -242,10 +238,10 @@ namespace bpp
 		class ArgBool : public ArgBase
 		{
 		public:
-			typedef bool value_t;
+			using value_t = bool;
 
 		protected:
-			virtual void process(int &, const char **&)
+			void process(int &, const char **&) override
 			{
 				this->mPresent = true;
 			}
@@ -269,7 +265,7 @@ namespace bpp
 		class ArgIntBase : public ArgBase
 		{
 		public:
-			typedef std::int64_t value_t;
+			using value_t = std::int64_t;
 
 		protected:
 			value_t mMin; ///< Range constraint for the value.
@@ -350,7 +346,7 @@ namespace bpp
 			value_t mValue; ///< Parsed value of the argument.
 
 		protected:
-			virtual void process(int &argc, const char **(&argv))
+			void process(int &argc, const char **(&argv)) override
 			{
 				mValue = this->processInt(argc, argv);
 				this->mPresent = true;
@@ -379,7 +375,7 @@ namespace bpp
 
 				if (getAsUint() > (std::uint64_t) std::numeric_limits<std::size_t>::max())
 					throw(bpp::ArgumentException()
-						<< "Unable to convert int argument '" << this->getName() << "' to size_t.");
+						<< "Unable to convert int argument '" << this->getName() << "' to std::size_t.");
 				return (std::size_t) mValue;
 			}
 
@@ -420,7 +416,7 @@ namespace bpp
 			std::vector<value_t> mValues; ///< Parsed values of the argument.
 
 		protected:
-			virtual void process(int &argc, const char **(&argv))
+			void process(int &argc, const char **(&argv)) override
 			{
 				if (!this->mPresent) mValues.clear();
 
@@ -479,7 +475,7 @@ namespace bpp
 		class ArgFloatBase : public ArgBase
 		{
 		public:
-			typedef double value_t;
+			using value_t = double;
 
 		protected:
 			value_t mMin; ///< Range constraint for the value.
@@ -548,7 +544,7 @@ namespace bpp
 			value_t mValue; ///< Parsed value of the argument.
 
 		protected:
-			virtual void process(int &argc, const char **(&argv))
+			void process(int &argc, const char **(&argv)) override
 			{
 				mValue = this->processFloat(argc, argv);
 				this->mPresent = true;
@@ -583,7 +579,7 @@ namespace bpp
 			std::vector<value_t> mValues; ///< Parsed values of the argument.
 
 		protected:
-			virtual void process(int &argc, const char **(&argv))
+			void process(int &argc, const char **(&argv)) override
 			{
 				if (!this->mPresent) mValues.clear();
 
@@ -643,12 +639,12 @@ namespace bpp
 		class ArgString : public ArgBase
 		{
 		public:
-			typedef std::string value_t;
+			using value_t = std::string;
 
 		protected:
 			std::string mValue; ///< The value of the argument stored after parsing.
 
-			virtual void process(int &argc, const char **(&argv))
+			void process(int &argc, const char **(&argv)) override
 			{
 				if (argc == 0)
 					throw(ArgumentException() << "Value of argument '" << this->getName() << "' is missing!");
@@ -682,7 +678,7 @@ namespace bpp
 		class ArgEnum : public ArgString
 		{
 		public:
-			typedef std::string value_t;
+			using value_t = std::string;
 
 		private:
 			std::string mNormalizedValue;
@@ -702,7 +698,7 @@ namespace bpp
 				mOptions.insert(mCaseSensitive ? str : toLower(str));
 			}
 
-			virtual void process(int &argc, const char **(&argv))
+			void process(int &argc, const char **(&argv)) override
 			{
 				ArgString::process(argc, argv);
 
@@ -769,7 +765,7 @@ namespace bpp
 			std::vector<std::string> mValues; ///< The list of values of the argument stored after parsing.
 
 		protected:
-			virtual void process(int &argc, const char **(&argv))
+			void process(int &argc, const char **(&argv)) override
 			{
 				if (argc == 0)
 					throw(ArgumentException() << "Value of argument '" << this->getName() << "' is missing!");
@@ -1110,12 +1106,12 @@ namespace bpp
 			stream << "Usage: " << Path::getFileName(getProgramName()) << std::endl;
 
 			stream << "Named arguments:" << std::endl;
-			for (auto it = mArguments.begin(); it != mArguments.end(); ++it) {
-				stream << "  " << it->first << " - " << it->second->getComment() << std::endl;
+			for (const auto &mArgument : mArguments) {
+				stream << "  " << mArgument.first << " - " << mArgument.second->getComment() << std::endl;
 			}
 
 			stream << "Nameless arguments (" << mNamelessMin << ", " << mNamelessMax << "):";
-			for (std::size_t i = 0; i < mNamelessCaptions.size(); ++i) { stream << " " << mNamelessCaptions[i]; }
+			for (const auto &mNamelessCaption : mNamelessCaptions) { stream << " " << mNamelessCaption; }
 			stream << std::endl;
 		}
 	};

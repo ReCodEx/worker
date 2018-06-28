@@ -85,7 +85,7 @@ private:
 	 * Exit whole application with return code 1.
 	 * @param msg string which is copied to stderr and logger if initialized.
 	 */
-	void force_exit(std::string msg = "");
+	void force_exit(const std::string &msg = "");
 
 	/**
 	 * Parse cmd line params given in constructor.

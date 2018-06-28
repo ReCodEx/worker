@@ -7,10 +7,6 @@
 
 void archivator::compress(const std::string &dir, const std::string &destination)
 {
-	archive *a;
-	archive_entry *entry;
-	int r;
-
 	std::map<fs::path, fs::path> files;
 	fs::path dir_path;
 	try {
@@ -42,26 +38,26 @@ void archivator::compress(const std::string &dir, const std::string &destination
 		throw archive_exception(e.what());
 	}
 
-	a = archive_write_new();
-	if (a == NULL) { throw archive_exception("Cannot create destination archive."); }
-	if (archive_write_set_format_zip(a) != ARCHIVE_OK) {
+	std::unique_ptr<archive, decltype(&archive_write_free)> a = {archive_write_new(), archive_write_free};
+	if (a == nullptr) { throw archive_exception("Cannot create destination archive."); }
+	if (archive_write_set_format_zip(a.get()) != ARCHIVE_OK) {
 		throw archive_exception("Cannot set ZIP format on destination archive.");
 	}
-	if (archive_write_open_filename(a, destination.c_str()) != ARCHIVE_OK) {
+	if (archive_write_open_filename(a.get(), destination.c_str()) != ARCHIVE_OK) {
 		throw archive_exception("Cannot open destination archive.");
 	}
 
 	for (auto &file : files) {
-		entry = archive_entry_new();
+		std::unique_ptr<archive_entry, decltype(&archive_entry_free)> entry = {archive_entry_new(), archive_entry_free};
 
-		archive_entry_set_pathname(entry, (fs::path(destination).stem() / file.second).string().c_str());
-		archive_entry_set_size(entry, fs::file_size(file.first));
-		archive_entry_set_mtime(entry, fs::last_write_time(file.first), 0); // 0 nanoseconds
-		archive_entry_set_filetype(entry, AE_IFREG);
-		archive_entry_set_perm(entry, 0644);
+		archive_entry_set_pathname(entry.get(), (fs::path(destination).stem() / file.second).string().c_str());
+		archive_entry_set_size(entry.get(), fs::file_size(file.first));
+		archive_entry_set_mtime(entry.get(), fs::last_write_time(file.first), 0); // 0 nanoseconds
+		archive_entry_set_filetype(entry.get(), AE_IFREG);
+		archive_entry_set_perm(entry.get(), 0644);
 
-		r = archive_write_header(a, entry);
-		if (r < ARCHIVE_OK) { throw archive_exception(archive_error_string(a)); }
+		int r = archive_write_header(a.get(), entry.get());
+		if (r < ARCHIVE_OK) { throw archive_exception(archive_error_string(a.get())); }
 
 		std::ifstream ifs((file.first).string(), std::ios::in | std::ios::binary);
 		if (ifs.is_open()) {
@@ -78,27 +74,20 @@ void archivator::compress(const std::string &dir, const std::string &destination
 					throw archive_exception("Error reading input file.");
 				}
 
-				r = archive_write_data(a, buff, static_cast<size_t>(ifs.gcount()));
-				if (r < ARCHIVE_OK) { throw archive_exception(archive_error_string(a)); }
+				r = archive_write_data(a.get(), buff, static_cast<std::size_t>(ifs.gcount()));
+				if (r < ARCHIVE_OK) { throw archive_exception(archive_error_string(a.get())); }
 			}
 		} else {
 			throw archive_exception("Cannot open file " + (file.first).string() + " for reading.");
 		}
-		archive_entry_free(entry);
 	}
-	archive_write_close(a);
-	archive_write_free(a);
+
+	archive_write_close(a.get());
 }
 
 
 void archivator::decompress(const std::string &filename, const std::string &destination)
 {
-	archive *a;
-	archive *ext;
-	archive_entry *entry;
-	int flags;
-	int r;
-
 	if (!fs::is_directory(destination)) {
 		throw archive_exception("Destination '" + destination + "' is not a directory. Cannot decompress archive.");
 	}
@@ -107,35 +96,38 @@ void archivator::decompress(const std::string &filename, const std::string &dest
 	}
 
 	// Select which attributes we want to restore.
+	int flags;
 	flags = ARCHIVE_EXTRACT_TIME;
 	flags |= ARCHIVE_EXTRACT_FFLAGS;
 	// Don't allow ".." in any path within archive
 	flags |= ARCHIVE_EXTRACT_SECURE_NODOTDOT;
 
-	a = archive_read_new();
-	if (a == NULL) { throw archive_exception("Cannot create source archive."); }
-	if (archive_read_support_format_all(a) != ARCHIVE_OK) {
+	std::unique_ptr<archive, decltype(&archive_write_free)> a = {archive_write_new(), archive_write_free};
+	if (a == nullptr) { throw archive_exception("Cannot create source archive."); }
+	if (archive_read_support_format_all(a.get()) != ARCHIVE_OK) {
 		throw archive_exception("Cannot set formats for source archive.");
 	}
-	if (archive_read_support_compression_all(a) != ARCHIVE_OK) {
+	if (archive_read_support_filter_all(a.get()) != ARCHIVE_OK) {
 		throw archive_exception("Cannot set compression methods for source archive.");
 	}
-	ext = archive_write_disk_new();
-	if (ext == NULL) { throw archive_exception("Cannot allocate archive entry."); }
-	if (archive_write_disk_set_options(ext, flags) != ARCHIVE_OK) {
+
+	std::unique_ptr<archive, decltype(&archive_write_free)> ext = {archive_write_disk_new(), archive_write_free};
+	if (ext == nullptr) { throw archive_exception("Cannot allocate archive entry."); }
+	if (archive_write_disk_set_options(ext.get(), flags) != ARCHIVE_OK) {
 		throw archive_exception("Cannot set options for writing to disk.");
 	}
-	if (archive_write_disk_set_standard_lookup(ext) != ARCHIVE_OK) {
+	if (archive_write_disk_set_standard_lookup(ext.get()) != ARCHIVE_OK) {
 		throw archive_exception("Cannot set lookup for writing to disk.");
 	}
 
-	r = archive_read_open_filename(a, filename.c_str(), 10240);
+	int r = archive_read_open_filename(a.get(), filename.c_str(), 10240);
 	if (r < ARCHIVE_OK) { throw archive_exception("Cannot open source archive."); }
 
 	while (true) {
-		r = archive_read_next_header(a, &entry);
+		archive_entry *entry;
+		r = archive_read_next_header(a.get(), &entry);
 		if (r == ARCHIVE_EOF) { break; }
-		if (r < ARCHIVE_OK) { throw archive_exception(archive_error_string(a)); }
+		if (r < ARCHIVE_OK) { throw archive_exception(archive_error_string(a.get())); }
 
 		const char *current_file = archive_entry_pathname(entry);
 		const std::string full_path = (fs::path(destination) / current_file).string();
@@ -149,28 +141,26 @@ void archivator::decompress(const std::string &filename, const std::string &dest
 			throw archive_exception("Unsupported archive entry filetype.");
 		}
 
-		r = archive_write_header(ext, entry);
-		if (r < ARCHIVE_OK) { throw archive_exception(archive_error_string(ext)); }
+		r = archive_write_header(ext.get(), entry);
+		if (r < ARCHIVE_OK) { throw archive_exception(archive_error_string(ext.get())); }
 
-		if (archive_entry_size(entry) > 0) { copy_data(a, ext); }
+		if (archive_entry_size(entry) > 0) { copy_data(a.get(), ext.get()); }
 
-		r = archive_write_finish_entry(ext);
-		if (r < ARCHIVE_OK) { throw archive_exception(archive_error_string(ext)); }
+		r = archive_write_finish_entry(ext.get());
+		if (r < ARCHIVE_OK) { throw archive_exception(archive_error_string(ext.get())); }
 	}
 
-	archive_read_close(a);
-	archive_read_free(a);
-	archive_write_close(ext);
-	archive_write_free(ext);
+	archive_read_close(a.get());
+	archive_write_close(ext.get());
 }
 
 
 void archivator::copy_data(archive *ar, archive *aw)
 {
-	int r;
+	std::int64_t r;
 	const void *buff;
-	size_t size;
-	int64_t offset;
+	std::size_t size;
+	std::int64_t offset;
 
 	while (true) {
 		r = archive_read_data_block(ar, &buff, &size, &offset);

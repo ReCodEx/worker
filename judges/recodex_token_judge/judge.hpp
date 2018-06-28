@@ -3,6 +3,7 @@
 
 
 #include <misc/exception.hpp>
+#include <cli/logger.hpp>
 
 #include <vector>
 #include <string>
@@ -17,10 +18,10 @@
 template <class READER, class LINE_COMPARATOR> class Judge
 {
 public:
-	typedef READER reader_t;
-	typedef typename READER::Line line_t;
-	typedef LINE_COMPARATOR line_comparator_t;
-	typedef typename LINE_COMPARATOR::result_t score_t;
+	using reader_t = READER;
+	using line_t = typename READER::Line;
+	using line_comparator_t = LINE_COMPARATOR;
+	using score_t = typename LINE_COMPARATOR::result_t;
 
 private:
 	/**

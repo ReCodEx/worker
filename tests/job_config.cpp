@@ -8,7 +8,7 @@
 #include <boost/filesystem.hpp>
 using namespace boost::filesystem;
 
-#include "../src/helpers/config.h"
+#include "helpers/config.h"
 using namespace helpers;
 
 

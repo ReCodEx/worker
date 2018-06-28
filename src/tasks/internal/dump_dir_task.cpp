@@ -1,16 +1,12 @@
 #include <fstream>
 #include "dump_dir_task.h"
 
-dump_dir_task::dump_dir_task(size_t id, std::shared_ptr<task_metadata> task_meta) : task_base(id, task_meta)
+dump_dir_task::dump_dir_task(std::size_t id, std::shared_ptr<task_metadata> task_meta) : task_base(id, task_meta)
 {
 	if (task_meta->cmd_args.size() < 2) {
 		throw task_exception("Wrong number of arguments. Required: 2 (1 optional), Actual: " +
 			std::to_string(task_meta_->cmd_args.size()));
 	}
-}
-
-dump_dir_task::~dump_dir_task()
-{
 }
 
 std::shared_ptr<task_results> dump_dir_task::run()
@@ -19,7 +15,7 @@ std::shared_ptr<task_results> dump_dir_task::run()
 	fs::path src_root(task_meta_->cmd_args[0]);
 	fs::path dest_root(task_meta_->cmd_args[1]);
 
-	auto limit = read_task_arg<size_t>(task_meta_->cmd_args, 2, 128);
+	auto limit = read_task_arg<std::size_t>(task_meta_->cmd_args, 2, 128);
 	limit *= 1024; // The argument is in kilobytes
 
 	fs::recursive_directory_iterator directory_iterator(src_root), directory_iterator_end;
@@ -48,7 +44,7 @@ std::shared_ptr<task_results> dump_dir_task::run()
 			}
 		}
 
-		size_t size = fs::file_size(path);
+		std::size_t size = fs::file_size(path);
 		if (size <= limit) {
 			auto return_code = copy_file(path, dest_path);
 

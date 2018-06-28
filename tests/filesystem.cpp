@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-#include "../src/helpers/filesystem.h"
+#include "helpers/filesystem.h"
 
 typedef std::tuple<std::string, std::string, sandbox_limits::dir_perm> bound_dirs_tuple;
 typedef std::vector<bound_dirs_tuple> bound_dirs_type;

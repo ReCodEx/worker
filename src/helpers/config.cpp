@@ -55,7 +55,7 @@ std::shared_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 				throw config_exception("Configuration task has missing task-id");
 			}
 			if (ctask["priority"] && ctask["priority"].IsScalar()) {
-				task_meta->priority = ctask["priority"].as<size_t>();
+				task_meta->priority = ctask["priority"].as<std::size_t>();
 			} else {
 				task_meta->priority = 1; // default value
 			}
@@ -170,34 +170,34 @@ std::shared_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 							sl->extra_time = FLT_MAX; // set undefined value (max float)
 						}
 						if (lim["stack-size"] && lim["stack-size"].IsScalar()) {
-							sl->stack_size = lim["stack-size"].as<size_t>();
+							sl->stack_size = lim["stack-size"].as<std::size_t>();
 						} else {
-							sl->stack_size = SIZE_MAX; // set undefined value (max size_t)
+							sl->stack_size = SIZE_MAX; // set undefined value (max std::size_t)
 						}
 						if (lim["memory"] && lim["memory"].IsScalar()) {
-							sl->memory_usage = lim["memory"].as<size_t>();
+							sl->memory_usage = lim["memory"].as<std::size_t>();
 						} else {
-							sl->memory_usage = SIZE_MAX; // set undefined value (max size_t)
+							sl->memory_usage = SIZE_MAX; // set undefined value (max std::size_t)
 						}
 						if (lim["extra-memory"] && lim["extra-memory"].IsScalar()) {
-							sl->extra_memory = lim["extra-memory"].as<size_t>();
+							sl->extra_memory = lim["extra-memory"].as<std::size_t>();
 						} else {
-							sl->extra_memory = SIZE_MAX; // set undefined value (max size_t)
+							sl->extra_memory = SIZE_MAX; // set undefined value (max std::size_t)
 						}
 						if (lim["parallel"] && lim["parallel"].IsScalar()) { // TODO not defined properly
-							sl->processes = lim["parallel"].as<size_t>();
+							sl->processes = lim["parallel"].as<std::size_t>();
 						} else {
-							sl->processes = SIZE_MAX; // set undefined value (max size_t)
+							sl->processes = SIZE_MAX; // set undefined value (max std::size_t)
 						}
 						if (lim["disk-size"] && lim["disk-size"].IsScalar()) {
-							sl->disk_size = lim["disk-size"].as<size_t>();
+							sl->disk_size = lim["disk-size"].as<std::size_t>();
 						} else {
-							sl->disk_size = SIZE_MAX; // set undefined value (max size_t)
+							sl->disk_size = SIZE_MAX; // set undefined value (max std::size_t)
 						}
 						if (lim["disk-files"] && lim["disk-files"].IsScalar()) {
-							sl->disk_files = lim["disk-files"].as<size_t>();
+							sl->disk_files = lim["disk-files"].as<std::size_t>();
 						} else {
-							sl->disk_files = SIZE_MAX; // set undefined value (max size_t)
+							sl->disk_files = SIZE_MAX; // set undefined value (max std::size_t)
 						}
 
 						// find bound dirs from config and attach them to limits
@@ -206,8 +206,8 @@ std::shared_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 
 						if (lim["environ-variable"] && lim["environ-variable"].IsMap()) {
 							for (auto &var : lim["environ-variable"]) {
-								sl->environ_vars.push_back(
-									std::make_pair(var.first.as<std::string>(), var.second.as<std::string>()));
+								sl->environ_vars.emplace_back(
+									var.first.as<std::string>(), var.second.as<std::string>());
 							}
 						}
 
@@ -292,7 +292,7 @@ std::vector<std::tuple<std::string, std::string, sandbox_limits::dir_perm>> help
 						mode = static_cast<sandbox_limits::dir_perm>(mode | sandbox_limits::dir_perm::DEV);
 					}
 				} // no throw... can be omitted
-				bound_dirs.push_back(std::tuple<std::string, std::string, sandbox_limits::dir_perm>{src, dst, mode});
+				bound_dirs.emplace_back(src, dst, mode);
 			}
 		}
 	} // can be omitted... no throw

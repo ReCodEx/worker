@@ -33,11 +33,9 @@ namespace bpp
 		StreamException(const std::string &msg) : std::exception(), mMessage(msg)
 		{
 		}
-		virtual ~StreamException() throw()
-		{
-		}
+		~StreamException() noexcept override = default;
 
-		virtual const char *what() const throw()
+		const char *what() const noexcept override
 		{
 			return mMessage.c_str();
 		}
@@ -68,9 +66,7 @@ namespace bpp
 		RuntimeError(const std::string &msg) : StreamException(msg)
 		{
 		}
-		virtual ~RuntimeError() throw()
-		{
-		}
+		~RuntimeError() noexcept override = default;
 
 
 		// Overloading << operator that uses stringstream to append data to mMessage.
@@ -102,10 +98,7 @@ namespace bpp
 		LogicError(const std::string &msg) : RuntimeError(msg)
 		{
 		}
-		virtual ~LogicError() throw()
-		{
-		}
-
+		~LogicError() noexcept override = default;
 
 		// Overloading << operator that uses stringstream to append data to mMessage.
 		template <typename T> LogicError &operator<<(const T &data)
@@ -133,10 +126,7 @@ namespace bpp
 		NotImplementedError(const std::string &msg) : RuntimeError(msg)
 		{
 		}
-		virtual ~NotImplementedError() throw()
-		{
-		}
-
+		~NotImplementedError() noexcept override = default;
 
 		// Overloading << operator that uses stringstream to append data to mMessage.
 		template <typename T> NotImplementedError &operator<<(const T &data)

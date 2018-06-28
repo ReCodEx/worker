@@ -1,8 +1,8 @@
 #ifndef RECODEX_WORKER_INTERNAL_FETCH_TASK_H
 #define RECODEX_WORKER_INTERNAL_FETCH_TASK_H
 
-#include "../task_base.h"
-#include "../../fileman/file_manager_interface.h"
+#include "tasks/task_base.h"
+#include "fileman/file_manager_interface.h"
 #include <memory>
 
 
@@ -21,16 +21,16 @@ public:
 	 * @throws task_exception on invalid number of arguments.
 	 */
 	fetch_task(
-		size_t id, std::shared_ptr<task_metadata> task_meta, std::shared_ptr<file_manager_interface> filemanager);
+		std::size_t id, std::shared_ptr<task_metadata> task_meta, std::shared_ptr<file_manager_interface> filemanager);
 	/**
 	 * Destructor.
 	 */
-	virtual ~fetch_task();
+	~fetch_task() override = default;
 	/**
 	 * Run the action.
 	 * @return Evaluation results to be pushed back to frontend.
 	 */
-	virtual std::shared_ptr<task_results> run();
+	std::shared_ptr<task_results> run() override;
 
 private:
 	/** Pointer to filemanager instance. */

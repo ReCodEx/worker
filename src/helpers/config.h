@@ -3,8 +3,8 @@
 
 #include <memory>
 #include <yaml-cpp/yaml.h>
-#include "../config/job_metadata.h"
-#include "../config/task_metadata.h"
+#include "config/job_metadata.h"
+#include "config/task_metadata.h"
 
 
 namespace helpers
@@ -54,15 +54,13 @@ namespace helpers
 		/**
 		 * Stated for completion.
 		 */
-		virtual ~config_exception()
-		{
-		}
+		~config_exception() override = default;
 
 		/**
 		 * Returns description of exception.
 		 * @return c-style string
 		 */
-		virtual const char *what() const noexcept
+		const char *what() const noexcept override
 		{
 			return what_.c_str();
 		}

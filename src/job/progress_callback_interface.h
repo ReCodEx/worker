@@ -1,6 +1,8 @@
 #ifndef RECODEX_WORKER_PROGRESS_CALLBACK_BASE_H
 #define RECODEX_WORKER_PROGRESS_CALLBACK_BASE_H
 
+#include <string>
+
 /**
  * Callback which is used in @ref job_evaluator and @ref job itself to indicate its state.
  * Can be used to inform user about evaluating particular submissions/jobs.
@@ -12,9 +14,7 @@ public:
 	/**
 	 * Stated for completion and for derived classes.
 	 */
-	virtual ~progress_callback_interface()
-	{
-	}
+	virtual ~progress_callback_interface() = default;
 
 	/**
 	 * Indicates that job archive was successfully downloaded from fileserver.
@@ -92,43 +92,43 @@ public:
 class empty_progress_callback : public progress_callback_interface
 {
 public:
-	virtual void job_archive_downloaded(const std::string &job_id)
+	void job_archive_downloaded(const std::string &job_id) override
 	{
 	}
 
-	virtual void job_build_failed(const std::string &job_id)
+	void job_build_failed(const std::string &job_id) override
 	{
 	}
 
-	virtual void job_finished(const std::string &job_id)
+	void job_finished(const std::string &job_id) override
 	{
 	}
 
-	virtual void job_results_uploaded(const std::string &job_id)
+	void job_results_uploaded(const std::string &job_id) override
 	{
 	}
 
-	virtual void job_started(const std::string &job_id)
+	void job_started(const std::string &job_id) override
 	{
 	}
 
-	virtual void job_ended(const std::string &job_id)
+	void job_ended(const std::string &job_id) override
 	{
 	}
 
-	virtual void job_aborted(const std::string &job_id)
+	void job_aborted(const std::string &job_id) override
 	{
 	}
 
-	virtual void task_completed(const std::string &job_id, const std::string &task_id)
+	void task_completed(const std::string &job_id, const std::string &task_id) override
 	{
 	}
 
-	virtual void task_failed(const std::string &job_id, const std::string &task_id)
+	void task_failed(const std::string &job_id, const std::string &task_id) override
 	{
 	}
 
-	virtual void task_skipped(const std::string &job_id, const std::string &task_id)
+	void task_skipped(const std::string &job_id, const std::string &task_id) override
 	{
 	}
 };

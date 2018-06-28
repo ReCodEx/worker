@@ -1,6 +1,8 @@
 #ifndef RECODEX_WORKER_JOB_EXCEPTION_H
 #define RECODEX_WORKER_JOB_EXCEPTION_H
 
+#include <exception>
+#include <string>
 
 /**
  * Job exception class.
@@ -14,6 +16,7 @@ public:
 	job_exception() : what_("Generic job exception")
 	{
 	}
+
 	/**
 	 * Exception with some brief description.
 	 * @param what textual description of a problem
@@ -21,17 +24,17 @@ public:
 	job_exception(const std::string &what) : what_(what)
 	{
 	}
+
 	/**
 	 * Virtual destructor.
 	 */
-	virtual ~job_exception()
-	{
-	}
+	~job_exception() override = default;
+
 	/**
 	 * Return description of this exception.
 	 * @return C string
 	 */
-	virtual const char *what() const noexcept
+	const char *what() const noexcept override
 	{
 		return what_.c_str();
 	}
@@ -55,6 +58,9 @@ public:
 	job_unrecoverable_exception(const std::string &what) : job_exception(what)
 	{
 	}
+
+	/** Destructor */
+	~job_unrecoverable_exception() override = default;
 };
 
 #endif // RECODEX_WORKER_JOB_EXCEPTION_H

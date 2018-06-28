@@ -5,8 +5,8 @@
 #include <memory>
 #include "task_base.h"
 #include "create_params.h"
-#include "../sandbox/sandbox_base.h"
-#include "../config/sandbox_limits.h"
+#include "sandbox/sandbox_base.h"
+#include "config/sandbox_limits.h"
 
 
 /**
@@ -31,14 +31,14 @@ public:
 	/**
 	 * Destructor, empty right now.
 	 */
-	virtual ~external_task();
+	~external_task() override = default;
 
 	/**
 	 * Runs given program and parameters in constructed sandbox.
 	 * @return @ref task_results with @a sandbox_status item properly set
 	 * @throws sandbox_exception if fatal error occured in sandbox
 	 */
-	virtual std::shared_ptr<task_results> run();
+	std::shared_ptr<task_results> run() override;
 
 	/**
 	 * Get sandbox_limits structure, given during construction.
@@ -66,13 +66,13 @@ private:
 	 * @param file file pointing inside sandbox
 	 * @return path of the directory and the file outside sandbox
 	 */
-	fs::path find_path_outside_sandbox(std::string file);
+	fs::path find_path_outside_sandbox(const std::string &file);
 
 	/**
 	 * If binary file provided as argument does not have executable flag, try to set it.
 	 * @param binary
 	 */
-	void make_binary_executable(std::string binary);
+	void make_binary_executable(const std::string &binary);
 
 	/**
 	 * Initialize output if requested.
@@ -83,8 +83,9 @@ private:
 	 * @param result to which stdout and err will be assigned
 	 */
 	void get_results_output(std::shared_ptr<task_results> result);
-	void process_results_output(std::shared_ptr<task_results> result, fs::path stdout_path, fs::path stderr_path);
-	void process_carboncopy_output(fs::path stdout_path, fs::path stderr_path);
+	void process_results_output(
+		const std::shared_ptr<task_results> &result, const fs::path &stdout_path, const fs::path &stderr_path);
+	void process_carboncopy_output(const fs::path &stdout_path, const fs::path &stderr_path);
 
 	/** Worker default configuration */
 	std::shared_ptr<worker_config> worker_config_;

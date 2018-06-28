@@ -15,7 +15,7 @@
 #include "internal/rename_task.h"
 #include "internal/rm_task.h"
 #include "internal/exists_task.h"
-#include "../fileman/file_manager_interface.h"
+#include "fileman/file_manager_interface.h"
 
 
 /**
@@ -33,7 +33,7 @@ public:
 	/**
 	 * Virtual destructor
 	 */
-	virtual ~task_factory();
+	~task_factory() override = default;
 
 	/**
 	 * Create internal task. This could be one of predefined operations like move or copy file,
@@ -46,15 +46,15 @@ public:
 	 * @return Pointer to task's base type holding proper task type. If requested task type is unknown, @a nullptr
 	 * is returned.
 	 */
-	virtual std::shared_ptr<task_base> create_internal_task(
-		size_t id, std::shared_ptr<task_metadata> task_meta = nullptr);
+	std::shared_ptr<task_base> create_internal_task(
+		std::size_t id, std::shared_ptr<task_metadata> task_meta = nullptr) override;
 
 	/**
 	 * Created task which will run in sandboxed environment.
 	 * @param data Structure holding creating parameters for external (sandboxed) tasks.
 	 * @return Pointer to task's base type holding proper task type.
 	 */
-	virtual std::shared_ptr<task_base> create_sandboxed_task(const create_params &data);
+	std::shared_ptr<task_base> create_sandboxed_task(const create_params &data) override;
 
 private:
 	/** Pointer to given file manager instance. */

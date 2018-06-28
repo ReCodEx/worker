@@ -3,8 +3,8 @@
 #include <zmq.hpp>
 #include <thread>
 
-#include "../src/connection_proxy.h"
-#include "../src/job/progress_callback.h"
+#include "connection_proxy.h"
+#include "job/progress_callback.h"
 
 using namespace testing;
 

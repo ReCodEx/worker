@@ -5,9 +5,9 @@
 
 #include <memory>
 #include <vector>
-#include "../helpers/logger.h"
+#include "helpers/logger.h"
 #include "sandbox_base.h"
-#include "../config/sandbox_config.h"
+#include "config/sandbox_config.h"
 
 /**
  * Class implementing operations with Isolate sandbox.
@@ -41,15 +41,15 @@ public:
 	 */
 	isolate_sandbox(std::shared_ptr<sandbox_config> sandbox_config,
 		sandbox_limits limits,
-		size_t id,
+		std::size_t id,
 		const std::string &temp_dir,
 		const std::string &data_dir,
 		std::shared_ptr<spdlog::logger> logger = nullptr);
 	/**
 	 * Destructor.
 	 */
-	virtual ~isolate_sandbox();
-	virtual sandbox_results run(const std::string &binary, const std::vector<std::string> &arguments);
+	~isolate_sandbox() override;
+	sandbox_results run(const std::string &binary, const std::vector<std::string> &arguments) override;
 
 private:
 	/** General sandbox configuration */
@@ -59,7 +59,7 @@ private:
 	/** Logger */
 	std::shared_ptr<spdlog::logger> logger_;
 	/** Identifier of this isolate's instance. Must be unique on each server. */
-	size_t id_;
+	std::size_t id_;
 	/** Name of isolate binary - defaults "isolate" */
 	std::string isolate_binary_;
 	/** Path to temporary directory used by sandboxes. Subdir with "id_" value will be created. */

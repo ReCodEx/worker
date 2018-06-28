@@ -1,7 +1,7 @@
 #ifndef RECODEX_WORKER_INTERNAL_RM_TASK_H
 #define RECODEX_WORKER_INTERNAL_RM_TASK_H
 
-#include "../task_base.h"
+#include "tasks/task_base.h"
 
 
 /**
@@ -17,18 +17,18 @@ public:
 	 * @a cmd_args entry has at least one argument - names of files and directories to be removed.
 	 * @throws task_exception when no argument provided.
 	 */
-	rm_task(size_t id, std::shared_ptr<task_metadata> task_meta);
+	rm_task(std::size_t id, std::shared_ptr<task_metadata> task_meta);
 	/**
 	 * Destructor.
 	 */
-	virtual ~rm_task();
+	~rm_task() override = default;
 	/**
 	 * Run the action. It tries to delete all entries first. When any of items cannot be deleted,
 	 * exception is throuwn, otherwise normal result is returned. For more info about removing function see
 	 * http://www.boost.org/doc/libs/1_59_0_b1/libs/filesystem/doc/reference.html#remove_all.
 	 * @return Evaluation results to be pushed back to frontend.
 	 */
-	virtual std::shared_ptr<task_results> run();
+	std::shared_ptr<task_results> run() override;
 };
 
 #endif // RECODEX_WORKER_INTERNAL_RM_TASK_H

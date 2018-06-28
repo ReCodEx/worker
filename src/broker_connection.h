@@ -24,7 +24,7 @@ struct message_origin {
 	/**
 	 * A set of origins from which there are incoming messages
 	 */
-	typedef std::bitset<3> set;
+	using set = std::bitset<3>;
 };
 
 /**
@@ -126,7 +126,7 @@ public:
 	{
 		const std::chrono::milliseconds ping_interval = config_->get_broker_ping_interval();
 		std::chrono::milliseconds poll_limit = ping_interval;
-		size_t broker_liveness = config_->get_max_broker_liveness();
+		std::size_t broker_liveness = config_->get_max_broker_liveness();
 
 		while (true) {
 			std::vector<std::string> msg;

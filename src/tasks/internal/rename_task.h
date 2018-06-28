@@ -1,7 +1,7 @@
 #ifndef RECODEX_WORKER_INTERNAL_RENAME_TASK_H
 #define RECODEX_WORKER_INTERNAL_RENAME_TASK_H
 
-#include "../task_base.h"
+#include "tasks/task_base.h"
 
 
 /**
@@ -21,16 +21,16 @@ public:
 	 * for more info.
 	 * @throws task_exception when no argument provided.
 	 */
-	rename_task(size_t id, std::shared_ptr<task_metadata> task_meta);
+	rename_task(std::size_t id, std::shared_ptr<task_metadata> task_meta);
 	/**
 	 * Destructor.
 	 */
-	virtual ~rename_task();
+	~rename_task() override = default;
 	/**
 	 * Run the action.
 	 * @return Evaluation results to be pushed back to frontend.
 	 */
-	virtual std::shared_ptr<task_results> run();
+	std::shared_ptr<task_results> run() override;
 };
 
 #endif // RECODEX_WORKER_INTERNAL_RENAME_TASK_H

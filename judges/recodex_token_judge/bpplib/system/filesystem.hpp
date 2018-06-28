@@ -45,9 +45,7 @@ namespace bpp
 		FileError(const std::string &msg) : RuntimeError(msg)
 		{
 		}
-		virtual ~FileError() throw()
-		{
-		}
+		~FileError() noexcept override = default;
 
 
 		// Overloading << operator that uses stringstream to append data to mMessage.
@@ -75,7 +73,7 @@ namespace bpp
 		 */
 		static std::string getFileName(const std::string &path)
 		{
-			size_t pos = path.find_last_of("/\\");
+			std::size_t pos = path.find_last_of("/\\");
 			return (pos != std::string::npos) ? path.substr(pos + 1) : path;
 		}
 

@@ -14,7 +14,7 @@ namespace fs = boost::filesystem;
 
 #include "log_config.h"
 #include "fileman_config.h"
-#include "../sandbox/sandbox_base.h"
+#include "sandbox/sandbox_base.h"
 
 
 /**
@@ -24,7 +24,7 @@ class worker_config
 {
 public:
 	/** Type of the header map */
-	typedef std::multimap<std::string, std::string> header_map_t;
+	using header_map_t = std::multimap<std::string, std::string>;
 
 	/**
 	 * The default constructor
@@ -46,7 +46,7 @@ public:
 	 * Get worker ID which has to be unique at least in context of one machine.
 	 * @return integer which can be used also as identifier/index of sandbox
 	 */
-	virtual size_t get_worker_id() const;
+	virtual std::size_t get_worker_id() const;
 	/**
 	 * Get worker human readable description (name), which will be shown in broker logs.
 	 * @return string with the description
@@ -78,7 +78,7 @@ public:
 	 * Get the maximum number of pings in a row without response before the broker is considered disconnected.
 	 * @return broker liveness integer
 	 */
-	virtual size_t get_max_broker_liveness() const;
+	virtual std::size_t get_max_broker_liveness() const;
 
 	/**
 	 * Get the interval between pings sent to the broker.
@@ -112,13 +112,13 @@ public:
 	 * Get maximal length of output which can be written to the results.
 	 * @return length of output in bytes
 	 */
-	virtual size_t get_max_output_length() const;
+	virtual std::size_t get_max_output_length() const;
 
 	/**
 	 * Get maximal length of output which can be copied into results folder.
 	 * @return length of output in bytes
 	 */
-	virtual size_t get_max_carboncopy_length() const;
+	virtual std::size_t get_max_carboncopy_length() const;
 
 	/**
 	 * Get flag which determines if cleanup is made after sumbission is evaluated.
@@ -128,35 +128,35 @@ public:
 
 private:
 	/** Unique worker number in context of one machine (0-100 preferably) */
-	size_t worker_id_;
+	std::size_t worker_id_ = 0;
 	/** Human readable description of the worker for logging purposes */
-	std::string worker_description_;
+	std::string worker_description_ = "";
 	/** Working directory of whole worker used as base directory for all temporary files */
-	std::string working_directory_;
+	std::string working_directory_ = "";
 	/** Broker URI, address where broker is listening */
-	std::string broker_uri_;
+	std::string broker_uri_ = "";
 	/** Header which are sent to broker and should specify worker abilities */
-	header_map_t headers_;
+	header_map_t headers_ = {};
 	/** Hwgroup which is sent to broker and is used in job configuration to select right limits */
-	std::string hwgroup_;
+	std::string hwgroup_ = {};
 	/** Maximum number of pings in a row without response before the broker is considered disconnected */
-	size_t max_broker_liveness_ = 4;
+	std::size_t max_broker_liveness_ = 4;
 	/** How often should the worker ping the broker */
 	std::chrono::milliseconds broker_ping_interval_ = std::chrono::milliseconds(1000);
 	/** The caching directory path */
-	std::string cache_dir_;
+	std::string cache_dir_ = "";
 	/** Configuration of logger */
-	log_config log_config_;
+	log_config log_config_ = {};
 	/** Default configuration of file managers */
-	std::vector<fileman_config> filemans_configs_;
+	std::vector<fileman_config> filemans_configs_ = {};
 	/** Default sandbox limits */
-	sandbox_limits limits_;
+	sandbox_limits limits_ = {};
 	/** Maximal length of output from sandbox which can be written to the results file, in bytes. */
-	size_t max_output_length_;
+	std::size_t max_output_length_ = 0;
 	/** Maximal lenght of output from sandbox which can be copied into results folder, in bytes */
-	size_t max_carboncopy_length_;
+	std::size_t max_carboncopy_length_ = 0;
 	/** If true then all files created during evaluation of job will be deleted at the end. */
-	bool cleanup_submission_;
+	bool cleanup_submission_ = true;
 };
 
 

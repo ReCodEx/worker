@@ -1,6 +1,7 @@
 #ifndef RECODEX_WORKER_FILEMAN_CONFIG_H
 #define RECODEX_WORKER_FILEMAN_CONFIG_H
 
+#include <string>
 
 /**
  * Struct which stores informations which are usefull in file managers.

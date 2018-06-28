@@ -76,22 +76,20 @@ public:
 	 * Constructor with custom string.
 	 * @param what String with description of failure.
 	 */
-	archive_exception(std::string what) : what_(what)
+	archive_exception(const std::string &what) : what_(what)
 	{
 	}
 
 	/**
 	 * Destructor.
 	 */
-	virtual ~archive_exception()
-	{
-	}
+	~archive_exception() override = default;
 
 	/**
 	 * Get failure description.
 	 * @return Stored string.
 	 */
-	virtual const char *what() const noexcept
+	const char *what() const noexcept override
 	{
 		return what_.c_str();
 	}

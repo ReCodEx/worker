@@ -22,17 +22,17 @@ public:
 	 * @param id Unique identificator of load order of tasks.
 	 * @param task_meta Variable containing further info about task.
 	 */
-	root_task(size_t id, std::shared_ptr<task_metadata> task_meta = std::make_shared<task_metadata>());
+	root_task(std::size_t id, std::shared_ptr<task_metadata> task_meta = std::make_shared<task_metadata>());
 	/**
 	 * Empty destructor.
 	 */
-	virtual ~root_task();
+	~root_task() override = default;
 
 	/**
 	 * Empty function. Has to be stated for completeness.
 	 * @return Always @a nullptr.
 	 */
-	virtual std::shared_ptr<task_results> run();
+	std::shared_ptr<task_results> run() override;
 };
 
 #endif // RECODEX_WORKER_FAKE_TASK_HPP

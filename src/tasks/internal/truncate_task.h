@@ -1,7 +1,7 @@
 #ifndef RECODEX_WORKER_TRUNCATE_TASK_H
 #define RECODEX_WORKER_TRUNCATE_TASK_H
 
-#include "../task_base.h"
+#include "tasks/task_base.h"
 
 
 class truncate_task : public task_base
@@ -14,11 +14,16 @@ public:
 	 * @a cmd_args entry has just 2 arguments - the name of the file to be truncated and the desired size
 	 * @throws task_exception on invalid number of arguments.
 	 */
-	truncate_task(size_t id, std::shared_ptr<task_metadata> task_meta);
-
-	virtual ~truncate_task();
-
-	virtual std::shared_ptr<task_results> run();
+	truncate_task(std::size_t id, std::shared_ptr<task_metadata> task_meta);
+	/**
+	 * Destructor.
+	 */
+	~truncate_task() override = default;
+	/**
+	 * Run the action.
+	 * @return Evaluation results to be pushed back to frontend.
+	 */
+	std::shared_ptr<task_results> run() override;
 };
 
 

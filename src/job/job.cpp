@@ -1,5 +1,6 @@
 #include "job.h"
 #include "job_exception.h"
+#include "helpers/type_utils.h"
 
 job::job(std::shared_ptr<job_metadata> job_meta,
 	std::shared_ptr<worker_config> worker_conf,
@@ -86,7 +87,7 @@ void job::build_job()
 	}
 
 	// create root task, which is logical root of evaluation
-	size_t id = 0;
+	std::size_t id = 0;
 	root_task_ = factory_->create_internal_task(id++);
 
 	// construct all tasks with their ids and check if they have all datas, but do not connect them
@@ -102,9 +103,7 @@ void job::build_job()
 
 		// go through variables parsing
 		task_meta->binary = parse_job_var(task_meta->binary);
-		for (size_t i = 0; i < task_meta->cmd_args.size(); ++i) {
-			task_meta->cmd_args.at(i) = parse_job_var(task_meta->cmd_args.at(i));
-		}
+		for (auto &cmd_arg : task_meta->cmd_args) { cmd_arg = parse_job_var(cmd_arg); }
 
 		std::shared_ptr<task_base> task;
 
@@ -146,8 +145,8 @@ void job::build_job()
 			sandbox->carboncopy_stderr = parse_job_var(sandbox->carboncopy_stderr);
 			std::vector<std::tuple<std::string, std::string, sandbox_limits::dir_perm>> new_bnd_dirs;
 			for (auto &bnd_dir : limits->bound_dirs) {
-				new_bnd_dirs.push_back(std::tuple<std::string, std::string, sandbox_limits::dir_perm>{
-					parse_job_var(std::get<0>(bnd_dir)), parse_job_var(std::get<1>(bnd_dir)), std::get<2>(bnd_dir)});
+				new_bnd_dirs.emplace_back(
+					parse_job_var(std::get<0>(bnd_dir)), parse_job_var(std::get<1>(bnd_dir)), std::get<2>(bnd_dir));
 			}
 			limits->bound_dirs = new_bnd_dirs;
 
@@ -200,7 +199,7 @@ void job::build_job()
 	print_job_queue();
 }
 
-void job::process_task_limits(std::shared_ptr<sandbox_limits> limits)
+void job::process_task_limits(const std::shared_ptr<sandbox_limits> &limits)
 {
 	if (limits == nullptr) { throw job_exception("Internal error. Nullptr dereference in process_task_limits."); }
 
@@ -208,17 +207,17 @@ void job::process_task_limits(std::shared_ptr<sandbox_limits> limits)
 	std::string msg = " item is bigger than default worker value";
 
 	// we have to load defaults from worker_config if necessary and check for bigger limits than in worker_config
-	if (limits->cpu_time == FLT_MAX) {
+	if (helpers::almost_equal(limits->cpu_time, FLT_MAX)) {
 		limits->cpu_time = worker_limits.cpu_time;
 	} else {
 		if (limits->cpu_time > worker_limits.cpu_time) { throw job_exception("time" + msg); }
 	}
-	if (limits->wall_time == FLT_MAX) {
+	if (helpers::almost_equal(limits->wall_time, FLT_MAX)) {
 		limits->wall_time = worker_limits.wall_time;
 	} else {
 		if (limits->wall_time > worker_limits.wall_time) { throw job_exception("wall-time" + msg); }
 	}
-	if (limits->extra_time == FLT_MAX) {
+	if (helpers::almost_equal(limits->extra_time, FLT_MAX)) {
 		limits->extra_time = worker_limits.extra_time;
 	} else {
 		if (limits->extra_time > worker_limits.extra_time) { throw job_exception("extra-time" + msg); }
@@ -260,7 +259,7 @@ void job::process_task_limits(std::shared_ptr<sandbox_limits> limits)
 }
 
 void job::connect_tasks(
-	std::shared_ptr<task_base> root, std::map<std::string, std::shared_ptr<task_base>> &unconn_tasks)
+	const std::shared_ptr<task_base> &root, std::map<std::string, std::shared_ptr<task_base>> &unconn_tasks)
 {
 	for (auto &elem : unconn_tasks) {
 		const std::vector<std::string> &depend = elem.second->get_dependencies();
@@ -271,13 +270,13 @@ void job::connect_tasks(
 			elem.second->add_parent(root);
 		}
 
-		for (size_t i = 0; i < depend.size(); ++i) {
+		for (const auto &i : depend) {
 			try {
-				auto ptr = unconn_tasks.at(depend.at(i));
+				auto ptr = unconn_tasks.at(i);
 				ptr->add_children(elem.second);
 				elem.second->add_parent(ptr);
 			} catch (std::out_of_range &) {
-				throw job_exception("Non existing task-id (" + depend.at(i) + ") in dependency list");
+				throw job_exception("Non existing task-id (" + i + ") in dependency list");
 			}
 		}
 	}
@@ -303,7 +302,7 @@ std::vector<std::pair<std::string, std::shared_ptr<task_results>>> job::run()
 			}
 
 			// add result from task into whole results set
-			results.push_back({task_id, res});
+			results.emplace_back(task_id, res);
 
 			// if task has some results then process them
 			if (res != nullptr) {
@@ -343,7 +342,7 @@ std::vector<std::pair<std::string, std::shared_ptr<task_results>>> job::run()
 			// even skipped task has its own result entry
 			std::shared_ptr<task_results> result(new task_results());
 			result->status = task_status::SKIPPED;
-			results.push_back({task_id, result});
+			results.emplace_back(task_id, result);
 
 			// we have to pass information about non-execution to children
 			task->set_children_execution(false);
@@ -424,10 +423,10 @@ std::string job::parse_job_var(const std::string &src)
 {
 	std::string res = src;
 
-	size_t start = 0;
+	std::size_t start = 0;
 	while ((start = res.find("${", start)) != std::string::npos) {
-		size_t end = res.find("}", start + 1);
-		size_t len = end - start - 2;
+		std::size_t end = res.find('}', start + 1);
+		std::size_t len = end - start - 2;
 		if (end == std::string::npos) { throw job_exception("Not closed variable name: " + res.substr(start)); }
 
 		if (job_variables_.find(res.substr(start + 2, len)) != job_variables_.end()) {

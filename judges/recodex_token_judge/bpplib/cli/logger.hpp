@@ -89,7 +89,7 @@ namespace bpp
 		std::size_t applySizeLimit(LogSeverity &severity)
 		{
 			std::size_t total = 0;
-			for (std::size_t i = (std::size_t) LogSeverity::UNDEFINED; i < (std::size_t) severity; ++i) {
+			for (auto i = (std::size_t) LogSeverity::UNDEFINED; i < (std::size_t) severity; ++i) {
 				total += mLengths[(LogSeverity) i];
 				if (total >= mMaxLength) { // max log length would be exceeded including current severity into output
 					severity = (LogSeverity) i;
@@ -215,8 +215,8 @@ namespace bpp
 		std::size_t size(LogSeverity severity = LogSeverity::ANY) const
 		{
 			std::size_t size = 0;
-			for (std::size_t i = (std::size_t) LogSeverity::UNDEFINED; i <= (std::size_t) severity; ++i) {
-				LogSeverity s = (LogSeverity) i;
+			for (auto i = (std::size_t) LogSeverity::UNDEFINED; i <= (std::size_t) severity; ++i) {
+				auto s = (LogSeverity) i;
 				auto it = mLengths.find(s);
 				if (it != mLengths.end()) { size += it->second; }
 

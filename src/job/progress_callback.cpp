@@ -1,9 +1,10 @@
 #include "progress_callback.h"
-#include "../helpers/zmq_socket.h"
-#include "../helpers/logger.h"
-#include "../connection_proxy.h"
+#include "helpers/zmq_socket.h"
+#include "helpers/logger.h"
+#include "connection_proxy.h"
 
-progress_callback::progress_callback(std::shared_ptr<zmq::context_t> context, std::shared_ptr<spdlog::logger> logger)
+progress_callback::progress_callback(
+	const std::shared_ptr<zmq::context_t> &context, std::shared_ptr<spdlog::logger> logger)
 	: socket_(*context, ZMQ_PAIR), command_("progress"), connected_(false), logger_(logger)
 {
 	if (logger_ == nullptr) { logger_ = helpers::create_null_logger(); }

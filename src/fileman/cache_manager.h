@@ -4,7 +4,7 @@
 #include <string>
 #include <memory>
 #include "file_manager_interface.h"
-#include "../helpers/logger.h"
+#include "helpers/logger.h"
 
 #define BOOST_FILESYSTEM_NO_DEPRECATED
 #define BOOST_NO_CXX11_SCOPED_ENUMS
@@ -38,22 +38,20 @@ public:
 	/**
 	 * Destructor.
 	 */
-	virtual ~cache_manager()
-	{
-	}
+	~cache_manager() override = default;
 	/**
 	 * Copy a file from cache to destination.
 	 * @param src_name Name of the file without path.
 	 * @param dst_name Name of the destination path with requested filename - the file
 	 *					can be renamed during fetching.
 	 */
-	virtual void get_file(const std::string &src_name, const std::string &dst_name);
+	void get_file(const std::string &src_name, const std::string &dst_name) override;
 	/**
 	 * Copy file to cache.
 	 * @param src_name Path and name of the file to be copied.
 	 * @param dst_name Name of the file in cache.
 	 */
-	virtual void put_file(const std::string &src_name, const std::string &dst_name);
+	void put_file(const std::string &src_name, const std::string &dst_name) override;
 
 	/**
 	 * Get path to the directory where files are stored.

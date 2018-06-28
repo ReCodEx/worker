@@ -18,7 +18,7 @@ namespace bpp
 	 * \tparam RES The result type (must be an integral type).
 	 * \tparam CONTAINER Class holding the sequence. The class must have size() method
 	 *         and the comparator must be able to get values from the container based on their indices.
-	 * \tparma COMPARATOR Comparator class holds a static method compare(seq1, i1, seq2, i2) -> bool.
+	 * \tparam COMPARATOR Comparator class holds a static method compare(seq1, i1, seq2, i2) -> bool.
 	 *         I.e., the comparator is also responsible for fetching values from the seq. containers.
 	 */
 	template <typename RES = std::size_t, class CONTAINER, typename COMPARATOR>
@@ -31,7 +31,7 @@ namespace bpp
 		const CONTAINER &seq2 = sequence1.size() < sequence2.size() ? sequence1 : sequence2;
 
 		std::vector<RES> row((std::size_t) seq2.size());
-		std::size_t rows = (std::size_t) seq1.size();
+		auto rows = (std::size_t) seq1.size();
 
 		// Dynamic programming - matrix traversal that keeps only the last row.
 		for (std::size_t r = 0; r < rows; ++r) {
@@ -65,7 +65,7 @@ namespace bpp
 	 * \tparam RES The result type (must be an integral type).
 	 * \tparam CONTAINER Class holding the sequence. The class must have size() method
 	 *         and the comparator must be able to get values from the container based on their indices.
-	 * \tparma COMPARATOR Comparator class holds a static method compare(seq1, i1, seq2, i2) -> bool.
+	 * \tparam COMPARATOR Comparator class holds a static method compare(seq1, i1, seq2, i2) -> bool.
 	 *         I.e., the comparator is also responsible for fetching values from the seq. containers.
 	 */
 	template <typename IDX = std::size_t, class CONTAINER, typename COMPARATOR>

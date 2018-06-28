@@ -4,8 +4,8 @@
 #include <string>
 #include <memory>
 #include "file_manager_interface.h"
-#include "../helpers/logger.h"
-#include "../config/fileman_config.h"
+#include "helpers/logger.h"
+#include "config/fileman_config.h"
 
 
 /**
@@ -34,23 +34,22 @@ public:
 	/**
 	 * Destructor.
 	 */
-	virtual ~http_manager()
-	{
-	}
+	~http_manager() override = default;
+
 	/**
 	 * Get and save file locally.
 	 * @param src_name Name of requested file (without path)
 	 * @param dst_name Path to the directory with name of the created file - the file can
 	 *					be renamed during fetching.
 	 */
-	virtual void get_file(const std::string &src_name, const std::string &dst_name);
+	void get_file(const std::string &src_name, const std::string &dst_name) override;
 	/**
 	 * Upload file to remote server with HTTP PUT method.
 	 * @param src_name Name with path to a file to upload.
 	 * @param dst_url Url where the file will be uploaded. If this is with or without file name
 	 *					depends on your HTTP server configuration.
 	 */
-	virtual void put_file(const std::string &src_name, const std::string &dst_url);
+	void put_file(const std::string &src_name, const std::string &dst_url) override;
 
 protected:
 	/**

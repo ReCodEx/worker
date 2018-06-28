@@ -13,14 +13,14 @@
 namespace fs = boost::filesystem;
 
 #include "spdlog/spdlog.h"
-#include "../helpers/logger.h"
-#include "../helpers/topological_sort.h"
-#include "../helpers/filesystem.h"
-#include "../config/worker_config.h"
-#include "../config/job_metadata.h"
-#include "../config/task_metadata.h"
-#include "../tasks/task_factory_interface.h"
-#include "../sandbox/sandbox_base.h"
+#include "helpers/logger.h"
+#include "helpers/topological_sort.h"
+#include "helpers/filesystem.h"
+#include "config/worker_config.h"
+#include "config/job_metadata.h"
+#include "config/task_metadata.h"
+#include "tasks/task_factory_interface.h"
+#include "sandbox/sandbox_base.h"
 #include "progress_callback_interface.h"
 
 
@@ -108,7 +108,7 @@ private:
 	 * Check limits and in case of undefined values set worker defaults.
 	 * @param limits limits which will be checked
 	 */
-	void process_task_limits(std::shared_ptr<sandbox_limits> limits);
+	void process_task_limits(const std::shared_ptr<sandbox_limits> &limits);
 	/**
 	 * Given unconnected tasks will be connected according to their dependencies.
 	 * If they do not have dependency, they will be assigned to given root task.
@@ -116,7 +116,7 @@ private:
 	 * @param unconn_tasks given unconnected tasks which will be connected
 	 */
 	void connect_tasks(
-		std::shared_ptr<task_base> root, std::map<std::string, std::shared_ptr<task_base>> &unconn_tasks);
+		const std::shared_ptr<task_base> &root, std::map<std::string, std::shared_ptr<task_base>> &unconn_tasks);
 
 	/**
 	 * Prepare variables which can be used in job configuration.

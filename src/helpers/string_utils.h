@@ -11,7 +11,7 @@ namespace helpers
 	 * @param length
 	 * @return generated string
 	 */
-	std::string random_alphanum_string(size_t length);
+	std::string random_alphanum_string(std::size_t length);
 
 	/**
 	 * Filter non-printable characters from given string and write it back.

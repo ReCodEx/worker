@@ -21,7 +21,7 @@ class fallback_file_manager : public file_manager_interface
 {
 public:
 	/** Pointer to every file manager type. */
-	typedef std::shared_ptr<file_manager_interface> file_manager_ptr;
+	using file_manager_ptr = std::shared_ptr<file_manager_interface>;
 
 public:
 	/**
@@ -35,9 +35,7 @@ public:
 	/**
 	 * Destructor.
 	 */
-	virtual ~fallback_file_manager()
-	{
-	}
+	~fallback_file_manager() override = default;
 
 	/**
 	 * Get file. If requested file is in cache, copy will be saved as @a dst_name immediately,
@@ -46,7 +44,7 @@ public:
 	 * @param dst_name Path (with filename) where to save the file (actual path you want,
 	 *					caching is transparent from this point of view).
 	 */
-	virtual void get_file(const std::string &src_name, const std::string &dst_name);
+	void get_file(const std::string &src_name, const std::string &dst_name) override;
 
 	/**
 	 * Save file using only secondary manager (i.e. upload file to remote server).
@@ -54,7 +52,7 @@ public:
 	 * @param src_name Name of the file (with path) to upload.
 	 * @param dst_url Destinaton (url where to upload the file).
 	 */
-	virtual void put_file(const std::string &src_name, const std::string &dst_url);
+	void put_file(const std::string &src_name, const std::string &dst_url) override;
 
 private:
 	/** Primary file manager (cache). */

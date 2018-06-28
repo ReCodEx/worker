@@ -12,12 +12,12 @@
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-#include "../src/config/worker_config.h"
-#include "../src/broker_connection.h"
-#include "../src/fileman/file_manager_interface.h"
-#include "../src/tasks/task_factory_interface.h"
-#include "../src/job/progress_callback_interface.h"
-#include "../src/job/job_evaluator_interface.h"
+#include "config/worker_config.h"
+#include "broker_connection.h"
+#include "fileman/file_manager_interface.h"
+#include "tasks/task_factory_interface.h"
+#include "job/progress_callback_interface.h"
+#include "job/job_evaluator_interface.h"
 
 using namespace testing;
 
@@ -37,10 +37,10 @@ public:
 	MOCK_CONST_METHOD0(get_headers, const worker_config::header_map_t &());
 	MOCK_CONST_METHOD0(get_broker_ping_interval, std::chrono::milliseconds());
 	MOCK_CONST_METHOD0(get_hwgroup, const std::string &());
-	MOCK_CONST_METHOD0(get_worker_id, size_t());
+	MOCK_CONST_METHOD0(get_worker_id, std::size_t());
 	MOCK_CONST_METHOD0(get_worker_description, const std::string &());
 	MOCK_CONST_METHOD0(get_limits, const sandbox_limits &());
-	MOCK_CONST_METHOD0(get_max_output_length, size_t());
+	MOCK_CONST_METHOD0(get_max_output_length, std::size_t());
 };
 
 /**
@@ -85,7 +85,7 @@ public:
 	virtual ~mock_task_factory()
 	{
 	}
-	MOCK_METHOD2(create_internal_task, std::shared_ptr<task_base>(size_t, std::shared_ptr<task_metadata>));
+	MOCK_METHOD2(create_internal_task, std::shared_ptr<task_base>(std::size_t, std::shared_ptr<task_metadata>));
 	MOCK_METHOD1(create_sandboxed_task, std::shared_ptr<task_base>(const create_params &));
 };
 
@@ -95,11 +95,11 @@ public:
 class mock_task : public task_base
 {
 public:
-	mock_task(size_t id, std::string str_id = "") : task_base(id, std::make_shared<task_metadata>())
+	mock_task(std::size_t id, std::string str_id = "") : task_base(id, std::make_shared<task_metadata>())
 	{
 		this->task_meta_->task_id = str_id;
 	}
-	mock_task(size_t id, std::shared_ptr<task_metadata> meta) : task_base(id, meta)
+	mock_task(std::size_t id, std::shared_ptr<task_metadata> meta) : task_base(id, meta)
 	{
 	}
 	mock_task() : mock_task(0)

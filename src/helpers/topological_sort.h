@@ -5,7 +5,7 @@
 #include <queue>
 #include <stack>
 #include <set>
-#include "../tasks/task_base.h"
+#include "tasks/task_base.h"
 
 
 namespace helpers
@@ -46,15 +46,13 @@ namespace helpers
 		/**
 		 * Stated for completion.
 		 */
-		virtual ~top_sort_exception()
-		{
-		}
+		~top_sort_exception() override = default;
 
 		/**
 		 * Returns description of exception.
 		 * @return c-style string
 		 */
-		virtual const char *what() const noexcept
+		const char *what() const noexcept override
 		{
 			return what_.c_str();
 		}
