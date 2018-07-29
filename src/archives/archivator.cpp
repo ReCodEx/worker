@@ -102,7 +102,7 @@ void archivator::decompress(const std::string &filename, const std::string &dest
 	// Don't allow ".." in any path within archive
 	flags |= ARCHIVE_EXTRACT_SECURE_NODOTDOT;
 
-	std::unique_ptr<archive, decltype(&archive_write_free)> a = {archive_write_new(), archive_write_free};
+	std::unique_ptr<archive, decltype(&archive_read_free)> a = {archive_read_new(), archive_read_free};
 	if (a == nullptr) { throw archive_exception("Cannot create source archive."); }
 	if (archive_read_support_format_all(a.get()) != ARCHIVE_OK) {
 		throw archive_exception("Cannot set formats for source archive.");
