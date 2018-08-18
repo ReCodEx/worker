@@ -99,13 +99,15 @@ namespace bpp
 			if (!GetFileSizeEx(mFile, &tmpSize)) throw RuntimeError("Cannot get file size.");
 			mLength = tmpSize.QuadPart;
 
-			// Create read only mapping object.
-			mMappedFile = CreateFileMapping(mFile, NULL, PAGE_READONLY, 0, 0, NULL);
-			if (mMappedFile == NULL) throw RuntimeError("Cannot create mapped file object.");
+			if (mLength > 0) {
+				// Create read only mapping object.
+				mMappedFile = CreateFileMapping(mFile, NULL, PAGE_READONLY, 0, 0, NULL);
+				if (mMappedFile == NULL) throw RuntimeError("Cannot create mapped file object.");
 
-			// Map the entire file to virtual memory space.
-			mData = MapViewOfFile(mMappedFile, FILE_MAP_READ, 0, 0, 0);
-			if (mData == NULL) throw RuntimeError("Cannot map view of file.");
+				// Map the entire file to virtual memory space.
+				mData = MapViewOfFile(mMappedFile, FILE_MAP_READ, 0, 0, 0);
+				if (mData == NULL) throw RuntimeError("Cannot map view of file.");
+			}
 #else
 			// Create file handle.
 			mFile = ::open(mFileName.c_str(), O_RDONLY);
@@ -116,11 +118,13 @@ namespace bpp
 			if (::fstat(mFile, &fileStat) == -1) throw RuntimeError("Cannot get file size.");
 			mLength = fileStat.st_size;
 
-			// Map the entire file to virtual memory space.
-			mData = ::mmap(NULL, mLength, PROT_READ, MAP_PRIVATE, mFile, 0);
-			if (mData == MAP_FAILED) {
-				mData = NULL;
-				throw RuntimeError("Cannot mmap the file.");
+			if (mLength > 0) {			
+				// Map the entire file to virtual memory space.
+				mData = ::mmap(NULL, mLength, PROT_READ, MAP_PRIVATE, mFile, 0);
+				if (mData == MAP_FAILED) {
+					mData = NULL;
+					throw RuntimeError("Cannot mmap the file.");
+				}
 			}
 #endif
 		}
@@ -163,16 +167,15 @@ namespace bpp
 			if (!opened()) return;
 
 #ifdef _WIN32
-			if (!UnmapViewOfFile(mData)) throw RuntimeError("Cannot unmap view of file.");
-			mData = NULL;
-
-			if (!CloseHandle(mMappedFile) || !CloseHandle(mFile)) throw RuntimeError("Cannot close mapped file.");
-			mMappedFile = mFile = NULL;
+			if (mData != NULL && !UnmapViewOfFile(mData)) throw RuntimeError("Cannot unmap view of file.");
+			if (mMappedFile != NULL && !CloseHandle(mMappedFile)) throw RuntimeError("Cannot close mapped file.");
+			if (mFile != NULL && !CloseHandle(mFile)) throw RuntimeError("Cannot close mapped file.");
+			mData = mMappedFile = mFile = NULL;
 #else
-			if (::munmap(mData, mLength) == -1) throw RuntimeError("Cannot unmap file.");
+			if (mData != NULL && ::munmap(mData, mLength) == -1) throw RuntimeError("Cannot unmap file.");
 			mData = NULL;
 
-			if (::close(mFile) == -1) throw RuntimeError("Cannot close mapped file.");
+			if (mfile != 0 && ::close(mFile) == -1) throw RuntimeError("Cannot close mapped file.");
 			mFile = 0;
 #endif
 		}
