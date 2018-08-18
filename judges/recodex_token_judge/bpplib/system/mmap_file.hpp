@@ -175,7 +175,7 @@ namespace bpp
 			if (mData != NULL && ::munmap(mData, mLength) == -1) throw RuntimeError("Cannot unmap file.");
 			mData = NULL;
 
-			if (mfile != 0 && ::close(mFile) == -1) throw RuntimeError("Cannot close mapped file.");
+			if (mFile != 0 && ::close(mFile) == -1) throw RuntimeError("Cannot close mapped file.");
 			mFile = 0;
 #endif
 		}
