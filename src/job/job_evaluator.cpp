@@ -313,6 +313,7 @@ void job_evaluator::push_result()
 	// make sure the yaml is ascii encoded
 	YAML::Emitter yaml_out;
 	yaml_out.SetOutputCharset(YAML::EscapeNonAscii);
+	yaml_out << res;
 	// open output stream and write constructed yaml
 	std::ofstream out(result_yaml.string());
 	out << yaml_out.c_str();
