@@ -86,6 +86,15 @@ TEST(Tasks, InternalCpTaskExceptionBug)
 	EXPECT_EQ(task_status::FAILED, res->status);
 }
 
+TEST(Tasks, InternalCpTaskWildcards)
+{
+	auto meta = get_task_meta();
+	meta->cmd_args = {"/proc/self/l*", "/tmp"};
+	std::shared_ptr<task_results> res;
+	EXPECT_NO_THROW(res = cp_task(1, meta).run());
+	EXPECT_EQ(task_status::OK, res->status);
+}
+
 TEST(Tasks, InternalExtractTask)
 {
 	EXPECT_THROW(extract_task(1, get_three_args()), task_exception);
