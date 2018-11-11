@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include <memory>
+#include <fstream>
 
 #include "tasks/internal/archivate_task.h"
 #include "tasks/internal/cp_task.h"
@@ -16,6 +17,11 @@
 #include "tasks/create_params.h"
 #include "config/sandbox_config.h"
 #include "mocks.h"
+
+#define BOOST_FILESYSTEM_NO_DEPRECATED
+#define BOOST_NO_CXX11_SCOPED_ENUMS
+#include <boost/filesystem.hpp>
+namespace fs = boost::filesystem;
 
 
 std::shared_ptr<task_metadata> get_task_meta()
@@ -88,11 +94,30 @@ TEST(Tasks, InternalCpTaskExceptionBug)
 
 TEST(Tasks, InternalCpTaskWildcards)
 {
+	// prepare directories and files
+	auto temp = fs::temp_directory_path();
+	auto src_dir = temp / fs::unique_path();
+	auto dst_dir = temp / fs::unique_path();
+	fs::create_directories(src_dir);
+	fs::create_directories(dst_dir);
+	for (const auto &i : {"a1", "a2", "b1"}) {
+		std::ofstream ofs((src_dir / i).string());
+		ofs << i;
+	}
+
+	// run the test and check asserts
 	auto meta = get_task_meta();
-	meta->cmd_args = {"/proc/self/l*", "/tmp"};
+	meta->cmd_args = {src_dir.string() + "/a*", dst_dir.string()};
 	std::shared_ptr<task_results> res;
 	EXPECT_NO_THROW(res = cp_task(1, meta).run());
 	EXPECT_EQ(task_status::OK, res->status);
+	EXPECT_TRUE(fs::is_regular_file(dst_dir / "a1"));
+	EXPECT_TRUE(fs::is_regular_file(dst_dir / "a2"));
+	EXPECT_FALSE(fs::is_regular_file(dst_dir / "b1"));
+
+	// cleanup
+	fs::remove_all(src_dir);
+	fs::remove_all(dst_dir);
 }
 
 TEST(Tasks, InternalExtractTask)
