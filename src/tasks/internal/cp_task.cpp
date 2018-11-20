@@ -91,11 +91,13 @@ std::shared_ptr<task_results> cp_task::run()
 	}
 
 	// go through all items in base directory and copy matching items to result location
-	for (const auto &item : fs::directory_iterator(base_dir)) {
-		if (regex_match(item.path().filename().string(), pattern)) {
-			auto target = output_is_dir ? (output / item.path().filename()) : output;
+	// TODO: replace to range loop when boost is upgraded
+	fs::directory_iterator end_itr;
+	for (fs::directory_iterator item(base_dir); item != end_itr; ++item) {
+		if (regex_match(item->path().filename().string(), pattern)) {
+			auto target = output_is_dir ? (output / item->path().filename()) : output;
 			boost::system::error_code error_code;
-			fs::copy(item.path(), target, error_code);
+			fs::copy(item->path(), target, error_code);
 			if (error_code.value() != boost::system::errc::success) {
 				result->status = task_status::FAILED;
 				result->error_message = std::string("Cannot copy files. Error: ") + error_code.message();
