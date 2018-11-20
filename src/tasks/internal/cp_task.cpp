@@ -84,6 +84,11 @@ std::shared_ptr<task_results> cp_task::run()
 	fs::path output(task_meta_->cmd_args[1]);
 	bool output_is_dir = fs::is_directory(output);
 
+	if (!fs::exists(base_dir)) {
+		result->status = task_status::FAILED;
+		result->error_message = "Source directory '" + base_dir.string() + "' does not exist";
+		return result;
+	}
 
 	// go through all items in base directory and copy matching items to result location
 	for (const auto &item : fs::directory_iterator(base_dir)) {
