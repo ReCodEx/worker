@@ -18,8 +18,12 @@ add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 # installation
 if(UNIX)
 	install(TARGETS recodex-judge-passthrough DESTINATION /usr/bin COMPONENT binaries)
+	install(PROGRAMS recodex-data-only-wrapper.sh DESTINATION /usr/bin COMPONENT binaries)
 elseif(MSVC)
 	install(TARGETS recodex-judge-passthrough DESTINATION worker/bin COMPONENT binaries)
+	install(PROGRAMS recodex-data-only-wrapper.sh DESTINATION worker/bin COMPONENT binaries)
 else()
 	install(TARGETS recodex-judge-passthrough DESTINATION recodex/worker/bin COMPONENT binaries)
+	install(PROGRAMS recodex-data-only-wrapper.sh DESTINATION recodex/worker/bin COMPONENT binaries)
 endif()
+

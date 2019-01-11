@@ -72,6 +72,7 @@ exit 0
 %{_bindir}/recodex-judge-filter
 %{_bindir}/recodex-judge-shuffle
 %{_bindir}/recodex-judge-passthrough
+%{_bindir}/recodex-data-only-wrapper.sh
 %{_bindir}/recodex-token-judge
 %config(noreplace) %attr(-,recodex,recodex) %{_sysconfdir}/recodex/worker/config-1.yml
 
