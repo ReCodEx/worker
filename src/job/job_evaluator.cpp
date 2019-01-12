@@ -310,9 +310,13 @@ void job_evaluator::push_result()
 		res["results"].push_back(node);
 	}
 
+	// make sure the yaml is ascii encoded
+	YAML::Emitter yaml_out;
+	yaml_out.SetOutputCharset(YAML::EscapeNonAscii);
+	yaml_out << res;
 	// open output stream and write constructed yaml
 	std::ofstream out(result_yaml.string());
-	out << res;
+	out << yaml_out.c_str();
 	out.close();
 	logger_->info("Yaml result file written succesfully.");
 
