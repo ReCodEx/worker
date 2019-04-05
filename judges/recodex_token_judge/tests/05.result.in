@@ -1,3 +1,4 @@
 some string tokens
 followed by numeric tokens 42 +1000000000 0054 -19.0 12
 and some float tokens +1.0 1.100 1e-03 -0.0002 0.000031
+0.00

@@ -15,6 +15,6 @@ load bats-shared
 }
 
 @test "numeric float tolerance" {
-	run $EXE_FILE --numeric --float-tolerance 0.01 $CORRECT_FILE $RESULT_FILE
+	run $EXE_FILE --numeric --float-tolerance 0.001 $CORRECT_FILE $RESULT_FILE
 	[ "$status" -eq 1 ]
 }

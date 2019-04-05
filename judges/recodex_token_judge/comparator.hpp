@@ -185,7 +185,11 @@ public:
 
 			double d1, d2;
 			if (tokenPair.tryGetFloats(d1, d2)) {
-				double err = std::abs(d1 - d2) / std::abs(d1 + d2);
+				// Divisor (normalizer) must not be zero, so we apply lower bound on it.
+				double divisorLimit = std::max(mFloatTolerance, 0.0001);
+				double divisor = std::max(std::abs(d1) + std::abs(d2), divisorLimit);
+
+				double err = std::abs(d1 - d2) / divisor;
 				return err <= mFloatTolerance;
 			}
 		}

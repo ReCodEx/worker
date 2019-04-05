@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
 		args.registerArg(bpp::make_unique<bpp::ProgramArguments::ArgBool>(
 			"numeric", "Tokens which appear to be integers or floats in decimal notation are compared as numbers."));
 		args.registerArg(bpp::make_unique<bpp::ProgramArguments::ArgFloat>("float-tolerance",
-			"Allowed maximal error for float number comparisons. The error of two numbers is |a-b|/|a+b|.",
+			"Allowed maximal error for float number comparisons. The error of two numbers is |a-b|/(|a|+|b|).",
 			false,
 			0.0001,
 			0.0,
