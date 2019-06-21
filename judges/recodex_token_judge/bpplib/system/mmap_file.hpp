@@ -60,9 +60,9 @@ namespace bpp
 
 	public:
 		MMapFile()
-			: mData(NULL), mLength(0),
+			: mData(nullptr), mLength(0),
 #ifdef _WIN32
-			  mFile(NULL), mMappedFile(NULL)
+			  mFile(nullptr), mMappedFile(nullptr)
 #else
 			  mFile(0)
 #endif
@@ -91,7 +91,7 @@ namespace bpp
 
 #ifdef _WIN32
 			// Create file handle.
-			mFile = CreateFileA(mFileName.c_str(), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, NULL, NULL);
+			mFile = CreateFileA(mFileName.c_str(), GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, 0, 0);
 			if (mFile == INVALID_HANDLE_VALUE) throw RuntimeError("Cannot open selected file.");
 
 			// Get the file size.
@@ -101,12 +101,12 @@ namespace bpp
 
 			if (mLength > 0) {
 				// Create read only mapping object.
-				mMappedFile = CreateFileMapping(mFile, NULL, PAGE_READONLY, 0, 0, NULL);
-				if (mMappedFile == NULL) throw RuntimeError("Cannot create mapped file object.");
+				mMappedFile = CreateFileMapping(mFile, nullptr, PAGE_READONLY, 0, 0, nullptr);
+				if (mMappedFile == nullptr) throw RuntimeError("Cannot create mapped file object.");
 
 				// Map the entire file to virtual memory space.
 				mData = MapViewOfFile(mMappedFile, FILE_MAP_READ, 0, 0, 0);
-				if (mData == NULL) throw RuntimeError("Cannot map view of file.");
+				if (mData == nullptr) throw RuntimeError("Cannot map view of file.");
 			}
 #else
 			// Create file handle.
@@ -120,9 +120,9 @@ namespace bpp
 
 			if (mLength > 0) {			
 				// Map the entire file to virtual memory space.
-				mData = ::mmap(NULL, mLength, PROT_READ, MAP_PRIVATE, mFile, 0);
+				mData = ::mmap(nullptr, mLength, PROT_READ, MAP_PRIVATE, mFile, 0);
 				if (mData == MAP_FAILED) {
-					mData = NULL;
+					mData = nullptr;
 					throw RuntimeError("Cannot mmap the file.");
 				}
 			}
@@ -132,7 +132,7 @@ namespace bpp
 
 		/**
 		 * \brief Get a pointer to memory block where the file is mapped.
-		 * \return Valid pointer if the file was mapped, NULL pointer otherwise.
+		 * \return Valid pointer if the file was mapped, nullptr pointer otherwise.
 		 */
 		void *getData() const
 		{
@@ -145,7 +145,7 @@ namespace bpp
 		 */
 		std::size_t length() const
 		{
-			return (std::size_t) mLength;
+			return (std::size_t)mLength;
 		}
 
 
@@ -155,7 +155,7 @@ namespace bpp
 		 */
 		bool opened() const
 		{
-			return getData() != NULL;
+			return getData() != nullptr;
 		}
 
 
@@ -167,13 +167,13 @@ namespace bpp
 			if (!opened()) return;
 
 #ifdef _WIN32
-			if (mData != NULL && !UnmapViewOfFile(mData)) throw RuntimeError("Cannot unmap view of file.");
-			if (mMappedFile != NULL && !CloseHandle(mMappedFile)) throw RuntimeError("Cannot close mapped file.");
-			if (mFile != NULL && !CloseHandle(mFile)) throw RuntimeError("Cannot close mapped file.");
-			mData = mMappedFile = mFile = NULL;
+			if (mData != nullptr && !UnmapViewOfFile(mData)) throw RuntimeError("Cannot unmap view of file.");
+			if (mMappedFile != nullptr && !CloseHandle(mMappedFile)) throw RuntimeError("Cannot close mapped file.");
+			if (mFile != nullptr && !CloseHandle(mFile)) throw RuntimeError("Cannot close mapped file.");
+			mData = mMappedFile = mFile = nullptr;
 #else
-			if (mData != NULL && ::munmap(mData, mLength) == -1) throw RuntimeError("Cannot unmap file.");
-			mData = NULL;
+			if (mData != nullptr && ::munmap(mData, mLength) == -1) throw RuntimeError("Cannot unmap file.");
+			mData = nullptr;
 
 			if (mFile != 0 && ::close(mFile) == -1) throw RuntimeError("Cannot close mapped file.");
 			mFile = 0;
