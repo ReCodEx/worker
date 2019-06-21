@@ -144,9 +144,9 @@ public:
 		/**
 		 * Get raw token string as plain old const char pointer (not necesarly null-terminated).
 		 */
-		const char_t *getToken(std::size_t idx) const
+		const char_t *getTokenCStr(std::size_t idx) const
 		{
-			return mReader.getToken(mTokens[idx]);
+			return mReader.getTokenCStr(mTokens[idx]);
 		}
 
 
@@ -164,7 +164,60 @@ public:
 		 */
 		std::string getTokenAsString(std::size_t idx) const
 		{
-			return std::string(getToken(idx), getTokenLength(idx));
+			return std::string(getTokenCStr(idx), getTokenLength(idx));
+		}
+	};
+
+	class LineView
+	{
+	private:
+		const Line &mLine;
+		std::size_t mOffset;
+		std::size_t mTokens;
+
+	public:
+		LineView(const Line &line, std::size_t offset, std::size_t tokens) : mLine(line), mOffset(offset), mTokens(tokens)
+		{
+		}
+
+		/**
+		 * Raw accessor to underlying TokenRef objects.
+		 */
+		const TokenRef &operator[](std::size_t idx) const
+		{
+			return mLine[idx + mOffset];
+		}
+
+		/**
+		 * Get raw token string as plain old const char pointer (not necesarly null-terminated).
+		 */
+		const char_t *getTokenCStr(std::size_t idx) const
+		{
+			return mLine.getTokenCStr(idx + mOffset);
+		}
+
+		/**
+		 * Return length of a token with given index.
+		 */
+		offset_t getTokenLength(std::size_t idx) const
+		{
+			return mLine.getTokenLength(idx + mOffset);
+		}
+
+		/**
+		 * Return the token as a copy wrapped in std string.
+		 */
+		std::string getTokenAsString(std::size_t idx) const
+		{
+			return mLine.getTokenAsString(idx + mOffset);
+		}
+
+		/**
+		 * Returns the number of tokens on the line.
+		 */
+		std::size_t size() const
+		{
+			return mTokens;
 		}
 	};
 
@@ -243,7 +296,7 @@ private:
 	/**
 	 * Retrieve const char reference to a token.
 	 */
-	const char_t *getToken(const TokenRef &token)
+	const char_t *getTokenCStr(const TokenRef &token)
 	{
 		return mData + token.offset();
 	}
@@ -273,15 +326,13 @@ public:
 
 		mData = (char_t *) mFile.getData();
 		mOffset = 0;
-		mLength = mFile.length() / sizeof(char_t);
+		mLength = (offset_t)(mFile.length() / sizeof(char_t));
 		mLineNumber = 1;
 		mLineOffset = 0;
 
 		if (mIgnoreTrailingWhitespace) {
 			// Reduce the file length to ignore all whitespace at the end ...
-			while (mLength > 0 && std::isspace(mData[mLength - 1])) {
-				--mLength;
-			}
+			while (mLength > 0 && std::isspace(mData[mLength - 1])) { --mLength; }
 		}
 	}
 
@@ -321,9 +372,7 @@ public:
 	 */
 	std::unique_ptr<Line> readLine()
 	{
-		if (eof()) {
-			return std::unique_ptr<Line>();
-		}
+		if (eof()) { return std::unique_ptr<Line>(); }
 
 		auto line = bpp::make_unique<Line>(*this, mLineNumber, mData + mOffset);
 		while (!eof()) {

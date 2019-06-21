@@ -48,6 +48,11 @@ namespace bpp
 		struct Block {
 			LogSeverity severity;
 			std::string data;
+
+		public:
+			Block() : severity(LogSeverity::UNDEFINED)
+			{
+			}
 		};
 
 		std::ostream &mDefaultSink; ///< Default ostream, where the log is being flushed.
@@ -103,7 +108,7 @@ namespace bpp
 	public:
 		Logger(std::ostream &defaultSink = std::cerr)
 			: mDefaultSink(defaultSink), mSeverity(LogSeverity::UNDEFINED), mMaxSeverity(LogSeverity::ANY),
-			  mMaxLength(~(std::size_t) 0)
+			  mMaxLength(~(std::size_t) 0), mAccumulatorSize(0)
 		{
 		}
 		virtual ~Logger()

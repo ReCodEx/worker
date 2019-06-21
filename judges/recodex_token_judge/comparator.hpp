@@ -209,6 +209,7 @@ public:
 	using offset_t = OFFSET;
 	using result_t = RESULT;
 	using line_t = typename Reader<CHAR, OFFSET>::Line;
+	using lineview_t = typename Reader<CHAR, OFFSET>::LineView;
 	using token_t = typename Reader<CHAR, OFFSET>::TokenRef;
 
 private:
@@ -236,7 +237,7 @@ private:
 
 
 	/**
-	 * Perform verification of map of valued from the unordered comparison and log all errors.
+	 * Perform verification of map of values from the unordered comparison and log all errors.
 	 * \tparam T Type of the token value.
 	 * \tparam LOGGING If false, the check is performed silently. Otherwise, the errors are logged using bpp::log().
 	 * \param mapValues The the map of values and their diffs to be checked.
@@ -431,6 +432,51 @@ private:
 
 
 	/**
+	 * Get number of common token-based prefix of two lines (for optimization purposes).
+	 * \param line1 Line to be compared
+	 * \param line2 Line to be compared
+	 * \param comparator Token comparator
+	 * \return Number of tokens which are the same on both lines from the beginning.
+	 */
+	std::size_t getCommonLinePrefixLength(
+		const line_t &line1, const line_t &line2, TokenComparator<CHAR, OFFSET> &comparator) const
+	{
+		std::size_t len = 0;
+		while (len < line1.size() && len < line2.size() &&
+			comparator.compare(line1.getTokenCStr(len),
+				line1.getTokenLength(len),
+				line2.getTokenCStr(len),
+				line2.getTokenLength(len))) {
+			++len;
+		}
+		return len;
+	}
+
+	/**
+	 * Get number of common token-based suffix of two lines (for optimization purposes).
+	 * \param line1 Line to be compared
+	 * \param line2 Line to be compared
+	 * \param comparator Token comparator
+	 * \return Number of tokens which are the same on both lines from the end.
+	 */
+	std::size_t getCommonLineSuffixLength(
+		const line_t &line1, const line_t &line2, TokenComparator<CHAR, OFFSET> &comparator) const
+	{
+		std::size_t idx1 = line1.size() - 1, idx2 = line2.size() - 1;
+		std::size_t len = 0;
+		while (len < line1.size() && len < line2.size() &&
+			comparator.compare(line1.getTokenCStr(idx1),
+				line1.getTokenLength(idx1),
+				line2.getTokenCStr(idx2),
+				line2.getTokenLength(idx2))) {
+			++len;
+			--idx1;
+			--idx2;
+		}
+		return len;
+	}
+
+	/**
 	 * Log one missing or unexpected token on an ordered line.
 	 * \param token The token to be logged (metadata only).
 	 * \param value The string value of the token.
@@ -467,8 +513,8 @@ private:
 	 * \param toC Index of the next matched token on the first line.
 	 * \param toR Index of the next matched token on the second line.
 	 */
-	void logOrderedErrors(const line_t &line1,
-		const line_t &line2,
+	void logOrderedErrors(const lineview_t &line1,
+		const lineview_t &line2,
 		std::size_t &c,
 		std::size_t &r,
 		std::size_t toC,
@@ -506,18 +552,26 @@ private:
 	template <bool LOGGING = false> result_t compareOrdered(const line_t &line1, const line_t &line2) const
 	{
 		TokenComparator<CHAR, OFFSET> &comparator = mTokenComparator;
+
+		std::size_t prefixLen = getCommonLinePrefixLength(line1, line2, comparator);
+		if (prefixLen == line1.size() && prefixLen == line2.size()) return 0;  // both lines are identical
+
+		std::size_t suffixLen = getCommonLineSuffixLength(line1, line2, comparator);
+		lineview_t lineView1(line1, prefixLen, line1.size() - prefixLen - suffixLen);
+		lineview_t lineView2(line2, prefixLen, line2.size() - prefixLen - suffixLen);
+
 		if (LOGGING) {
 			std::vector<std::pair<std::size_t, std::size_t>> lcs;
-			bpp::longest_common_subsequence(line1,
-				line2,
+			bpp::longest_common_subsequence(lineView1,
+				lineView2,
 				lcs,
-				[&comparator](const line_t &line1, std::size_t i1, const line_t &line2, std::size_t i2) {
+				[&comparator](const lineview_t &line1, std::size_t i1, const lineview_t &line2, std::size_t i2) {
 					return comparator.compare(
-						line1.getToken(i1), line1[i1].length(), line2.getToken(i2), line2[i2].length());
+						line1.getTokenCStr(i1), line1.getTokenLength(i1), line2.getTokenCStr(i2), line2.getTokenLength(i2));
 				});
 
 			// If there are no errors, return immediately.
-			result_t res = (result_t)(line1.size() - lcs.size() + line2.size() - lcs.size());
+			result_t res = (result_t)(lineView1.size() - lcs.size() + lineView2.size() - lcs.size());
 			if (res == 0) return res;
 
 			bpp::log().error() << "-" << line1.lineNumber() << "/+" << line2.lineNumber() << ":";
@@ -525,7 +579,7 @@ private:
 			std::size_t c = 0;
 			std::size_t r = 0;
 			for (auto &&it : lcs) {
-				logOrderedErrors(line1, line2, c, r, it.first, it.second);
+				logOrderedErrors(lineView1, lineView2, c, r, it.first, it.second);
 
 				// Skip the matched pair ...
 				++c;
@@ -533,17 +587,18 @@ private:
 			}
 
 			// Log trailing tokens after last matched pair.
-			logOrderedErrors(line1, line2, c, r, line1.size(), line2.size());
+			logOrderedErrors(lineView1, lineView2, c, r, lineView1.size(), lineView2.size());
 
 			bpp::log().error() << "\n";
 			return res;
 		} else {
-			std::size_t lcs = bpp::longest_common_subsequence_length(
-				line1, line2, [&comparator](const line_t &line1, std::size_t i1, const line_t &line2, std::size_t i2) {
+			std::size_t lcs = bpp::longest_common_subsequence_length(lineView1,
+				lineView2,
+				[&comparator](const lineview_t &line1, std::size_t i1, const lineview_t &line2, std::size_t i2) {
 					return comparator.compare(
-						line1.getToken(i1), line1[i1].length(), line2.getToken(i2), line2[i2].length());
+						line1.getTokenCStr(i1), line1.getTokenLength(i1), line2.getTokenCStr(i2), line2.getTokenLength(i2));
 				});
-			return (result_t)(line1.size() - lcs + line2.size() - lcs);
+			return (result_t)(lineView1.size() - lcs + lineView2.size() - lcs);
 		}
 	}
 

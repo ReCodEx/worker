@@ -189,11 +189,11 @@ private:
 		lcsMatrix.resize((sizeC + 1) * (sizeR + 1));
 		for (std::size_t c = 0; c < sizeC; ++c) {
 			lcsMatrix[(c + 1) * (sizeR + 1)].score =
-				lcsMatrix[c * (sizeR + 1)].score + mCorrectLinesBuffer[c]->size() + 1;
+				lcsMatrix[c * (sizeR + 1)].score + (score_t)mCorrectLinesBuffer[c]->size() + 1;
 			lcsMatrix[(c + 1) * (sizeR + 1)].dc = -1;
 		}
 		for (std::size_t r = 0; r < sizeR; ++r) {
-			lcsMatrix[r + 1].score = lcsMatrix[r].score + mResultLinesBuffer[r]->size() + 1;
+			lcsMatrix[r + 1].score = lcsMatrix[r].score + (score_t)mResultLinesBuffer[r]->size() + 1;
 			lcsMatrix[r + 1].dr = -1;
 		}
 
@@ -203,11 +203,11 @@ private:
 			for (std::size_t r = 0; r < sizeR; ++r) {
 				lcsMatrix[i].comparisonResult =
 					mLineComparator.compare(*mCorrectLinesBuffer[c].get(), *mResultLinesBuffer[r].get());
-				lcsMatrix[i].totalTokens = mCorrectLinesBuffer[c]->size() + mResultLinesBuffer[r]->size();
+				lcsMatrix[i].totalTokens = (score_t)(mCorrectLinesBuffer[c]->size() + mResultLinesBuffer[r]->size());
 
 				// Compute score for each of three possibilities ...
-				score_t upperScore = lcsMatrix[i - sizeR - 1].score + mCorrectLinesBuffer[c]->size() + 1;
-				score_t leftScore = lcsMatrix[i - 1].score + mResultLinesBuffer[r]->size() + 1;
+				score_t upperScore = lcsMatrix[i - sizeR - 1].score + (score_t)mCorrectLinesBuffer[c]->size() + 1;
+				score_t leftScore = lcsMatrix[i - 1].score + (score_t)mResultLinesBuffer[r]->size() + 1;
 				score_t upperLeftScore = lcsMatrix[i - sizeR - 2].score + lcsMatrix[i].comparisonResult;
 
 				// Find the best option (with the lowest score).
