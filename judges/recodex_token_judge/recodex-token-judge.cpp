@@ -51,6 +51,8 @@ int main(int argc, char *argv[])
 		args.registerArg(
 			bpp::make_unique<bpp::ProgramArguments::ArgBool>("shuffled-lines", "Lines may appear in any order."));
 		args.getArg("shuffled-lines").conflictsWith("ignore-line-ends");
+		args.registerArg(bpp::make_unique<bpp::ProgramArguments::ArgInt>(
+			"token-lcs-approx-max-window", "Tuning parameter for approx LCS for comparing lines (0 = always full LCS).", false, 11, 0, 255));
 
 		// Log args
 		args.registerArg(
@@ -92,7 +94,9 @@ int main(int argc, char *argv[])
 			args.getArgBool("numeric").getValue(),
 			args.getArgFloat("float-tolerance").getValue());
 
-		LineComparator<> lineComparator(tokenComparator, args.getArgBool("shuffled-tokens").getValue());
+		LineComparator<> lineComparator(tokenComparator,
+			args.getArgBool("shuffled-tokens").getValue(),
+			(std::size_t)args.getArgInt("token-lcs-approx-max-window").getValue());
 
 
 		// Create main judge and execute it ...

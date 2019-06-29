@@ -11,10 +11,11 @@
 #include <string>
 #include <limits>
 #include <memory>
+
 #include <cmath>
 #include <cstdlib>
 #include <cstdint>
-
+#include <cassert>
 
 /**
  * Try to parse long int out of a string. Return true if the string contains only an integer, false otherwise.
@@ -215,6 +216,7 @@ public:
 private:
 	TokenComparator<CHAR, OFFSET> &mTokenComparator; ///< Token comparator used for comparing tokens on the lines.
 	bool mShuffledTokens; ///< Whether the tokens on each line may be in arbitrary order.
+	std::size_t mApproxLcsMaxWindow; ///< Tuning (performance) parameter, when should LCS fall back to approx version
 
 	/**
 	 * Log one error of unordered token comparison (a token is superfluous or missing).
@@ -542,6 +544,52 @@ private:
 
 
 	/**
+	 * Log errors when approximate LCS is used (there is no time to compute full LCS).
+	 * Simply compare tokens on corresponding positions and report (at most 3) mismatches.
+	 * \param line1 The first line being compared (correct).
+	 * \param line2 The second line being compared (result).
+	 */
+	void logApproxErrors(const lineview_t &line1, const lineview_t &line2) const
+	{
+		bpp::log().error() << " (approx)";
+
+		TokenComparator<CHAR, OFFSET> &comparator = mTokenComparator;
+		std::size_t i1 = 0, i2 = 0, errors = 0;
+
+		// Log first three mismatches (using direct pairing)
+		while (i1 < line1.size() && i2 < line2.size() && errors < 3) {
+			if (!comparator.compare(line1.getTokenCStr(i1),
+					line1.getTokenLength(i1),
+					line2.getTokenCStr(i2),
+					line2.getTokenLength(i2))) {
+				logMismatchError(line1[i1], line1.getTokenAsString(i1), line2[i2], line2.getTokenAsString(i2));
+				++errors;
+			}
+			++i1;
+			++i2;
+		}
+
+		while (i1 < line1.size() && errors < 3) {
+			// Missing tokens (present in correct file, but missing in results).
+			logOrderedError(line1[i1], line1.getTokenAsString(i1), "-");
+			++errors;
+			++i1;
+		}
+
+		while (i2 < line2.size() && errors < 3) {
+			// Missing tokens (present in correct file, but missing in results).
+			logOrderedError(line2[i2], line2.getTokenAsString(i2), "+");
+			++errors;
+			++i2;
+		}
+
+		if (i1 < line1.size() || i2 < line2.size()) {
+			bpp::log().error() << " ...";
+		}
+	}
+
+
+	/**
 	 * Apply LCS algorithm to find the best matching between the two lines
 	 * and determine the error as the number of tokens not present in the common subequence.
 	 * \tparam LOGGING If false, the check is performed silently. Otherwise, the errors are logged using bpp::log().
@@ -554,58 +602,81 @@ private:
 		TokenComparator<CHAR, OFFSET> &comparator = mTokenComparator;
 
 		std::size_t prefixLen = getCommonLinePrefixLength(line1, line2, comparator);
-		if (prefixLen == line1.size() && prefixLen == line2.size()) return 0;  // both lines are identical
+		if (prefixLen == line1.size() && prefixLen == line2.size()) return 0; // both lines are identical
 
 		std::size_t suffixLen = getCommonLineSuffixLength(line1, line2, comparator);
 		lineview_t lineView1(line1, prefixLen, line1.size() - prefixLen - suffixLen);
 		lineview_t lineView2(line2, prefixLen, line2.size() - prefixLen - suffixLen);
 
 		if (LOGGING) {
-			std::vector<std::pair<std::size_t, std::size_t>> lcs;
-			bpp::longest_common_subsequence(lineView1,
-				lineView2,
-				lcs,
-				[&comparator](const lineview_t &line1, std::size_t i1, const lineview_t &line2, std::size_t i2) {
-					return comparator.compare(
-						line1.getTokenCStr(i1), line1.getTokenLength(i1), line2.getTokenCStr(i2), line2.getTokenLength(i2));
-				});
-
-			// If there are no errors, return immediately.
-			result_t res = (result_t)(lineView1.size() - lcs.size() + lineView2.size() - lcs.size());
-			if (res == 0) return res;
-
 			bpp::log().error() << "-" << line1.lineNumber() << "/+" << line2.lineNumber() << ":";
+			result_t res;
 
-			std::size_t c = 0;
-			std::size_t r = 0;
-			for (auto &&it : lcs) {
-				logOrderedErrors(lineView1, lineView2, c, r, it.first, it.second);
+			if (mApproxLcsMaxWindow > 0 && std::min(lineView1.size(), lineView2.size()) > mApproxLcsMaxWindow) {
+				res = (result_t)(
+					lineView1.size() + lineView2.size()); // we do not compute lcs anymore (this is worst case result)
+				logApproxErrors(lineView1, lineView2);
+			} else {
+				std::vector<std::pair<std::size_t, std::size_t>> lcs;
+				bpp::longest_common_subsequence(lineView1,
+					lineView2,
+					lcs,
+					[&comparator](const lineview_t &line1, std::size_t i1, const lineview_t &line2, std::size_t i2) {
+						return comparator.compare(line1.getTokenCStr(i1),
+							line1.getTokenLength(i1),
+							line2.getTokenCStr(i2),
+							line2.getTokenLength(i2));
+					});
 
-				// Skip the matched pair ...
-				++c;
-				++r;
+				// If there are no errors, return immediately.
+				res = (result_t)(lineView1.size() - lcs.size() + lineView2.size() - lcs.size());
+				assert(res > 0);
+
+				std::size_t c = 0;
+				std::size_t r = 0;
+				for (auto &&it : lcs) {
+					logOrderedErrors(lineView1, lineView2, c, r, it.first, it.second);
+
+					// Skip the matched pair ...
+					++c;
+					++r;
+				}
+
+				// Log trailing tokens after last matched pair.
+				logOrderedErrors(lineView1, lineView2, c, r, lineView1.size(), lineView2.size());
 			}
-
-			// Log trailing tokens after last matched pair.
-			logOrderedErrors(lineView1, lineView2, c, r, lineView1.size(), lineView2.size());
 
 			bpp::log().error() << "\n";
 			return res;
 		} else {
-			std::size_t lcs = bpp::longest_common_subsequence_length(lineView1,
-				lineView2,
-				[&comparator](const lineview_t &line1, std::size_t i1, const lineview_t &line2, std::size_t i2) {
-					return comparator.compare(
-						line1.getTokenCStr(i1), line1.getTokenLength(i1), line2.getTokenCStr(i2), line2.getTokenLength(i2));
-				});
+			std::size_t lcs =
+				(mApproxLcsMaxWindow > 0 && std::min(lineView1.size(), lineView2.size()) > mApproxLcsMaxWindow) ?
+				bpp::longest_common_subsequence_approx_length(lineView1,
+					lineView2,
+					[&comparator](const lineview_t &line1, std::size_t i1, const lineview_t &line2, std::size_t i2) {
+						return comparator.compare(line1.getTokenCStr(i1),
+							line1.getTokenLength(i1),
+							line2.getTokenCStr(i2),
+							line2.getTokenLength(i2));
+					},
+					mApproxLcsMaxWindow) :
+				bpp::longest_common_subsequence_length(lineView1,
+					lineView2,
+					[&comparator](const lineview_t &line1, std::size_t i1, const lineview_t &line2, std::size_t i2) {
+						return comparator.compare(line1.getTokenCStr(i1),
+							line1.getTokenLength(i1),
+							line2.getTokenCStr(i2),
+							line2.getTokenLength(i2));
+					});
+
 			return (result_t)(lineView1.size() - lcs + lineView2.size() - lcs);
 		}
 	}
 
 
 public:
-	LineComparator(TokenComparator<CHAR, OFFSET> &tokenComparator, bool shuffledTokens)
-		: mTokenComparator(tokenComparator), mShuffledTokens(shuffledTokens)
+	LineComparator(TokenComparator<CHAR, OFFSET> &tokenComparator, bool shuffledTokens, std::size_t approxLcsMaxWindow)
+		: mTokenComparator(tokenComparator), mShuffledTokens(shuffledTokens), mApproxLcsMaxWindow(approxLcsMaxWindow)
 	{
 	}
 

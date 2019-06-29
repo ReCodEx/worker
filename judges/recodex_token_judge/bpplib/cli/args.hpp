@@ -151,7 +151,7 @@ namespace bpp
 			 * \param mandatory Flag that indicates whether the argument must be present on commandline.
 			 */
 			ArgBase(const std::string &name, const std::string &comment, bool mandatory)
-				: mName(name), mComment(comment), mMandatory(mandatory), mPresent(false)
+				: args(nullptr), mName(name), mComment(comment), mMandatory(mandatory), mPresent(false)
 			{
 				if (mName.empty()) throw(ArgumentException() << "Argument name must not be empty.");
 
