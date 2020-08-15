@@ -42,6 +42,7 @@ Worker specific requirements are written in this section. It covers only basic
 requirements, additional runtimes or tools may be needed depending on type of
 use. The package names are for CentOS if not specified otherwise. 
 
+- Boost 1.66 development libs (`boost-devel` package)
 - ZeroMQ in version at least 4.0, packages `zeromq` and `zeromq-devel`
   (`libzmq3-dev` on Debian)
 - YAML-CPP library, `yaml-cpp` and `yaml-cpp-devel` (`libyaml-cpp0.5v5` and
