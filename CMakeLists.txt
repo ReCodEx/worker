@@ -21,7 +21,7 @@ else()
 endif()
 # -- load Boost
 set (Boost_USE_MULTITHREADED ON)
-find_package(Boost 1.53.0 REQUIRED COMPONENTS filesystem system program_options)
+find_package(Boost 1.66.0 REQUIRED COMPONENTS filesystem system program_options)
 include_directories(${Boost_INCLUDE_DIRS})
 
 # -- cURL
@@ -301,8 +301,6 @@ if(UNIX)
 	set(CPACK_RPM_PACKAGE_ARCHITECTURE "x86_64")
 	set(CPACK_RPM_PACKAGE_RELEASE "1")
 	set(CPACK_RPM_PACKAGE_DESCRIPTION "Backend part of ReCodEx programmer testing solution.")
-	#set(CPACK_RPM_PACKAGE_REQUIRES "boost-filesystem >= 1.53.0, boost-program-options >= 1.53.0, yaml-cpp >= 0.5.1, zeromq >= 4.0.5, libstdc++ >= 4.8.5, libcurl >= 7.29.0, libarchive >= 3.1.2")
-	#set(CPACK_RPM_PACKAGE_AUTOREQ " no")
 	set(CPACK_RPM_POST_INSTALL_SCRIPT_FILE "${CMAKE_CURRENT_SOURCE_DIR}/install/postinst")
 	set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Petr Stefan <ps@stdin.cz>")
 	set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "amd64")
