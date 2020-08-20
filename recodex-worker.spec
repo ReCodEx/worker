@@ -1,8 +1,8 @@
 %define name recodex-worker
 %define short_name worker
 %define version 1.6.4
-%define unmangled_version 0c3af00f74b5f088e68a7f1b79e130bef0105646
-%define release 1
+%define unmangled_version 597144f5dc757fc18446f3fc4a58f064f3ac4ba6
+%define release 4
 
 %define spdlog_name spdlog
 %define spdlog_version 0.13.0
@@ -17,7 +17,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 Prefix: %{_prefix}
 Vendor: Petr Stefan <UNKNOWN>
 Url: https://github.com/ReCodEx/worker
-BuildRequires: systemd gcc-c++ cmake zeromq-devel cppzmq-devel yaml-cpp-devel libcurl-devel libarchive-devel
+BuildRequires: systemd gcc-c++ cmake zeromq-devel cppzmq-devel yaml-cpp-devel libcurl-devel libarchive-devel boost-devel
 Requires: systemd isolate
 
 #Source0: %{name}-%{unmangled_version}.tar.gz
@@ -27,7 +27,7 @@ Source1: https://github.com/gabime/%{spdlog_name}/archive/v%{spdlog_version}.tar
 %global debug_package %{nil}
 
 %description
-Backend part of ReCodEx programmer testing solution.
+Worker is a backend component of ReCodEx code examiner, an educational application for evaluating programming assignments. 
 
 %prep
 %setup -n %{short_name}-%{unmangled_version}
