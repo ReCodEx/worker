@@ -274,8 +274,10 @@ private:
 	 */
 	template <typename T> static void mapRemoveEmpty(std::map<T, int> &m)
 	{
-		for (auto it = m.begin(); it != m.end(); ++it) {
-			if (it->second == 0) { m.erase(it); }
+		std::map<T, int> old;
+		old.swap(m);
+		for (auto it = old.begin(); it != old.end(); ++it) {
+			if (it->second != 0) { m[it->first] = it->second; }
 		}
 	}
 
