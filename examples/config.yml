@@ -1,43 +1,66 @@
 ---  # only one document with all configuration needed
 worker-id: 1
 worker-description: "linux_worker_1"
-broker-uri: tcp://localhost:9657
+broker-uri: "tcp://localhost:9657"
 headers:
     env:
+        - bash
         - c-gcc-linux
-        - python3
-        - cxx11-gcc-linux
+        - cxx-gcc-linux
+        - data-linux
         - freepascal-linux
-        - java8
-        - mono46
+        - go
+        - groovy
+        - haskell
+        - java
+        - kotlin
+        - mono
+        - node-linux
+        - php-linux
+        - prolog
+        - python3
+        - rust
+        - scala
     threads: 1
-hwgroup: "group1"
-working-directory: /var/recodex-worker
+hwgroup: "01-default"
+working-directory: "/var/recodex-worker-wd"
 file-managers:
-    - hostname: "http://localhost:9999"  # port is optional
-      username: ""  # can be ignored in specific modules
-      password: ""  # can be ignored in specific modules
-file-cache:  # only in case that there is cache module
-    cache-dir: "/tmp/recodex/cache"
+    - hostname: "http://localhost:9999"
+      username: "re"    # this must match http auth credentials
+      password: "codex" # which are set for fileserver
+file-cache:
+    cache-dir: "/var/recodex-worker-cache"
 logger:
     file: "/var/log/recodex/worker"  # w/o suffix - actual names will be worker.log, worker.1.log, ...
     level: "debug"  # level of logging - one of "debug", "warn", "emerg"
     max-size: 1048576  # 1 MB; max size of file before log rotation
     rotations: 3  # number of rotations kept
 limits:
-    time: 30  # in secs
-    wall-time: 30  # seconds
-    extra-time: 2  # seconds
-    stack-size: 0  # normal in KB, but 0 means no special limit
-    memory: 900000  # in KB
-    extra-memory: 8  # in KB, will be added to memory limit
-    parallel: 0  # time and memory limits are merged
-    disk-size: 1048576
+    time: 30            # seconds
+    wall-time: 30       # seconds
+    extra-time: 2       # seconds
+    stack-size: 0       # KiB, but 0 means no special limit
+    memory: 1048576     # KiB
+    extra-memory: 64    # KiB, will be added to memory limit
+    parallel: 0         # if parallel == 1, time and memory limits are merged
+    disk-size: 1048576  # KiB
     disk-files: 100
-    environ-variable:
-        HOME: /box
+    environ-variable: # environmental variables used inside sandbox
+        HOME: /box  # do not change unless you know what are you doing
         PATH: /usr/bin:/bin
-max-output-length: 1024  # in bytes
+        # JAVA_HOME: /path/to/JAVA/jdk  # when JAVA env is enabled
+        # LD_LIBRARY_PATH: /usr/local/gcc72/lib64  # e.g., for custom GCC libs
+        # PPC_CONFIG_PATH: /usr/etc  # base path for config files in freepascal env
+        # GROOVY_HOME: /path/to/groovy/home
+      # Python config parameters...
+		# PYTHONHASHSEED: 0
+        # PYTHONIOENCODING: utf-8
+        # VIRTUAL_ENV: /path/to/python/venv
+    bound-directories: # All aditional dirs mapped into sandbox (SDKs, libs, venvs, ...)
+        - src: "/tmp"
+		  dst: "/tmp"
+		  mode: "rw"  # if mode is omitted, dir is mounted as read-only (which is typical for lib dirs)
+max-output-length: 4096  # in bytes
 max-carboncopy-length: 1048576  # in bytes
 cleanup-submission: false  # if true, then folders with data concerning submissions will be cleared after evaluation, should be used carefully, can produce huge amount of used disk space
 ...

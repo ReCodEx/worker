@@ -1,8 +1,8 @@
 %define name recodex-worker
 %define short_name worker
-%define version 1.6.4
-%define unmangled_version 597144f5dc757fc18446f3fc4a58f064f3ac4ba6
-%define release 4
+%define version 1.6.5
+%define unmangled_version cbb96cedfb593d50c44cb9a6e981d3c70e0a2515
+%define release 1
 
 %define spdlog_name spdlog
 %define spdlog_version 0.13.0
@@ -27,7 +27,7 @@ Source1: https://github.com/gabime/%{spdlog_name}/archive/v%{spdlog_version}.tar
 %global debug_package %{nil}
 
 %description
-Worker is a backend component of ReCodEx code examiner, an educational application for evaluating programming assignments. 
+Worker is a backend component of ReCodEx code examiner, an educational application for evaluating programming assignments. Worker is responsible for the evaluation of code submissions in a sandbox.
 
 %prep
 %setup -n %{short_name}-%{unmangled_version}
