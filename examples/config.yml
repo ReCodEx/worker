@@ -1,7 +1,7 @@
 ---  # only one document with all configuration needed
 worker-id: 1
 worker-description: "linux_worker_1"
-broker-uri: "tcp://localhost:9657"
+broker-uri: "tcp://127.0.0.1:9657"
 headers:
     env:
         - bash
@@ -25,7 +25,7 @@ headers:
 hwgroup: "01-default"
 working-directory: "/var/recodex-worker-wd"
 file-managers:
-    - hostname: "http://localhost:9999"
+    - hostname: "http://127.0.0.1:9999"
       username: "re"    # this must match http auth credentials
       password: "codex" # which are set for fileserver
 file-cache:
@@ -53,13 +53,13 @@ limits:
         # PPC_CONFIG_PATH: /usr/etc  # base path for config files in freepascal env
         # GROOVY_HOME: /path/to/groovy/home
       # Python config parameters...
-		# PYTHONHASHSEED: 0
+        # PYTHONHASHSEED: 0
         # PYTHONIOENCODING: utf-8
         # VIRTUAL_ENV: /path/to/python/venv
     bound-directories: # All aditional dirs mapped into sandbox (SDKs, libs, venvs, ...)
         - src: "/tmp"
-		  dst: "/tmp"
-		  mode: "rw"  # if mode is omitted, dir is mounted as read-only (which is typical for lib dirs)
+          dst: "/tmp"
+          mode: "rw"  # if mode is omitted, dir is mounted as read-only (which is typical for lib dirs)
 max-output-length: 4096  # in bytes
 max-carboncopy-length: 1048576  # in bytes
 cleanup-submission: false  # if true, then folders with data concerning submissions will be cleared after evaluation, should be used carefully, can produce huge amount of used disk space
