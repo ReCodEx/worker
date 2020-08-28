@@ -4,6 +4,8 @@
 #include "helpers/filesystem.h"
 #include <fstream>
 #include <algorithm>
+#include <memory>
+#include <string>
 #define BOOST_FILESYSTEM_NO_DEPRECATED
 #define BOOST_NO_CXX11_SCOPED_ENUMS
 #include <boost/filesystem.hpp>
@@ -47,8 +49,12 @@ void external_task::sandbox_init()
 {
 #ifndef _WIN32
 	if (task_meta_->sandbox->name == "isolate") {
+		sandbox_limits limits(*limits_);
+		if (this->get_type() == task_type::INITIATION) {
+			limits.share_net = true; // initiation (compilation) tasks may use internet to download stuff
+		}
 		sandbox_ = std::make_shared<isolate_sandbox>(
-			sandbox_config_, *limits_, worker_config_->get_worker_id(), temp_dir_, evaluation_dir_.string(), logger_);
+			sandbox_config_, limits, worker_config_->get_worker_id(), temp_dir_, evaluation_dir_.string(), logger_);
 	}
 #endif
 }

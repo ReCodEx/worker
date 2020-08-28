@@ -332,7 +332,10 @@ char **isolate_sandbox::isolate_run_args(const std::string &binary, const std::v
 	} else {
 		vargs.push_back("--processes=" + std::to_string(limits_.processes));
 	}
-	if (limits_.share_net) { vargs.push_back("--share-net"); }
+	if (limits_.share_net) {
+		vargs.push_back("--share-net");
+		vargs.push_back("--dir=/etc"); // shared network requires /etc to work properly
+	}
 	for (auto &i : limits_.environ_vars) { vargs.push_back("--env=" + i.first + "=" + i.second); }
 	for (auto &i : limits_.bound_dirs) {
 		std::string mode = "";
