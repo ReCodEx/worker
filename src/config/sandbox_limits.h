@@ -7,6 +7,8 @@
 #include <tuple>
 #include <utility>
 #include <algorithm>
+#include <map>
+#include <string>
 #include "helpers/type_utils.h"
 
 
@@ -26,7 +28,25 @@ public:
 	 * @param DEV Allow access to character and block devices.
 	 * @warning Not all options must be supported by all sandboxes. Please, consult your sandbox documentation first.
 	 */
-	enum dir_perm : unsigned short { RO = 0, RW = 1, NOEXEC = 2, FS = 4, MAYBE = 8, DEV = 16 };
+	enum dir_perm : unsigned short { RO = 0, RW = 1, NOEXEC = 2, FS = 4, MAYBE = 8, DEV = 16, TMP = 32, NOREC = 64 };
+	/**
+	 * Return a mapping between dir_perm enums and their associated string representatives.
+	 */
+	static const std::map<sandbox_limits::dir_perm, std::string>& get_dir_perm_associated_strings()
+	{
+		static std::map<sandbox_limits::dir_perm, std::string> options;
+		if (options.size() == 0) {
+			// fill the map for the first time
+			options[sandbox_limits::dir_perm::RW] = "rw";
+			options[sandbox_limits::dir_perm::NOEXEC] = "noexec";
+			options[sandbox_limits::dir_perm::FS] = "fs";
+			options[sandbox_limits::dir_perm::MAYBE] = "maybe";
+			options[sandbox_limits::dir_perm::DEV] = "dev";
+			options[sandbox_limits::dir_perm::TMP] = "tmp";
+			options[sandbox_limits::dir_perm::NOREC] = "norec";
+		}
+		return options;
+	}
 	/**
 	 * Limit memory usage. For Isolate, this limits whole control group (--cg-mem switch).
 	 * Memory size is set in kilobytes.

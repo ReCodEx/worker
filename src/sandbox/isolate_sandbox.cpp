@@ -12,7 +12,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
-#include <string>
+#include <map>
 #define BOOST_FILESYSTEM_NO_DEPRECATED
 #define BOOST_NO_CXX11_SCOPED_ENUMS
 #include <boost/filesystem.hpp>
@@ -340,12 +340,13 @@ char **isolate_sandbox::isolate_run_args(const std::string &binary, const std::v
 	for (auto &i : limits_.bound_dirs) {
 		std::string mode = "";
 		auto flags = std::get<2>(i);
-		if (flags & sandbox_limits::dir_perm::RW) { mode += ":rw"; }
-		if (flags & sandbox_limits::dir_perm::NOEXEC) { mode += ":noexec"; }
-		if (flags & sandbox_limits::dir_perm::FS) { mode += ":fs"; }
-		if (flags & sandbox_limits::dir_perm::MAYBE) { mode += ":maybe"; }
-		if (flags & sandbox_limits::dir_perm::DEV) { mode += ":dev"; }
-		vargs.push_back(std::string("--dir=") + std::get<1>(i) + "=" + std::get<0>(i) + mode);
+		for (const auto &kv : sandbox_limits::get_dir_perm_associated_strings()) {
+			if (flags & kv.first) { mode += ":" + kv.second; }
+		}
+		auto src = std::get<0>(i);
+		auto dst = std::get<1>(i);
+		std::string dirVal = (src == dst) ? src : (dst + "=" + src);
+		vargs.push_back(std::string("--dir=") + dirVal + mode);
 	}
 	// Bind /etc/alternatives directory if exists
 	vargs.push_back("--dir=etc/alternatives=/etc/alternatives:maybe");

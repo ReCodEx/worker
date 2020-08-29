@@ -56,10 +56,12 @@ limits:
         # PYTHONHASHSEED: 0
         # PYTHONIOENCODING: utf-8
         # VIRTUAL_ENV: /path/to/python/venv
-    bound-directories: # All aditional dirs mapped into sandbox (SDKs, libs, venvs, ...)
-        - src: "/tmp"
-          dst: "/tmp"
-          mode: "rw"  # if mode is omitted, dir is mounted as read-only (which is typical for lib dirs)
+    bound-directories: # All aditional dirs mapped into sandbox (SDKs, libs, venvs, ...), essential dirs (bin, dev, lib, usr, ...) are mapped automatically
+        - dst: "/tmp"
+          mode: "tmp"  # if mode is omitted, dir is mounted as read-only (which is typical for lib dirs)
+        #- src: "/usr/share/something"  # actually existing directory
+        #  dst: "/something"            # where the directory will be mounted in sandbox fs
+        #  mode: "rw"  # multiple modes can be separated by comma, see http://www.ucw.cz/moe/isolate.1.html (directory rules - options)
 max-output-length: 4096  # in bytes
 max-carboncopy-length: 1048576  # in bytes
 cleanup-submission: false  # if true, then folders with data concerning submissions will be cleared after evaluation, should be used carefully, can produce huge amount of used disk space

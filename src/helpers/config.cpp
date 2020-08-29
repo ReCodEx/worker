@@ -1,4 +1,9 @@
+#include <memory>
 #include <algorithm>
+#include <string>
+#include <map>
+#include <vector>
+
 #include "config.h"
 
 
@@ -262,36 +267,37 @@ std::vector<std::tuple<std::string, std::string, sandbox_limits::dir_perm>> help
 			std::string dst;
 			sandbox_limits::dir_perm mode = sandbox_limits::dir_perm::RO;
 			if (dir.IsMap()) {
+				if (dir["mode"] && dir["mode"].IsScalar()) {
+					std::string str_mode = dir["mode"].as<std::string>();
+					std::transform(str_mode.begin(), str_mode.end(), str_mode.begin(), ::tolower);
+
+					for (const auto &kv : sandbox_limits::get_dir_perm_associated_strings()) {
+						if (str_mode.find(kv.second) != std::string::npos) {
+							mode = static_cast<sandbox_limits::dir_perm>(mode | kv.first);
+						}
+					}
+
+					if (mode & sandbox_limits::dir_perm::TMP) { // special checks for tmp
+						if (mode & sandbox_limits::dir_perm::FS) {
+							throw config_exception("Options 'fs' and 'tmp' are incompatible (they cannot be used together)");
+						}
+						if (dir["src"]) {
+							throw config_exception("Path 'src' must not be present when mounting 'tmp' directory (only 'dst')");
+						}
+					}
+				}
+
 				if (dir["src"] && dir["src"].IsScalar()) {
-					src = dir["src"].as<std::string>();
-				} else {
-					throw config_exception("Item 'src' in 'bound-directories' not defined");
+					dst = src = dir["src"].as<std::string>();
 				}
 				if (dir["dst"] && dir["dst"].IsScalar()) {
 					dst = dir["dst"].as<std::string>();
-				} else {
-					throw config_exception("Item 'dst' in 'bound-directories' not defined");
+					if (src.empty()) { src = dst; }
 				}
-				if (dir["mode"] && dir["mode"].IsScalar()) {
-					std::string str_mode = dir["mode"].as<std::string>();
-					std::transform(str_mode.begin(), str_mode.end(), str_mode.begin(), ::toupper);
+				if (src.empty() || dst.empty()) {
+					throw config_exception("Either 'src' or 'dst' must be defined in every 'bound-directories' record");
+				}
 
-					if (str_mode.find("RW") != std::string::npos) {
-						mode = static_cast<sandbox_limits::dir_perm>(mode | sandbox_limits::dir_perm::RW);
-					}
-					if (str_mode.find("NOEXEC") != std::string::npos) {
-						mode = static_cast<sandbox_limits::dir_perm>(mode | sandbox_limits::dir_perm::NOEXEC);
-					}
-					if (str_mode.find("FS") != std::string::npos) {
-						mode = static_cast<sandbox_limits::dir_perm>(mode | sandbox_limits::dir_perm::FS);
-					}
-					if (str_mode.find("MAYBE") != std::string::npos) {
-						mode = static_cast<sandbox_limits::dir_perm>(mode | sandbox_limits::dir_perm::MAYBE);
-					}
-					if (str_mode.find("DEV") != std::string::npos) {
-						mode = static_cast<sandbox_limits::dir_perm>(mode | sandbox_limits::dir_perm::DEV);
-					}
-				} // no throw... can be omitted
 				bound_dirs.emplace_back(src, dst, mode);
 			}
 		}

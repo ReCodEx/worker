@@ -1,8 +1,8 @@
 %define name recodex-worker
 %define short_name worker
 %define version 1.6.5
-%define unmangled_version 26e4021a8a3afdd51cee8e1ff68d3b95dd1de03a
-%define release 3
+%define unmangled_version f0c0f38b207ef48c723a2f4fecfa60a1ab41ce7f
+%define release 6
 
 %define spdlog_name spdlog
 %define spdlog_version 0.13.0
