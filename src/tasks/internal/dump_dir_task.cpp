@@ -3,8 +3,8 @@
 
 dump_dir_task::dump_dir_task(std::size_t id, std::shared_ptr<task_metadata> task_meta) : task_base(id, task_meta)
 {
-	if (task_meta->cmd_args.size() < 2) {
-		throw task_exception("Wrong number of arguments. Required: 2 (1 optional), Actual: " +
+	if (task_meta->cmd_args.size() < 3) {
+		throw task_exception("Wrong number of arguments. Required: 3 (1+ optional), Actual: " +
 			std::to_string(task_meta_->cmd_args.size()));
 	}
 }
