@@ -7,7 +7,7 @@
 
 namespace fs = boost::filesystem;
 
-class exists_task_test : public ::testing::Test
+class dump_dir_task_test : public ::testing::Test
 {
 protected:
 	fs::path root;
@@ -49,7 +49,7 @@ protected:
 	}
 };
 
-TEST_F(exists_task_test, everything_fits)
+TEST_F(dump_dir_task_test, everything_fits)
 {
 	auto results = task->run();
 	ASSERT_EQ(task_status::OK, results->status) << "Failed with: " + results->error_message;
@@ -59,7 +59,7 @@ TEST_F(exists_task_test, everything_fits)
 	ASSERT_TRUE(fs::exists(target / "dir" / "subdir" / "file_c"));
 }
 
-TEST_F(exists_task_test, everything_skipped)
+TEST_F(dump_dir_task_test, everything_skipped)
 {
 	task_meta->cmd_args[2] = "1";
 
@@ -74,7 +74,7 @@ TEST_F(exists_task_test, everything_skipped)
 	ASSERT_TRUE(fs::exists(target / "dir" / "subdir" / "file_c.skipped"));
 }
 
-TEST_F(exists_task_test, largest_skipped)
+TEST_F(dump_dir_task_test, largest_skipped)
 {
 	task_meta->cmd_args[2] = "4";
 
