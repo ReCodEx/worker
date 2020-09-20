@@ -32,7 +32,7 @@ public:
 	/**
 	 * Return a mapping between dir_perm enums and their associated string representatives.
 	 */
-	static const std::map<sandbox_limits::dir_perm, std::string>& get_dir_perm_associated_strings()
+	static const std::map<sandbox_limits::dir_perm, std::string> &get_dir_perm_associated_strings()
 	{
 		static std::map<sandbox_limits::dir_perm, std::string> options;
 		if (options.size() == 0) {

@@ -279,17 +279,17 @@ std::vector<std::tuple<std::string, std::string, sandbox_limits::dir_perm>> help
 
 					if (mode & sandbox_limits::dir_perm::TMP) { // special checks for tmp
 						if (mode & sandbox_limits::dir_perm::FS) {
-							throw config_exception("Options 'fs' and 'tmp' are incompatible (they cannot be used together)");
+							throw config_exception(
+								"Options 'fs' and 'tmp' are incompatible (they cannot be used together)");
 						}
 						if (dir["src"]) {
-							throw config_exception("Path 'src' must not be present when mounting 'tmp' directory (only 'dst')");
+							throw config_exception(
+								"Path 'src' must not be present when mounting 'tmp' directory (only 'dst')");
 						}
 					}
 				}
 
-				if (dir["src"] && dir["src"].IsScalar()) {
-					dst = src = dir["src"].as<std::string>();
-				}
+				if (dir["src"] && dir["src"].IsScalar()) { dst = src = dir["src"].as<std::string>(); }
 				if (dir["dst"] && dir["dst"].IsScalar()) {
 					dst = dir["dst"].as<std::string>();
 					if (src.empty()) { src = dst; }
