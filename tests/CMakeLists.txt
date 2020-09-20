@@ -162,6 +162,7 @@ add_test_suite(string_utils
 )
 
 add_test_suite(dump_dir_task
+        ${HELPERS_DIR}/string_utils.cpp
 	${TASKS_DIR}/task_base.cpp
 	${TASKS_DIR}/internal/dump_dir_task.cpp
 	dump_dir_task.cpp
