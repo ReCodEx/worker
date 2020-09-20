@@ -1,5 +1,5 @@
 #include "cp_task.h"
-#include <regex>
+#include "helpers/string_utils.h"
 #include "helpers/filesystem.h"
 
 #define BOOST_FILESYSTEM_NO_DEPRECATED
@@ -7,48 +7,6 @@
 #include <boost/filesystem.hpp>
 
 namespace fs = boost::filesystem;
-
-namespace {
-
-void replace_substring(std::string &data, const std::string &from, const std::string &to)
-{
-	std::size_t pos = data.find(from);
-	while(pos != std::string::npos) {
-		data.replace(pos, from.size(), to);
-		pos = data.find(from, pos + to.size());
-	}
-}
-
-void escape_regex(std::string &regex)
-{
-	replace_substring(regex, "\\", "\\\\");
-	replace_substring(regex, "^", "\\^");
-	replace_substring(regex, ".", "\\.");
-	replace_substring(regex, "$", "\\$");
-	replace_substring(regex, "|", "\\|");
-	replace_substring(regex, "(", "\\(");
-	replace_substring(regex, ")", "\\)");
-	replace_substring(regex, "[", "\\[");
-	replace_substring(regex, "]", "\\]");
-	replace_substring(regex, "*", "\\*");
-	replace_substring(regex, "+", "\\+");
-	replace_substring(regex, "?", "\\?");
-	replace_substring(regex, "/", "\\/");
-}
-
-std::regex wildcards_regex(std::string wildcard_pattern)
-{
-	// Escape all regex special chars
-	escape_regex(wildcard_pattern);
-
-	// Convert chars '*?' back to their regex equivalents
-	replace_substring(wildcard_pattern, "\\?", ".");
-	replace_substring(wildcard_pattern, "\\*", ".*");
-
-	return std::regex(wildcard_pattern);
-}
-
-} // namespace
 
 
 cp_task::cp_task(std::size_t id, std::shared_ptr<task_metadata> task_meta) : task_base(id, task_meta)
@@ -79,7 +37,7 @@ std::shared_ptr<task_results> cp_task::run()
 	fs::path input(task_meta_->cmd_args[0]);
 	auto filename_matcher = input.filename().string();
 	auto base_dir = input.remove_filename();
-	auto pattern = wildcards_regex(filename_matcher);
+	auto pattern = helpers::wildcards_regex(filename_matcher);
 
 	// parse output path and check if it is existing directory or not
 	fs::path output(task_meta_->cmd_args[1]);
