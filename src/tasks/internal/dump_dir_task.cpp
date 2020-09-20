@@ -1,5 +1,30 @@
 #include <fstream>
 #include "dump_dir_task.h"
+#include "helpers/string_utils.h"
+
+namespace  {
+
+std::vector<std::regex> get_excludes(std::vector<std::string> &args) {
+	std::vector<std::string> excludesArgs(args.cbegin() + 3, args.cend());
+	std::vector<std::regex> excludes(args.size() - 3);
+
+	for (auto &path : excludesArgs) {
+		excludes.push_back(helpers::wildcards_regex(path));
+	}
+
+	return excludes;
+}
+
+bool is_excluded(fs::path &relative_path, std::vector<std::regex> &excludes) {
+	for (auto &exclude : excludes) {
+		if (regex_match(relative_path.string(), exclude)) {
+			return true;
+		}
+	}
+	return false;
+}
+
+} // namespace
 
 dump_dir_task::dump_dir_task(std::size_t id, std::shared_ptr<task_metadata> task_meta) : task_base(id, task_meta)
 {
@@ -18,6 +43,9 @@ std::shared_ptr<task_results> dump_dir_task::run()
 	auto limit = read_task_arg<std::size_t>(task_meta_->cmd_args, 2, 128);
 	limit *= 1024; // The argument is in kilobytes
 
+	// get excludes and construct their regexps
+	std::vector<std::regex> excludes = get_excludes(task_meta_->cmd_args);
+
 	fs::recursive_directory_iterator directory_iterator(src_root), directory_iterator_end;
 	std::vector<fs::path> paths(directory_iterator, directory_iterator_end);
 
@@ -33,6 +61,11 @@ std::shared_ptr<task_results> dump_dir_task::run()
 	for (auto &path : paths) {
 		auto relative_path = fs::path(path.string().substr(src_root.string().size()));
 		auto dest_path = dest_root / relative_path;
+
+		// check if source path is excluded or not
+		if (is_excluded(path, excludes)) {
+			continue;
+		}
 
 		if (!fs::exists(dest_path.parent_path())) {
 			auto return_code = make_dirs(dest_path.parent_path());
