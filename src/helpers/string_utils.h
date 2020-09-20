@@ -3,6 +3,7 @@
 
 #include <string>
 #include <algorithm>
+#include <regex>
 
 namespace helpers
 {
@@ -18,6 +19,13 @@ namespace helpers
 	 * @param text
 	 */
 	void filter_non_printable_chars(std::string &text);
+
+	/**
+	 * Constructs appropriate regular expression for given wildcard.
+	 * @param string with wildcard pattern
+	 * @return regex
+	 */
+	std::regex wildcards_regex(std::string wildcard_pattern);
 } // namespace helpers
 
 
