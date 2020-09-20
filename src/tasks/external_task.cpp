@@ -54,7 +54,6 @@ void external_task::sandbox_init()
 			limits.share_net = true; // initiation (compilation) tasks may use internet to download stuff
 
 			// TODO: a better way would be to make this optional (a job will define, whether it requires net or not)
-			
 		}
 		sandbox_ = std::make_shared<isolate_sandbox>(
 			sandbox_config_, limits, worker_config_->get_worker_id(), temp_dir_, evaluation_dir_.string(), logger_);

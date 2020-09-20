@@ -1,33 +1,34 @@
 #include "string_utils.h"
 #include <cctype>
 
-namespace {
-
-void replace_substring(std::string &data, const std::string &from, const std::string &to)
+namespace
 {
-	std::size_t pos = data.find(from);
-	while(pos != std::string::npos) {
-		data.replace(pos, from.size(), to);
-		pos = data.find(from, pos + to.size());
+
+	void replace_substring(std::string &data, const std::string &from, const std::string &to)
+	{
+		std::size_t pos = data.find(from);
+		while (pos != std::string::npos) {
+			data.replace(pos, from.size(), to);
+			pos = data.find(from, pos + to.size());
+		}
 	}
-}
 
-void escape_regex(std::string &regex)
-{
-	replace_substring(regex, "\\", "\\\\");
-	replace_substring(regex, "^", "\\^");
-	replace_substring(regex, ".", "\\.");
-	replace_substring(regex, "$", "\\$");
-	replace_substring(regex, "|", "\\|");
-	replace_substring(regex, "(", "\\(");
-	replace_substring(regex, ")", "\\)");
-	replace_substring(regex, "[", "\\[");
-	replace_substring(regex, "]", "\\]");
-	replace_substring(regex, "*", "\\*");
-	replace_substring(regex, "+", "\\+");
-	replace_substring(regex, "?", "\\?");
-	replace_substring(regex, "/", "\\/");
-}
+	void escape_regex(std::string &regex)
+	{
+		replace_substring(regex, "\\", "\\\\");
+		replace_substring(regex, "^", "\\^");
+		replace_substring(regex, ".", "\\.");
+		replace_substring(regex, "$", "\\$");
+		replace_substring(regex, "|", "\\|");
+		replace_substring(regex, "(", "\\(");
+		replace_substring(regex, ")", "\\)");
+		replace_substring(regex, "[", "\\[");
+		replace_substring(regex, "]", "\\]");
+		replace_substring(regex, "*", "\\*");
+		replace_substring(regex, "+", "\\+");
+		replace_substring(regex, "?", "\\?");
+		replace_substring(regex, "/", "\\/");
+	}
 
 } // namespace
 

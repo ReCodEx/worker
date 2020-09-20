@@ -2,27 +2,26 @@
 #include "dump_dir_task.h"
 #include "helpers/string_utils.h"
 
-namespace  {
+namespace
+{
 
-std::vector<std::regex> get_excludes(std::vector<std::string> &args) {
-	std::vector<std::string> excludesArgs(args.cbegin() + 3, args.cend());
-	std::vector<std::regex> excludes(args.size() - 3);
+	std::vector<std::regex> get_excludes(std::vector<std::string> &args)
+	{
+		std::vector<std::string> excludesArgs(args.cbegin() + 3, args.cend());
+		std::vector<std::regex> excludes(args.size() - 3);
 
-	for (auto &path : excludesArgs) {
-		excludes.push_back(helpers::wildcards_regex(path));
+		for (auto &path : excludesArgs) { excludes.push_back(helpers::wildcards_regex(path)); }
+
+		return excludes;
 	}
 
-	return excludes;
-}
-
-bool is_excluded(fs::path &relative_path, std::vector<std::regex> &excludes) {
-	for (auto &exclude : excludes) {
-		if (regex_match(relative_path.string(), exclude)) {
-			return true;
+	bool is_excluded(fs::path &relative_path, std::vector<std::regex> &excludes)
+	{
+		for (auto &exclude : excludes) {
+			if (regex_match(relative_path.string(), exclude)) { return true; }
 		}
+		return false;
 	}
-	return false;
-}
 
 } // namespace
 
@@ -63,9 +62,7 @@ std::shared_ptr<task_results> dump_dir_task::run()
 		auto dest_path = dest_root / relative_path;
 
 		// check if source path is excluded or not
-		if (is_excluded(path, excludes)) {
-			continue;
-		}
+		if (is_excluded(path, excludes)) { continue; }
 
 		if (!fs::exists(dest_path.parent_path())) {
 			auto return_code = make_dirs(dest_path.parent_path());
