@@ -51,6 +51,9 @@ protected:
 
 TEST_F(dump_dir_task_test, everything_fits)
 {
+	// setup command line arguments
+	task_meta->cmd_args = {root.string(), (target / "dir").string(), "16384"};
+
 	auto results = task->run();
 	ASSERT_EQ(task_status::OK, results->status) << "Failed with: " + results->error_message;
 
@@ -61,7 +64,8 @@ TEST_F(dump_dir_task_test, everything_fits)
 
 TEST_F(dump_dir_task_test, everything_skipped)
 {
-	task_meta->cmd_args[2] = "1";
+	// setup command line arguments
+	task_meta->cmd_args = {root.string(), (target / "dir").string(), "1"};
 
 	auto results = task->run();
 	ASSERT_EQ(task_status::OK, results->status) << "Failed with: " + results->error_message;
@@ -76,7 +80,8 @@ TEST_F(dump_dir_task_test, everything_skipped)
 
 TEST_F(dump_dir_task_test, largest_skipped)
 {
-	task_meta->cmd_args[2] = "4";
+	// setup command line arguments
+	task_meta->cmd_args = {root.string(), (target / "dir").string(), "4"};
 
 	auto results = task->run();
 	ASSERT_EQ(task_status::OK, results->status) << "Failed with: " + results->error_message;
@@ -84,5 +89,57 @@ TEST_F(dump_dir_task_test, largest_skipped)
 	ASSERT_TRUE(fs::exists(target / "dir" / "file_a"));
 	ASSERT_FALSE(fs::exists(target / "dir" / "file_b"));
 	ASSERT_TRUE(fs::exists(target / "dir" / "file_b.skipped"));
+	ASSERT_TRUE(fs::exists(target / "dir" / "subdir" / "file_c"));
+}
+
+TEST_F(dump_dir_task_test, nothing_excluded)
+{
+	// setup command line arguments
+	task_meta->cmd_args = {root.string(), (target / "dir").string(), "16384", "nonexisting-a", "nonexisting-b"};
+
+	auto results = task->run();
+	ASSERT_EQ(task_status::OK, results->status) << "Failed with: " + results->error_message;
+
+	ASSERT_TRUE(fs::exists(target / "dir" / "file_a"));
+	ASSERT_TRUE(fs::exists(target / "dir" / "file_b"));
+	ASSERT_TRUE(fs::exists(target / "dir" / "subdir" / "file_c"));
+}
+
+TEST_F(dump_dir_task_test, exclude_single_file)
+{
+	// setup command line arguments
+	task_meta->cmd_args = {root.string(), (target / "dir").string(), "16384", "file_a"};
+
+	auto results = task->run();
+	ASSERT_EQ(task_status::OK, results->status) << "Failed with: " + results->error_message;
+
+	ASSERT_FALSE(fs::exists(target / "dir" / "file_a"));
+	ASSERT_TRUE(fs::exists(target / "dir" / "file_b"));
+	ASSERT_TRUE(fs::exists(target / "dir" / "subdir" / "file_c"));
+}
+
+TEST_F(dump_dir_task_test, exclude_subdir)
+{
+	// setup command line arguments
+	task_meta->cmd_args = {root.string(), (target / "dir").string(), "16384", (fs::path("subdir") / "file*").string()};
+
+	auto results = task->run();
+	ASSERT_EQ(task_status::OK, results->status) << "Failed with: " + results->error_message;
+
+	ASSERT_TRUE(fs::exists(target / "dir" / "file_a"));
+	ASSERT_TRUE(fs::exists(target / "dir" / "file_b"));
+	ASSERT_FALSE(fs::exists(target / "dir" / "subdir" / "file_c"));
+}
+
+TEST_F(dump_dir_task_test, exclude_root_dir_files)
+{
+	// setup command line arguments
+	task_meta->cmd_args = {root.string(), (target / "dir").string(), "16384", "file*"};
+
+	auto results = task->run();
+	ASSERT_EQ(task_status::OK, results->status) << "Failed with: " + results->error_message;
+
+	ASSERT_FALSE(fs::exists(target / "dir" / "file_a"));
+	ASSERT_FALSE(fs::exists(target / "dir" / "file_b"));
 	ASSERT_TRUE(fs::exists(target / "dir" / "subdir" / "file_c"));
 }
