@@ -1,5 +1,6 @@
 #include "string_utils.h"
 #include <cctype>
+#include <map>
 
 namespace
 {
@@ -15,19 +16,9 @@ namespace
 
 	void escape_regex(std::string &regex)
 	{
-		replace_substring(regex, "\\", "\\\\");
-		replace_substring(regex, "^", "\\^");
-		replace_substring(regex, ".", "\\.");
-		replace_substring(regex, "$", "\\$");
-		replace_substring(regex, "|", "\\|");
-		replace_substring(regex, "(", "\\(");
-		replace_substring(regex, ")", "\\)");
-		replace_substring(regex, "[", "\\[");
-		replace_substring(regex, "]", "\\]");
-		replace_substring(regex, "*", "\\*");
-		replace_substring(regex, "+", "\\+");
-		replace_substring(regex, "?", "\\?");
-		replace_substring(regex, "/", "\\/");
+		std::string escape = "\\";
+		std::string escapeables[] = {"\\", "^", ".", "$", "|", "(", ")", "[", "]", "*", "+", "?", "/"};
+		for (auto &escapeable : escapeables) { replace_substring(regex, escapeable, escape + escapeable); }
 	}
 
 } // namespace
@@ -61,8 +52,9 @@ std::regex helpers::wildcards_regex(std::string wildcard_pattern)
 	escape_regex(wildcard_pattern);
 
 	// Convert chars '*?' back to their regex equivalents
-	replace_substring(wildcard_pattern, "\\?", ".");
-	replace_substring(wildcard_pattern, "\\*", ".*");
+	std::map<std::string, std::string> wildcards = {{"\\?", "."}, {"\\*", ".*"}};
+	for (auto entry : wildcards) { replace_substring(wildcard_pattern, entry.first, entry.second); }
 
+	// return regular expression created from escaped and wildcarded input
 	return std::regex(wildcard_pattern);
 }
