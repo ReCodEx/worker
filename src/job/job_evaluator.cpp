@@ -49,23 +49,13 @@ void job_evaluator::prepare_submission()
 {
 	logger_->info("Preparing submission for usage...");
 
-	// decompress downloaded archive
+	// decompress downloaded archive directly to source path (eval dir)
 	try {
-		fs::create_directories(submission_path_);
-		archivator::decompress((archive_path_ / archive_name_).string(), submission_path_.string());
+		fs::create_directories(source_path_);
+		archivator::decompress((archive_path_ / archive_name_).string(), source_path_.string());
+		fs::permissions(source_path_, fs::add_perms | fs::group_write | fs::others_write);
 	} catch (archive_exception &e) {
 		throw job_exception("Downloaded submission cannot be decompressed: " + std::string(e.what()));
-	}
-
-	// copy source codes to source code folder
-	try {
-		// stem().stem() is removing the .tar.bz2 ending (maybe working with just .zip ending too)
-		fs::path tmp_path = submission_path_ / archive_name_.stem().stem();
-		// source_path_ is automaticaly created in copy_directory()
-		helpers::copy_directory(tmp_path, source_path_);
-		fs::permissions(source_path_, fs::add_perms | fs::group_write | fs::others_write);
-	} catch (helpers::filesystem_exception &e) {
-		throw job_exception("Error copying source files to source code path: " + std::string(e.what()));
 	}
 
 	try {
@@ -149,7 +139,6 @@ void job_evaluator::run_job()
 void job_evaluator::init_submission_paths()
 {
 	source_path_ = working_directory_ / "eval" / std::to_string(config_->get_worker_id()) / job_id_;
-	submission_path_ = working_directory_ / "submissions" / std::to_string(config_->get_worker_id()) / job_id_;
 	archive_path_ = working_directory_ / "downloads" / std::to_string(config_->get_worker_id()) / job_id_;
 	// set temporary directory for tasks in job
 	job_temp_dir_ = working_directory_ / "temp" / std::to_string(config_->get_worker_id()) / job_id_;
@@ -167,16 +156,6 @@ void job_evaluator::cleanup_submission()
 		}
 	} catch (fs::filesystem_error &e) {
 		logger_->warn("Source code directory not cleaned properly: {}", e.what());
-	}
-
-	// delete submission decompressed directory
-	try {
-		if (fs::exists(submission_path_)) {
-			logger_->info("Cleaning up decompressed submission directory...");
-			fs::remove_all(submission_path_);
-		}
-	} catch (fs::filesystem_error &e) {
-		logger_->warn("Submission directory not cleaned properly: {}", e.what());
 	}
 
 	// delete downloaded archive directory
@@ -218,7 +197,6 @@ void job_evaluator::cleanup_variables()
 		archive_url_ = "";
 		archive_name_ = "";
 		archive_path_ = "";
-		submission_path_ = "";
 		source_path_ = "";
 		results_path_ = "";
 		result_url_ = "";
