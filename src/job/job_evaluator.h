@@ -133,8 +133,6 @@ private:
 	fs::path archive_name_;
 	/** Path in which downloaded archive is stored */
 	fs::path archive_path_;
-	/** Path in which downloaded decompressed submission is stored */
-	fs::path submission_path_;
 	/** Path only with source codes and job configuration, no subfolders */
 	fs::path source_path_;
 	/** Results path in which result.yml and result.zip are stored */
