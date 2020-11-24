@@ -1,0 +1,52 @@
+name: Linux Build
+
+on: [push, pull_request]
+
+jobs:
+  tests:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - run: g++ --version
+      - run: cmake --version
+
+      # before install
+      - run: sudo apt-get update -qq
+      - name: Install bats testing suite
+        run: sudo apt-get install -y bats
+      - name: Install ZeroMQ
+        run: sudo apt-get install -y libzmq3-dev libzmq5
+      - name: Install Boost
+        run: sudo apt-get install -y libboost-all-dev
+      - name: Install yaml-cpp
+        run: sudo apt-get install -y libyaml-cpp-dev
+      - name: Install libcURL
+        run: sudo apt-get install -y libcurl4-gnutls-dev
+      - name: Install libarchive (to avoid compiling it)
+        run: sudo apt-get install -y libarchive-dev
+      - name: Install libcap for isolate
+        run: sudo apt-get install -y libcap-dev
+
+      # install isolate
+      - run: git clone https://github.com/ioi/isolate.git
+      - run: make isolate
+        working-directory: isolate
+      - run: sudo make install
+        working-directory: isolate
+      - run: rm -rf isolate
+
+      # script
+      - run: mkdir build
+      - run: cmake ..
+        working-directory: build
+      - run: make -j 4
+        working-directory: build
+      - run: ctest -E tool_ --output-on-failure
+        working-directory: build
+      - run: bats ../../../judges/recodex_token_judge/tests
+        working-directory: build/judges/recodex_token_judge
+
+      # after success
+      - uses: codecov/codecov-action@v1
