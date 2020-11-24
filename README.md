@@ -1,8 +1,8 @@
 # Worker
 
-[![Linux build Status](https://img.shields.io/travis/ReCodEx/worker/master.svg?label=Linux%20build)](https://travis-ci.org/ReCodEx/worker)
+[![Linux build Status](https://github.com/ReCodEx/worker/workflows/Linux%20Build/badge.svg)](https://github.com/ReCodEx/worker/actions)
 [![Windows build status](https://img.shields.io/appveyor/ci/Neloop/worker/master.svg?label=Windows%20build)](https://ci.appveyor.com/project/Neloop/worker/branch/master)
-[![Coverage](https://img.shields.io/coveralls/ReCodEx/worker.svg)](https://coveralls.io/github/ReCodEx/worker)
+[![codecov](https://codecov.io/gh/ReCodEx/worker/branch/master/graph/badge.svg?token=AYHQA9R8PJ)](https://codecov.io/gh/ReCodEx/worker)
 [![License](http://img.shields.io/:license-mit-blue.svg)](http://badges.mit-license.org)
 [![Docs](https://img.shields.io/badge/docs-latest-brightgreen.svg)](http://recodex.github.io/worker/)
 [![Wiki](https://img.shields.io/badge/docs-wiki-orange.svg)](https://github.com/ReCodEx/wiki/wiki)
