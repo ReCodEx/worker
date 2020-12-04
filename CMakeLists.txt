@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8.11)
 project(recodex-worker)
-set(RECODEX_VERSION 1.6.4)
+set(RECODEX_VERSION 1.7.1)
 enable_testing()
 
 # Hack for old CentOS and new GCC with uncompatible ABI
