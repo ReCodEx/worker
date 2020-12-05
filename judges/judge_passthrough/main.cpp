@@ -131,7 +131,7 @@ int main(int argc, char **argv)
 		// Get the first line which holds the exit code
 		std::string line, decoded, result;
 		int exitCode = 0;
-		if (getline(inputFile, line)) {
+		if (getline(inputFile, line) && line.size() > 0) {
 			exitCode = stoi(line);
 			if (exitCode < 0 || exitCode > 255) {
 				throw runtime_error("Invalid exit code value.");
@@ -141,7 +141,7 @@ int main(int argc, char **argv)
 		}
 
 		// Get the stdout and decode it
-		if (getline(inputFile, line)) {
+		if (getline(inputFile, line) && line.size() > 0) {
 			result = Base64::Decode(line, decoded);
 			if (!result.empty()) {
 				throw runtime_error(result);
@@ -150,7 +150,7 @@ int main(int argc, char **argv)
 		}
 
 		// Get the stderr and decode it
-		if (getline(inputFile, line)) {
+		if (getline(inputFile, line) && line.size() > 0) {
 			result = Base64::Decode(line, decoded);
 			if (!result.empty()) {
 				throw runtime_error(result);
