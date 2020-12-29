@@ -7,7 +7,7 @@ void helpers::copy_directory(const fs::path &src, const fs::path &dest)
 		if (!fs::exists(src)) {
 			throw filesystem_exception(
 				"helpers::copy_directory: Source directory does not exist '" + src.string() + "'");
-		} else if (!fs::is_directory(src)) {
+		} else if (!fs::is_directory(fs::symlink_status(src))) {
 			throw filesystem_exception(
 				"helpers::copy_directory: Source directory is not a directory '" + src.string() + "'");
 		} else if (!fs::exists(dest) && !fs::create_directories(dest)) {
@@ -17,7 +17,7 @@ void helpers::copy_directory(const fs::path &src, const fs::path &dest)
 
 		fs::directory_iterator endit;
 		for (fs::directory_iterator it(src); it != endit; ++it) {
-			if (fs::is_directory(it->status())) {
+			if (fs::is_directory(it->symlink_status())) {
 				helpers::copy_directory(it->path(), dest / it->path().filename());
 			} else {
 				fs::copy(it->path(), dest / it->path().filename());

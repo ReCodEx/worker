@@ -44,7 +44,7 @@ std::shared_ptr<task_results> cp_task::run()
 	for (fs::directory_iterator item(base_dir); item != end_itr; ++item) {
 		if (regex_match(item->path().filename().string(), pattern)) {
 			auto target = output_is_dir ? (output / item->path().filename()) : output;
-			if (fs::is_directory(item->path())) {
+			if (fs::is_directory(fs::symlink_status(item->path()))) {
 				helpers::copy_directory(item->path(), target);
 			} else {
 				boost::system::error_code error_code;
