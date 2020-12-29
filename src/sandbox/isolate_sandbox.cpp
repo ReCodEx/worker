@@ -165,7 +165,7 @@ void isolate_sandbox::isolate_init_child(int fd_0, int fd_1)
 
 	args[0] = isolate_binary_.c_str();
 	args[1] = "--cg";
-	args[2] = ("--box-id=" + std::to_string(id_)).c_str();
+	args[2] = strdup(("--box-id=" + std::to_string(id_)).c_str());
 	args[3] = "--init";
 	args[4] = NULL;
 
@@ -198,7 +198,7 @@ void isolate_sandbox::isolate_cleanup()
 		const char *args[5];
 		args[0] = isolate_binary_.c_str();
 		args[1] = "--cg";
-		args[2] = ("--box-id=" + std::to_string(id_)).c_str();
+		args[2] = strdup(("--box-id=" + std::to_string(id_)).c_str());
 		args[3] = "--cleanup";
 		args[4] = NULL;
 		// const_cast is ugly, but this is working with C code - execv does not modify its arguments
