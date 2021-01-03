@@ -250,8 +250,8 @@ void isolate_sandbox::isolate_run(const std::string &binary, const std::vector<s
 		execvp(isolate_binary_.c_str(), args);
 
 		// Never reached
-		for(char **arg = args; *arg; arg++)
-			free(*arg);
+		for(char **arg = args; *arg; arg++) { free(*arg); }
+		delete[] args;
 
 		log_and_throw(logger_, "Exec returned to child: ", strerror(errno));
 	} break;
