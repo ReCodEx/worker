@@ -173,6 +173,8 @@ void isolate_sandbox::isolate_init_child(int fd_0, int fd_1)
 	execvp(isolate_binary_.c_str(), const_cast<char **>(args));
 
 	// Never reached
+	free(const_cast<char *>(args[2]));
+
 	log_and_throw(logger_, "Exec returned to child: ", strerror(errno));
 }
 
@@ -205,6 +207,8 @@ void isolate_sandbox::isolate_cleanup()
 		execvp(isolate_binary_.c_str(), const_cast<char **>(args));
 
 		// Never reached
+		free(const_cast<char *>(args[2]));
+
 		log_and_throw(logger_, "Exec returned to child: ", strerror(errno));
 		break;
 	default:
@@ -246,6 +250,9 @@ void isolate_sandbox::isolate_run(const std::string &binary, const std::vector<s
 		execvp(isolate_binary_.c_str(), args);
 
 		// Never reached
+		for(char **arg = args; *arg; arg++)
+			free(*arg);
+
 		log_and_throw(logger_, "Exec returned to child: ", strerror(errno));
 	} break;
 	default: {
