@@ -14,9 +14,11 @@ namespace helpers
 	 * Recursively copy directory from source to destination.
 	 * @param src source directory which content will be copied into @a dest
 	 * @param dest destination path which should not exist
+	 * @param skip_symlinks if true, all symlinks in src will be ignored
+	 *                      (security feature when dealing with sandboxed data)
 	 * @throws filesystem_exception with approprite description
 	 */
-	void copy_directory(const fs::path &src, const fs::path &dest);
+	void copy_directory(const fs::path &src, const fs::path &dest, bool skip_symlinks = false);
 
 	/**
 	 * Normalize dots and double dots from given path.

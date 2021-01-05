@@ -1,33 +1,95 @@
 #include "filesystem.h"
 #include <iostream>
+#include <map>
 
-void helpers::copy_directory(const fs::path &src, const fs::path &dest)
+/**
+ * Try to find matching hardlink in hardlinks map. If src is found in the map, dest is filled with corresponding file.
+ * @param hardlinks the hardlinks map (src -> dst)
+ * @param src source path being looked up in hardlinks using equvalent func
+ * @param dest output arg which is filled in case of success
+ * @return true if the hardlink match is found
+ */
+bool find_matching_hadlink(std::map<fs::path, fs::path> &hardlinks, const fs::path &src, fs::path &dest)
+{
+	for (auto& [s, d] : hardlinks) {
+		if (fs::equivalent(s, src)) { // both paths point to the same data on the disk (same hardlinks)
+			dest = d;
+			return true;
+		}
+	}
+	return false;
+}
+
+void copy_diretory_internal(const fs::path &src, const fs::path &dest, bool skip_symlinks, std::map<fs::path, fs::path> &hardlinks)
 {
 	try {
+		// routine checks
 		if (!fs::exists(src)) {
-			throw filesystem_exception(
+			throw helpers::filesystem_exception(
 				"helpers::copy_directory: Source directory does not exist '" + src.string() + "'");
-		} else if (!fs::is_directory(fs::symlink_status(src))) {
-			throw filesystem_exception(
+		}
+
+		if (skip_symlinks && fs::is_symlink(src)) {
+			return;
+		}
+		
+		if (!fs::is_directory(fs::symlink_status(src))) {
+			throw helpers::filesystem_exception(
 				"helpers::copy_directory: Source directory is not a directory '" + src.string() + "'");
-		} else if (!fs::exists(dest) && !fs::create_directories(dest)) {
-			throw filesystem_exception(
+		}
+		
+		if (!fs::exists(dest) && !fs::create_directories(dest)) {
+			throw helpers::filesystem_exception(
 				"helpers::copy_directory: Destination directory cannot be created '" + dest.string() + "'");
 		}
 
+		// proceed with copying
 		fs::directory_iterator endit;
 		for (fs::directory_iterator it(src); it != endit; ++it) {
+			auto srcPath = it->path();
+			auto destPath = dest / it->path().filename();
+
+			if (skip_symlinks && fs::is_symlink(srcPath)) {
+				continue;
+			}
+
 			if (fs::is_directory(it->symlink_status())) {
-				helpers::copy_directory(it->path(), dest / it->path().filename());
+				copy_diretory_internal(srcPath, destPath, skip_symlinks, hardlinks);
 			} else {
-				fs::copy(it->path(), dest / it->path().filename());
+				// a file may be either copied or hardlinked
+				if (!fs::is_symlink(srcPath) && fs::hard_link_count(srcPath) > 1) {
+					fs::path destPathHardlink;
+					if (find_matching_hadlink(hardlinks, it->path(), destPathHardlink)) {
+						// another file refering to the same data already exists in dest directory
+						fs::create_hard_link(destPathHardlink, destPath);
+						continue; // move to next file, hardlink replaced copying
+					} else {
+						// this is the first time we encoutered this data, lets register them in hardlinks map
+						hardlinks.emplace(std::make_pair(it->path(), destPath));
+					}
+				}
+
+				// no hardlink created, lets proceed with copying
+				fs::copy(it->path(), destPath);
 			}
 		}
 	} catch (fs::filesystem_error &e) {
-		throw filesystem_exception("helpers::copy_directory: Error in copying directories: " + std::string(e.what()));
+		throw helpers::filesystem_exception("helpers::copy_directory: Error in copying directories: " + std::string(e.what()));
 	}
 
 	return;
+}
+
+void helpers::copy_directory(const fs::path &src, const fs::path &dest, bool skip_symlinks)
+{
+	/*
+	 * Hardlinks map provide mapping between files in src and dest which have been harlinked.
+	 * Everytime a file with > 1 hadlink count is copied from src to dest, it is registered here.
+	 * When files with > 1 hardlinks are encountered, this map is searched and if match is found
+	 * the new file is hadlinked inside dest instead of coping it from src.
+	 */
+	std::map<fs::path, fs::path> hardlinks;
+	::copy_diretory_internal(src, dest, skip_symlinks, hardlinks);
 }
 
 fs::path helpers::normalize_path(const fs::path &path)
