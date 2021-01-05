@@ -25,7 +25,7 @@ namespace
 	void move_or_throw(std::shared_ptr<spdlog::logger> logger, const std::string &from, const std::string &to)
 	{
 		try {
-			helpers::copy_directory(from, to);
+			helpers::copy_directory(from, to, true); // true = skip symlinks for security reasons
 		} catch (fs::filesystem_error &e) {
 			log_and_throw(logger, "Failed moving ", from, " to ", to, ", error: ", e.what());
 		}
