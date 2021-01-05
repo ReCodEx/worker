@@ -160,21 +160,26 @@ void isolate_sandbox::isolate_init_child(int fd_0, int fd_1)
 	if (devnull == -1) { log_and_throw(logger_, "Cannot open /dev/null file for writing."); }
 	dup2(devnull, 2);
 
-	// Exec isolate init command
-	const char *args[5];
+	std::string boxIdArg("--box-id=" + std::to_string(id_));
 
-	args[0] = isolate_binary_.c_str();
-	args[1] = "--cg";
-	args[2] = strdup(("--box-id=" + std::to_string(id_)).c_str());
-	args[3] = "--init";
-	args[4] = NULL;
+	// disk quotas need to be set in initialization
+	auto disk_size_blocks = (limits_.disk_size * 1024) / BLOCK_SIZE;
+	std::string quotaArg("--quota=" + std::to_string(disk_size_blocks) + "," + std::to_string(limits_.disk_files));
+
+	// Exec isolate init command
+	const char *args[] {
+		isolate_binary_.c_str(),
+		"--cg",
+		boxIdArg.c_str(),
+		quotaArg.c_str(),
+		"--init",
+		nullptr,
+	};
 
 	// const_cast is ugly, but this is working with C code - execv does not modify its arguments
 	execvp(isolate_binary_.c_str(), const_cast<char **>(args));
 
-	// Never reached
-	free(const_cast<char *>(args[2]));
-
+	// never reached unless exec explodes in our face
 	log_and_throw(logger_, "Exec returned to child: ", strerror(errno));
 }
 
@@ -324,6 +329,7 @@ char **isolate_sandbox::isolate_run_args(const std::string &binary, const std::v
 	if (limits_.stack_size != 0) { vargs.push_back("--stack=" + std::to_string(limits_.stack_size)); }
 	if (limits_.files_size != 0) { vargs.push_back("--fsize=" + std::to_string(limits_.files_size)); }
 	// Calculate number of required blocks - total number of bytes divided by block size (defined in sys/mount.h)
+	// Actually, the quotas are probably silently ignored in --run command, but it is not properly documented in isolate.
 	auto disk_size_blocks = (limits_.disk_size * 1024) / BLOCK_SIZE;
 	vargs.push_back("--quota=" + std::to_string(disk_size_blocks) + "," + std::to_string(limits_.disk_files));
 	if (!sandbox_config_->std_input.empty()) { vargs.push_back("--stdin=" + sandbox_config_->std_input); }
