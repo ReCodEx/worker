@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.19.0)
 project(recodex-judge-shuffle)
 
 # Use all settings from original Makefile

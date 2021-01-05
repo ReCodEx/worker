@@ -45,6 +45,9 @@ jobs:
         working-directory: build
       - run: ctest -E tool_ --output-on-failure
         working-directory: build
+      - run: ctest -R tool_ --output-on-failure
+        continue-on-error: true
+        working-directory: build
       - run: bats ../../../judges/recodex_token_judge/tests
         working-directory: build/judges/recodex_token_judge
 
