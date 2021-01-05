@@ -9,7 +9,7 @@
  * @param dest output arg which is filled in case of success
  * @return true if the hardlink match is found
  */
-bool find_matching_hadlink(std::map<fs::path, fs::path> &hardlinks, const fs::path &src, fs::path &dest)
+bool find_matching_hardlink(std::map<fs::path, fs::path> &hardlinks, const fs::path &src, fs::path &dest)
 {
 	for (auto& [s, d] : hardlinks) {
 		if (fs::equivalent(s, src)) { // both paths point to the same data on the disk (same hardlinks)
@@ -59,7 +59,7 @@ void copy_diretory_internal(const fs::path &src, const fs::path &dest, bool skip
 				// a file may be either copied or hardlinked
 				if (!fs::is_symlink(srcPath) && fs::hard_link_count(srcPath) > 1) {
 					fs::path destPathHardlink;
-					if (find_matching_hadlink(hardlinks, it->path(), destPathHardlink)) {
+					if (find_matching_hardlink(hardlinks, it->path(), destPathHardlink)) {
 						// another file refering to the same data already exists in dest directory
 						fs::create_hard_link(destPathHardlink, destPath);
 						continue; // move to next file, hardlink replaced copying
@@ -84,9 +84,9 @@ void helpers::copy_directory(const fs::path &src, const fs::path &dest, bool ski
 {
 	/*
 	 * Hardlinks map provide mapping between files in src and dest which have been harlinked.
-	 * Everytime a file with > 1 hadlink count is copied from src to dest, it is registered here.
+	 * Everytime a file with > 1 hardlink count is copied from src to dest, it is registered here.
 	 * When files with > 1 hardlinks are encountered, this map is searched and if match is found
-	 * the new file is hadlinked inside dest instead of coping it from src.
+	 * the new file is hardlinked inside dest instead of coping it from src.
 	 */
 	std::map<fs::path, fs::path> hardlinks;
 	::copy_diretory_internal(src, dest, skip_symlinks, hardlinks);

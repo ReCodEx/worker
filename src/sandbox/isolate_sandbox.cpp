@@ -160,18 +160,18 @@ void isolate_sandbox::isolate_init_child(int fd_0, int fd_1)
 	if (devnull == -1) { log_and_throw(logger_, "Cannot open /dev/null file for writing."); }
 	dup2(devnull, 2);
 
-	std::string boxIdArg("--box-id=" + std::to_string(id_));
+	std::string box_id_arg("--box-id=" + std::to_string(id_));
 
 	// disk quotas need to be set in initialization
 	auto disk_size_blocks = (limits_.disk_size * 1024) / BLOCK_SIZE;
-	std::string quotaArg("--quota=" + std::to_string(disk_size_blocks) + "," + std::to_string(limits_.disk_files));
+	std::string quota_arg("--quota=" + std::to_string(disk_size_blocks) + "," + std::to_string(limits_.disk_files));
 
 	// Exec isolate init command
 	const char *args[] {
 		isolate_binary_.c_str(),
 		"--cg",
-		boxIdArg.c_str(),
-		quotaArg.c_str(),
+		box_id_arg.c_str(),
+		quota_arg.c_str(),
 		"--init",
 		nullptr,
 	};
