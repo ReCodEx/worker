@@ -1,7 +1,7 @@
 # Worker
 
-[![Linux build Status](https://github.com/ReCodEx/worker/workflows/Linux%20Build/badge.svg)](https://github.com/ReCodEx/worker/actions)
-[![Windows build status](https://img.shields.io/appveyor/ci/Neloop/worker/master.svg?label=Windows%20build)](https://ci.appveyor.com/project/Neloop/worker/branch/master)
+[![Linux Build Status](https://github.com/ReCodEx/worker/workflows/Linux%20Build/badge.svg)](https://github.com/ReCodEx/worker/actions)
+[![Windows Build Status](https://github.com/ReCodEx/worker/workflows/Windows%20Build/badge.svg)](https://github.com/ReCodEx/worker/actions)
 [![codecov](https://codecov.io/gh/ReCodEx/worker/branch/master/graph/badge.svg?token=AYHQA9R8PJ)](https://codecov.io/gh/ReCodEx/worker)
 [![License](http://img.shields.io/:license-mit-blue.svg)](http://badges.mit-license.org)
 [![Docs](https://img.shields.io/badge/docs-latest-brightgreen.svg)](http://recodex.github.io/worker/)
@@ -42,7 +42,7 @@ Worker specific requirements are written in this section. It covers only basic
 requirements, additional runtimes or tools may be needed depending on type of
 use. The package names are for CentOS if not specified otherwise. 
 
-- Boost 1.66 development libs (`boost-devel` package)
+- Boost 1.70 development libs (`boost-devel` package)
 - ZeroMQ in version at least 4.0, packages `zeromq` and `zeromq-devel`
   (`libzmq3-dev` on Debian)
 - YAML-CPP library, `yaml-cpp` and `yaml-cpp-devel` (`libyaml-cpp0.5v5` and

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.11)
+cmake_minimum_required(VERSION 3.19.0)
 project(recodex-worker)
 set(RECODEX_VERSION 1.7.1)
 enable_testing()
@@ -21,7 +21,7 @@ else()
 endif()
 # -- load Boost
 set (Boost_USE_MULTITHREADED ON)
-find_package(Boost 1.53.0 REQUIRED COMPONENTS filesystem system program_options)
+find_package(Boost 1.70.0 REQUIRED COMPONENTS filesystem system program_options)
 include_directories(${Boost_INCLUDE_DIRS})
 
 # -- cURL
