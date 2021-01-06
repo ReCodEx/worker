@@ -129,17 +129,16 @@ manageable in long term horizon.
 #### Install worker on Windows
 
 There are basically two main dependencies needed, **Windows 7** or higher and
-**Visual Studio 2015+**. Provided simple installation batch script should do all
-the work on Windows machine. Officially only VS2015 and 32-bit compilation is
-supported, because of hardcoded compile options in installation script. If
-different VS or different platform is needed, the script should be changed to
-appropriate values.
+**Visual Studio 2019+**. There is a simple installation batch script provided 
+which should do all the work on Windows machine. The script uses MsBuild from 
+VS2019 and 64-bit compilation, if you wish to use different compile option,
+please revisit mentioned script.
 
-Mentioned script is placed in *install* directory alongside supportive scripts
-for UNIX systems and is named *win-build.cmd*. Provided script will do almost
+The script is placed in *install* directory alongside supportive scripts for
+UNIX systems and is named *win-build.cmd*. Provided script will do almost
 all the work connected with building and dependency resolving (using
 **NuGet** package manager and `msbuild` building system). Script should be
-run under 32-bit version of _Developer Command Prompt for VS2015_ and from
+run under 64-bit version of _Developer Command Prompt for VS2019_ and from
 *install* directory.
 
 Building and installing of worker is then quite simple, script has command line
@@ -165,8 +164,7 @@ All build binaries and cmake temporary files can be found in *build* folder,
 classically there will be subfolder *Release* which will contain compiled
 application with all needed dlls. Once if clickable installation binary is
 created, it can be found in *build* folder under name 
-*recodex-worker-VERSION-win32.exe*. Sample screenshot can be found on following
-picture.
+*recodex-worker-VERSION-x64.exe*.
 
 #### Usage
 
