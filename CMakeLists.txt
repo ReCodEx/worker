@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.19.0)
+cmake_minimum_required(VERSION 3.11.0)
 project(recodex-worker)
 set(RECODEX_VERSION 1.7.1)
 enable_testing()
