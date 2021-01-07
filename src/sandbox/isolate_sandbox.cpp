@@ -162,16 +162,11 @@ void isolate_sandbox::isolate_init_child(int fd_0, int fd_1)
 
 	std::string box_id_arg("--box-id=" + std::to_string(id_));
 
-	// disk quotas need to be set in initialization
-	auto disk_size_blocks = (limits_.disk_size * 1024) / BLOCK_SIZE;
-	std::string quota_arg("--quota=" + std::to_string(disk_size_blocks) + "," + std::to_string(limits_.disk_files));
-
 	// Exec isolate init command
 	const char *args[] {
 		isolate_binary_.c_str(),
 		"--cg",
 		box_id_arg.c_str(),
-		quota_arg.c_str(),
 		"--init",
 		nullptr,
 	};
@@ -330,7 +325,7 @@ char **isolate_sandbox::isolate_run_args(const std::string &binary, const std::v
 	if (limits_.files_size != 0) { vargs.push_back("--fsize=" + std::to_string(limits_.files_size)); }
 	// Calculate number of required blocks - total number of bytes divided by block size (defined in sys/mount.h)
 	// Actually, the quotas are probably silently ignored in --run command, but it is not properly documented in isolate.
-	auto disk_size_blocks = (limits_.disk_size * 1024) / BLOCK_SIZE;
+	auto disk_size_blocks = (limits_.disk_size * 1024) / BLOCK_SIZE; // BLOCK_SIZE is from sys/mount.h
 	vargs.push_back("--quota=" + std::to_string(disk_size_blocks) + "," + std::to_string(limits_.disk_files));
 	if (!sandbox_config_->std_input.empty()) { vargs.push_back("--stdin=" + sandbox_config_->std_input); }
 	if (!sandbox_config_->std_output.empty()) { vargs.push_back("--stdout=" + sandbox_config_->std_output); }
