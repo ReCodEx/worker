@@ -77,8 +77,11 @@ echo Running tests...
 SET "PATH=%PATH%;%BIN_DIR%"
 :: execute tests
 cd %TESTS_BUILD_DIR%
-copy %CA_BUNDLE_PATH% %TESTS_BUILD_DIR%\%CA_BUNDLE%
+:: copy CA bundle to tests working directory
+copy %CA_BUNDLE_PATH% %TESTS_DIR%\%CA_BUNDLE%
 ctest -C Release --output-on-failure
+:: remove CA bundle from tests working directory
+del %TESTS_DIR%\%CA_BUNDLE%
 goto :EOF
 
 :: *** PACKAGE ***
