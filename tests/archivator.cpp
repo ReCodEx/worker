@@ -18,38 +18,50 @@ TEST(Archivator, DecompressNonexistingArchive)
 
 TEST(Archivator, DecompressZip)
 {
-	ASSERT_NO_THROW(archivator::decompress("testing_archives/valid_zip.zip", fs::temp_directory_path().string()));
-	EXPECT_TRUE(fs::is_directory(fs::temp_directory_path() / "valid_zip"));
-	EXPECT_TRUE(fs::is_regular_file(fs::temp_directory_path() / "valid_zip" / "a.txt"));
-	EXPECT_TRUE(fs::file_size(fs::temp_directory_path() / "valid_zip" / "a.txt") > 0);
-	fs::remove_all(fs::temp_directory_path() / "valid_zip");
+	fs::path unziped_path = fs::temp_directory_path() / "valid_zip";
+	fs::create_directory(unziped_path);
+
+	ASSERT_NO_THROW(archivator::decompress("testing_archives/valid_zip.zip", unziped_path.string()));
+	EXPECT_TRUE(fs::is_directory(unziped_path));
+	EXPECT_TRUE(fs::is_regular_file(unziped_path / "a.txt"));
+	EXPECT_TRUE(fs::file_size(unziped_path / "a.txt") > 0);
+	fs::remove_all(unziped_path);
 }
 
 TEST(Archivator, DecompressTar)
 {
-	ASSERT_NO_THROW(archivator::decompress("testing_archives/valid_tar.tar", fs::temp_directory_path().string()));
-	EXPECT_TRUE(fs::is_directory(fs::temp_directory_path() / "valid_tar"));
-	EXPECT_TRUE(fs::is_regular_file(fs::temp_directory_path() / "valid_tar" / "a.txt"));
-	EXPECT_TRUE(fs::file_size(fs::temp_directory_path() / "valid_tar" / "a.txt") > 0);
-	fs::remove_all(fs::temp_directory_path() / "valid_tar");
+	fs::path untared_path = fs::temp_directory_path() / "valid_tar";
+	fs::create_directory(untared_path);
+
+	ASSERT_NO_THROW(archivator::decompress("testing_archives/valid_tar.tar", untared_path.string()));
+	EXPECT_TRUE(fs::is_directory(untared_path));
+	EXPECT_TRUE(fs::is_regular_file(untared_path / "a.txt"));
+	EXPECT_TRUE(fs::file_size(untared_path / "a.txt") > 0);
+	fs::remove_all(untared_path);
 }
 
 TEST(Archivator, DecompressTarGz)
 {
-	ASSERT_NO_THROW(archivator::decompress("testing_archives/valid_tar.tar.gz", fs::temp_directory_path().string()));
-	EXPECT_TRUE(fs::is_directory(fs::temp_directory_path() / "valid_tar"));
-	EXPECT_TRUE(fs::is_regular_file(fs::temp_directory_path() / "valid_tar" / "a.txt"));
-	EXPECT_TRUE(fs::file_size(fs::temp_directory_path() / "valid_tar" / "a.txt") > 0);
-	fs::remove_all(fs::temp_directory_path() / "valid_tar");
+	fs::path untared_path = fs::temp_directory_path() / "valid_tar";
+	fs::create_directory(untared_path);
+
+	ASSERT_NO_THROW(archivator::decompress("testing_archives/valid_tar.tar.gz", untared_path.string()));
+	EXPECT_TRUE(fs::is_directory(untared_path));
+	EXPECT_TRUE(fs::is_regular_file(untared_path / "a.txt"));
+	EXPECT_TRUE(fs::file_size(untared_path / "a.txt") > 0);
+	fs::remove_all(untared_path);
 }
 
 TEST(Archivator, DecompressTarBz2)
 {
-	ASSERT_NO_THROW(archivator::decompress("testing_archives/valid_tar.tar.bz2", fs::temp_directory_path().string()));
-	EXPECT_TRUE(fs::is_directory(fs::temp_directory_path() / "valid_tar"));
-	EXPECT_TRUE(fs::is_regular_file(fs::temp_directory_path() / "valid_tar" / "a.txt"));
-	EXPECT_TRUE(fs::file_size(fs::temp_directory_path() / "valid_tar" / "a.txt") > 0);
-	fs::remove_all(fs::temp_directory_path() / "valid_tar");
+	fs::path untared_path = fs::temp_directory_path() / "valid_tar";
+	fs::create_directory(untared_path);
+
+	ASSERT_NO_THROW(archivator::decompress("testing_archives/valid_tar.tar.bz2", untared_path.string()));
+	EXPECT_TRUE(fs::is_directory(untared_path));
+	EXPECT_TRUE(fs::is_regular_file(untared_path / "a.txt"));
+	EXPECT_TRUE(fs::file_size(untared_path / "a.txt") > 0);
+	fs::remove_all(untared_path);
 }
 
 TEST(Archivator, DecompressCorruptedZip)
