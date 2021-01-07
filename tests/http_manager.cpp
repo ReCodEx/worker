@@ -25,6 +25,7 @@ static fileman_config get_recodex_config()
 }
 
 
+// Disabled: server no longer exist
 TEST(HttpManager, DISABLED_GetExistingFile)
 {
 	auto tmp = fs::temp_directory_path();
@@ -49,16 +50,17 @@ TEST(HttpManager, GetExistingHttp)
 {
 	auto tmp = fs::temp_directory_path();
 	fileman_config config;
-	config.remote_url = "http://curl.haxx.se";
+	config.remote_url = "https://curl.se";
 	config.username = "";
 	config.password = "";
 	http_manager m({config});
-	EXPECT_NO_THROW(m.get_file("http://curl.haxx.se/rfc/rfc7234.txt", (tmp / "rfc7234.txt").string()));
+	EXPECT_NO_THROW(m.get_file("https://curl.se/rfc/rfc7234.txt", (tmp / "rfc7234.txt").string()));
 	EXPECT_TRUE(fs::is_regular_file((tmp / "rfc7234.txt").string()));
 	fs::remove(tmp / "rfc7234.txt");
 }
 
-TEST(HttpManager, GetNonexistingFile)
+// Disabled: server no longer exist
+TEST(HttpManager, DISABLED_GetNonexistingFile)
 {
 	auto tmp = fs::temp_directory_path();
 	fileman_config config = get_recodex_config();
@@ -74,7 +76,8 @@ TEST(HttpManager, GetNonexistingFile)
 	//*/
 }
 
-TEST(HttpManager, WrongAuthentication)
+// Disabled: server no longer exist
+TEST(HttpManager, DISABLED_WrongAuthentication)
 {
 	auto tmp = fs::temp_directory_path();
 	fileman_config config = get_recodex_config();
@@ -147,6 +150,8 @@ std::vector<std::string> codes{
 	"522", // Connection timed out
 	"524" // A timeout occurred
 };
+
+// Disabled: server no longer exist
 TEST(HttpManager, DISABLED_AllWrongErrorCodes)
 {
 	auto tmp = fs::temp_directory_path();
@@ -162,6 +167,7 @@ TEST(HttpManager, DISABLED_AllWrongErrorCodes)
 	}
 }
 
+// Disabled: server no longer exist
 TEST(HttpManager, DISABLED_SimplePutFile)
 {
 	auto tmp = fs::temp_directory_path();
@@ -185,7 +191,8 @@ TEST(HttpManager, DISABLED_SimplePutFile)
 	fs::remove(tmp / "a.txt");
 }
 
-TEST(HttpManager, PutFileWrongURL)
+// Disabled: server no longer exist
+TEST(HttpManager, DISABLED_PutFileWrongURL)
 {
 	auto tmp = fs::temp_directory_path();
 	{
@@ -202,7 +209,8 @@ TEST(HttpManager, PutFileWrongURL)
 	fs::remove(tmp / "b.txt");
 }
 
-TEST(HttpManager, PutWrongFile)
+// Disabled: server no longer exist
+TEST(HttpManager, DISABLED_PutWrongFile)
 {
 	auto tmp = fs::temp_directory_path();
 	fileman_config config = get_recodex_config();
