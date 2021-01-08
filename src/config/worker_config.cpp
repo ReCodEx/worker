@@ -135,6 +135,9 @@ worker_config::worker_config(const YAML::Node &config)
 			if (limits["parallel"] && limits["parallel"].IsScalar()) {
 				limits_.processes = limits["parallel"].as<std::size_t>();
 			} // no throw... can be omitted
+			if (limits["disk-quotas"] && limits["disk-quotas"].IsScalar()) {
+				limits_.disk_quotas = limits["disk-quotas"].as<bool>();
+			} // no throw... can be omitted
 			if (limits["disk-size"] && limits["disk-size"].IsScalar()) {
 				limits_.disk_size = limits["disk-size"].as<std::size_t>();
 			} // no throw... can be omitted

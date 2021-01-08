@@ -194,6 +194,11 @@ std::shared_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 						} else {
 							sl->processes = SIZE_MAX; // set undefined value (max std::size_t)
 						}
+						if (lim["disk-quotas"] && lim["disk-quotas"].IsScalar()) {
+							sl->disk_quotas = lim["disk-quotas"].as<bool>();
+						} else {
+							sl->disk_quotas = false;
+						}
 						if (lim["disk-size"] && lim["disk-size"].IsScalar()) {
 							sl->disk_size = lim["disk-size"].as<std::size_t>();
 						} else {

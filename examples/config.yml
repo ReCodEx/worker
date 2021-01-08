@@ -43,8 +43,10 @@ limits:
     memory: 1048576     # KiB
     extra-memory: 64    # KiB, will be added to memory limit
     parallel: 0         # if parallel == 1, time and memory limits are merged
-    disk-size: 1048576  # KiB
-    disk-files: 100
+    # Enable disk quotas only if you have enabled them in your FS
+    disk-quotas: false
+    disk-size: 1048576  # KiB, ignored if disk-quotas == false
+    disk-files: 100     # ignored if disk-quotas == false
     environ-variable: # environmental variables used inside sandbox
         HOME: /box  # do not change unless you know what are you doing
         PATH: /usr/bin:/bin

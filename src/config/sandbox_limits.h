@@ -89,6 +89,11 @@ public:
 	 */
 	std::size_t files_size = 0;
 	/**
+	 * Whether disk quotas (disk_size and disk_files) are enabled.
+	 * @warning Keep this false if underlying filesystem does not support quotas.
+	 */
+	bool disk_quotas = false;
+	/**
 	 * Set disk quota to given number of kilobytes.
 	 * @warning Underlying filesystem must support quotas.
 	 */
