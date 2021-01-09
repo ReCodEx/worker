@@ -1,8 +1,8 @@
 %define name recodex-worker
 %define short_name worker
 %define version 1.7.2
-%define unmangled_version e23700a31f928f57d77004260094a2a2d0898664
-%define release 1
+%define unmangled_version da7e7382dbbdf8e1df895d0cb92a31801102c8bf
+%define release 3
 
 %define spdlog_name spdlog
 %define spdlog_version 0.13.0
@@ -39,10 +39,10 @@ mv -f %{spdlog_name}-%{spdlog_version} vendor/spdlog
 
 %build
 %cmake -DDISABLE_TESTS=true .
-make %{?_smp_mflags}
+%cmake_build
 
 %install
-make install DESTDIR=%{buildroot}
+%cmake_install --prefix %{buildroot}
 mkdir -p %{buildroot}/var/log/recodex
 
 %clean
