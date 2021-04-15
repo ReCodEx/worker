@@ -171,20 +171,12 @@ void external_task::process_results_output(
 
 		// if there was something in stdout, write it to result
 		if (std_out.gcount() != 0) {
-			result_stdout = result_stdout.substr(0, std_out.gcount());
-			// filter non printable result
-			helpers::filter_non_printable_chars(result_stdout);
-			// write to result structure
-			result->output_stdout = result_stdout;
+			result->output_stdout = result_stdout.substr(0, std_out.gcount());
 		}
 
 		// if there was something in stderr, write it to result
 		if (std_err.gcount() != 0) {
-			result_stderr = result_stderr.substr(0, std_err.gcount());
-			// filter non printable result
-			helpers::filter_non_printable_chars(result_stderr);
-			// write to result structure
-			result->output_stderr = result_stderr;
+			result->output_stderr = result_stderr.substr(0, std_err.gcount());
 		}
 
 		// be nice and close streams
