@@ -28,7 +28,7 @@ public:
 
 
 	/**
-	 * Internal structure that hold references to tokens.s
+	 * Internal structure that hold references to tokens.
 	 */
 	class TokenRef
 	{
@@ -302,9 +302,16 @@ private:
 	}
 
 public:
-	Reader(bool ignoreEmptyLines, bool allowComments, bool ignoreLineEnds, bool ignoreTrailingWhitespace)
-		: mIgnoreEmptyLines(ignoreEmptyLines), mAllowComments(allowComments), mIgnoreLineEnds(ignoreLineEnds),
-		  mIgnoreTrailingWhitespace(ignoreTrailingWhitespace), mData(nullptr), mOffset(0), mLength(0)
+	Reader(bool ignoreEmptyLines, bool allowComments, bool ignoreLineEnds, bool ignoreTrailingWhitespace) :
+		mIgnoreEmptyLines(ignoreEmptyLines),
+		mAllowComments(allowComments),
+		mIgnoreLineEnds(ignoreLineEnds),
+		mIgnoreTrailingWhitespace(ignoreTrailingWhitespace),
+		mData(nullptr),
+		mOffset(0),
+		mLength(0),
+		mLineNumber(0),
+		mLineOffset(0)
 	{
 	}
 
@@ -375,6 +382,7 @@ public:
 		if (eof()) { return std::unique_ptr<Line>(); }
 
 		auto line = bpp::make_unique<Line>(*this, mLineNumber, mData + mOffset);
+		auto startOffset = mOffset;
 		while (!eof()) {
 			skipWhitespace();
 
@@ -398,6 +406,7 @@ public:
 			// If we got here, an empty line or a comment line was read (which we skipped).
 			line->mLineNumber = mLineNumber;
 			line->mRawData = mData + mOffset;
+			startOffset = mOffset;
 		}
 
 		if (line->mTokens.empty() && mIgnoreEmptyLines) {
@@ -405,8 +414,9 @@ public:
 			return std::unique_ptr<Line>();
 		}
 
-		line->mRawLength =
-			line->mTokens.size() > 0 ? line->mTokens.back().charNumber() + line->mTokens.back().length() - 1 : 0;
+		line->mRawLength = line->mTokens.size() > 0
+			? line->mTokens.back().offset() - startOffset + line->mTokens.back().length()
+			: 0;
 		return line;
 	}
 };
