@@ -52,13 +52,13 @@ jobs:
             mv -Force ./rmt_curl/build/native/include/v140/x64/Release/dynamic/* ./curl/include/curl/
             mv -Force ./rmt_curl/build/native/lib/v140/x64/Release/dynamic/* ./curl/lib/
 
-            nuget install fix8.dependencies.zmq -ExcludeVersion
+            nuget install libzmq_vc140 -ExcludeVersion -Version 4.3.2
             mkdir -Force libzmq
             cd libzmq
             mkdir -Force lib
             cd ..
-            mv -Force ./fix8.dependencies.zmq/build/native/include/ ./libzmq/
-            mv -Force ./fix8.dependencies.zmq/build/native/lib/x64/v140/Release/Desktop/* ./libzmq/lib/
+            mv -Force ./libzmq_vc140/build/native/include ./libzmq/
+            mv -Force ./libzmq_vc140/build/native/bin/libzmq-x64-v140-mt-4_3_2_0.imp.lib ./libzmq/lib/libzmq.lib
       - working-directory: libs
         run: Invoke-WebRequest -Uri 'https://curl.haxx.se/ca/cacert.pem' -Outfile "curl-ca-bundle.crt"
 
@@ -70,7 +70,7 @@ jobs:
       - name: Move DLLs of libraries to test folder
         working-directory: libs
         run: |
-            mv -Force fix8.dependencies.zmq/build/native/bin/x64/v140/Release/Desktop/* $Env:GITHUB_WORKSPACE\tests\Release\
+            mv -Force libzmq_vc140/build/native/bin/libzmq-x64-v140-mt-4_3_2_0.dll $Env:GITHUB_WORKSPACE\tests\Release\libzmq.dll
             mv -Force rmt_curl/build/native/bin/v140/x64/Release/dynamic/* $Env:GITHUB_WORKSPACE\tests\Release\
             mv -Force rmt_libssh2/build/native/bin/v140/x64/Release/dynamic/* $Env:GITHUB_WORKSPACE\tests\Release\
             mv -Force rmt_zlib/build/native/bin/v140/x64/Release/dynamic/* $Env:GITHUB_WORKSPACE\tests\Release\
