@@ -1,7 +1,6 @@
 # Worker
 
 [![Linux Build Status](https://github.com/ReCodEx/worker/workflows/Linux%20Build/badge.svg)](https://github.com/ReCodEx/worker/actions)
-[![Windows Build Status](https://github.com/ReCodEx/worker/workflows/Windows%20Build/badge.svg)](https://github.com/ReCodEx/worker/actions)
 [![codecov](https://codecov.io/gh/ReCodEx/worker/branch/master/graph/badge.svg?token=AYHQA9R8PJ)](https://codecov.io/gh/ReCodEx/worker)
 [![License](http://img.shields.io/:license-mit-blue.svg)](http://badges.mit-license.org)
 [![Docs](https://img.shields.io/badge/docs-latest-brightgreen.svg)](http://recodex.github.io/worker/)
@@ -26,12 +25,11 @@ evaluation request, worker has to do following:
 
 ### COPR Installation
 
-Follows description for CentOS which will do all steps as described in _Manual Installation_.
+Follows description for CentOS-like systems which will do all steps as described in _Manual Installation_.
 
 ```
-# yum install yum-plugin-copr
-# yum copr enable semai/ReCodEx
-# yum install recodex-worker
+# dnf copr enable semai/ReCodEx
+# dnf install recodex-worker
 ```
 
 ### Manual Installation
@@ -40,9 +38,9 @@ Follows description for CentOS which will do all steps as described in _Manual I
 
 Worker specific requirements are written in this section. It covers only basic
 requirements, additional runtimes or tools may be needed depending on type of
-use. The package names are for CentOS if not specified otherwise. 
+use. The package names are for CentOS-like systems, if not specified otherwise. 
 
-- Boost 1.70 development libs (`boost-devel` package)
+- Boost development libs (`boost-devel` package), v 1.66 should suffice, 1.75 is now targetted
 - ZeroMQ in version at least 4.0, packages `zeromq` and `zeromq-devel`
   (`libzmq3-dev` on Debian)
 - YAML-CPP library, `yaml-cpp` and `yaml-cpp-devel` (`libyaml-cpp0.5v5` and
@@ -127,6 +125,8 @@ distribution's package manager is preferred way to keep your system clean and
 manageable in long term horizon.
 
 #### Install worker on Windows
+
+> **The Windows support is no longer maintained nor tested since we have found no suitable win-based sandbox and it cost us a lot of effort to make it compatible.**
 
 There are basically two main dependencies needed, **Windows 7** or higher and
 **Visual Studio 2019+**. There is a simple installation batch script provided 
