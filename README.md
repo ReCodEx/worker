@@ -1,6 +1,7 @@
 # Worker
 
 [![Linux Build Status](https://github.com/ReCodEx/worker/workflows/Linux%20Build/badge.svg)](https://github.com/ReCodEx/worker/actions)
+[![Windows Build Status](https://github.com/ReCodEx/worker/workflows/Windows%20Build/badge.svg)](https://github.com/ReCodEx/worker/actions)
 [![codecov](https://codecov.io/gh/ReCodEx/worker/branch/master/graph/badge.svg?token=AYHQA9R8PJ)](https://codecov.io/gh/ReCodEx/worker)
 [![License](http://img.shields.io/:license-mit-blue.svg)](http://badges.mit-license.org)
 [![Docs](https://img.shields.io/badge/docs-latest-brightgreen.svg)](http://recodex.github.io/worker/)
@@ -125,8 +126,6 @@ distribution's package manager is preferred way to keep your system clean and
 manageable in long term horizon.
 
 #### Install worker on Windows
-
-> **The Windows support is no longer maintained nor tested since we have found no suitable win-based sandbox and it cost us a lot of effort to make it compatible.**
 
 There are basically two main dependencies needed, **Windows 7** or higher and
 **Visual Studio 2019+**. There is a simple installation batch script provided 

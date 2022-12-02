@@ -117,7 +117,7 @@ echo Downloading NuGet packages...
 %NUGET% install rmt_zlib -ExcludeVersion -Version 1.2.8.7
 %NUGET% install rmt_libssh2 -ExcludeVersion -Version 1.8.0
 %NUGET% install rmt_curl -ExcludeVersion -Version 7.51.0
-%NUGET% install fix8.dependencies.zmq -ExcludeVersion
+%NUGET% install libzmq_vc140 -ExcludeVersion -Version 4.3.2
 
 :: move downloaded libraries to folders with more logical structure
 echo Moving downloaded libraries...
@@ -131,8 +131,8 @@ if not exist %CURL_DIR%\lib ( mkdir %CURL_DIR%\lib )
 move %LIBS_DIR%\rmt_curl\build\native\include\v140\x64\Release\dynamic\* %CURL_DIR%\include\curl\
 move %LIBS_DIR%\rmt_curl\build\native\lib\v140\x64\Release\dynamic\*.lib %CURL_DIR%\lib 
 if not exist %ZMQ_DIR%\lib ( mkdir %ZMQ_DIR%\lib )
-move %LIBS_DIR%\fix8.dependencies.zmq\build\native\include %ZMQ_DIR%
-move %LIBS_DIR%\fix8.dependencies.zmq\build\native\lib\x64\v140\Release\Desktop\*.lib %ZMQ_DIR%\lib 
+move %LIBS_DIR%\libzmq_vc140\build\native\include %ZMQ_DIR%
+move %LIBS_DIR%\libzmq_vc140\build\native\bin\libzmq-x64-v140-mt-4_3_2_0.imp.lib %ZMQ_DIR%\lib\libzmq.lib
 
 :: download certificate bundle
 echo Downloading certificate bundle...
@@ -151,7 +151,7 @@ cd %BUILD_DIR%
 cmake --build . --config Release --target ALL_BUILD || goto error
 
 :: copy dll libraries to build directory
-copy /Y %LIBS_DIR%\fix8.dependencies.zmq\build\native\bin\x64\v140\Release\Desktop\*.dll %BIN_DIR%
+copy /Y %LIBS_DIR%\libzmq_vc140\build\native\bin\libzmq-x64-v140-mt-4_3_2_0.dll %BIN_DIR%\libzmq.dll
 copy /Y %LIBS_DIR%\rmt_curl\build\native\bin\v140\x64\Release\dynamic\*.dll %BIN_DIR%
 copy /Y %LIBS_DIR%\rmt_libssh2\build\native\bin\v140\x64\Release\dynamic\*.dll %BIN_DIR%
 copy /Y %LIBS_DIR%\rmt_zlib\build\native\bin\v140\x64\Release\dynamic\*.dll %BIN_DIR%
