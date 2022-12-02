@@ -1,6 +1,11 @@
 #include "cache_manager.h"
 #include "helpers/string_utils.h"
 
+#if BOOST_VERSION >= 107400
+#define OVERWRITE_FLAG fs::copy_options::overwrite_existing
+#else
+#define OVERWRITE_FLAG fs::copy_option::overwrite_if_exists
+#endif
 
 cache_manager::cache_manager(std::shared_ptr<spdlog::logger> logger)
 	: cache_manager(fs::temp_directory_path().string(), logger)
@@ -37,7 +42,7 @@ void cache_manager::get_file(const std::string &src_name, const std::string &dst
 	}
 
 	try {
-		fs::copy_file(source_file, destination_file, fs::copy_option::overwrite_if_exists);
+		fs::copy_file(source_file, destination_file, OVERWRITE_FLAG);
 		fs::permissions(fs::path(destination_file),
 			fs::perms::add_perms | fs::perms::owner_write | fs::perms::group_write | fs::perms::others_write);
 		// change last modification time of the file
@@ -64,7 +69,7 @@ void cache_manager::put_file(const std::string &src_name, const std::string &dst
 
 	try {
 		// first copy only temporary file
-		fs::copy_file(source_file, destination_temp_file, fs::copy_option::overwrite_if_exists);
+		fs::copy_file(source_file, destination_temp_file, OVERWRITE_FLAG);
 		// and then move (atomically) the file to its original destination
 		fs::rename(destination_temp_file, destination_file);
 	} catch (fs::filesystem_error &e) {
