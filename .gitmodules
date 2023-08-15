@@ -1,9 +1,6 @@
 [submodule "vendor/cppzmq"]
 	path = vendor/cppzmq
 	url = https://github.com/zeromq/cppzmq.git
-[submodule "vendor/googletest"]
-	path = vendor/googletest
-	url = https://github.com/google/googletest.git
 [submodule "vendor/spdlog"]
 	path = vendor/spdlog
 	url = https://github.com/gabime/spdlog.git
@@ -13,3 +10,6 @@
 [submodule "vendor/libarchive"]
 	path = vendor/libarchive
 	url = https://github.com/libarchive/libarchive.git
+[submodule "vendor/googletest"]
+	path = vendor/googletest
+	url = https://github.com/google/googletest.git
