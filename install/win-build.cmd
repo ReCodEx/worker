@@ -112,7 +112,6 @@ cd %LIBS_DIR%
 echo Downloading NuGet packages...
 %NUGET% install boost -ExcludeVersion -Version 1.72.0
 %NUGET% install boost_system-vc142 -ExcludeVersion -Version 1.72.0
-%NUGET% install boost_filesystem-vc142 -ExcludeVersion -Version 1.72.0
 %NUGET% install boost_program_options-vc142 -ExcludeVersion -Version 1.72.0
 %NUGET% install rmt_zlib -ExcludeVersion -Version 1.2.8.7
 %NUGET% install rmt_libssh2 -ExcludeVersion -Version 1.8.0
@@ -123,7 +122,6 @@ echo Downloading NuGet packages...
 echo Moving downloaded libraries...
 move %BOOST_DIR%\lib\native\include %BOOST_DIR%
 move %LIBS_DIR%\boost_system-vc142\lib\native\*.lib %BOOST_DIR%\lib
-move %LIBS_DIR%\boost_filesystem-vc142\lib\native\*.lib %BOOST_DIR%\lib
 move %LIBS_DIR%\boost_program_options-vc142\lib\native\*.lib %BOOST_DIR%\lib
 if not exist %CURL_DIR%\include ( mkdir %CURL_DIR%\include )
 if not exist %CURL_DIR%\include\curl ( mkdir %CURL_DIR%\include\curl )

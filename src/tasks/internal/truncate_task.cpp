@@ -1,7 +1,7 @@
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include "truncate_task.h"
 
-namespace fs = boost::filesystem;
+namespace fs = std::filesystem;
 
 truncate_task::truncate_task(std::size_t id, std::shared_ptr<task_metadata> task_meta) : task_base(id, task_meta)
 {
@@ -21,10 +21,10 @@ std::shared_ptr<task_results> truncate_task::run()
 	limit *= 1024;
 
 	if (fs::file_size(file) > limit) {
-		boost::system::error_code error_code;
+		std::error_code error_code;
 		fs::resize_file(file, limit, error_code);
 
-		if (error_code.value() != boost::system::errc::success) { results->status = task_status::FAILED; }
+		if (error_code) { results->status = task_status::FAILED; }
 	}
 
 	return results;

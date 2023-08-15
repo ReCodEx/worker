@@ -6,16 +6,13 @@
 #include <string>
 #include <map>
 #include <yaml-cpp/yaml.h>
-
-#define BOOST_FILESYSTEM_NO_DEPRECATED
-#define BOOST_NO_CXX11_SCOPED_ENUMS
-#include <boost/filesystem.hpp>
-namespace fs = boost::filesystem;
+#include <filesystem>
 
 #include "log_config.h"
 #include "fileman_config.h"
 #include "sandbox/sandbox_base.h"
 
+namespace fs = std::filesystem;
 
 /**
  * An object representation of a default worker's configuration

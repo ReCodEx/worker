@@ -3,14 +3,11 @@
 
 #include <string>
 #include <memory>
+#include <filesystem>
 #include "file_manager_interface.h"
 #include "helpers/logger.h"
 
-#define BOOST_FILESYSTEM_NO_DEPRECATED
-#define BOOST_NO_CXX11_SCOPED_ENUMS
-#include <boost/filesystem.hpp>
-
-namespace fs = boost::filesystem;
+namespace fs = std::filesystem;
 
 
 /**

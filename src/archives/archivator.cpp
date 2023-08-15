@@ -4,6 +4,13 @@
 #include <fstream>
 #include <iostream>
 
+// https://stackoverflow.com/questions/61030383/how-to-convert-stdfilesystemfile-time-type-to-time-t
+template <typename TP> std::time_t to_time_t(TP tp)
+{
+    using namespace std::chrono;
+    auto sctp = time_point_cast<system_clock::duration>(tp - TP::clock::now() + system_clock::now());
+    return system_clock::to_time_t(sctp);
+}
 
 void archivator::compress(const std::string &dir, const std::string &destination)
 {
@@ -15,7 +22,7 @@ void archivator::compress(const std::string &dir, const std::string &destination
 			for (auto i = fs::recursive_directory_iterator(dir_path); i != fs::recursive_directory_iterator(); ++i) {
 				fs::path file = *i;
 				if (fs::is_regular_file(file)) {
-					// find out where the two paths diverge - boost::filesystem::relative() is too new now to use it
+					// find out where the two paths diverge - std::filesystem::relative() is too new now to use it
 					fs::path::const_iterator itr_dir = dir_path.begin();
 					fs::path::const_iterator itr_file = file.begin();
 					while (*itr_dir == *itr_file && itr_dir != dir_path.end()) {
@@ -52,7 +59,7 @@ void archivator::compress(const std::string &dir, const std::string &destination
 
 		archive_entry_set_pathname(entry.get(), (fs::path(destination).stem() / file.second).string().c_str());
 		archive_entry_set_size(entry.get(), fs::file_size(file.first));
-		archive_entry_set_mtime(entry.get(), fs::last_write_time(file.first), 0); // 0 nanoseconds
+		archive_entry_set_mtime(entry.get(), to_time_t(fs::last_write_time(file.first)), 0); // 0 nanoseconds
 		archive_entry_set_filetype(entry.get(), AE_IFREG);
 		archive_entry_set_perm(entry.get(), 0644);
 

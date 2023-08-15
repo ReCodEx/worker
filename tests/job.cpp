@@ -3,11 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <type_traits>
-
-#define BOOST_FILESYSTEM_NO_DEPRECATED
-#define BOOST_NO_CXX11_SCOPED_ENUMS
-#include <boost/filesystem.hpp>
-using namespace boost::filesystem;
+#include <filesystem>
 
 #include "mocks.h"
 #include "job/job.h"
@@ -18,7 +14,7 @@ using namespace boost::filesystem;
 #include "tasks/external_task.h"
 #include "config/worker_config.h"
 
-
+using namespace std::filesystem;
 using namespace testing;
 
 typedef std::tuple<std::string, std::string, sandbox_limits::dir_perm> mytuple;

@@ -24,7 +24,7 @@ set(BASE_LIBS
 if(UNIX)
 	set(LIBS ${BASE_LIBS}
 		-lzmq
-		-lboost_system -lboost_filesystem -lboost_program_options
+		-lboost_system -lboost_program_options
 		-lgcov --coverage
 		archive
 	)
@@ -183,7 +183,7 @@ if(UNIX)
 		yaml-cpp
 		-lcurl
 		-lzmq
-		-lboost_system -lboost_filesystem -lboost_program_options
+		-lboost_system -lboost_program_options
 		-lgcov --coverage
 		archive
 	)

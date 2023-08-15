@@ -53,7 +53,7 @@ void job_evaluator::prepare_submission()
 	try {
 		fs::create_directories(source_path_);
 		archivator::decompress((archive_path_ / archive_name_).string(), source_path_.string());
-		fs::permissions(source_path_, fs::add_perms | fs::group_write | fs::others_write);
+		fs::permissions(source_path_, fs::perms::group_write | fs::perms::others_write, fs::perm_options::add);
 	} catch (archive_exception &e) {
 		throw job_exception("Downloaded submission cannot be decompressed: " + std::string(e.what()));
 	}
@@ -77,7 +77,7 @@ void job_evaluator::prepare_submission()
 
 void job_evaluator::build_job()
 {
-	namespace fs = boost::filesystem;
+	namespace fs = std::filesystem;
 	logger_->info("Building job...");
 
 	// find job-config.yml to load configuration

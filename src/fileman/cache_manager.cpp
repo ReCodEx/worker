@@ -37,11 +37,12 @@ void cache_manager::get_file(const std::string &src_name, const std::string &dst
 	}
 
 	try {
-		fs::copy_file(source_file, destination_file, fs::copy_option::overwrite_if_exists);
+		fs::copy_file(source_file, destination_file, fs::copy_options::overwrite_existing);
 		fs::permissions(fs::path(destination_file),
-			fs::perms::add_perms | fs::perms::owner_write | fs::perms::group_write | fs::perms::others_write);
+			fs::perms::owner_write | fs::perms::group_write | fs::perms::others_write,
+			fs::perm_options::add);
 		// change last modification time of the file
-		fs::last_write_time(source_file, std::time(nullptr));
+		fs::last_write_time(source_file, std::filesystem::file_time_type::min());
 	} catch (fs::filesystem_error &e) {
 		auto message = "Failed to copy file '" + source_file.string() + "' to '" + dst_path + "'. Error: " + e.what();
 		logger_->warn(message);
@@ -64,7 +65,7 @@ void cache_manager::put_file(const std::string &src_name, const std::string &dst
 
 	try {
 		// first copy only temporary file
-		fs::copy_file(source_file, destination_temp_file, fs::copy_option::overwrite_if_exists);
+		fs::copy_file(source_file, destination_temp_file, fs::copy_options::overwrite_existing);
 		// and then move (atomically) the file to its original destination
 		fs::rename(destination_temp_file, destination_file);
 	} catch (fs::filesystem_error &e) {

@@ -3,16 +3,13 @@
 #include <fstream>
 #include <vector>
 #include <iostream>
-
-#define BOOST_FILESYSTEM_NO_DEPRECATED
-#define BOOST_NO_CXX11_SCOPED_ENUMS
-#include <boost/filesystem.hpp>
+#include <filesystem>
 
 #include "fileman/http_manager.h"
 
 using namespace testing;
 using namespace std;
-namespace fs = boost::filesystem;
+namespace fs = std::filesystem;
 
 
 static fileman_config get_recodex_config()

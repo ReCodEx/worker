@@ -1,14 +1,11 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include <fstream>
+#include <filesystem>
 
 #include "archives/archivator.h"
 
-#define BOOST_FILESYSTEM_NO_DEPRECATED
-#define BOOST_NO_CXX11_SCOPED_ENUMS
-#include <boost/filesystem.hpp>
-
-namespace fs = boost::filesystem;
+namespace fs = std::filesystem;
 
 
 TEST(Archivator, DecompressNonexistingArchive)

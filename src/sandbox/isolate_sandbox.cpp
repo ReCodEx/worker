@@ -13,12 +13,10 @@
 #include <iostream>
 #include <fstream>
 #include <map>
-#define BOOST_FILESYSTEM_NO_DEPRECATED
-#define BOOST_NO_CXX11_SCOPED_ENUMS
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include "helpers/filesystem.h"
 
-namespace fs = boost::filesystem;
+namespace fs = std::filesystem;
 
 namespace
 {

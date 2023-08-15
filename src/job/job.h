@@ -6,11 +6,7 @@
 #include <utility>
 #include <memory>
 #include <algorithm>
-
-#define BOOST_FILESYSTEM_NO_DEPRECATED
-#define BOOST_NO_CXX11_SCOPED_ENUMS
-#include <boost/filesystem.hpp>
-namespace fs = boost::filesystem;
+#include <filesystem>
 
 #include "spdlog/spdlog.h"
 #include "helpers/logger.h"
@@ -23,6 +19,7 @@ namespace fs = boost::filesystem;
 #include "sandbox/sandbox_base.h"
 #include "progress_callback_interface.h"
 
+namespace fs = std::filesystem;
 
 /**
  * Job is unit which is received from broker and should be evaluated.

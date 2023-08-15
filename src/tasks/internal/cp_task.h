@@ -5,7 +5,7 @@
 
 
 /**
- * Copy files using boost::filesystem::copy.
+ * Copy files using std::filesystem::copy.
  */
 class cp_task : public task_base
 {
