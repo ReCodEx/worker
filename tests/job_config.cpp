@@ -2,13 +2,11 @@
 #include <gmock/gmock.h>
 #include <iostream>
 #include <fstream>
-
-#define BOOST_FILESYSTEM_NO_DEPRECATED
-#define BOOST_NO_CXX11_SCOPED_ENUMS
-#include <boost/filesystem.hpp>
-using namespace boost::filesystem;
+#include <filesystem>
 
 #include "helpers/config.h"
+
+using namespace std::filesystem;
 using namespace helpers;
 
 

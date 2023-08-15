@@ -66,8 +66,7 @@ std::shared_ptr<task_results> dump_dir_task::run()
 
 		if (!fs::exists(dest_path.parent_path())) {
 			auto return_code = make_dirs(dest_path.parent_path());
-			if (return_code.value() != boost::system::errc::success &&
-				return_code.value() != boost::system::errc::file_exists) {
+			if (return_code && return_code != std::errc::file_exists) {
 				results->status = task_status::FAILED;
 				results->error_message = "Creating directory `" + dest_path.string() + "` failed (error code `" +
 					std::to_string(return_code.value()) + "`)";
@@ -78,7 +77,7 @@ std::shared_ptr<task_results> dump_dir_task::run()
 		if (size <= limit) {
 			auto return_code = copy_file(path, dest_path);
 
-			if (return_code.value() != boost::system::errc::success) {
+			if (return_code) {
 				results->status = task_status::FAILED;
 				results->error_message = "Copying `" + path.string() + "` to `" + dest_path.string() +
 					"` failed (error code " + std::to_string(return_code.value()) + ")";
@@ -97,17 +96,17 @@ std::shared_ptr<task_results> dump_dir_task::run()
 	return results;
 }
 
-boost::system::error_code dump_dir_task::copy_file(const fs::path &src, const fs::path &dest)
+std::error_code dump_dir_task::copy_file(const fs::path &src, const fs::path &dest)
 {
-	boost::system::error_code error_code;
+	std::error_code error_code;
 	fs::copy(src, dest, error_code);
 
 	return error_code;
 }
 
-boost::system::error_code dump_dir_task::make_dirs(const fs::path &path)
+std::error_code dump_dir_task::make_dirs(const fs::path &path)
 {
-	boost::system::error_code error_code;
+	std::error_code error_code;
 	fs::create_directories(path, error_code);
 
 	return error_code;

@@ -2,6 +2,9 @@
 #include <gmock/gmock.h>
 #include <memory>
 #include <fstream>
+#include <filesystem>
+#include <string>
+#include <cstdio>
 
 #include "tasks/internal/archivate_task.h"
 #include "tasks/internal/cp_task.h"
@@ -18,10 +21,7 @@
 #include "config/sandbox_config.h"
 #include "mocks.h"
 
-#define BOOST_FILESYSTEM_NO_DEPRECATED
-#define BOOST_NO_CXX11_SCOPED_ENUMS
-#include <boost/filesystem.hpp>
-namespace fs = boost::filesystem;
+namespace fs = std::filesystem;
 
 
 std::shared_ptr<task_metadata> get_task_meta()
@@ -96,8 +96,8 @@ TEST(Tasks, InternalCpTaskWildcards)
 {
 	// prepare directories and files
 	auto temp = fs::temp_directory_path();
-	auto src_dir = temp / fs::unique_path();
-	auto dst_dir = temp / fs::unique_path();
+	auto src_dir = temp / std::string(std::tmpnam(nullptr));
+	auto dst_dir = temp / std::string(std::tmpnam(nullptr));
 	fs::create_directories(src_dir);
 	fs::create_directories(dst_dir);
 	for (const auto &i : {"a1", "a2", "b1"}) {

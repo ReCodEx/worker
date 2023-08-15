@@ -2,11 +2,9 @@
 #define RECODEX_WORKER_HELPERS_FILESYSTEM_HPP
 
 #include "config/sandbox_limits.h"
-#define BOOST_FILESYSTEM_NO_DEPRECATED
-#define BOOST_NO_CXX11_SCOPED_ENUMS
-#include <boost/filesystem.hpp>
-namespace fs = boost::filesystem;
+#include <filesystem>
 
+namespace fs = std::filesystem;
 
 namespace helpers
 {

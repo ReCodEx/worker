@@ -1,12 +1,9 @@
 #include "cp_task.h"
 #include "helpers/string_utils.h"
 #include "helpers/filesystem.h"
+#include <filesystem>
 
-#define BOOST_FILESYSTEM_NO_DEPRECATED
-#define BOOST_NO_CXX11_SCOPED_ENUMS
-#include <boost/filesystem.hpp>
-
-namespace fs = boost::filesystem;
+namespace fs = std::filesystem;
 
 
 cp_task::cp_task(std::size_t id, std::shared_ptr<task_metadata> task_meta) : task_base(id, task_meta)
@@ -47,9 +44,9 @@ std::shared_ptr<task_results> cp_task::run()
 			if (fs::is_directory(fs::symlink_status(item->path()))) {
 				helpers::copy_directory(item->path(), target);
 			} else {
-				boost::system::error_code error_code;
+				std::error_code error_code;
 				fs::copy(item->path(), target, error_code);
-				if (error_code.value() != boost::system::errc::success) {
+				if (error_code) {
 					result->status = task_status::FAILED;
 					result->error_message = std::string("Cannot copy files. Error: ") + error_code.message();
 					break;

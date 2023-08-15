@@ -1,10 +1,10 @@
 #ifndef RECODEX_WORKER_INTERNAL_CP_DIR_TASK_H
 #define RECODEX_WORKER_INTERNAL_CP_DIR_TASK_H
 
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include "tasks/task_base.h"
 
-namespace fs = boost::filesystem;
+namespace fs = std::filesystem;
 
 /**
  * Copy a directory recursively, with a limit on the total size of the output.
@@ -35,8 +35,8 @@ public:
 	std::shared_ptr<task_results> run() override;
 
 private:
-	boost::system::error_code copy_file(const fs::path &src, const fs::path &dest);
-	boost::system::error_code make_dirs(const fs::path &path);
+	std::error_code copy_file(const fs::path &src, const fs::path &dest);
+	std::error_code make_dirs(const fs::path &path);
 };
 
 

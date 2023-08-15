@@ -1,10 +1,7 @@
 #include "mkdir_task.h"
+#include <filesystem>
 
-#define BOOST_FILESYSTEM_NO_DEPRECATED
-#define BOOST_NO_CXX11_SCOPED_ENUMS
-#include <boost/filesystem.hpp>
-
-namespace fs = boost::filesystem;
+namespace fs = std::filesystem;
 
 
 mkdir_task::mkdir_task(std::size_t id, std::shared_ptr<task_metadata> task_meta) : task_base(id, task_meta)
@@ -20,7 +17,7 @@ std::shared_ptr<task_results> mkdir_task::run()
 	try {
 		for (auto &i : task_meta_->cmd_args) {
 			fs::create_directories(i);
-			fs::permissions(i, fs::add_perms | fs::group_write | fs::others_write);
+			fs::permissions(i, fs::perms::group_write | fs::perms::others_write, fs::perm_options::add);
 		}
 	} catch (fs::filesystem_error &e) {
 		// Remove already created directories

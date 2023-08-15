@@ -9,13 +9,9 @@
 #include <thread>
 #include <vector>
 #include <yaml-cpp/yaml.h>
+#include <filesystem>
 
-#define BOOST_FILESYSTEM_NO_DEPRECATED
-#define BOOST_NO_CXX11_SCOPED_ENUMS
-#include <boost/filesystem.hpp>
 #include <boost/program_options.hpp>
-namespace fs = boost::filesystem;
-
 
 #include "broker_connection.h"
 #include "config/log_config.h"
@@ -26,6 +22,7 @@ namespace fs = boost::filesystem;
 #include "job/job_receiver.h"
 #include "job/job_evaluator.h"
 
+namespace fs = std::filesystem;
 
 /**
  * Main class of the whole program.

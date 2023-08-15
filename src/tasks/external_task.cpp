@@ -6,11 +6,9 @@
 #include <algorithm>
 #include <memory>
 #include <string>
-#define BOOST_FILESYSTEM_NO_DEPRECATED
-#define BOOST_NO_CXX11_SCOPED_ENUMS
-#include <boost/filesystem.hpp>
+#include <filesystem>
 
-namespace fs = boost::filesystem;
+namespace fs = std::filesystem;
 
 external_task::external_task(const create_params &data)
 	: task_base(data.id, data.task_meta), worker_config_(data.worker_conf), sandbox_(nullptr),
@@ -229,10 +227,10 @@ void external_task::make_binary_executable(const std::string &binary)
 
 		// determine if file has executable bits set
 		fs::file_status stat = status(binary_path);
-		if (stat.permissions() & (fs::perms::owner_exe | fs::perms::group_exe | fs::perms::others_exe)) { return; }
+		if ((stat.permissions() & (fs::perms::owner_exec | fs::perms::group_exec | fs::perms::others_exec)) != fs::perms::none) { return; }
 
 		fs::permissions(
-			binary_path, fs::perms::add_perms | fs::perms::owner_exe | fs::perms::group_exe | fs::others_exe);
+			binary_path, fs::perms::owner_exec | fs::perms::group_exec | fs::perms::others_exec, fs::perm_options::add);
 	} catch (fs::filesystem_error &e) {
 		log_and_throw(logger_,
 			"Failed to set executable bits for path inside '",

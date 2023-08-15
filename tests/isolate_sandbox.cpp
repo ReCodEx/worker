@@ -2,15 +2,13 @@
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-
-#define BOOST_FILESYSTEM_NO_DEPRECATED
-#define BOOST_NO_CXX11_SCOPED_ENUMS
-#include <boost/filesystem.hpp>
-namespace fs = boost::filesystem;
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 
 #include "sandbox/isolate_sandbox.h"
+
+namespace fs = std::filesystem;
 
 TEST(IsolateSandbox, BasicCreation)
 {
@@ -162,7 +160,7 @@ TEST(IsolateSandbox, BindDirsExecuteGCC)
 	limits.environ_vars = {{"PATH", "/usr/bin"}};
 
 	fs::create_directories(tmp / "recodex_35_test");
-	fs::permissions(tmp / "recodex_35_test", fs::add_perms | fs::group_write | fs::others_write);
+	fs::permissions(tmp / "recodex_35_test", fs::perms::group_write | fs::perms::others_write, fs::perm_options::add);
 	{
 		std::ofstream file((tmp / "recodex_35_test" / "main.c").string());
 		file << "#include <stdio.h>\n\nint main(void)\n{\n\tprintf(\"Hello world!\\n\");\n\treturn 0;\n}\n";

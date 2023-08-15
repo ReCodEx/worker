@@ -5,13 +5,9 @@
 #include <fstream>
 #include <vector>
 #include <utility>
+#include <filesystem>
+
 #include "helpers/logger.h"
-
-#define BOOST_FILESYSTEM_NO_DEPRECATED
-#define BOOST_NO_CXX11_SCOPED_ENUMS
-#include <boost/filesystem.hpp>
-namespace fs = boost::filesystem;
-
 #include "job.h"
 #include "config/worker_config.h"
 #include "fileman/file_manager_interface.h"
@@ -20,6 +16,7 @@ namespace fs = boost::filesystem;
 #include "helpers/filesystem.h"
 #include "job_evaluator_interface.h"
 
+namespace fs = std::filesystem;
 
 /**
  * Processes jobs received from the broker by @ref job_receiver

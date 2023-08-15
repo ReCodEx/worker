@@ -1,12 +1,9 @@
 #include "gtest/gtest.h"
 #include "spdlog/spdlog.h"
 #include <curl/curl.h>
+#include <filesystem>
 
-#define BOOST_FILESYSTEM_NO_DEPRECATED
-#define BOOST_NO_CXX11_SCOPED_ENUMS
-#include <boost/filesystem.hpp>
-
-namespace fs = boost::filesystem;
+namespace fs = std::filesystem;
 
 
 /**

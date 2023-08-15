@@ -33,9 +33,6 @@ jobs:
             nuget install boost_system-vc142 -ExcludeVersion -Version 1.72.0
             mv -Force ./boost_system-vc142/lib/native/* ./boost/lib/
             
-            nuget install boost_filesystem-vc142 -ExcludeVersion -Version 1.72.0
-            mv -Force ./boost_filesystem-vc142/lib/native/* ./boost/lib/
-
             nuget install boost_program_options-vc142 -ExcludeVersion -Version 1.72.0
             mv -Force ./boost_program_options-vc142/lib/native/* ./boost/lib/
 

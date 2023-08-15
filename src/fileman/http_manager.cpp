@@ -2,12 +2,9 @@
 #include <stdio.h>
 #include <curl/curl.h>
 #include <regex>
+#include <filesystem>
 
-#define BOOST_FILESYSTEM_NO_DEPRECATED
-#define BOOST_NO_CXX11_SCOPED_ENUMS
-#include <boost/filesystem.hpp>
-
-namespace fs = boost::filesystem;
+namespace fs = std::filesystem;
 
 // Disable warning about fopen() on Windows
 #ifdef _WIN32
@@ -122,7 +119,8 @@ void http_manager::get_file(const std::string &src_name, const std::string &dst_
 		// set write permissions to downloaded file
 		try {
 			fs::permissions(fs::path(dst_name),
-				fs::perms::add_perms | fs::perms::owner_write | fs::perms::group_write | fs::perms::others_write);
+				fs::perms::owner_write | fs::perms::group_write | fs::perms::others_write,
+				fs::perm_options::add);
 		} catch (fs::filesystem_error &e) {
 			auto message = "Failed to set write permissions on '" + dst_name + "'. Error: " + e.what();
 			logger_->warn(message);

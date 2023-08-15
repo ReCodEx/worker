@@ -1,11 +1,13 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include <fstream>
 #include <memory>
+#include <string>
+#include <cstdio>
 #include "tasks/internal/exists_task.h"
 
-namespace fs = boost::filesystem;
+namespace fs = std::filesystem;
 
 class exists_task_test : public ::testing::Test
 {
@@ -17,7 +19,7 @@ protected:
 
 	virtual void SetUp()
 	{
-		root = fs::temp_directory_path() / fs::unique_path();
+		root = fs::temp_directory_path() / std::string(std::tmpnam(nullptr));
 		fs::create_directory(root);
 		fs::create_directory(root / "subdir");
 

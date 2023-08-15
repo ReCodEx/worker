@@ -1,10 +1,7 @@
 #include "rename_task.h"
+#include <filesystem>
 
-#define BOOST_FILESYSTEM_NO_DEPRECATED
-#define BOOST_NO_CXX11_SCOPED_ENUMS
-#include <boost/filesystem.hpp>
-
-namespace fs = boost::filesystem;
+namespace fs = std::filesystem;
 
 
 rename_task::rename_task(std::size_t id, std::shared_ptr<task_metadata> task_meta) : task_base(id, task_meta)
