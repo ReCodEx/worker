@@ -1,15 +1,12 @@
 cmake_minimum_required(VERSION 3.11.0)
 project(recodex-worker)
-set(RECODEX_VERSION 1.7.2)
+set(RECODEX_VERSION 1.8.0)
 enable_testing()
-
-# Hack for old CentOS and new GCC with uncompatible ABI
-# add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
 
 set(EXEC_NAME ${PROJECT_NAME})
 set(gtest_force_shared_crt ON CACHE BOOL "Use shared (DLL) run-time lib even when Google Test is built as static lib.")
 
-# Find installed packages on system
+# Find installed packages on the system
 # -- LibArchive
 find_package(LibArchive)
 
@@ -21,7 +18,7 @@ else()
 endif()
 # -- load Boost
 set (Boost_USE_MULTITHREADED ON)
-find_package(Boost 1.66.0 REQUIRED COMPONENTS filesystem system program_options)
+find_package(Boost 1.74.0 REQUIRED COMPONENTS system program_options)
 include_directories(${Boost_INCLUDE_DIRS})
 
 # -- cURL

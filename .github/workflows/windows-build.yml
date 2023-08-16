@@ -27,13 +27,13 @@ jobs:
       - name: Install dependencies and prepare directory structure for cmake
         working-directory: libs
         run: |
-            nuget install boost -ExcludeVersion -Version 1.72.0
+            nuget install boost -ExcludeVersion -Version 1.74.0
             mv -Force ./boost/lib/native/include/ ./boost/
             
-            nuget install boost_system-vc142 -ExcludeVersion -Version 1.72.0
+            nuget install boost_system-vc142 -ExcludeVersion -Version 1.74.0
             mv -Force ./boost_system-vc142/lib/native/* ./boost/lib/
             
-            nuget install boost_program_options-vc142 -ExcludeVersion -Version 1.72.0
+            nuget install boost_program_options-vc142 -ExcludeVersion -Version 1.74.0
             mv -Force ./boost_program_options-vc142/lib/native/* ./boost/lib/
 
             nuget install rmt_zlib -ExcludeVersion -Version 1.2.8.7
