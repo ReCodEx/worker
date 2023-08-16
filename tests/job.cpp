@@ -784,8 +784,8 @@ TEST(job_test, job_variables)
 
 	auto bnd_dirs = limits->bound_dirs;
 	ASSERT_EQ(bnd_dirs.size(), 1u);
-	ASSERT_EQ(path(std::get<0>(bnd_dirs[0])).string(), (temp_directory_path() / "recodex").string());
-	ASSERT_EQ(path(std::get<1>(bnd_dirs[0])).string(), (dir / "tmp").string());
+	ASSERT_EQ(path(std::get<0>(bnd_dirs[0])), (temp_directory_path() / "recodex"));
+	ASSERT_EQ(path(std::get<1>(bnd_dirs[0])), (dir / "tmp"));
 
 	// cleanup after yourself
 	remove_all(dir_root);

@@ -42,7 +42,7 @@ void cache_manager::get_file(const std::string &src_name, const std::string &dst
 			fs::perms::owner_write | fs::perms::group_write | fs::perms::others_write,
 			fs::perm_options::add);
 		// change last modification time of the file
-		fs::last_write_time(source_file, std::filesystem::file_time_type::min());
+		fs::last_write_time(source_file, fs::file_time_type::clock::now());
 	} catch (fs::filesystem_error &e) {
 		auto message = "Failed to copy file '" + source_file.string() + "' to '" + dst_path + "'. Error: " + e.what();
 		logger_->warn(message);

@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   tests:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v2
         with:
@@ -30,7 +30,7 @@ jobs:
         run: sudo apt-get install -y libcap-dev
 
       # install isolate
-      - run: git clone https://github.com/ioi/isolate.git
+      - run: git clone https://github.com/ReCodEx/isolate
       - run: make isolate
         working-directory: isolate
       - run: sudo make install

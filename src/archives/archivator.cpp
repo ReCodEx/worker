@@ -25,7 +25,7 @@ void archivator::compress(const std::string &dir, const std::string &destination
 					// find out where the two paths diverge - std::filesystem::relative() is too new now to use it
 					fs::path::const_iterator itr_dir = dir_path.begin();
 					fs::path::const_iterator itr_file = file.begin();
-					while (*itr_dir == *itr_file && itr_dir != dir_path.end()) {
+					while (itr_dir != dir_path.end() && itr_file != file.end() && *itr_dir == *itr_file) {
 						++itr_dir;
 						++itr_file;
 					}

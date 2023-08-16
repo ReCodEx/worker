@@ -1,4 +1,4 @@
-#ifndef _WIN32
+#ifdef TEST_ISOLATE
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>

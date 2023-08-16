@@ -10,39 +10,37 @@
 [![COPR](https://copr.fedorainfracloud.org/coprs/semai/ReCodEx/package/recodex-worker/status_image/last_build.png)](https://copr.fedorainfracloud.org/coprs/semai/ReCodEx/)
 
 The job of the worker is to securely execute a job according to its
-configuration and upload results back for latter processing. After receiving an
-evaluation request, worker has to do following:
+configuration and upload results back for later processing. After receiving an
+evaluation request, a worker has to do the following:
 
-- download the archive containing submitted source files and configuration file
+- download the archive containing the submitted source files and configuration file
 - download any supplementary files based on the configuration file, such as test 
   inputs or helper programs (this is done on demand, using a `fetch` command
   in the assignment configuration)
-- evaluate the submission according to job configuration
-- during evaluation progress messages can be sent back to broker
+- evaluate the submission according to the job configuration
+- during evaluation progress messages can be sent back to the broker
 - upload the results of the evaluation to the fileserver
-- notify broker that the evaluation finished
+- notify the broker that the evaluation finished
 
 ## Installation
 
 ### COPR Installation
-
-Follows description for CentOS which will do all steps as described in _Manual Installation_.
+Follows the description for RHEL-like systems which will do all steps as described in _Manual Installation_.
 
 ```
-# yum install yum-plugin-copr
-# yum copr enable semai/ReCodEx
-# yum install recodex-worker
+# dnf install dnf-plugin-copr
+# dnf copr enable semai/ReCodEx
+# dnf install recodex-worker
 ```
 
 ### Manual Installation
 
 #### Dependencies
-
-Worker specific requirements are written in this section. It covers only basic
+Worker-specific requirements are written in this section. It covers only basic
 requirements, additional runtimes or tools may be needed depending on type of
-use. The package names are for CentOS if not specified otherwise. 
+use. The package names are for CentOS if not specified otherwise.
 
-- Boost 1.70 development libs (`boost-devel` package)
+- Boost 1.74 development libs or newer (`boost-devel` package, or `libboost-all-dev` on Debian/Ubuntu)
 - ZeroMQ in version at least 4.0, packages `zeromq` and `zeromq-devel`
   (`libzmq3-dev` on Debian)
 - YAML-CPP library, `yaml-cpp` and `yaml-cpp-devel` (`libyaml-cpp0.5v5` and
@@ -55,21 +53,20 @@ use. The package names are for CentOS if not specified otherwise.
 
 **Isolate** (only for Linux installations)
 
-First, we need to compile sandbox Isolate from source and install it. Current
-worker is tested against version 1.3, so this version needs to be checked out.
-Assume that we keep source code in `/opt/src` dir. For building man page you
+First, we need to compile sandbox Isolate from the source and install it. The current
+worker is tested against our local clone which has some patches in it, so this version needs to be checked out.
+Assume that we keep the source code in `/opt/src` dir. For building man page you
 need to have package `asciidoc` installed.
 
 ```
 $ cd /opt/src
-$ git clone https://github.com/ioi/isolate.git
+$ git clone https://github.com/ReCodEx/isolate
 $ cd isolate
-$ git checkout v1.3
 $ make
 # make install && make install-doc
 ```
 
-For proper work Isolate depends on several advanced features of the Linux
+For proper work, Isolate depends on several advanced features of the Linux
 kernel. Make sure that your kernel is compiled with `CONFIG_PID_NS`,
 `CONFIG_IPC_NS`, `CONFIG_NET_NS`, `CONFIG_CPUSETS`, `CONFIG_CGROUP_CPUACCT`,
 `CONFIG_MEMCG`. If your machine has swap enabled, also check
@@ -107,7 +104,7 @@ worker source codes.
   that `rpm` and `deb` packages are build in the same time. You may need to have
   `rpmbuild` command (usually as `rpmbuild` or `rpm` package) or edit
   CPACK_GENERATOR variable in _CMakeLists.txt_ file in root of source code tree.
-- Install generated package through your package manager (`yum`, `dnf`, `dpkg`).
+- Install generated package through your package manager (`dnf`, `dnf`, `dpkg`).
 
 The worker installation process is composed of following steps:
 
