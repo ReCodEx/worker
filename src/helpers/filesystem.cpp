@@ -151,7 +151,7 @@ fs::path helpers::find_path_outside_sandbox(const std::string &inside_path,
 	auto file_path_string = file_path.string();
 
 	// try to find the file in main source directory
-	auto source_path = fs::path(source_dir) / file_path;
+	auto source_path = fs::path(source_dir) / file_path.relative_path();
 	if (fs::exists(source_path)) { return source_path; }
 
 	// try to find the file in sandbox bound directories (absolute path in sandbox provided)
@@ -160,7 +160,7 @@ fs::path helpers::find_path_outside_sandbox(const std::string &inside_path,
 
 		if (file_path_string.find(sandbox_dir_string) == 0) {
 			std::string file_path_end = file_path_string.substr(sandbox_dir_string.length());
-			return fs::path(std::get<0>(dir)) / fs::path(file_path_end);
+			return fs::path(std::get<0>(dir)) / fs::path(file_path_end).relative_path();
 		}
 	}
 
