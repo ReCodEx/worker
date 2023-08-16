@@ -26,7 +26,7 @@ cache_manager::cache_manager(const std::string &caching_dir, std::shared_ptr<spd
 
 void cache_manager::get_file(const std::string &src_name, const std::string &dst_path)
 {
-	fs::path source_file = caching_dir_ / src_name;
+	fs::path source_file = caching_dir_ / fs::path(src_name).relative_path();
 	fs::path destination_file = dst_path;
 	logger_->debug("Copying file {} from cache to {}", src_name, dst_path);
 
@@ -53,12 +53,13 @@ void cache_manager::get_file(const std::string &src_name, const std::string &dst
 void cache_manager::put_file(const std::string &src_name, const std::string &dst_name)
 {
 	fs::path source_file(src_name);
-	fs::path destination_file = caching_dir_ / dst_name;
+	fs::path destination_file = caching_dir_ / fs::path(dst_name).relative_path();
 	fs::path destination_temp_file;
 
 	do {
 		// generate name and check it for existance, if exists... repeat
-		destination_temp_file = caching_dir_ / (dst_name + "-" + helpers::random_alphanum_string(20) + ".tmp");
+		fs::path random_name(dst_name + "-" + helpers::random_alphanum_string(20) + ".tmp");
+		destination_temp_file = caching_dir_ / random_name.relative_path();
 	} while (fs::exists(destination_temp_file));
 
 	logger_->debug("Copying file {} to cache with name {}", src_name, dst_name);

@@ -137,7 +137,7 @@ void archivator::decompress(const std::string &filename, const std::string &dest
 		if (r < ARCHIVE_OK) { throw archive_exception(archive_error_string(a.get())); }
 
 		const char *current_file = archive_entry_pathname(entry);
-		const std::string full_path = (fs::path(destination) / current_file).string();
+		const std::string full_path = (fs::path(destination) / fs::path(current_file).relative_path()).string();
 		archive_entry_set_pathname(entry, full_path.c_str());
 		auto filetype = archive_entry_filetype(entry);
 		if (filetype == AE_IFREG) {
