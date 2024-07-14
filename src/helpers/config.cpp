@@ -46,7 +46,7 @@ void load_task_success_exit_codes(const YAML::Node &node, std::vector<bool> &suc
 			}
 		}
 	} else {
-		throw helpers::config_exception("Task command success_exit_codes must be an integer or a list.");
+		throw helpers::config_exception("Task command success-exit-codes must be an integer or a list.");
 	}
 }
 
@@ -125,8 +125,8 @@ std::shared_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 						task_meta->cmd_args = ctask["cmd"]["args"].as<std::vector<std::string>>();
 					} // can be omitted... no throw
 
-					if (ctask["cmd"]["success_exit_codes"]) {
-						load_task_success_exit_codes(ctask["cmd"]["success_exit_codes"], task_meta->success_exit_codes);
+					if (ctask["cmd"]["success-exit-codes"]) {
+						load_task_success_exit_codes(ctask["cmd"]["success-exit-codes"], task_meta->success_exit_codes);
 					}
 				} else {
 					throw config_exception("Command in task is not a map");

@@ -192,7 +192,7 @@ TEST(job_config_test, config_data)
 						   "          args:\n"
 						   "              - -v\n"
 						   "              - \"-f 01.in\"\n"
-						   "          success_exit_codes:\n"
+						   "          success-exit-codes:\n"
 						   "              - 1\n"
 						   "              - [3,5]\n"
 						   "              - [10,12]\n"
