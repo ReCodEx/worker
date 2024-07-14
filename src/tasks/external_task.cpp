@@ -88,6 +88,9 @@ std::shared_ptr<task_results> external_task::run()
 	res->sandbox_status =
 		std::unique_ptr<sandbox_results>(new sandbox_results(sandbox_->run(task_meta_->binary, task_meta_->cmd_args)));
 
+	// fix status if non-zero exit codes are treated as execution success
+	postprocess_exit_codes(res);
+
 	// get output from stdout and stderr
 	get_results_output(res);
 
@@ -100,6 +103,20 @@ std::shared_ptr<task_results> external_task::run()
 	}
 
 	return res;
+}
+
+void external_task::postprocess_exit_codes(std::shared_ptr<task_results> result)
+{
+	bool success = task_meta_->is_success_exit_code(result->sandbox_status->exitcode);
+	if (success && result->sandbox_status->status == isolate_status::RE) {
+		// we need to override the status to ok, based on acceptable exit-code
+		result->sandbox_status->status = isolate_status::OK;
+		result->sandbox_status->message = "";
+	} else if (!success && result->sandbox_status->status == isolate_status::OK) {
+		// this happens if zero is not a successfuly exit-code
+		result->sandbox_status->status = isolate_status::RE;
+		result->sandbox_status->message = "Exited with code 0, which is not considered a success (exit codes override)";
+	}
 }
 
 std::shared_ptr<sandbox_limits> external_task::get_limits()
@@ -168,14 +185,10 @@ void external_task::process_results_output(
 		std_err.read(&result_stderr[0], max_length);
 
 		// if there was something in stdout, write it to result
-		if (std_out.gcount() != 0) {
-			result->output_stdout = result_stdout.substr(0, std_out.gcount());
-		}
+		if (std_out.gcount() != 0) { result->output_stdout = result_stdout.substr(0, std_out.gcount()); }
 
 		// if there was something in stderr, write it to result
-		if (std_err.gcount() != 0) {
-			result->output_stderr = result_stderr.substr(0, std_err.gcount());
-		}
+		if (std_err.gcount() != 0) { result->output_stderr = result_stderr.substr(0, std_err.gcount()); }
 
 		// be nice and close streams
 		std_out.close();
@@ -227,7 +240,10 @@ void external_task::make_binary_executable(const std::string &binary)
 
 		// determine if file has executable bits set
 		fs::file_status stat = status(binary_path);
-		if ((stat.permissions() & (fs::perms::owner_exec | fs::perms::group_exec | fs::perms::others_exec)) != fs::perms::none) { return; }
+		if ((stat.permissions() & (fs::perms::owner_exec | fs::perms::group_exec | fs::perms::others_exec)) !=
+			fs::perms::none) {
+			return;
+		}
 
 		fs::permissions(
 			binary_path, fs::perms::owner_exec | fs::perms::group_exec | fs::perms::others_exec, fs::perm_options::add);

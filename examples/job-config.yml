@@ -25,7 +25,7 @@ tasks:
         args:
             - "/tmp/main.c"
             - "/tmp/hello_from_codex_worker/main.c"
-    - task-id: "eval_test01"
+    - task-id: "compile_test01"
       priority: 3
       fatal-failure: false
       dependencies:
@@ -54,8 +54,32 @@ tasks:
                 - src: /tmp/hello_from_codex_worker
                   dst: "evaluate"
                   mode: RW
-    - task-id: "remove_created_dir"
+    - task-id: "run_test01"
       priority: 4
+      fatal-failure: false
+      dependencies:
+        - "compile_test01"
+      cmd:
+        bin: "./test"
+        args: []
+        success_exit_codes: # list of exit codes which will be accepted as success
+          - 0  # zero is success by default, but if success_exit_codes is present, it must be added explicitly.
+          - 1  # single code
+          - [100, 200]  # an interval (inclusive)
+          # codes 0, 1, 100, 101, ... 199, and 200 will all be accepted
+      sandbox:
+        name: "isolate"
+        limits:
+            - hw-group-id: "group1"  # determines specific limits for specific machines
+              time: 1  # seconds
+              wall-time: 1  # seconds
+              extra-time: 1  # seconds
+              parallel: 0  # time and memory limits are merged from all potential processes/threads
+              environ-variable:
+                ISOLATE_BOX: "/box"
+                PATH: "/usr/bin"
+    - task-id: "remove_created_dir"
+      priority: 5
       fatal-failure: false
       cmd:
           bin: "rm"

@@ -7,6 +7,50 @@
 #include "config.h"
 
 
+/**
+ * Properly add an exit-code or an interval of exit-codes in the bitmap.
+ */
+void add_exit_codes(std::vector<bool> &success_exit_codes, int from_index, int to_index = -1)
+{
+	if (to_index == -1) { to_index = from_index; }
+
+	if (from_index < 0 || to_index > 255 || from_index > to_index) { return; }
+
+	if (success_exit_codes.size() <= ((std::size_t) to_index)) { success_exit_codes.resize(to_index + 1); }
+
+	for (int i = from_index; i <= to_index; ++i) { success_exit_codes[i] = true; }
+}
+
+
+/**
+ * Process the config node with success exit codes and fill a bitmap with their enabled indices.
+ * The config must be a single int value or a list of values. In case of a list, each item should be either integer or a
+ * tuple of two integers representing from-to range (inclusive).
+ * @param node root of yaml sub-tree with the exit codes.
+ * @param success_exit_codes a bitmap being constructed
+ */
+void load_task_success_exit_codes(const YAML::Node &node, std::vector<bool> &success_exit_codes)
+{
+	success_exit_codes.clear();
+	if (node.IsScalar()) {
+		add_exit_codes(success_exit_codes, node.as<int>());
+	} else if (node.IsSequence()) {
+		for (auto &subnode : node) {
+			if (subnode.IsScalar()) {
+				add_exit_codes(success_exit_codes, subnode.as<int>());
+			} else if (subnode.IsSequence() && subnode.size() == 2) {
+				add_exit_codes(success_exit_codes, subnode[0].as<int>(), subnode[1].as<int>());
+			} else {
+				throw helpers::config_exception(
+					"Success exit code must be a scalar (int) value or an interval (two integers in a list)");
+			}
+		}
+	} else {
+		throw helpers::config_exception("Task command success_exit_codes must be an integer or a list.");
+	}
+}
+
+
 std::shared_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf)
 {
 	std::shared_ptr<job_metadata> job_meta = std::make_shared<job_metadata>();
@@ -80,6 +124,10 @@ std::shared_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 					if (ctask["cmd"]["args"] && ctask["cmd"]["args"].IsSequence()) {
 						task_meta->cmd_args = ctask["cmd"]["args"].as<std::vector<std::string>>();
 					} // can be omitted... no throw
+
+					if (ctask["cmd"]["success_exit_codes"]) {
+						load_task_success_exit_codes(ctask["cmd"]["success_exit_codes"], task_meta->success_exit_codes);
+					}
 				} else {
 					throw config_exception("Command in task is not a map");
 				}

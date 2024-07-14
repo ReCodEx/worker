@@ -37,7 +37,7 @@ public:
 		std::shared_ptr<sandbox_config> sandbox = nullptr,
 		std::string test_id = "")
 		: task_id(task_id), priority(priority), dependencies(deps), test_id(test_id), type(type), fatal_failure(fatal),
-		  binary(cmd), cmd_args(args), sandbox(sandbox)
+		  binary(cmd), cmd_args(args), success_exit_codes({true}), sandbox(sandbox)
 	{
 	}
 
@@ -59,6 +59,20 @@ public:
 	std::string binary;
 	/** Arguments for executed command. */
 	std::vector<std::string> cmd_args;
+	/**
+	 * List of command exit codes which should be treated as "success" (denoted by true value at their index).
+	 * By default, the list has only one item - true at index 0.
+	 */
+	std::vector<bool> success_exit_codes;
+
+	/**
+	 * Safely checks whether given exit code is deemed successful (handling corner cases).
+	 */
+	bool is_success_exit_code(int code) const
+	{
+		// indices outside success_exit_codes range are handled as false
+		return code >= 0 && ((std::size_t) code) < success_exit_codes.size() && success_exit_codes[code];
+	}
 
 	/** If not null than this task is external and will be executed in given sandbox. */
 	std::shared_ptr<sandbox_config> sandbox;
