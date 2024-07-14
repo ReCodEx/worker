@@ -7,7 +7,13 @@
 /**
  * Return error codes of sandbox. Code names corresponds isolate's meta file error codes.
  */
-enum class isolate_status { OK, RE, SG, TO, XX };
+enum class isolate_status {
+	OK,
+	RE, // run-time error, i.e., exited with a non-zero exit code
+	SG, // program died on a signal
+	TO, // timed out
+	XX, // internal error of the sandbox
+};
 
 /**
  * Status of whole task after execution.
