@@ -192,6 +192,14 @@ TEST(job_config_test, config_data)
 						   "          args:\n"
 						   "              - -v\n"
 						   "              - \"-f 01.in\"\n"
+						   "          success_exit_codes:\n"
+						   "              - 1\n"
+						   "              - [3,5]\n"
+						   "              - [10,12]\n"
+						   "              - [11,14]\n"
+						   "              - [21,23]\n"
+						   "              - [22,24]\n"
+						   "              - [20,25]\n"
 						   "      sandbox:\n"
 						   "          name: fake\n"
 						   "          stdin: 01.in\n"
@@ -250,6 +258,14 @@ TEST(job_config_test, config_data)
 	ASSERT_EQ(task2->binary, "recodex");
 	ASSERT_EQ(task2->cmd_args[0], "-v");
 	ASSERT_EQ(task2->cmd_args[1], "-f 01.in");
+
+	std::vector<int> codes{1, 3, 4, 5, 10, 11, 12, 13, 14, 20, 21, 22, 23, 24, 25};
+	for (auto code : codes) { ASSERT_TRUE(task2->is_success_exit_code(code)); }
+	std::size_t false_count = 0;
+	for (int i = 0; i < 256; ++i) {
+		if (!task2->is_success_exit_code(i)) { ++false_count; }
+	}
+	ASSERT_EQ(false_count, 256 - codes.size());
 
 	ASSERT_NE(task2->sandbox, nullptr);
 	ASSERT_EQ(task2->sandbox->name, "fake");
