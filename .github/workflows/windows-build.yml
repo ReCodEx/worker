@@ -4,9 +4,9 @@ on: [push, pull_request]
 
 jobs:
   tests:
-    runs-on: windows-2019
+    runs-on: windows-2025
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           submodules: true
       - uses: ilammy/msvc-dev-cmd@v1
@@ -15,7 +15,7 @@ jobs:
       
       # cache
       - name: Cache CMakeCache.txt and Nuget packages
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: |
             CMakeCache.txt
@@ -60,7 +60,7 @@ jobs:
         run: Invoke-WebRequest -Uri 'https://curl.haxx.se/ca/cacert.pem' -Outfile "curl-ca-bundle.crt"
 
       # build
-      - run: cmake -G "Visual Studio 16 2019" "-DBOOST_ROOT=$Env:GITHUB_WORKSPACE\libs\boost" "-DCURL_LIBRARY=$Env:GITHUB_WORKSPACE\libs\curl\lib\libcurl_imp.lib" "-DCURL_INCLUDE_DIR=$Env:GITHUB_WORKSPACE\libs\curl\include" "-DZMQ_LIBRARY_DIR=$Env:GITHUB_WORKSPACE\libs\libzmq\lib" "-DZMQ_INCLUDE_DIR=$Env:GITHUB_WORKSPACE\libs\libzmq\include" .
+      - run: cmake -G "Visual Studio 17 2022" "-DBOOST_ROOT=$Env:GITHUB_WORKSPACE\libs\boost" "-DCURL_LIBRARY=$Env:GITHUB_WORKSPACE\libs\curl\lib\libcurl_imp.lib" "-DCURL_INCLUDE_DIR=$Env:GITHUB_WORKSPACE\libs\curl\include" "-DZMQ_LIBRARY_DIR=$Env:GITHUB_WORKSPACE\libs\libzmq\lib" "-DZMQ_INCLUDE_DIR=$Env:GITHUB_WORKSPACE\libs\libzmq\include" .
       - run: msbuild "ALL_BUILD.vcxproj" /p:Configuration=Release /m /verbosity:quiet
 
       # before_test
