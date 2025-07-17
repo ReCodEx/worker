@@ -14,6 +14,7 @@
 #include <string>
 #include <fstream>
 #include <stdexcept>
+#include <cstdint>
 
 #define	RES_ERROR	2
 
