@@ -111,7 +111,7 @@ void isolate_sandbox::isolate_init()
 
 	logger_->debug("Initializing isolate...");
 
-	// Create unnamend pipe
+	// Create unnamed pipe
 	if (pipe(fd) == -1) { log_and_throw(logger_, "Cannot create pipe: ", strerror(errno)); }
 
 	childpid = fork();
