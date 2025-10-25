@@ -355,6 +355,13 @@ private:
 	{
 		// Check correct file remains ...
 		bool reportedAny = false;
+
+		for (auto &&it : mCorrectLinesBuffer) {
+			logImpairedCorrectLine(*it.get());
+			reportedAny = true;
+		}
+		mCorrectLinesBuffer.clear();
+
 		while (!mCorrectReader.eof() && !bpp::log().isFull(bpp::LogSeverity::ERROR)) {
 			readNextCorrectLine();
 			if (mCorrectLine) {
@@ -374,6 +381,13 @@ private:
 	{
 		// Check result file remains ...
 		bool reportedAny = false;
+
+		for (auto &&it : mResultLinesBuffer) {
+			logImpairedResultLine(*it.get());
+			reportedAny = true;
+		}
+		mResultLinesBuffer.clear();
+
 		while (!mResultReader.eof() && !bpp::log().isFull(bpp::LogSeverity::ERROR)) {
 			readNextResultLine();
 			if (mResultLine) {
