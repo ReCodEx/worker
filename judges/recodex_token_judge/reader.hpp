@@ -83,7 +83,7 @@ public:
 
 	public:
 		Line(Reader<CHAR, OFFSET> &reader, offset_t lineNumber, const char_t *rawData, offset_t rawLength = 0)
-			: mReader(reader), mLineNumber(lineNumber), mRawData(rawData), mRawLength(rawLength)
+			: mReader(reader), mLineNumber(lineNumber), mTokens(), mRawData(rawData), mRawLength(rawLength)
 		{
 		}
 

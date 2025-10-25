@@ -464,11 +464,11 @@ private:
 	 * \return Number of tokens which are the same on both lines from the end.
 	 */
 	std::size_t getCommonLineSuffixLength(
-		const line_t &line1, const line_t &line2, TokenComparator<CHAR, OFFSET> &comparator) const
+		const line_t &line1, const line_t &line2, TokenComparator<CHAR, OFFSET> &comparator, std::size_t prefixLen = 0) const
 	{
 		std::size_t idx1 = line1.size() - 1, idx2 = line2.size() - 1;
 		std::size_t len = 0;
-		while (len < line1.size() && len < line2.size() &&
+		while ((len + prefixLen) < line1.size() && (len + prefixLen) < line2.size() &&
 			comparator.compare(line1.getTokenCStr(idx1),
 				line1.getTokenLength(idx1),
 				line2.getTokenCStr(idx2),
@@ -606,7 +606,7 @@ private:
 		std::size_t prefixLen = getCommonLinePrefixLength(line1, line2, comparator);
 		if (prefixLen == line1.size() && prefixLen == line2.size()) return 0; // both lines are identical
 
-		std::size_t suffixLen = getCommonLineSuffixLength(line1, line2, comparator);
+		std::size_t suffixLen = getCommonLineSuffixLength(line1, line2, comparator, prefixLen);
 		lineview_t lineView1(line1, prefixLen, line1.size() - prefixLen - suffixLen);
 		lineview_t lineView2(line2, prefixLen, line2.size() - prefixLen - suffixLen);
 
