@@ -296,7 +296,7 @@ void isolate_sandbox::isolate_run(const std::string &binary, const std::vector<s
 			waitpid(childpid, &status, 0);
 			// Kill control process. If it already exits, nothing will be done
 			kill(controlpid, SIGKILL);
-			// Remove zombie from controll process.
+			// Remove zombie from control process.
 			waitpid(controlpid, NULL, 0);
 
 			// isolate was killed

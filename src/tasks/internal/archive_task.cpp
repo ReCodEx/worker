@@ -1,8 +1,8 @@
-#include "archivate_task.h"
+#include "archive_task.h"
 #include "archives/archivator.h"
 
 
-archivate_task::archivate_task(std::size_t id, std::shared_ptr<task_metadata> task_meta) : task_base(id, task_meta)
+archive_task::archive_task(std::size_t id, std::shared_ptr<task_metadata> task_meta) : task_base(id, task_meta)
 {
 	if (task_meta_->cmd_args.size() != 2) {
 		throw task_exception(
@@ -11,7 +11,7 @@ archivate_task::archivate_task(std::size_t id, std::shared_ptr<task_metadata> ta
 }
 
 
-std::shared_ptr<task_results> archivate_task::run()
+std::shared_ptr<task_results> archive_task::run()
 {
 	std::shared_ptr<task_results> result(new task_results());
 

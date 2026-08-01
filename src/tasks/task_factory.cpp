@@ -21,8 +21,8 @@ std::shared_ptr<task_base> task_factory::create_internal_task(std::size_t id, st
 		task = std::make_shared<rename_task>(id, task_meta);
 	} else if (task_meta->binary == "rm") {
 		task = std::make_shared<rm_task>(id, task_meta);
-	} else if (task_meta->binary == "archivate") {
-		task = std::make_shared<archivate_task>(id, task_meta);
+	} else if (task_meta->binary == "archive") {
+		task = std::make_shared<archive_task>(id, task_meta);
 	} else if (task_meta->binary == "extract") {
 		task = std::make_shared<extract_task>(id, task_meta);
 	} else if (task_meta->binary == "fetch") {

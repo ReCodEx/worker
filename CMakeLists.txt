@@ -156,8 +156,8 @@ set(SOURCE_FILES
 	${TASKS_DIR}/internal/mkdir_task.cpp
 	${TASKS_DIR}/internal/rm_task.h
 	${TASKS_DIR}/internal/rm_task.cpp
-	${TASKS_DIR}/internal/archivate_task.h
-	${TASKS_DIR}/internal/archivate_task.cpp
+	${TASKS_DIR}/internal/archive_task.h
+	${TASKS_DIR}/internal/archive_task.cpp
 	${TASKS_DIR}/internal/extract_task.h
 	${TASKS_DIR}/internal/extract_task.cpp
 	${TASKS_DIR}/internal/fetch_task.h
