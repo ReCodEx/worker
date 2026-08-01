@@ -26,7 +26,7 @@ namespace fs = std::filesystem;
  * Job is built from configuration in which all information should be provided.
  * Job building results in task tree and task queue in which task should be evaluated.
  * @note During construction job_metadata structure is given. This structure is editable and
- * there is posibility it can be changed by whoever constructed a job class.
+ * there is possibility it can be changed by whoever constructed a job class.
  * In actual ReCodEx worker this situation can never happen. But be aware of this and keep it in mind in other coding.
  * Also do not change job_metadata or task_metadata structure between construction of tasks and its execution.
  * If you do it, you should watch your back, devil will be always very close!
@@ -41,7 +41,7 @@ public:
 	 * @param job_meta
 	 * @param worker_conf
 	 * @param working_directory Directory for temporary saving of files by tasks. Example
-	 *							use case is storing isolate's meta log file.
+	 *							use case is storing sandbox's meta log file.
 	 * @param source_path path to source codes of submission
 	 * @param result_path path to directory containing all results
 	 * @param factory used in creation of task objects
@@ -120,7 +120,7 @@ private:
 	 */
 	void prepare_job_vars();
 	/**
-	 * Replace occurences of job config variables and return the resulting string
+	 * Replace occurrences of job config variables and return the resulting string
 	 * @param src scanned string for variables
 	 * @return new string with all variables replaced with values
 	 */

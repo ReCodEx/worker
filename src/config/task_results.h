@@ -23,7 +23,7 @@ enum class task_status { OK, FAILED, SKIPPED };
 
 /**
  * Sandbox results.
- * @note Not all items must be returned from sandbox, so some defaults may aply.
+ * @note Not all items must be returned from sandbox, so some defaults may apply.
  */
 struct sandbox_results {
 	/**
@@ -42,7 +42,7 @@ struct sandbox_results {
 	 */
 	float wall_time = 0;
 	/**
-	 * Flag if program exited normaly or was killed.
+	 * Flag if program exited normally or was killed.
 	 * Default: false
 	 */
 	bool killed = false;
@@ -139,7 +139,7 @@ struct task_results {
 	std::unique_ptr<sandbox_results> sandbox_status = nullptr;
 
 	/**
-	 * Constructor with default values initiazation.
+	 * Constructor with default values initialization.
 	 */
 	task_results() = default;
 	/**
