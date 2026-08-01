@@ -41,7 +41,12 @@ isolate_sandbox::isolate_sandbox(std::shared_ptr<sandbox_config> sandbox_config,
 	const std::string &temp_dir,
 	const std::string &data_dir,
 	std::shared_ptr<spdlog::logger> logger)
-	: sandbox_config_(sandbox_config), limits_(limits), logger_(logger), id_(id), isolate_binary_("isolate"),
+	/*
+	 * ISOLATE REPLACEMENT (new tool is recodex-guardian)
+	 * This is a temporary measure. We replace isolate with our new sandbox with identical interface.
+	 * In the future, we will enhance the interface and make this a more proper change.
+	 */
+	: sandbox_config_(sandbox_config), limits_(limits), logger_(logger), id_(id), isolate_binary_("recodex-guardian"),
 	  data_dir_(data_dir)
 {
 	if (logger_ == nullptr) { logger_ = helpers::create_null_logger(); }
