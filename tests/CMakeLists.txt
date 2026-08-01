@@ -117,7 +117,7 @@ add_test_suite(tasks
 	${TASKS_DIR}/internal/mkdir_task.cpp
 	${TASKS_DIR}/internal/rename_task.cpp
 	${TASKS_DIR}/internal/rm_task.cpp
-	${TASKS_DIR}/internal/archivate_task.cpp
+	${TASKS_DIR}/internal/archive_task.cpp
 	${TASKS_DIR}/internal/extract_task.cpp
 	${TASKS_DIR}/internal/fetch_task.cpp
 	${TASKS_DIR}/internal/truncate_task.cpp
