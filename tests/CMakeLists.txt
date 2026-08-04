@@ -123,6 +123,7 @@ add_test_suite(tasks
 	${TASKS_DIR}/internal/truncate_task.cpp
 	${TASKS_DIR}/internal/exists_task.cpp
 	${SRC_DIR}/archives/archivator.cpp
+	${SANDBOX_DIR}/guardian_sandbox.cpp
 	${SANDBOX_DIR}/isolate_sandbox.cpp
 	${HELPERS_DIR}/logger.cpp
 	${HELPERS_DIR}/config.cpp

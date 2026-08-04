@@ -1,6 +1,6 @@
 #ifndef _WIN32
 
-#include "isolate_sandbox.h"
+#include "guardian_sandbox.h"
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/mount.h>
@@ -14,8 +14,6 @@
 #include <fstream>
 #include <map>
 #include <filesystem>
-#include <boost/iostreams/stream.hpp>
-#include <boost/iostreams/device/file_descriptor.hpp>
 #include "helpers/filesystem.h"
 
 namespace fs = std::filesystem;
@@ -37,13 +35,13 @@ namespace
 	}
 } // namespace
 
-isolate_sandbox::isolate_sandbox(std::shared_ptr<sandbox_config> sandbox_config,
+guardian_sandbox::guardian_sandbox(std::shared_ptr<sandbox_config> sandbox_config,
 	sandbox_limits limits,
 	std::size_t id,
 	const std::string &temp_dir,
 	const std::string &data_dir,
 	std::shared_ptr<spdlog::logger> logger)
-	: sandbox_config_(sandbox_config), limits_(limits), logger_(logger), id_(id), isolate_binary_("isolate"),
+	: sandbox_config_(sandbox_config), limits_(limits), logger_(logger), id_(id), guardian_binary_("recodex-guardian"),
 	  data_dir_(data_dir)
 {
 	if (logger_ == nullptr) { logger_ = helpers::create_null_logger(); }
@@ -52,7 +50,7 @@ isolate_sandbox::isolate_sandbox(std::shared_ptr<sandbox_config> sandbox_config,
 
 	if (data_dir_ == "") { logger_->info("Empty data directory for moving to sandbox."); }
 
-	// Set backup limit (for killing isolate if it hasn't finished yet)
+	// Set backup limit (for killing guardian if it hasn't finished yet)
 	max_timeout_ = limits_.wall_time > limits_.cpu_time ? limits_.wall_time : limits_.cpu_time;
 	max_timeout_ += 300; // plus 5 minutes (for short tasks)
 	max_timeout_ *= 1.2; // 20% time more than necessary (better have some spare time)
@@ -61,42 +59,42 @@ isolate_sandbox::isolate_sandbox(std::shared_ptr<sandbox_config> sandbox_config,
 	try {
 		fs::create_directories(temp_dir_);
 	} catch (fs::filesystem_error &e) {
-		log_and_throw(logger_, "Failed to create directory for isolate meta file. Error: ", e.what());
+		log_and_throw(logger_, "Failed to create directory for guardian meta file. Error: ", e.what());
 	}
 
 	meta_file_ = (fs::path(temp_dir_) / "meta.log").string();
 
 	try {
-		isolate_init();
+		guardian_init();
 	} catch (...) {
 		fs::remove_all(temp_dir_);
 		throw;
 	}
 }
 
-isolate_sandbox::~isolate_sandbox()
+guardian_sandbox::~guardian_sandbox()
 {
 	try {
-		isolate_cleanup();
+		guardian_cleanup();
 		fs::remove_all(temp_dir_);
 	} catch (...) {
 		// We don't care if this failed. We can't fix it either. Just don't throw an exception in destructor.
 	}
 }
 
-sandbox_results isolate_sandbox::run(const std::string &binary, const std::vector<std::string> &arguments)
+sandbox_results guardian_sandbox::run(const std::string &binary, const std::vector<std::string> &arguments)
 {
-	// move data to isolate directory
+	// move data to guardian directory
 	if (data_dir_ != "") { move_or_throw(logger_, data_dir_, sandboxed_dir_); }
 
 	try {
-		// run isolate
-		isolate_run(binary, arguments);
+		// run guardian
+		guardian_run(binary, arguments);
 
-		// move data from isolate directory back to data directory
+		// move data from guardian directory back to data directory
 		if (data_dir_ != "") { move_or_throw(logger_, sandboxed_dir_, data_dir_); }
 	} catch (const std::exception &) {
-		// on errors also move data from isolate directory back to data directory
+		// on errors also move data from guardian directory back to data directory
 		if (data_dir_ != "") { move_or_throw(logger_, sandboxed_dir_, data_dir_); }
 
 		// rethrow the original exception when data are saved
@@ -106,92 +104,65 @@ sandbox_results isolate_sandbox::run(const std::string &binary, const std::vecto
 	return process_meta_file();
 }
 
-class log_pipe {
-	// A pipe through which a child process sends lines to a parent process.
-
-	int read_fd_, write_fd_;		// -1 = closed
-	std::shared_ptr<spdlog::logger> logger_;
-
-public:
-	log_pipe(std::shared_ptr<spdlog::logger> logger) {
-		logger_ = logger;
-		int fds[2];
-		if (pipe(fds) < 0) { log_and_throw(logger_, "Cannot create pipe: %m"); }
-		read_fd_ = fds[0];
-		write_fd_ = fds[1];
-	}
-
-	~log_pipe() {
-		if (read_fd_ >= 0) { close(read_fd_); }
-		if (write_fd_ >= 0) { close(write_fd_); }
-	}
-
-	void child_dup_to_fd(int fd) {
-		// Call in child process
-		dup2(write_fd_, fd);
-		close(read_fd_);
-		close(write_fd_);
-		read_fd_ = write_fd_ = -1;
-	}
-
-	boost::iostreams::stream<boost::iostreams::file_descriptor_source> parent_read_stream() {
-		// Call in parent process
-		close(write_fd_);
-		write_fd_ = -1;
-		return boost::iostreams::stream<boost::iostreams::file_descriptor_source>(read_fd_, boost::iostreams::never_close_handle);
-	}
-};
-
-void isolate_sandbox::isolate_init()
+void guardian_sandbox::guardian_init()
 {
-	log_pipe stdout_pipe(logger_), stderr_pipe(logger_);
+	int fd[2];
 	pid_t childpid;
 
-	logger_->debug("Initializing isolate...");
+	logger_->debug("Initializing guardian...");
+
+	// Create unnamed pipe
+	if (pipe(fd) == -1) { log_and_throw(logger_, "Cannot create pipe: ", strerror(errno)); }
 
 	childpid = fork();
 
 	switch (childpid) {
 	case -1: log_and_throw(logger_, "Fork failed: ", strerror(errno)); break;
-	case 0:
-		stdout_pipe.child_dup_to_fd(1);
-		stderr_pipe.child_dup_to_fd(2);
-		isolate_init_child();
-		break;
+	case 0: guardian_init_child(fd[0], fd[1]); break;
 	default:
 		//---Parent---
-		auto stdout_stream = stdout_pipe.parent_read_stream();
-		auto stderr_stream = stderr_pipe.parent_read_stream();
+		// Close up input side of pipe
+		close(fd[1]);
 
-		// To prevent deadlocks, read from stderr first, since stdout is guaranteed
-		// to fit in PIPE_BUF.
-		std::string line;
-		while (std::getline(stderr_stream, line)) {
-			logger_->warn("Isolate: {}", line);
-		}
-
-		if (!std::getline(stdout_stream, sandboxed_dir_)) {
-			log_and_throw(logger_, "Error reading sandbox path from pipe.");
+		char buf[256];
+		int ret;
+		while ((ret = read(fd[0], (void *) buf, 256)) > 0) {
+			if (buf[ret - 1] == '\n') { buf[ret - 1] = '\0'; }
+			sandboxed_dir_ += std::string(buf);
 		}
 		sandboxed_dir_ += "/box";
+		if (ret == -1) { log_and_throw(logger_, "Read from pipe error."); }
 
 		int status;
 		waitpid(childpid, &status, 0);
 		if (WEXITSTATUS(status) != 0) {
-			log_and_throw(logger_, "Isolate init error. Return value: ", WEXITSTATUS(status));
+			log_and_throw(logger_, "Guardian init error. Return value: ", WEXITSTATUS(status));
 		}
-		logger_->debug("Isolate initialized in {}", sandboxed_dir_);
+		logger_->debug("Guardian initialized in {}", sandboxed_dir_);
+		close(fd[0]);
 		break;
 	}
 }
 
-void isolate_sandbox::isolate_init_child()
+void guardian_sandbox::guardian_init_child(int fd_0, int fd_1)
 {
+	// Close up output side of pipe
+	close(fd_0);
+
+	// Close stdout, duplicate the input side of pipe to stdout
+	dup2(fd_1, 1);
+
+	// Redirect stderr to /dev/null file
+	int devnull;
+	devnull = open("/dev/null", O_WRONLY);
+	if (devnull == -1) { log_and_throw(logger_, "Cannot open /dev/null file for writing."); }
+	dup2(devnull, 2);
+
 	std::string box_id_arg("--box-id=" + std::to_string(id_));
 
-	// Exec isolate init command
+	// Exec guardian init command
 	std::vector<const char *> args {
-		isolate_binary_.c_str(),
+		guardian_binary_.c_str(),
 		"--cg",
 		box_id_arg.c_str(),
 	};
@@ -208,18 +179,17 @@ void isolate_sandbox::isolate_init_child()
 	args.push_back(nullptr);
 
 	// const_cast is ugly, but this is working with C code - execv does not modify its arguments
-	execvp(isolate_binary_.c_str(), const_cast<char **>(&args[0]));
+	execvp(guardian_binary_.c_str(), const_cast<char **>(&args[0]));
 
 	// never reached unless exec explodes in our face
 	log_and_throw(logger_, "Exec returned to child: ", strerror(errno));
 }
 
-void isolate_sandbox::isolate_cleanup()
+void guardian_sandbox::guardian_cleanup()
 {
-	log_pipe stderr_pipe(logger_);
 	pid_t childpid;
 
-	logger_->debug("Cleaning up isolate...");
+	logger_->debug("Cleaning up guardian...");
 
 	childpid = fork();
 
@@ -227,18 +197,21 @@ void isolate_sandbox::isolate_cleanup()
 	case -1: log_and_throw(logger_, "Fork failed: ", strerror(errno)); break;
 	case 0:
 		//---Child---
-		stderr_pipe.child_dup_to_fd(2);
+		// Redirect stderr to /dev/null file
+		int devnull;
+		devnull = open("/dev/null", O_WRONLY);
+		if (devnull == -1) { log_and_throw(logger_, "Cannot open /dev/null file for writing."); }
+		dup2(devnull, 2);
 
-		// Exec isolate cleanup command
+		// Exec guardian cleanup command
 		const char *args[5];
-		args[0] = isolate_binary_.c_str();
+		args[0] = guardian_binary_.c_str();
 		args[1] = "--cg";
 		args[2] = strdup(("--box-id=" + std::to_string(id_)).c_str());
 		args[3] = "--cleanup";
 		args[4] = NULL;
-
 		// const_cast is ugly, but this is working with C code - execv does not modify its arguments
-		execvp(isolate_binary_.c_str(), const_cast<char **>(args));
+		execvp(guardian_binary_.c_str(), const_cast<char **>(args));
 
 		// Never reached
 		free(const_cast<char *>(args[2]));
@@ -247,27 +220,21 @@ void isolate_sandbox::isolate_cleanup()
 		break;
 	default:
 		//---Parent---
-		auto stderr_stream = stderr_pipe.parent_read_stream();
-		std::string line;
-		while (std::getline(stderr_stream, line)) {
-			logger_->warn("Isolate: {}", line);
-		}
-
 		int status;
 		waitpid(childpid, &status, 0);
 		if (WEXITSTATUS(status) != 0) {
-			log_and_throw(logger_, "Isolate cleanup error. Return value: ", WEXITSTATUS(status));
+			log_and_throw(logger_, "Guardian cleanup error. Return value: ", WEXITSTATUS(status));
 		}
-		logger_->debug("Isolate box {} cleaned up.", id_);
+		logger_->debug("Guardian box {} cleaned up.", id_);
 		break;
 	}
 }
 
-void isolate_sandbox::isolate_run(const std::string &binary, const std::vector<std::string> &arguments)
+void guardian_sandbox::guardian_run(const std::string &binary, const std::vector<std::string> &arguments)
 {
 	pid_t childpid;
 
-	logger_->debug("Running isolate...");
+	logger_->debug("Running guardian...");
 	logger_->debug("Running the first fork");
 
 	childpid = fork();
@@ -282,12 +249,12 @@ void isolate_sandbox::isolate_run(const std::string &binary, const std::vector<s
 		int devnull;
 		devnull = open("/dev/null", O_WRONLY);
 		if (devnull == -1) { log_and_throw(logger_, "Cannot open /dev/null file for writing."); }
-		dup2(devnull, 0); // Don't allow process inside isolate to read from current standard input
+		dup2(devnull, 0); // Don't allow process inside guardian to read from current standard input
 		dup2(devnull, 1);
 		dup2(devnull, 2);
 
-		auto args = isolate_run_args(binary, arguments);
-		execvp(isolate_binary_.c_str(), args);
+		auto args = guardian_run_args(binary, arguments);
+		execvp(guardian_binary_.c_str(), args);
 
 		// Never reached
 		for(char **arg = args; *arg; arg++) { free(*arg); }
@@ -297,8 +264,8 @@ void isolate_sandbox::isolate_run(const std::string &binary, const std::vector<s
 	} break;
 	default: {
 		//---Parent---
-		/* Spawn a control process, that will wait given timeout and then kills isolate process.
-		 * When a isolate process finishes before the timeout, parent thread kills control process
+		/* Spawn a control process, that will wait given timeout and then kills guardian process.
+		 * When a guardian process finishes before the timeout, parent thread kills control process
 		 * and calls waitpid() to remove zombie from system.
 		 */
 
@@ -325,33 +292,33 @@ void isolate_sandbox::isolate_run(const std::string &binary, const std::vector<s
 			logger_->debug("Returned from the second fork as parent");
 
 			int status;
-			// Wait for isolate process. Waitpid returns no much longer than timeout if not earlier.
+			// Wait for guardian process. Waitpid returns no much longer than timeout if not earlier.
 			waitpid(childpid, &status, 0);
 			// Kill control process. If it already exits, nothing will be done
 			kill(controlpid, SIGKILL);
 			// Remove zombie from control process.
 			waitpid(controlpid, NULL, 0);
 
-			// isolate was killed
+			// guardian was killed
 			if (WIFSIGNALED(status)) {
-				log_and_throw(logger_, "Isolate process was killed by signal ", WTERMSIG(status), " due to timeout.");
+				log_and_throw(logger_, "Guardian process was killed by signal ", WTERMSIG(status), " due to timeout.");
 			}
-			// isolate exited, but with return value signify internal error
+			// guardian exited, but with return value signify internal error
 			if (WEXITSTATUS(status) != 0 && WEXITSTATUS(status) != 1) {
-				log_and_throw(logger_, "Isolate run into internal error. Return value: ", WEXITSTATUS(status));
+				log_and_throw(logger_, "Guardian run into internal error. Return value: ", WEXITSTATUS(status));
 			}
-			logger_->debug("Isolate box {} ran successfully.", id_);
+			logger_->debug("Guardian box {} ran successfully.", id_);
 			break;
 		}
 	} break;
 	}
 }
 
-char **isolate_sandbox::isolate_run_args(const std::string &binary, const std::vector<std::string> &arguments)
+char **guardian_sandbox::guardian_run_args(const std::string &binary, const std::vector<std::string> &arguments)
 {
 	std::vector<std::string> vargs;
 
-	vargs.push_back(isolate_binary_); // First argument must be binary name
+	vargs.push_back(guardian_binary_); // First argument must be binary name
 	vargs.push_back("--cg");
 	vargs.push_back("--cg-timing");
 	vargs.push_back("--box-id=" + std::to_string(id_));
@@ -413,7 +380,7 @@ char **isolate_sandbox::isolate_run_args(const std::string &binary, const std::v
 	return c_args;
 }
 
-sandbox_results isolate_sandbox::process_meta_file()
+sandbox_results guardian_sandbox::process_meta_file()
 {
 	sandbox_results results;
 

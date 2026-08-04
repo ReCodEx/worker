@@ -165,31 +165,31 @@ std::shared_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 
 				if (ctask["sandbox"]["stdin"] && ctask["sandbox"]["stdin"].IsScalar()) {
 					sandbox->std_input = ctask["sandbox"]["stdin"].as<std::string>();
-				} // can be ommited... no throw
+				} // can be omitted... no throw
 				if (ctask["sandbox"]["stdout"] && ctask["sandbox"]["stdout"].IsScalar()) {
 					sandbox->std_output = ctask["sandbox"]["stdout"].as<std::string>();
-				} // can be ommited... no throw
+				} // can be omitted... no throw
 				if (ctask["sandbox"]["stderr"] && ctask["sandbox"]["stderr"].IsScalar()) {
 					sandbox->std_error = ctask["sandbox"]["stderr"].as<std::string>();
-				} // can be ommited... no throw
+				} // can be omitted... no throw
 				if (ctask["sandbox"]["stderr-to-stdout"] && ctask["sandbox"]["stderr-to-stdout"].IsScalar()) {
 					sandbox->stderr_to_stdout = ctask["sandbox"]["stderr-to-stdout"].as<bool>();
-				} // can be ommited... no throw
+				} // can be omitted... no throw
 				if (ctask["sandbox"]["output"] && ctask["sandbox"]["output"].IsScalar()) {
 					sandbox->output = ctask["sandbox"]["output"].as<bool>();
-				} // can be ommited... no throw
+				} // can be omitted... no throw
 				if (ctask["sandbox"]["carboncopy-stdout"] && ctask["sandbox"]["carboncopy-stdout"].IsScalar()) {
 					sandbox->carboncopy_stdout = ctask["sandbox"]["carboncopy-stdout"].as<std::string>();
-				} // can be ommited... no throw
+				} // can be omitted... no throw
 				if (ctask["sandbox"]["carboncopy-stderr"] && ctask["sandbox"]["carboncopy-stderr"].IsScalar()) {
 					sandbox->carboncopy_stderr = ctask["sandbox"]["carboncopy-stderr"].as<std::string>();
-				} // can be ommited... no throw
+				} // can be omitted... no throw
 				if (ctask["sandbox"]["chdir"] && ctask["sandbox"]["chdir"].IsScalar()) {
 					sandbox->chdir = ctask["sandbox"]["chdir"].as<std::string>();
-				} // can be ommited... no throw
+				} // can be omitted... no throw
 				if (ctask["sandbox"]["working-directory"] && ctask["sandbox"]["working-directory"].IsScalar()) {
 					sandbox->working_directory = ctask["sandbox"]["working-directory"].as<std::string>();
-				} // can be ommited... no throw
+				} // can be omitted... no throw
 
 				// load limits... if they are supplied
 				if (ctask["sandbox"]["limits"]) {

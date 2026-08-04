@@ -15,6 +15,12 @@
 
 /**
  * Base class for all sandbox implementations.
+ * 
+ * Sandbox is used for security of system running untrusted program. They impose
+ * sets restrictions to the application like time limit, memory limit or accessible
+ * files. When any of the limits are reached, the program inside sandbox is killed.
+ * 
+ * This is a base class for different sandbox implementations that may be used by the worker.
  */
 class sandbox_base
 {
