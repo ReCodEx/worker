@@ -5,7 +5,7 @@
 #include <memory>
 
 /**
- * Return error codes of sandbox. Code names corresponds isolate's meta file error codes.
+ * Return error codes of sandbox.
  */
 enum class isolate_status {
 	OK,

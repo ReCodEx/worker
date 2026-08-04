@@ -16,7 +16,7 @@
  * about task which always have to be defined.
  * @note Task can be created only with one constructor which receive pointer to
  * @ref task_metadata as parameter. This structure is mutable, so it can be changed
- * during task execution. This case should never happen in ReCodEx worker, but posibility
+ * during task execution. This case should never happen in ReCodEx worker, but possibility
  * is still here. Please keep this in mind if you're editing this code otherwise it can
  * end up very bad for you!
  */
@@ -29,7 +29,7 @@ public:
 	task_base() = delete;
 	/**
 	 * Only possible way of construction which just store all given parameters into private variables.
-	 * @param id Unique identificator of load order of tasks.
+	 * @param id Unique identifier of load order of tasks.
 	 * @param task_meta Variable containing further info about task.
 	 */
 	task_base(std::size_t id, std::shared_ptr<task_metadata> task_meta);
@@ -84,7 +84,7 @@ public:
 	std::size_t get_priority();
 	/**
 	 * Get failing policy. If @a true than failure of this task will cause
-	 * mmediate exit of job evaluation.
+	 * immediate exit of job evaluation.
 	 * @return If task's failure is fatal for whole job.
 	 */
 	bool get_fatal_failure();
@@ -203,7 +203,7 @@ public:
 	/**
 	 * Compare @ref task_base objects by their priority and identifier. This is something like
 	 * lesser than operator on @ref task_base objects.
-	 * Its supposed that bigger number of priority is greater priority, so this tasks will be prefered.
+	 * Its supposed that bigger number of priority is greater priority, so this tasks will be preferred.
 	 * @param a First task to compare.
 	 * @param b Second task to compare.
 	 * @return @a true if parameter a is lesser than b

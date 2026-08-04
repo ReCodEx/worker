@@ -38,7 +38,7 @@ tasks:
             - "test"
             - "main.c"
       sandbox:  # if defined task is external and will be run in sandbox
-        name: "isolate"  # mandatory information
+        name: ""  # empty string means default sandbox (set in config, recodex-guardian is the fallback)
         limits:  # if not defined, then worker default configuration of limits is loaded
              # anything of the specified limits can be omitted and will be loaded from worker defaults
             - hw-group-id: "group1"  # determines specific limits for specific machines
@@ -68,7 +68,7 @@ tasks:
           - [100, 200]  # an interval (inclusive)
           # codes 0, 1, 100, 101, ... 199, and 200 will all be accepted
       sandbox:
-        name: "isolate"
+        name: ""
         limits:
             - hw-group-id: "group1"  # determines specific limits for specific machines
               time: 1  # seconds
