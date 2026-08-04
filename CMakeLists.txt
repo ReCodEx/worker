@@ -135,6 +135,8 @@ set(SOURCE_FILES
 	${FILEMAN_DIR}/prefixed_file_manager.h
 
 	${SANDBOX_DIR}/sandbox_base.h
+	${SANDBOX_DIR}/guardian_sandbox.h
+	${SANDBOX_DIR}/guardian_sandbox.cpp
 	${SANDBOX_DIR}/isolate_sandbox.h
 	${SANDBOX_DIR}/isolate_sandbox.cpp
 
