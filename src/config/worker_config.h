@@ -35,7 +35,7 @@ public:
 	worker_config(const YAML::Node &config);
 
 	/**
-	 * Virtual destructor to avoid memory leaks when dealocating childs.
+	 * Virtual destructor to avoid memory leaks when deallocating childs.
 	 */
 	virtual ~worker_config();
 
@@ -44,27 +44,32 @@ public:
 	 * @return integer which can be used also as identifier/index of sandbox
 	 */
 	virtual std::size_t get_worker_id() const;
+	
 	/**
 	 * Get worker human readable description (name), which will be shown in broker logs.
 	 * @return string with the description
 	 */
 	virtual const std::string &get_worker_description() const;
+	
 	/**
 	 * Working directory path defined in config file.
 	 * Basically directory which is used as central point of work, all things should be done here.
 	 * @return textual representation of path
 	 */
 	virtual const std::string &get_working_directory() const;
+	
 	/**
 	 * Defines address on which broker run.
 	 * @return textual representation of address or domain name and port
 	 */
 	virtual const std::string &get_broker_uri() const;
+	
 	/**
 	 * Headers defined in configuration file, which will be sent to broker.
 	 * @return associative array
 	 */
 	virtual const header_map_t &get_headers() const;
+	
 	/**
 	 * Gets hwgroup string description.
 	 * @return hardware group of this worker
@@ -94,11 +99,20 @@ public:
 	 * @return constant reference to log_config structure
 	 */
 	virtual const log_config &get_log_config() const;
+	
 	/**
 	 * Get wrapper for file manager configuration.
 	 * @return constant reference to fileman_config structure
 	 */
 	virtual const std::vector<fileman_config> &get_filemans_configs() const;
+
+	/**
+	 * Get name of the default sandbox which will be used for evaluations,
+	 * if the job configuration doesn't specify any other sandbox.
+	 * @return identifier of the sandbox
+	 */
+	virtual const std::string &get_sandbox_name() const;
+
 	/**
 	 * Get default worker sandbox limits. Which will be used as defaults if not defined in job configuration.
 	 * @return non editable reference to sandbox_limits structure
@@ -118,7 +132,7 @@ public:
 	virtual std::size_t get_max_carboncopy_length() const;
 
 	/**
-	 * Get flag which determines if cleanup is made after sumbission is evaluated.
+	 * Get flag which determines if cleanup is made after submission is evaluated.
 	 * @return
 	 */
 	virtual bool get_cleanup_submission() const;
@@ -146,11 +160,13 @@ private:
 	log_config log_config_ = {};
 	/** Default configuration of file managers */
 	std::vector<fileman_config> filemans_configs_ = {};
+	/** Default sandbox name */
+	std::string sandbox_name_ = "recodex-guardian";
 	/** Default sandbox limits */
 	sandbox_limits limits_ = {};
 	/** Maximal length of output from sandbox which can be written to the results file, in bytes. */
 	std::size_t max_output_length_ = 0;
-	/** Maximal lenght of output from sandbox which can be copied into results folder, in bytes */
+	/** Maximal length of output from sandbox which can be copied into results folder, in bytes */
 	std::size_t max_carboncopy_length_ = 0;
 	/** If true then all files created during evaluation of job will be deleted at the end. */
 	bool cleanup_submission_ = true;

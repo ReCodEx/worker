@@ -35,6 +35,7 @@ logger:
     level: "debug"  # level of logging - one of "debug", "warn", "emerg"
     max-size: 1048576  # 1 MB; max size of file before log rotation
     rotations: 3  # number of rotations kept
+sandbox: "recodex-guardian"  # if not specifies, recodex-guardian is used by default; "isolate" is also supported
 limits:
     time: 30            # seconds
     wall-time: 30       # seconds
@@ -58,7 +59,7 @@ limits:
         # PYTHONHASHSEED: 0
         # PYTHONIOENCODING: utf-8
         # VIRTUAL_ENV: /path/to/python/venv
-    bound-directories: # All aditional dirs mapped into sandbox (SDKs, libs, venvs, ...), essential dirs (bin, dev, lib, usr, ...) are mapped automatically
+    bound-directories: # All additional dirs mapped into sandbox (SDKs, libs, venvs, ...), essential dirs (bin, dev, lib, usr, ...) are mapped automatically
         - dst: "/tmp"
           mode: "tmp"  # if mode is omitted, dir is mounted as read-only (which is typical for lib dirs)
         #- src: "/usr/share/something"  # actually existing directory

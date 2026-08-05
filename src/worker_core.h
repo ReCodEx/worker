@@ -45,7 +45,7 @@ public:
 	worker_core(std::vector<std::string> args);
 
 	/**
-	 * All structures which need to be explicitly destructed or unitialized should do it now.
+	 * All structures which need to be explicitly destructed or uninitialized should do it now.
 	 */
 	~worker_core();
 
