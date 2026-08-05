@@ -111,7 +111,18 @@ worker_config::worker_config(const YAML::Node &config)
 			} // no throw... can be omitted
 		} // no throw... can be omitted
 
-		// load limits
+		// load default sandbox name (recodex-guardian is used if not defined)
+		if (config["sandbox"]) {
+			if (!config["sandbox"].IsScalar()) {
+				throw config_error("Item sandbox must be a string, if present");
+			}
+			sandbox_name_ = config["sandbox"].as<std::string>();
+			if (sandbox_name_ != "recodex-guardian" && sandbox_name_ != "isolate") {
+				throw config_error("Only 'recodex-guardian' and 'isolate' sandboxes are supported for now");
+			}
+		}
+
+		// load sandbox default limits
 		if (config["limits"] && config["limits"].IsMap()) {
 			auto limits = config["limits"];
 			if (limits["time"] && limits["time"].IsScalar()) {
@@ -229,6 +240,11 @@ const log_config &worker_config::get_log_config() const
 const std::vector<fileman_config> &worker_config::get_filemans_configs() const
 {
 	return filemans_configs_;
+}
+
+const std::string &worker_config::get_sandbox_name() const
+{
+	return sandbox_name_;
 }
 
 const sandbox_limits &worker_config::get_limits() const
