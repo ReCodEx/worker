@@ -12,6 +12,8 @@
 /**
  * Class implementing operations with ReCodEx Guardian sandbox.
  *
+ * Right now, guardian mimics the CLI API of isolate, so it can be used as
+ * direct replacement. This will be gradually modified in the future.
  */
 class guardian_sandbox : public sandbox_base
 {

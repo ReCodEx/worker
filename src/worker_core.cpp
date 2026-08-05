@@ -52,7 +52,7 @@ void worker_core::run()
 		logger_->critical("Broker connection thread cannot be started: {}", e.what());
 		return;
 	}
-	logger_->info("Broker connection thread created succesfully.");
+	logger_->info("Broker connection thread created successfully.");
 
 	logger_->info("Job receiver will now start receiving.");
 	job_receiver_->start_receiving();
