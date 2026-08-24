@@ -14,6 +14,8 @@
 #include <fstream>
 #include <map>
 #include <filesystem>
+#include <boost/iostreams/stream.hpp>
+#include <boost/iostreams/device/file_descriptor.hpp>
 #include "helpers/filesystem.h"
 
 namespace fs = std::filesystem;
@@ -104,34 +106,74 @@ sandbox_results isolate_sandbox::run(const std::string &binary, const std::vecto
 	return process_meta_file();
 }
 
+class log_pipe {
+	// A pipe through which a child process sends lines to a parent process.
+
+	int read_fd_, write_fd_;		// -1 = closed
+	std::shared_ptr<spdlog::logger> logger_;
+
+public:
+	log_pipe(std::shared_ptr<spdlog::logger> logger) {
+		logger_ = logger;
+		int fds[2];
+		if (pipe(fds) < 0) { log_and_throw(logger_, "Cannot create pipe: %m"); }
+		read_fd_ = fds[0];
+		write_fd_ = fds[1];
+	}
+
+	~log_pipe() {
+		if (read_fd_ >= 0) { close(read_fd_); }
+		if (write_fd_ >= 0) { close(write_fd_); }
+	}
+
+	void child_dup_to_fd(int fd) {
+		// Call in child process
+		dup2(write_fd_, fd);
+		close(read_fd_);
+		close(write_fd_);
+		read_fd_ = write_fd_ = -1;
+	}
+
+	boost::iostreams::stream<boost::iostreams::file_descriptor_source> parent_read_stream() {
+		// Call in parent process
+		close(write_fd_);
+		write_fd_ = -1;
+		return boost::iostreams::stream<boost::iostreams::file_descriptor_source>(read_fd_, boost::iostreams::never_close_handle);
+	}
+};
+
 void isolate_sandbox::isolate_init()
 {
-	int fd[2];
+	log_pipe stdout_pipe(logger_), stderr_pipe(logger_);
 	pid_t childpid;
 
 	logger_->debug("Initializing isolate...");
-
-	// Create unnamed pipe
-	if (pipe(fd) == -1) { log_and_throw(logger_, "Cannot create pipe: ", strerror(errno)); }
 
 	childpid = fork();
 
 	switch (childpid) {
 	case -1: log_and_throw(logger_, "Fork failed: ", strerror(errno)); break;
-	case 0: isolate_init_child(fd[0], fd[1]); break;
+	case 0:
+		stdout_pipe.child_dup_to_fd(1);
+		stderr_pipe.child_dup_to_fd(2);
+		isolate_init_child();
+		break;
 	default:
 		//---Parent---
-		// Close up input side of pipe
-		close(fd[1]);
+		auto stdout_stream = stdout_pipe.parent_read_stream();
+		auto stderr_stream = stderr_pipe.parent_read_stream();
 
-		char buf[256];
-		int ret;
-		while ((ret = read(fd[0], (void *) buf, 256)) > 0) {
-			if (buf[ret - 1] == '\n') { buf[ret - 1] = '\0'; }
-			sandboxed_dir_ += std::string(buf);
+		// To prevent deadlocks, read from stderr first, since stdout is guaranteed
+		// to fit in PIPE_BUF.
+		std::string line;
+		while (std::getline(stderr_stream, line)) {
+			logger_->warn("Isolate: {}", line);
+		}
+
+		if (!std::getline(stdout_stream, sandboxed_dir_)) {
+			log_and_throw(logger_, "Error reading sandbox path from pipe.");
 		}
 		sandboxed_dir_ += "/box";
-		if (ret == -1) { log_and_throw(logger_, "Read from pipe error."); }
 
 		int status;
 		waitpid(childpid, &status, 0);
@@ -139,25 +181,12 @@ void isolate_sandbox::isolate_init()
 			log_and_throw(logger_, "Isolate init error. Return value: ", WEXITSTATUS(status));
 		}
 		logger_->debug("Isolate initialized in {}", sandboxed_dir_);
-		close(fd[0]);
 		break;
 	}
 }
 
-void isolate_sandbox::isolate_init_child(int fd_0, int fd_1)
+void isolate_sandbox::isolate_init_child()
 {
-	// Close up output side of pipe
-	close(fd_0);
-
-	// Close stdout, duplicate the input side of pipe to stdout
-	dup2(fd_1, 1);
-
-	// Redirect stderr to /dev/null file
-	int devnull;
-	devnull = open("/dev/null", O_WRONLY);
-	if (devnull == -1) { log_and_throw(logger_, "Cannot open /dev/null file for writing."); }
-	dup2(devnull, 2);
-
 	std::string box_id_arg("--box-id=" + std::to_string(id_));
 
 	// Exec isolate init command
@@ -187,6 +216,7 @@ void isolate_sandbox::isolate_init_child(int fd_0, int fd_1)
 
 void isolate_sandbox::isolate_cleanup()
 {
+	log_pipe stderr_pipe(logger_);
 	pid_t childpid;
 
 	logger_->debug("Cleaning up isolate...");
@@ -197,11 +227,7 @@ void isolate_sandbox::isolate_cleanup()
 	case -1: log_and_throw(logger_, "Fork failed: ", strerror(errno)); break;
 	case 0:
 		//---Child---
-		// Redirect stderr to /dev/null file
-		int devnull;
-		devnull = open("/dev/null", O_WRONLY);
-		if (devnull == -1) { log_and_throw(logger_, "Cannot open /dev/null file for writing."); }
-		dup2(devnull, 2);
+		stderr_pipe.child_dup_to_fd(2);
 
 		// Exec isolate cleanup command
 		const char *args[5];
@@ -210,6 +236,7 @@ void isolate_sandbox::isolate_cleanup()
 		args[2] = strdup(("--box-id=" + std::to_string(id_)).c_str());
 		args[3] = "--cleanup";
 		args[4] = NULL;
+
 		// const_cast is ugly, but this is working with C code - execv does not modify its arguments
 		execvp(isolate_binary_.c_str(), const_cast<char **>(args));
 
@@ -220,6 +247,12 @@ void isolate_sandbox::isolate_cleanup()
 		break;
 	default:
 		//---Parent---
+		auto stderr_stream = stderr_pipe.parent_read_stream();
+		std::string line;
+		while (std::getline(stderr_stream, line)) {
+			logger_->warn("Isolate: {}", line);
+		}
+
 		int status;
 		waitpid(childpid, &status, 0);
 		if (WEXITSTATUS(status) != 0) {
