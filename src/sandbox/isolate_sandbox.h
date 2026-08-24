@@ -73,7 +73,7 @@ private:
 	/** Initialize isolate */
 	void isolate_init();
 	/** Actual code for isolate initialization inside a process. Called by isolate_init(). */
-	void isolate_init_child(int fd_0, int fd_1);
+	void isolate_init_child();
 	/** Cleanup isolate after finish evaluation */
 	void isolate_cleanup();
 	/** Run isolate evaluation with sandboxed program inside. */
