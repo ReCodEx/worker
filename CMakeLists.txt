@@ -18,7 +18,7 @@ else()
 endif()
 # -- load Boost
 set (Boost_USE_MULTITHREADED ON)
-find_package(Boost 1.74.0 REQUIRED COMPONENTS system program_options)
+find_package(Boost 1.74.0 REQUIRED COMPONENTS system program_options iostreams)
 include_directories(${Boost_INCLUDE_DIRS})
 
 # -- cURL
