@@ -159,9 +159,7 @@ std::shared_ptr<job_metadata> helpers::build_job_metadata(const YAML::Node &conf
 
 				if (ctask["sandbox"]["name"] && ctask["sandbox"]["name"].IsScalar()) {
 					sandbox->name = ctask["sandbox"]["name"].as<std::string>();
-				} else {
-					throw config_exception("Name of sandbox not given");
-				}
+				} // can be omitted, will be filled from worker config... no throw
 
 				if (ctask["sandbox"]["stdin"] && ctask["sandbox"]["stdin"].IsScalar()) {
 					sandbox->std_input = ctask["sandbox"]["stdin"].as<std::string>();
