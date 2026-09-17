@@ -23,7 +23,7 @@ using namespace testing;
 
 
 /**
- * A mock configuration object. Inverval of pinging is 1 second.
+ * A mock configuration object. Interval of pinging is 1 second.
  */
 class mock_worker_config : public worker_config
 {

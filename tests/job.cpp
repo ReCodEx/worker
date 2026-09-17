@@ -272,13 +272,6 @@ TEST(job_test, empty_tasks_details)
 	task->priority = 1;
 	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory, nullptr), job_exception);
 
-	// empty sandbox name
-	EXPECT_CALL((*factory), create_internal_task(0, _)).WillOnce(Return(empty_task));
-	task->binary = "hello";
-	auto sandbox = std::make_shared<sandbox_config>();
-	task->sandbox = sandbox;
-	EXPECT_THROW(job(job_meta, worker_conf, dir_root, dir, temp_directory_path(), factory, nullptr), job_exception);
-
 	// cleanup after yourself
 	remove_all(dir_root);
 }

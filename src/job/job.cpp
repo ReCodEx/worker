@@ -116,6 +116,12 @@ void job::build_job()
 
 			auto sandbox = task_meta->sandbox;
 
+			if (sandbox->name.empty()) {
+				// if the sandbox is not specified in the job, use worker config instead
+				sandbox->name = worker_config_->get_sandbox_name();
+			}
+
+			// and let's make sure that one of the sandboxes is specified
 			if (sandbox->name.empty()) { throw job_exception("Sandbox name cannot be empty"); }
 
 			// first we have to get appropriate hwgroup limits

@@ -45,11 +45,8 @@ use. The package names are for CentOS if not specified otherwise.
   (`libzmq3-dev` on Debian)
 - YAML-CPP library, `yaml-cpp` and `yaml-cpp-devel` (`libyaml-cpp0.5v5` and
   `libyaml-cpp-dev` on Debian)
-- libcurl library `libcurl-devel` (`libcurl4-gnutls-dev` on Debian)
-- libarchive library as optional dependency. Installing will speed up build
-  process, otherwise libarchive is built from source during installation.
-  Package name is `libarchive` and `libarchive-devel` (`libarchive-dev` on
-  Debian)
+- libcurl library `libcurl-devel` (`libcurl4-dev` on Debian)
+- libarchive library as optional dependency. Installing will speed up build process, otherwise libarchive is built from source during installation. Package name is `libarchive` and `libarchive-devel` (`libarchive-dev` on Debian)
 
 **Isolate** (only for Linux installations)
 
