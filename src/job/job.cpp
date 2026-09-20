@@ -116,10 +116,18 @@ void job::build_job()
 
 			auto sandbox = task_meta->sandbox;
 
-			if (sandbox->name.empty()) {
+			//
+			// IMPORTANT (30.9.2026):
+			// The following condition is temporarily commented, so the snadbox is selected merely from the
+			// worker configuration (overrides possible sandbox name in the job configuration).
+			// At the moment, API always chooses isolate, hence, this is necessary to test new recodex-guardian
+			// and allow old and new instances of the worker to run simultaneously during a transition period.
+			// TODO: restore the condition after the transition
+			//
+			// if (sandbox->name.empty()) {
 				// if the sandbox is not specified in the job, use worker config instead
 				sandbox->name = worker_config_->get_sandbox_name();
-			}
+			// }
 
 			// and let's make sure that one of the sandboxes is specified
 			if (sandbox->name.empty()) { throw job_exception("Sandbox name cannot be empty"); }
