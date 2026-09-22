@@ -93,15 +93,21 @@ sandbox_results isolate_sandbox::run(const std::string &binary, const std::vecto
 		// run isolate
 		isolate_run(binary, arguments);
 
-		// move data from isolate directory back to data directory
-		if (data_dir_ != "") { move_or_throw(logger_, sandboxed_dir_, data_dir_); }
-	} catch (const std::exception &) {
-		// on errors also move data from isolate directory back to data directory
-		if (data_dir_ != "") { move_or_throw(logger_, sandboxed_dir_, data_dir_); }
+	} catch (const std::exception &e_run) {
+		try {
+			// on errors also move data from isolate directory back to data directory
+			// but we need to do it safely, so the original exception is rethrown after this
+			if (data_dir_ != "") { move_or_throw(logger_, sandboxed_dir_, data_dir_); }
+		} catch (const std::exception &e) {
+			logger_->error("When isolate_run failed... ", e.what());
+		}
 
 		// rethrow the original exception when data are saved
-		throw;
+		throw e_run;
 	}
+
+	// move data from isolate directory back to data directory
+	if (data_dir_ != "") { move_or_throw(logger_, sandboxed_dir_, data_dir_); }
 
 	return process_meta_file();
 }
