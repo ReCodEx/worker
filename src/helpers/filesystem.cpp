@@ -5,7 +5,7 @@
 /**
  * Try to find matching hardlink in hardlinks map. If src is found in the map, dest is filled with corresponding file.
  * @param hardlinks the hardlinks map (src -> dst)
- * @param src source path being looked up in hardlinks using equvalent func
+ * @param src source path being looked up in hardlinks using equivalent func
  * @param dest output arg which is filled in case of success
  * @return true if the hardlink match is found
  */
@@ -20,7 +20,7 @@ bool find_matching_hardlink(std::map<fs::path, fs::path> &hardlinks, const fs::p
 	return false;
 }
 
-void copy_diretory_internal(const fs::path &src, const fs::path &dest, bool skip_symlinks, std::map<fs::path, fs::path> &hardlinks)
+void copy_directory_internal(const fs::path &src, const fs::path &dest, bool skip_symlinks, std::map<fs::path, fs::path> &hardlinks)
 {
 	try {
 		// routine checks
@@ -32,7 +32,7 @@ void copy_diretory_internal(const fs::path &src, const fs::path &dest, bool skip
 		if (skip_symlinks && fs::is_symlink(src)) {
 			return;
 		}
-		
+
 		if (!fs::is_directory(fs::symlink_status(src))) {
 			throw helpers::filesystem_exception(
 				"helpers::copy_directory: Source directory is not a directory '" + src.string() + "'");
@@ -54,17 +54,18 @@ void copy_diretory_internal(const fs::path &src, const fs::path &dest, bool skip
 			}
 
 			if (fs::is_directory(it->symlink_status())) {
-				copy_diretory_internal(srcPath, destPath, skip_symlinks, hardlinks);
-			} else {
+				// recursively copy subdirectory
+				copy_directory_internal(srcPath, destPath, skip_symlinks, hardlinks);
+			} else if (fs::is_regular_file(it->symlink_status())) { // prevents copying of special files (sockets, fifos, etc.)
 				// a file may be either copied or hardlinked
 				if (!fs::is_symlink(srcPath) && fs::hard_link_count(srcPath) > 1) {
 					fs::path destPathHardlink;
 					if (find_matching_hardlink(hardlinks, it->path(), destPathHardlink)) {
-						// another file refering to the same data already exists in dest directory
+						// another file referring to the same data already exists in dest directory
 						fs::create_hard_link(destPathHardlink, destPath);
 						continue; // move to next file, hardlink replaced copying
 					} else {
-						// this is the first time we encoutered this data, lets register them in hardlinks map
+						// this is the first time we encountered this data, lets register them in hardlinks map
 						hardlinks.emplace(std::make_pair(it->path(), destPath));
 					}
 				}
@@ -83,13 +84,13 @@ void copy_diretory_internal(const fs::path &src, const fs::path &dest, bool skip
 void helpers::copy_directory(const fs::path &src, const fs::path &dest, bool skip_symlinks)
 {
 	/*
-	 * Hardlinks map provide mapping between files in src and dest which have been harlinked.
+	 * Hardlinks map provide mapping between files in src and dest which have been hardlinked.
 	 * Everytime a file with > 1 hardlink count is copied from src to dest, it is registered here.
 	 * When files with > 1 hardlinks are encountered, this map is searched and if match is found
 	 * the new file is hardlinked inside dest instead of coping it from src.
 	 */
 	std::map<fs::path, fs::path> hardlinks;
-	::copy_diretory_internal(src, dest, skip_symlinks, hardlinks);
+	::copy_directory_internal(src, dest, skip_symlinks, hardlinks);
 }
 
 fs::path helpers::normalize_path(const fs::path &path)
