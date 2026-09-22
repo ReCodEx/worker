@@ -118,7 +118,7 @@ void job::build_job()
 
 			//
 			// IMPORTANT (30.9.2026):
-			// The following condition is temporarily commented, so the snadbox is selected merely from the
+			// The following condition is temporarily commented, so the sandbox is selected merely from the
 			// worker configuration (overrides possible sandbox name in the job configuration).
 			// At the moment, API always chooses isolate, hence, this is necessary to test new recodex-guardian
 			// and allow old and new instances of the worker to run simultaneously during a transition period.
