@@ -132,6 +132,10 @@ void job::build_job()
 			// and let's make sure that one of the sandboxes is specified
 			if (sandbox->name.empty()) { throw job_exception("Sandbox name cannot be empty"); }
 
+			// inject sandbox cpuset config from worker configuration
+			sandbox->cpus = worker_config_->get_sandbox_cpus();
+			sandbox->numa_nodes = worker_config_->get_sandbox_numa_nodes();
+
 			// first we have to get appropriate hwgroup limits
 			std::shared_ptr<sandbox_limits> limits;
 			auto hwit = sandbox->loaded_limits.find(worker_config_->get_hwgroup());
