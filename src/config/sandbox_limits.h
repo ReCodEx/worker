@@ -29,6 +29,7 @@ public:
 	 * @warning Not all options must be supported by all sandboxes. Please, consult your sandbox documentation first.
 	 */
 	enum dir_perm : unsigned short { RO = 0, RW = 1, NOEXEC = 2, FS = 4, MAYBE = 8, DEV = 16, TMP = 32, NOREC = 64 };
+
 	/**
 	 * Return a mapping between dir_perm enums and their associated string representatives.
 	 */
@@ -47,72 +48,86 @@ public:
 		}
 		return options;
 	}
+
 	/**
 	 * Limit memory usage. For Isolate, this limits whole control group (--cg-mem switch).
 	 * Memory size is set in kilobytes.
 	 */
 	std::size_t memory_usage = 0;
+
 	/**
 	 * Extra memory which will be added to memory limit before killing program.
 	 * Memory size is set in kilobytes.
 	 */
 	std::size_t extra_memory = 0;
+
 	/**
 	 * Limit total run time by CPU time. For Isolate, this is for whole control group.
 	 * Time is set in seconds and can be fractional.
 	 */
 	float cpu_time = 0;
+
 	/**
 	 * Limit total run time by wall clock. Time is set in seconds and can be fractional.
 	 */
 	float wall_time = 0;
+
 	/**
 	 * Set extra time before kill the process. If program finishes in this extra amount of
 	 * time, it won't succeeded, but total run time will be reported to results log. This
 	 * time is also in (fractional) seconds.
 	 */
 	float extra_time = 0;
+
 	/**
 	 * Allow to share host computers network. Otherwise, dedicated
 	 * local interface will be created.
 	 */
 	bool share_net = false;
+
 	/**
 	 * Limit stack size. This is additional memory limit, 0 is no special limit for stack,
-	 * global memory rules will aply. Otherwise, max stack size is @a stack_size kilobytes.
+	 * global memory rules will apply. Otherwise, max stack size is @a stack_size kilobytes.
 	 */
 	std::size_t stack_size = 0;
+
 	/**
 	 * Limit size of created files. This could be useful, if your filesystem doesn't support
 	 * quotas. 0 means not set.
 	 * @warning This option is deprecated! Use @ref disk_size and @ref disk_files instead.
 	 */
 	std::size_t files_size = 0;
+
 	/**
 	 * Whether disk quotas (disk_size and disk_files) are enabled.
 	 * @warning Keep this false if underlying filesystem does not support quotas.
 	 */
 	bool disk_quotas = false;
+
 	/**
 	 * Set disk quota to given number of kilobytes.
 	 * @warning Underlying filesystem must support quotas.
 	 */
 	std::size_t disk_size = 0;
+
 	/**
 	 * Set disk quota to given number of files. Actual implementation may vary, for example
 	 * on Linux with ext4 filesystem this should be maximum number of used inodes.
 	 * @warning Underlying filesystem must support quotas.
 	 */
 	std::size_t disk_files = 0;
+
 	/**
 	 * Limit number of processes/threads that could be created.
 	 * 0 means no limit.
 	 */
 	std::size_t processes = 0;
+
 	/**
 	 * Set environment variables before run command inside the sandbox.
 	 */
 	std::vector<std::pair<std::string, std::string>> environ_vars;
+
 	/**
 	 * Contains local directories that should be bound into the sandbox.
 	 */
@@ -160,9 +175,9 @@ public:
 		return (memory_usage == second.memory_usage && extra_memory == second.extra_memory &&
 			helpers::almost_equal(cpu_time, second.cpu_time) && helpers::almost_equal(wall_time, second.wall_time) &&
 			helpers::almost_equal(extra_time, second.extra_time) && stack_size == second.stack_size &&
-			files_size == second.files_size && disk_size == second.disk_size && disk_files == second.disk_files &&
-			processes == second.processes && share_net == second.share_net && environ_vars == second.environ_vars &&
-			bound_dirs == second.bound_dirs);
+			files_size == second.files_size && disk_quotas == second.disk_quotas && disk_size == second.disk_size &&
+			disk_files == second.disk_files && processes == second.processes && share_net == second.share_net &&
+			environ_vars == second.environ_vars && bound_dirs == second.bound_dirs);
 	}
 
 	/**

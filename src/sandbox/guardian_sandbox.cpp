@@ -91,6 +91,7 @@ void guardian_sandbox::guardian_init_child()
 	}
 
 	args.push_back("--init");
+	for (auto &it : args) { logger_->debug("  {}", it); }
 	args.push_back(nullptr);
 
 	// const_cast is ugly, but this is working with C code - execv does not modify its arguments

@@ -81,31 +81,38 @@ private:
 	 * Check directories given during construction for existence.
 	 */
 	void check_job_dirs();
+
 	/**
 	 * Init system logger for job. Resulting log will be send with other results to frontend.
 	 */
 	void init_logger();
+
 	/**
 	 * If given progress callback is nullptr, then make it empty callback so we can call it freely.
 	 */
 	void init_progress_callback();
+
 	/**
 	 * Cleanup after job evaluation, should be enough to delete all created files
 	 */
 	void cleanup_job();
+
 	/**
 	 * Build job from @a job_meta_. Should be called in constructor.
 	 */
 	void build_job();
+
 	/**
 	 * Debug print of queue of tasks.
 	 */
 	void print_job_queue();
+
 	/**
 	 * Check limits and in case of undefined values set worker defaults.
 	 * @param limits limits which will be checked
 	 */
 	void process_task_limits(const std::shared_ptr<sandbox_limits> &limits);
+
 	/**
 	 * Given unconnected tasks will be connected according to their dependencies.
 	 * If they do not have dependency, they will be assigned to given root task.
@@ -126,21 +133,30 @@ private:
 	 */
 	std::string parse_job_var(const std::string &src);
 
+
 	// PRIVATE DATA MEMBERS
+
 	/** Information about this job given on construction. */
 	std::shared_ptr<job_metadata> job_meta_;
+
 	/** Pointer on default worker config. */
 	std::shared_ptr<worker_config> worker_config_;
+
 	/** Directory, where tasks can create their own subfolders and temporary files. */
 	fs::path temporary_directory_;
+
 	/** Directory where source codes needed in job execution are stored. */
 	fs::path source_path_;
+
 	/** Directory where results and log of job are stored. */
 	fs::path result_path_;
+
 	/** Directory inside sandbox which should be bound as the working one. */
 	fs::path sandbox_working_path_;
+
 	/** Factory for creating tasks. */
 	std::shared_ptr<task_factory_interface> factory_;
+
 	/** Progress callback which is called on some important points */
 	std::shared_ptr<progress_callback_interface> progress_callback_;
 
@@ -149,6 +165,7 @@ private:
 
 	/** Logical start of every job evaluation */
 	std::shared_ptr<task_base> root_task_;
+
 	/** Tasks in linear ordering prepared for evaluation */
 	std::vector<std::shared_ptr<task_base>> task_queue_;
 
