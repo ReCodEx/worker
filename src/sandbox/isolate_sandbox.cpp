@@ -233,11 +233,16 @@ void isolate_sandbox::sandbox_run(const std::string &binary, const std::vector<s
 
 char **isolate_sandbox::isolate_run_args(const std::string &binary, const std::vector<std::string> &arguments)
 {
+	if (!sandbox_config_->cpus.empty() || !sandbox_config_->numa_nodes.empty()) {
+		logger_->debug("The worker has sandbox-cpuset parameters configured, but these are ignored by isolate. Isolate "
+					   "uses its own config for that.");
+	}
+
 	std::vector<std::string> vargs;
 
 	vargs.push_back(sandbox_binary_); // First argument must be binary name
 	vargs.push_back("--cg");
-	vargs.push_back("--cg-timing");
+	// vargs.push_back("--cg-timing");  // MJ recommended removing this one in isolate v2
 	vargs.push_back("--box-id=" + std::to_string(id_));
 
 	vargs.push_back("--cg-mem=" + std::to_string(limits_.memory_usage + limits_.extra_memory));
