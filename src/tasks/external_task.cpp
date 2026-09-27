@@ -55,6 +55,11 @@ void external_task::sandbox_init()
 
 			// TODO: a better way would be to make this optional (a job will define, whether it requires net or not)
 		}
+		logger_->debug("Creating guardian sandbox with limits: disk_quotas={}, disk_size={}, disk_files={}",
+			limits.disk_quotas,
+			limits.disk_size,
+			limits.disk_files);
+
 		sandbox_ = std::make_shared<guardian_sandbox>(
 			sandbox_config_, limits, worker_config_->get_worker_id(), temp_dir_, evaluation_dir_.string(), logger_);
 	} else if (task_meta_->sandbox->name == "isolate") {

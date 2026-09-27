@@ -125,8 +125,8 @@ void job::build_job()
 			// TODO: restore the condition after the transition
 			//
 			// if (sandbox->name.empty()) {
-				// if the sandbox is not specified in the job, use worker config instead
-				sandbox->name = worker_config_->get_sandbox_name();
+			// if the sandbox is not specified in the job, use worker config instead
+			sandbox->name = worker_config_->get_sandbox_name();
 			// }
 
 			// and let's make sure that one of the sandboxes is specified
@@ -256,6 +256,9 @@ void job::process_task_limits(const std::shared_ptr<sandbox_limits> &limits)
 	} else {
 		if (limits->processes > worker_limits.processes) { throw job_exception("parallel" + msg); }
 	}
+
+	// turn on disk quotas if they are enforced by worker configuration
+	if (!limits->disk_quotas && worker_limits.disk_quotas) { limits->disk_quotas = true; }
 	if (limits->disk_size == SIZE_MAX) {
 		limits->disk_size = worker_limits.disk_size;
 	} else {

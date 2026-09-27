@@ -28,6 +28,7 @@ public:
 	 * @throws task_exception if name of the sandbox in data argument is unknown.
 	 */
 	external_task(const create_params &data);
+
 	/**
 	 * Destructor, empty right now.
 	 */
@@ -52,10 +53,12 @@ private:
 	 * stated sandbox).
 	 */
 	void sandbox_check();
+
 	/**
 	 * Construct appropriate sandbox according his name give during construction.
 	 */
 	void sandbox_init();
+
 	/**
 	 * Destruction of internal sandbox.
 	 */
@@ -98,22 +101,31 @@ private:
 
 	/** Worker default configuration */
 	std::shared_ptr<worker_config> worker_config_;
+
 	/** Constructed sandbox itself */
 	std::shared_ptr<sandbox_base> sandbox_;
+
 	/** General sandbox config */
 	std::shared_ptr<sandbox_config> sandbox_config_;
+
 	/** Limits for sandbox in which program will be started */
 	std::shared_ptr<sandbox_limits> limits_;
+
 	/** Job system logger */
 	std::shared_ptr<spdlog::logger> logger_;
+
 	/** Directory for temporary files */
 	std::string temp_dir_;
+
 	/** Directory outside sandbox where task will be executed */
 	fs::path evaluation_dir_;
+
 	/** Directory bound to the sandbox as default working dir */
 	fs::path sandbox_working_dir_;
+
 	/** After execution delete stdout file produced by sandbox */
 	bool remove_stdout_ = false;
+
 	/** After execution delete stderr file produced by sandbox */
 	bool remove_stderr_ = false;
 };
