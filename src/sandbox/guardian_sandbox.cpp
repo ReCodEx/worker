@@ -18,126 +18,48 @@
 
 namespace fs = std::filesystem;
 
-namespace
-{
-	void move_or_throw(std::shared_ptr<spdlog::logger> logger, const std::string &from, const std::string &to)
-	{
-		try {
-			helpers::copy_directory(from, to, true); // true = skip symlinks for security reasons
-		} catch (fs::filesystem_error &e) {
-			log_and_throw(logger, "Failed moving ", from, " to ", to, ", error: ", e.what());
-		}
-
-		try {
-			fs::remove_all(from);
-		} catch (fs::filesystem_error &) {
-		}
-	}
-} // namespace
-
 guardian_sandbox::guardian_sandbox(std::shared_ptr<sandbox_config> sandbox_config,
 	sandbox_limits limits,
 	std::size_t id,
 	const std::string &temp_dir,
 	const std::string &data_dir,
 	std::shared_ptr<spdlog::logger> logger)
-	: sandbox_config_(sandbox_config), limits_(limits), logger_(logger), id_(id), guardian_binary_("recodex-guardian"),
-	  data_dir_(data_dir)
+	: sandbox_base(sandbox_config, limits, id, temp_dir, data_dir, "recodex-guardian", logger)
 {
-	if (logger_ == nullptr) { logger_ = helpers::create_null_logger(); }
+}
 
-	if (sandbox_config_ == nullptr) { log_and_throw(logger_, "No sandbox configuration provided."); }
-
-	if (data_dir_ == "") { logger_->info("Empty data directory for moving to sandbox."); }
-
-	// Set backup limit (for killing guardian if it hasn't finished yet)
-	max_timeout_ = limits_.wall_time > limits_.cpu_time ? limits_.wall_time : limits_.cpu_time;
-	max_timeout_ += 300; // plus 5 minutes (for short tasks)
-	max_timeout_ *= 1.2; // 20% time more than necessary (better have some spare time)
-
-	temp_dir_ = (fs::path(temp_dir) / std::to_string(id_)).string();
-	try {
-		fs::create_directories(temp_dir_);
-	} catch (fs::filesystem_error &e) {
-		log_and_throw(logger_, "Failed to create directory for guardian meta file. Error: ", e.what());
-	}
-
+void guardian_sandbox::sandbox_init()
+{
 	meta_file_ = (fs::path(temp_dir_) / "meta.log").string();
 
-	try {
-		guardian_init();
-	} catch (...) {
-		fs::remove_all(temp_dir_);
-		throw;
-	}
-}
-
-guardian_sandbox::~guardian_sandbox()
-{
-	try {
-		guardian_cleanup();
-		fs::remove_all(temp_dir_);
-	} catch (...) {
-		// We don't care if this failed. We can't fix it either. Just don't throw an exception in destructor.
-	}
-}
-
-sandbox_results guardian_sandbox::run(const std::string &binary, const std::vector<std::string> &arguments)
-{
-	// move data to guardian directory
-	if (data_dir_ != "") { move_or_throw(logger_, data_dir_, sandboxed_dir_); }
-
-	try {
-		// run guardian
-		guardian_run(binary, arguments);
-
-	} catch (const std::exception &e_run) {
-		try {
-			// on errors also move data from guardian directory back to data directory
-			// but we need to do it safely, so the original exception is rethrown after this
-			if (data_dir_ != "") { move_or_throw(logger_, sandboxed_dir_, data_dir_); }
-		} catch (const std::exception &e) {
-			logger_->error("When guardian_run failed... ", e.what());
-		}
-
-		// rethrow the original exception when data are saved
-		throw e_run;
-	}
-
-	// move data from guardian directory back to data directory
-	if (data_dir_ != "") { move_or_throw(logger_, sandboxed_dir_, data_dir_); }
-
-	return process_meta_file();
-}
-
-void guardian_sandbox::guardian_init()
-{
-	int fd[2];
+	sandbox_log_pipe stdout_pipe(logger_), stderr_pipe(logger_);
 	pid_t childpid;
 
 	logger_->debug("Initializing guardian...");
-
-	// Create unnamed pipe
-	if (pipe(fd) == -1) { log_and_throw(logger_, "Cannot create pipe: ", strerror(errno)); }
 
 	childpid = fork();
 
 	switch (childpid) {
 	case -1: log_and_throw(logger_, "Fork failed: ", strerror(errno)); break;
-	case 0: guardian_init_child(fd[0], fd[1]); break;
+	case 0:
+		stdout_pipe.child_dup_to_fd(1);
+		stderr_pipe.child_dup_to_fd(2);
+		guardian_init_child();
+		break;
+
 	default:
 		//---Parent---
-		// Close up input side of pipe
-		close(fd[1]);
+		auto stdout_stream = stdout_pipe.parent_read_stream();
+		auto stderr_stream = stderr_pipe.parent_read_stream();
 
-		char buf[256];
-		int ret;
-		while ((ret = read(fd[0], (void *) buf, 256)) > 0) {
-			if (buf[ret - 1] == '\n') { buf[ret - 1] = '\0'; }
-			sandboxed_dir_ += std::string(buf);
+		// To prevent deadlocks, read from stderr first, since stdout is guaranteed to fit in PIPE_BUF.
+		std::string line;
+		while (std::getline(stderr_stream, line)) { logger_->warn("Guardian stderr: {}", line); }
+
+		if (!std::getline(stdout_stream, sandboxed_dir_)) {
+			log_and_throw(logger_, "Error reading sandbox path from pipe.");
 		}
 		sandboxed_dir_ += "/box";
-		if (ret == -1) { log_and_throw(logger_, "Read from pipe error."); }
 
 		int status;
 		waitpid(childpid, &status, 0);
@@ -145,30 +67,17 @@ void guardian_sandbox::guardian_init()
 			log_and_throw(logger_, "Guardian init error. Return value: ", WEXITSTATUS(status));
 		}
 		logger_->debug("Guardian initialized in {}", sandboxed_dir_);
-		close(fd[0]);
 		break;
 	}
 }
 
-void guardian_sandbox::guardian_init_child(int fd_0, int fd_1)
+void guardian_sandbox::guardian_init_child()
 {
-	// Close up output side of pipe
-	close(fd_0);
-
-	// Close stdout, duplicate the input side of pipe to stdout
-	dup2(fd_1, 1);
-
-	// Redirect stderr to /dev/null file
-	int devnull;
-	devnull = open("/dev/null", O_WRONLY);
-	if (devnull == -1) { log_and_throw(logger_, "Cannot open /dev/null file for writing."); }
-	dup2(devnull, 2);
-
 	std::string box_id_arg("--box-id=" + std::to_string(id_));
 
 	// Exec guardian init command
-	std::vector<const char *> args {
-		guardian_binary_.c_str(),
+	std::vector<const char *> args{
+		sandbox_binary_.c_str(),
 		"--cg",
 		box_id_arg.c_str(),
 	};
@@ -185,14 +94,15 @@ void guardian_sandbox::guardian_init_child(int fd_0, int fd_1)
 	args.push_back(nullptr);
 
 	// const_cast is ugly, but this is working with C code - execv does not modify its arguments
-	execvp(guardian_binary_.c_str(), const_cast<char **>(&args[0]));
+	execvp(sandbox_binary_.c_str(), const_cast<char **>(&args[0]));
 
 	// never reached unless exec explodes in our face
 	log_and_throw(logger_, "Exec returned to child: ", strerror(errno));
 }
 
-void guardian_sandbox::guardian_cleanup()
+void guardian_sandbox::sandbox_cleanup()
 {
+	sandbox_log_pipe stderr_pipe(logger_);
 	pid_t childpid;
 
 	logger_->debug("Cleaning up guardian...");
@@ -203,29 +113,31 @@ void guardian_sandbox::guardian_cleanup()
 	case -1: log_and_throw(logger_, "Fork failed: ", strerror(errno)); break;
 	case 0:
 		//---Child---
-		// Redirect stderr to /dev/null file
-		int devnull;
-		devnull = open("/dev/null", O_WRONLY);
-		if (devnull == -1) { log_and_throw(logger_, "Cannot open /dev/null file for writing."); }
-		dup2(devnull, 2);
+		stderr_pipe.child_dup_to_fd(2);
 
 		// Exec guardian cleanup command
 		const char *args[5];
-		args[0] = guardian_binary_.c_str();
+		args[0] = sandbox_binary_.c_str();
 		args[1] = "--cg";
 		args[2] = strdup(("--box-id=" + std::to_string(id_)).c_str());
 		args[3] = "--cleanup";
 		args[4] = NULL;
+
 		// const_cast is ugly, but this is working with C code - execv does not modify its arguments
-		execvp(guardian_binary_.c_str(), const_cast<char **>(args));
+		execvp(sandbox_binary_.c_str(), const_cast<char **>(args));
 
 		// Never reached
 		free(const_cast<char *>(args[2]));
 
 		log_and_throw(logger_, "Exec returned to child: ", strerror(errno));
 		break;
+
 	default:
 		//---Parent---
+		auto stderr_stream = stderr_pipe.parent_read_stream();
+		std::string line;
+		while (std::getline(stderr_stream, line)) { logger_->warn("Guardian stderr: {}", line); }
+
 		int status;
 		waitpid(childpid, &status, 0);
 		if (WEXITSTATUS(status) != 0) {
@@ -236,7 +148,7 @@ void guardian_sandbox::guardian_cleanup()
 	}
 }
 
-void guardian_sandbox::guardian_run(const std::string &binary, const std::vector<std::string> &arguments)
+void guardian_sandbox::sandbox_run(const std::string &binary, const std::vector<std::string> &arguments)
 {
 	pid_t childpid;
 
@@ -260,10 +172,10 @@ void guardian_sandbox::guardian_run(const std::string &binary, const std::vector
 		dup2(devnull, 2);
 
 		auto args = guardian_run_args(binary, arguments);
-		execvp(guardian_binary_.c_str(), args);
+		execvp(sandbox_binary_.c_str(), args);
 
 		// Never reached
-		for(char **arg = args; *arg; arg++) { free(*arg); }
+		for (char **arg = args; *arg; arg++) { free(*arg); }
 		delete[] args;
 
 		log_and_throw(logger_, "Exec returned to child: ", strerror(errno));
@@ -324,7 +236,7 @@ char **guardian_sandbox::guardian_run_args(const std::string &binary, const std:
 {
 	std::vector<std::string> vargs;
 
-	vargs.push_back(guardian_binary_); // First argument must be binary name
+	vargs.push_back(sandbox_binary_); // First argument must be binary name
 	vargs.push_back("--cg");
 	vargs.push_back("--cg-timing");
 	vargs.push_back("--box-id=" + std::to_string(id_));
@@ -386,7 +298,7 @@ char **guardian_sandbox::guardian_run_args(const std::string &binary, const std:
 	return c_args;
 }
 
-sandbox_results guardian_sandbox::process_meta_file()
+sandbox_results guardian_sandbox::extract_results()
 {
 	sandbox_results results;
 
