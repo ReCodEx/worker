@@ -24,7 +24,7 @@ namespace helpers
 	 * Get unique identification of given log level.
 	 * More informative levels (debug, info) has greater values than error levels.
 	 * @param lev spdlog level enum type
-	 * @return unique identificator
+	 * @return unique identifier
 	 */
 	int get_log_level_number(spdlog::level::level_enum lev);
 

@@ -14,28 +14,10 @@
 #include <fstream>
 #include <map>
 #include <filesystem>
-#include <boost/iostreams/stream.hpp>
-#include <boost/iostreams/device/file_descriptor.hpp>
 #include "helpers/filesystem.h"
+#include "helpers/logger.h"
 
 namespace fs = std::filesystem;
-
-namespace
-{
-	void move_or_throw(std::shared_ptr<spdlog::logger> logger, const std::string &from, const std::string &to)
-	{
-		try {
-			helpers::copy_directory(from, to, true); // true = skip symlinks for security reasons
-		} catch (fs::filesystem_error &e) {
-			log_and_throw(logger, "Failed moving ", from, " to ", to, ", error: ", e.what());
-		}
-
-		try {
-			fs::remove_all(from);
-		} catch (fs::filesystem_error &) {
-		}
-	}
-} // namespace
 
 isolate_sandbox::isolate_sandbox(std::shared_ptr<sandbox_config> sandbox_config,
 	sandbox_limits limits,
@@ -43,114 +25,15 @@ isolate_sandbox::isolate_sandbox(std::shared_ptr<sandbox_config> sandbox_config,
 	const std::string &temp_dir,
 	const std::string &data_dir,
 	std::shared_ptr<spdlog::logger> logger)
-	: sandbox_config_(sandbox_config), limits_(limits), logger_(logger), id_(id), isolate_binary_("isolate"),
-	  data_dir_(data_dir)
+	: sandbox_base(sandbox_config, limits, id, temp_dir, data_dir, "isolate", logger)
 {
-	if (logger_ == nullptr) { logger_ = helpers::create_null_logger(); }
+}
 
-	if (sandbox_config_ == nullptr) { log_and_throw(logger_, "No sandbox configuration provided."); }
-
-	if (data_dir_ == "") { logger_->info("Empty data directory for moving to sandbox."); }
-
-	// Set backup limit (for killing isolate if it hasn't finished yet)
-	max_timeout_ = limits_.wall_time > limits_.cpu_time ? limits_.wall_time : limits_.cpu_time;
-	max_timeout_ += 300; // plus 5 minutes (for short tasks)
-	max_timeout_ *= 1.2; // 20% time more than necessary (better have some spare time)
-
-	temp_dir_ = (fs::path(temp_dir) / std::to_string(id_)).string();
-	try {
-		fs::create_directories(temp_dir_);
-	} catch (fs::filesystem_error &e) {
-		log_and_throw(logger_, "Failed to create directory for isolate meta file. Error: ", e.what());
-	}
-
+void isolate_sandbox::sandbox_init()
+{
 	meta_file_ = (fs::path(temp_dir_) / "meta.log").string();
 
-	try {
-		isolate_init();
-	} catch (...) {
-		fs::remove_all(temp_dir_);
-		throw;
-	}
-}
-
-isolate_sandbox::~isolate_sandbox()
-{
-	try {
-		isolate_cleanup();
-		fs::remove_all(temp_dir_);
-	} catch (...) {
-		// We don't care if this failed. We can't fix it either. Just don't throw an exception in destructor.
-	}
-}
-
-sandbox_results isolate_sandbox::run(const std::string &binary, const std::vector<std::string> &arguments)
-{
-	// move data to isolate directory
-	if (data_dir_ != "") { move_or_throw(logger_, data_dir_, sandboxed_dir_); }
-
-	try {
-		// run isolate
-		isolate_run(binary, arguments);
-
-	} catch (const std::exception &e_run) {
-		try {
-			// on errors also move data from isolate directory back to data directory
-			// but we need to do it safely, so the original exception is rethrown after this
-			if (data_dir_ != "") { move_or_throw(logger_, sandboxed_dir_, data_dir_); }
-		} catch (const std::exception &e) {
-			logger_->error("When isolate_run failed... ", e.what());
-		}
-
-		// rethrow the original exception when data are saved
-		throw e_run;
-	}
-
-	// move data from isolate directory back to data directory
-	if (data_dir_ != "") { move_or_throw(logger_, sandboxed_dir_, data_dir_); }
-
-	return process_meta_file();
-}
-
-class log_pipe {
-	// A pipe through which a child process sends lines to a parent process.
-
-	int read_fd_, write_fd_;		// -1 = closed
-	std::shared_ptr<spdlog::logger> logger_;
-
-public:
-	log_pipe(std::shared_ptr<spdlog::logger> logger) {
-		logger_ = logger;
-		int fds[2];
-		if (pipe(fds) < 0) { log_and_throw(logger_, "Cannot create pipe: %m"); }
-		read_fd_ = fds[0];
-		write_fd_ = fds[1];
-	}
-
-	~log_pipe() {
-		if (read_fd_ >= 0) { close(read_fd_); }
-		if (write_fd_ >= 0) { close(write_fd_); }
-	}
-
-	void child_dup_to_fd(int fd) {
-		// Call in child process
-		dup2(write_fd_, fd);
-		close(read_fd_);
-		close(write_fd_);
-		read_fd_ = write_fd_ = -1;
-	}
-
-	boost::iostreams::stream<boost::iostreams::file_descriptor_source> parent_read_stream() {
-		// Call in parent process
-		close(write_fd_);
-		write_fd_ = -1;
-		return boost::iostreams::stream<boost::iostreams::file_descriptor_source>(read_fd_, boost::iostreams::never_close_handle);
-	}
-};
-
-void isolate_sandbox::isolate_init()
-{
-	log_pipe stdout_pipe(logger_), stderr_pipe(logger_);
+	sandbox_log_pipe stdout_pipe(logger_), stderr_pipe(logger_);
 	pid_t childpid;
 
 	logger_->debug("Initializing isolate...");
@@ -169,12 +52,9 @@ void isolate_sandbox::isolate_init()
 		auto stdout_stream = stdout_pipe.parent_read_stream();
 		auto stderr_stream = stderr_pipe.parent_read_stream();
 
-		// To prevent deadlocks, read from stderr first, since stdout is guaranteed
-		// to fit in PIPE_BUF.
+		// To prevent deadlocks, read from stderr first, since stdout is guaranteed to fit in PIPE_BUF.
 		std::string line;
-		while (std::getline(stderr_stream, line)) {
-			logger_->warn("Isolate: {}", line);
-		}
+		while (std::getline(stderr_stream, line)) { logger_->warn("Isolate stderr: {}", line); }
 
 		if (!std::getline(stdout_stream, sandboxed_dir_)) {
 			log_and_throw(logger_, "Error reading sandbox path from pipe.");
@@ -196,8 +76,8 @@ void isolate_sandbox::isolate_init_child()
 	std::string box_id_arg("--box-id=" + std::to_string(id_));
 
 	// Exec isolate init command
-	std::vector<const char *> args {
-		isolate_binary_.c_str(),
+	std::vector<const char *> args{
+		sandbox_binary_.c_str(),
 		"--cg",
 		box_id_arg.c_str(),
 	};
@@ -214,15 +94,15 @@ void isolate_sandbox::isolate_init_child()
 	args.push_back(nullptr);
 
 	// const_cast is ugly, but this is working with C code - execv does not modify its arguments
-	execvp(isolate_binary_.c_str(), const_cast<char **>(&args[0]));
+	execvp(sandbox_binary_.c_str(), const_cast<char **>(&args[0]));
 
 	// never reached unless exec explodes in our face
 	log_and_throw(logger_, "Exec returned to child: ", strerror(errno));
 }
 
-void isolate_sandbox::isolate_cleanup()
+void isolate_sandbox::sandbox_cleanup()
 {
-	log_pipe stderr_pipe(logger_);
+	sandbox_log_pipe stderr_pipe(logger_);
 	pid_t childpid;
 
 	logger_->debug("Cleaning up isolate...");
@@ -237,14 +117,14 @@ void isolate_sandbox::isolate_cleanup()
 
 		// Exec isolate cleanup command
 		const char *args[5];
-		args[0] = isolate_binary_.c_str();
+		args[0] = sandbox_binary_.c_str();
 		args[1] = "--cg";
 		args[2] = strdup(("--box-id=" + std::to_string(id_)).c_str());
 		args[3] = "--cleanup";
 		args[4] = NULL;
 
 		// const_cast is ugly, but this is working with C code - execv does not modify its arguments
-		execvp(isolate_binary_.c_str(), const_cast<char **>(args));
+		execvp(sandbox_binary_.c_str(), const_cast<char **>(args));
 
 		// Never reached
 		free(const_cast<char *>(args[2]));
@@ -255,9 +135,7 @@ void isolate_sandbox::isolate_cleanup()
 		//---Parent---
 		auto stderr_stream = stderr_pipe.parent_read_stream();
 		std::string line;
-		while (std::getline(stderr_stream, line)) {
-			logger_->warn("Isolate: {}", line);
-		}
+		while (std::getline(stderr_stream, line)) { logger_->warn("Isolate: {}", line); }
 
 		int status;
 		waitpid(childpid, &status, 0);
@@ -269,7 +147,7 @@ void isolate_sandbox::isolate_cleanup()
 	}
 }
 
-void isolate_sandbox::isolate_run(const std::string &binary, const std::vector<std::string> &arguments)
+void isolate_sandbox::sandbox_run(const std::string &binary, const std::vector<std::string> &arguments)
 {
 	pid_t childpid;
 
@@ -293,10 +171,10 @@ void isolate_sandbox::isolate_run(const std::string &binary, const std::vector<s
 		dup2(devnull, 2);
 
 		auto args = isolate_run_args(binary, arguments);
-		execvp(isolate_binary_.c_str(), args);
+		execvp(sandbox_binary_.c_str(), args);
 
 		// Never reached
-		for(char **arg = args; *arg; arg++) { free(*arg); }
+		for (char **arg = args; *arg; arg++) { free(*arg); }
 		delete[] args;
 
 		log_and_throw(logger_, "Exec returned to child: ", strerror(errno));
@@ -357,7 +235,7 @@ char **isolate_sandbox::isolate_run_args(const std::string &binary, const std::v
 {
 	std::vector<std::string> vargs;
 
-	vargs.push_back(isolate_binary_); // First argument must be binary name
+	vargs.push_back(sandbox_binary_); // First argument must be binary name
 	vargs.push_back("--cg");
 	vargs.push_back("--cg-timing");
 	vargs.push_back("--box-id=" + std::to_string(id_));
@@ -419,7 +297,7 @@ char **isolate_sandbox::isolate_run_args(const std::string &binary, const std::v
 	return c_args;
 }
 
-sandbox_results isolate_sandbox::process_meta_file()
+sandbox_results isolate_sandbox::extract_results()
 {
 	sandbox_results results;
 

@@ -57,8 +57,7 @@ void external_task::sandbox_init()
 		}
 		sandbox_ = std::make_shared<guardian_sandbox>(
 			sandbox_config_, limits, worker_config_->get_worker_id(), temp_dir_, evaluation_dir_.string(), logger_);
-	}
-	else if (task_meta_->sandbox->name == "isolate") {
+	} else if (task_meta_->sandbox->name == "isolate") {
 		sandbox_limits limits(*limits_);
 		if (this->get_type() == task_type::INITIATION) {
 			limits.share_net = true; // initiation (compilation) tasks may use internet to download stuff
@@ -97,8 +96,8 @@ std::shared_ptr<task_results> external_task::run()
 	make_binary_executable(task_meta_->binary);
 
 	auto res = std::make_shared<task_results>();
-	res->sandbox_status =
-		std::unique_ptr<sandbox_results>(new sandbox_results(sandbox_->run(task_meta_->binary, task_meta_->cmd_args)));
+	res->sandbox_status = std::unique_ptr<sandbox_results>(
+		new sandbox_results(sandbox_->execute_in_sandbox(task_meta_->binary, task_meta_->cmd_args)));
 
 	// fix status if non-zero exit codes are treated as execution success
 	postprocess_exit_codes(res);
