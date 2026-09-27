@@ -242,8 +242,10 @@ char **guardian_sandbox::guardian_run_args(const std::string &binary, const std:
 	vargs.push_back("--cg-timing");
 	vargs.push_back("--box-id=" + std::to_string(id_));
 
+	if (!sandbox_config_->cpus.empty()) { vargs.push_back("--cpuset-cpus=" + sandbox_config_->cpus); }
+	if (!sandbox_config_->numa_nodes.empty()) { vargs.push_back("--cpuset-mems=" + sandbox_config_->numa_nodes); }
+
 	vargs.push_back("--cg-mem=" + std::to_string(limits_.memory_usage + limits_.extra_memory));
-	// vargs.push_back("--mem=" + std::to_string(limits_.memory_usage));
 	vargs.push_back("--time=" + std::to_string(limits_.cpu_time));
 	vargs.push_back("--wall-time=" + std::to_string(limits_.wall_time));
 	vargs.push_back("--extra-time=" + std::to_string(limits_.extra_time));

@@ -75,6 +75,18 @@ public:
 	 */
 	std::map<std::string, std::shared_ptr<sandbox_limits>> loaded_limits;
 
+	/**
+	 * List of CPU cores to be used by the sandbox (empty = all).
+	 * See worker_config::sandbox_cpus_ for more details.
+	 */
+	std::string cpus = "";
+
+	/**
+	 * List of NUMA nodes to be used by the sandbox (empty = all).
+	 * See worker_config::sandbox_numa_nodes_ for more details.
+	 */
+	std::string numa_nodes = "";
+
 	sandbox_config() = default;
 };
 
