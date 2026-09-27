@@ -36,6 +36,9 @@ logger:
     max-size: 1048576  # 1 MB; max size of file before log rotation
     rotations: 3  # number of rotations kept
 sandbox: "recodex-guardian"  # if not specifies, recodex-guardian is used by default; "isolate" is also supported
+sandbox-cpuset:  # optional CG cpuset configuration for sandbox (relevant only for recodex-guardian)
+    cpus: "0-3"  # list/range of CPUs to be used by the sandbox (empty/missing = all)
+    numa-nodes: "0"  # list/range of NUMA nodes to be used by the sandbox (empty/missing = all)
 limits:
     time: 30            # seconds
     wall-time: 30       # seconds
