@@ -1,8 +1,8 @@
 %define name recodex-worker
 %define short_name worker
-%define version 1.9.1
-%define unmangled_version f267aa9d46aa908c56632af351d51f140de7e01c
-%define release 2
+%define version 2.0.0
+%define unmangled_version e66ddc766c796cda748c6af47ea2c6eef2dcda46
+%define release 1
 
 %define spdlog_name spdlog
 %define spdlog_version 0.13.0
@@ -18,7 +18,7 @@ Prefix: %{_prefix}
 Vendor: Petr Stefan <UNKNOWN>
 Url: https://github.com/ReCodEx/worker
 BuildRequires: systemd gcc-c++ cmake zeromq-devel cppzmq-devel yaml-cpp-devel libcurl-devel libarchive-devel boost-devel
-Requires: systemd isolate
+Requires: systemd
 
 #Source0: %{name}-%{unmangled_version}.tar.gz
 Source0: https://github.com/ReCodEx/%{short_name}/archive/%{unmangled_version}.tar.gz#/%{short_name}-%{unmangled_version}.tar.gz
