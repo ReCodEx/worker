@@ -11,7 +11,7 @@
 
 /**
  * Class which handles external tasks, aka tasks which will be executed in sandbox.
- * This class have to deal with construction of apropriate sandbox and running program in it.
+ * This class have to deal with construction of appropriate sandbox and running program in it.
  */
 class external_task : public task_base
 {
@@ -23,11 +23,12 @@ public:
 
 	/**
 	 * Only way to construct external task is through this constructor.
-	 * Choosing propriate sandbox and constructing it, is also done here.
+	 * Choosing appropriate sandbox and constructing it, is also done here.
 	 * @param data Data to create external task class.
 	 * @throws task_exception if name of the sandbox in data argument is unknown.
 	 */
 	external_task(const create_params &data);
+
 	/**
 	 * Destructor, empty right now.
 	 */
@@ -36,7 +37,7 @@ public:
 	/**
 	 * Runs given program and parameters in constructed sandbox.
 	 * @return @ref task_results with @a sandbox_status item properly set
-	 * @throws sandbox_exception if fatal error occured in sandbox
+	 * @throws sandbox_exception if fatal error occurred in sandbox
 	 */
 	std::shared_ptr<task_results> run() override;
 
@@ -52,10 +53,12 @@ private:
 	 * stated sandbox).
 	 */
 	void sandbox_check();
+
 	/**
-	 * Construct apropriate sandbox according his name give during construction.
+	 * Construct appropriate sandbox according his name give during construction.
 	 */
 	void sandbox_init();
+
 	/**
 	 * Destruction of internal sandbox.
 	 */
@@ -98,22 +101,31 @@ private:
 
 	/** Worker default configuration */
 	std::shared_ptr<worker_config> worker_config_;
+
 	/** Constructed sandbox itself */
 	std::shared_ptr<sandbox_base> sandbox_;
+
 	/** General sandbox config */
 	std::shared_ptr<sandbox_config> sandbox_config_;
+
 	/** Limits for sandbox in which program will be started */
 	std::shared_ptr<sandbox_limits> limits_;
+
 	/** Job system logger */
 	std::shared_ptr<spdlog::logger> logger_;
+
 	/** Directory for temporary files */
 	std::string temp_dir_;
+
 	/** Directory outside sandbox where task will be executed */
 	fs::path evaluation_dir_;
-	/** Directory binded to the sandbox as default working dir */
+
+	/** Directory bound to the sandbox as default working dir */
 	fs::path sandbox_working_dir_;
+
 	/** After execution delete stdout file produced by sandbox */
 	bool remove_stdout_ = false;
+
 	/** After execution delete stderr file produced by sandbox */
 	bool remove_stderr_ = false;
 };

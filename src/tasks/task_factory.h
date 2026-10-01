@@ -5,7 +5,7 @@
 #include "task_factory_interface.h"
 #include "external_task.h"
 #include "root_task.h"
-#include "internal/archivate_task.h"
+#include "internal/archive_task.h"
 #include "internal/cp_task.h"
 #include "internal/dump_dir_task.h"
 #include "internal/truncate_task.h"

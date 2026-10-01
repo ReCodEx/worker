@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.11.0)
 project(recodex-worker)
-set(RECODEX_VERSION 1.9.0)
+set(RECODEX_VERSION 2.0.0)
 enable_testing()
 
 set(EXEC_NAME ${PROJECT_NAME})
@@ -135,6 +135,9 @@ set(SOURCE_FILES
 	${FILEMAN_DIR}/prefixed_file_manager.h
 
 	${SANDBOX_DIR}/sandbox_base.h
+	${SANDBOX_DIR}/sandbox_base.cpp
+	${SANDBOX_DIR}/guardian_sandbox.h
+	${SANDBOX_DIR}/guardian_sandbox.cpp
 	${SANDBOX_DIR}/isolate_sandbox.h
 	${SANDBOX_DIR}/isolate_sandbox.cpp
 
@@ -156,8 +159,8 @@ set(SOURCE_FILES
 	${TASKS_DIR}/internal/mkdir_task.cpp
 	${TASKS_DIR}/internal/rm_task.h
 	${TASKS_DIR}/internal/rm_task.cpp
-	${TASKS_DIR}/internal/archivate_task.h
-	${TASKS_DIR}/internal/archivate_task.cpp
+	${TASKS_DIR}/internal/archive_task.h
+	${TASKS_DIR}/internal/archive_task.cpp
 	${TASKS_DIR}/internal/extract_task.h
 	${TASKS_DIR}/internal/extract_task.cpp
 	${TASKS_DIR}/internal/fetch_task.h

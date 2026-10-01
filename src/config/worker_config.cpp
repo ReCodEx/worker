@@ -111,7 +111,26 @@ worker_config::worker_config(const YAML::Node &config)
 			} // no throw... can be omitted
 		} // no throw... can be omitted
 
-		// load limits
+		// load default sandbox name (recodex-guardian is used if not defined)
+		if (config["sandbox"]) {
+			if (!config["sandbox"].IsScalar()) { throw config_error("Item sandbox must be a string, if present"); }
+			sandbox_name_ = config["sandbox"].as<std::string>();
+			if (sandbox_name_ != "recodex-guardian" && sandbox_name_ != "isolate") {
+				throw config_error("Only 'recodex-guardian' and 'isolate' sandboxes are supported for now");
+			}
+		}
+
+		// load sandbox cpus and numa nodes configuration (recodex-guardian only, isolate uses its own config)
+		if (config["sandbox-cpuset"] && config["sandbox-cpuset"].IsMap()) {
+			if (config["sandbox-cpuset"]["cpus"] && config["sandbox-cpuset"]["cpus"].IsScalar()) {
+				sandbox_cpus_ = config["sandbox-cpuset"]["cpus"].as<std::string>();
+			} // no throw... can be omitted
+			if (config["sandbox-cpuset"]["numa-nodes"] && config["sandbox-cpuset"]["numa-nodes"].IsScalar()) {
+				sandbox_numa_nodes_ = config["sandbox-cpuset"]["numa-nodes"].as<std::string>();
+			} // no throw... can be omitted
+		}
+
+		// load sandbox default limits
 		if (config["limits"] && config["limits"].IsMap()) {
 			auto limits = config["limits"];
 			if (limits["time"] && limits["time"].IsScalar()) {
@@ -229,6 +248,21 @@ const log_config &worker_config::get_log_config() const
 const std::vector<fileman_config> &worker_config::get_filemans_configs() const
 {
 	return filemans_configs_;
+}
+
+const std::string &worker_config::get_sandbox_name() const
+{
+	return sandbox_name_;
+}
+
+const std::string &worker_config::get_sandbox_cpus() const
+{
+	return sandbox_cpus_;
+}
+
+const std::string &worker_config::get_sandbox_numa_nodes() const
+{
+	return sandbox_numa_nodes_;
 }
 
 const sandbox_limits &worker_config::get_limits() const

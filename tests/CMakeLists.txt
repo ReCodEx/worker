@@ -117,12 +117,14 @@ add_test_suite(tasks
 	${TASKS_DIR}/internal/mkdir_task.cpp
 	${TASKS_DIR}/internal/rename_task.cpp
 	${TASKS_DIR}/internal/rm_task.cpp
-	${TASKS_DIR}/internal/archivate_task.cpp
+	${TASKS_DIR}/internal/archive_task.cpp
 	${TASKS_DIR}/internal/extract_task.cpp
 	${TASKS_DIR}/internal/fetch_task.cpp
 	${TASKS_DIR}/internal/truncate_task.cpp
 	${TASKS_DIR}/internal/exists_task.cpp
 	${SRC_DIR}/archives/archivator.cpp
+	${SANDBOX_DIR}/sandbox_base.cpp
+	${SANDBOX_DIR}/guardian_sandbox.cpp
 	${SANDBOX_DIR}/isolate_sandbox.cpp
 	${HELPERS_DIR}/logger.cpp
 	${HELPERS_DIR}/config.cpp
@@ -200,6 +202,7 @@ endif()
 add_test_suite(tool_isolate_sandbox
 	tests_main.cpp
 	isolate_sandbox.cpp
+	${SANDBOX_DIR}/sandbox_base.cpp
 	${SANDBOX_DIR}/isolate_sandbox.cpp
 	${HELPERS_DIR}/logger.cpp
 	${HELPERS_DIR}/filesystem.cpp

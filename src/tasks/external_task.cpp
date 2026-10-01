@@ -1,4 +1,5 @@
 #include "external_task.h"
+#include "sandbox/guardian_sandbox.h"
 #include "sandbox/isolate_sandbox.h"
 #include "helpers/string_utils.h"
 #include "helpers/filesystem.h"
@@ -37,6 +38,7 @@ void external_task::sandbox_check()
 	bool found = false;
 
 #ifndef _WIN32
+	if (task_meta_->sandbox->name == "recodex-guardian") { found = true; }
 	if (task_meta_->sandbox->name == "isolate") { found = true; }
 #endif
 
@@ -46,7 +48,16 @@ void external_task::sandbox_check()
 void external_task::sandbox_init()
 {
 #ifndef _WIN32
-	if (task_meta_->sandbox->name == "isolate") {
+	if (task_meta_->sandbox->name == "recodex-guardian") {
+		sandbox_limits limits(*limits_);
+		if (this->get_type() == task_type::INITIATION) {
+			limits.share_net = true; // initiation (compilation) tasks may use internet to download stuff
+
+			// TODO: a better way would be to make this optional (a job will define, whether it requires net or not)
+		}
+		sandbox_ = std::make_shared<guardian_sandbox>(
+			sandbox_config_, limits, worker_config_->get_worker_id(), temp_dir_, evaluation_dir_.string(), logger_);
+	} else if (task_meta_->sandbox->name == "isolate") {
 		sandbox_limits limits(*limits_);
 		if (this->get_type() == task_type::INITIATION) {
 			limits.share_net = true; // initiation (compilation) tasks may use internet to download stuff
@@ -85,8 +96,8 @@ std::shared_ptr<task_results> external_task::run()
 	make_binary_executable(task_meta_->binary);
 
 	auto res = std::make_shared<task_results>();
-	res->sandbox_status =
-		std::unique_ptr<sandbox_results>(new sandbox_results(sandbox_->run(task_meta_->binary, task_meta_->cmd_args)));
+	res->sandbox_status = std::unique_ptr<sandbox_results>(
+		new sandbox_results(sandbox_->execute_in_sandbox(task_meta_->binary, task_meta_->cmd_args)));
 
 	// fix status if non-zero exit codes are treated as execution success
 	postprocess_exit_codes(res);
@@ -113,7 +124,7 @@ void external_task::postprocess_exit_codes(std::shared_ptr<task_results> result)
 		result->sandbox_status->status = isolate_status::OK;
 		result->sandbox_status->message = "";
 	} else if (!success && result->sandbox_status->status == isolate_status::OK) {
-		// this happens if zero is not a successfuly exit-code
+		// this happens if zero is not a successfully exit-code
 		result->sandbox_status->status = isolate_status::RE;
 		result->sandbox_status->message = "Exited with code 0, which is not considered a success (exit codes override)";
 	}

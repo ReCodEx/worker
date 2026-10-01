@@ -116,7 +116,25 @@ void job::build_job()
 
 			auto sandbox = task_meta->sandbox;
 
+			//
+			// IMPORTANT (30.9.2026):
+			// The following condition is temporarily commented, so the sandbox is selected merely from the
+			// worker configuration (overrides possible sandbox name in the job configuration).
+			// At the moment, API always chooses isolate, hence, this is necessary to test new recodex-guardian
+			// and allow old and new instances of the worker to run simultaneously during a transition period.
+			// TODO: restore the condition after the transition
+			//
+			// if (sandbox->name.empty()) {
+			// if the sandbox is not specified in the job, use worker config instead
+			sandbox->name = worker_config_->get_sandbox_name();
+			// }
+
+			// and let's make sure that one of the sandboxes is specified
 			if (sandbox->name.empty()) { throw job_exception("Sandbox name cannot be empty"); }
+
+			// inject sandbox cpuset config from worker configuration
+			sandbox->cpus = worker_config_->get_sandbox_cpus();
+			sandbox->numa_nodes = worker_config_->get_sandbox_numa_nodes();
 
 			// first we have to get appropriate hwgroup limits
 			std::shared_ptr<sandbox_limits> limits;
@@ -242,6 +260,9 @@ void job::process_task_limits(const std::shared_ptr<sandbox_limits> &limits)
 	} else {
 		if (limits->processes > worker_limits.processes) { throw job_exception("parallel" + msg); }
 	}
+
+	// turn on disk quotas if they are enforced by worker configuration
+	if (!limits->disk_quotas && worker_limits.disk_quotas) { limits->disk_quotas = true; }
 	if (limits->disk_size == SIZE_MAX) {
 		limits->disk_size = worker_limits.disk_size;
 	} else {

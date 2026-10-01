@@ -6,7 +6,7 @@
 #include <string>
 #include <cstdio>
 
-#include "tasks/internal/archivate_task.h"
+#include "tasks/internal/archive_task.h"
 #include "tasks/internal/cp_task.h"
 #include "tasks/internal/extract_task.h"
 #include "tasks/internal/mkdir_task.h"
@@ -67,12 +67,12 @@ std::shared_ptr<task_metadata> get_zero_args()
 	return res;
 }
 
-TEST(Tasks, InternalArchivateTask)
+TEST(Tasks, InternalArchiveTask)
 {
-	EXPECT_THROW(archivate_task(1, get_three_args()), task_exception);
-	EXPECT_THROW(archivate_task(1, get_one_args()), task_exception);
-	EXPECT_THROW(archivate_task(1, get_zero_args()), task_exception);
-	EXPECT_NO_THROW(archivate_task(1, get_two_args()));
+	EXPECT_THROW(archive_task(1, get_three_args()), task_exception);
+	EXPECT_THROW(archive_task(1, get_one_args()), task_exception);
+	EXPECT_THROW(archive_task(1, get_zero_args()), task_exception);
+	EXPECT_NO_THROW(archive_task(1, get_two_args()));
 }
 
 TEST(Tasks, InternalCpTask)
@@ -206,10 +206,10 @@ TEST(Tasks, TaskFactory)
 	auto meta = get_task_meta();
 	std::shared_ptr<task_base> task;
 
-	// archivate task
-	meta->binary = "archivate";
+	// archive task
+	meta->binary = "archive";
 	task = factory.create_internal_task(0, meta);
-	EXPECT_NE(std::dynamic_pointer_cast<archivate_task>(task), nullptr);
+	EXPECT_NE(std::dynamic_pointer_cast<archive_task>(task), nullptr);
 
 	// cp task
 	meta->binary = "cp";
@@ -243,7 +243,7 @@ TEST(Tasks, TaskFactory)
 
 	// root task
 	// - with explicit nullptr argument
-	meta->binary = "archivate";
+	meta->binary = "archive";
 	task = factory.create_internal_task(0, nullptr);
 	EXPECT_NE(std::dynamic_pointer_cast<root_task>(task), nullptr);
 	// - without explicit meta argument
@@ -251,7 +251,7 @@ TEST(Tasks, TaskFactory)
 	EXPECT_NE(std::dynamic_pointer_cast<root_task>(task), nullptr);
 
 	// unknown internal task
-	meta->binary = "unknown_internal_bianry";
+	meta->binary = "unknown_internal_binary";
 	task = factory.create_internal_task(0, meta);
 	EXPECT_EQ(task, nullptr);
 

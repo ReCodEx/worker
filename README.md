@@ -1,7 +1,6 @@
 # Worker
 
 [![Linux Build Status](https://github.com/ReCodEx/worker/workflows/Linux%20Build/badge.svg)](https://github.com/ReCodEx/worker/actions)
-[![Windows Build Status](https://github.com/ReCodEx/worker/workflows/Windows%20Build/badge.svg)](https://github.com/ReCodEx/worker/actions)
 [![codecov](https://codecov.io/gh/ReCodEx/worker/branch/master/graph/badge.svg?token=AYHQA9R8PJ)](https://codecov.io/gh/ReCodEx/worker)
 [![License](http://img.shields.io/:license-mit-blue.svg)](http://badges.mit-license.org)
 [![Docs](https://img.shields.io/badge/docs-latest-brightgreen.svg)](http://recodex.github.io/worker/)
@@ -45,11 +44,8 @@ use. The package names are for CentOS if not specified otherwise.
   (`libzmq3-dev` on Debian)
 - YAML-CPP library, `yaml-cpp` and `yaml-cpp-devel` (`libyaml-cpp0.5v5` and
   `libyaml-cpp-dev` on Debian)
-- libcurl library `libcurl-devel` (`libcurl4-gnutls-dev` on Debian)
-- libarchive library as optional dependency. Installing will speed up build
-  process, otherwise libarchive is built from source during installation.
-  Package name is `libarchive` and `libarchive-devel` (`libarchive-dev` on
-  Debian)
+- libcurl library `libcurl-devel` (`libcurl4-dev` on Debian)
+- libarchive library as optional dependency. Installing will speed up build process, otherwise libarchive is built from source during installation. Package name is `libarchive` and `libarchive-devel` (`libarchive-dev` on Debian)
 
 **Isolate** (only for Linux installations)
 
@@ -125,21 +121,13 @@ manageable in long term horizon.
 
 #### Install worker on Windows
 
-There are basically two main dependencies needed, **Windows 7** or higher and
-**Visual Studio 2019+**. There is a simple installation batch script provided 
-which should do all the work on Windows machine. The script uses MsBuild from 
-VS2019 and 64-bit compilation, if you wish to use different compile option,
-please revisit mentioned script.
+We found no practical applications to run worker on Windows since we rely solely on linux-based (cgroups, namespaces, etc.) sandboxing. Therefore, it was decided to drop Windows support in 2026. The cmake and the code is still maintained in a way, that windows build is possible, but we no longer test it.
 
-The script is placed in *install* directory alongside supportive scripts for
-UNIX systems and is named *win-build.cmd*. Provided script will do almost
-all the work connected with building and dependency resolving (using
-**NuGet** package manager and `msbuild` building system). Script should be
-run under 64-bit version of _Developer Command Prompt for VS2019_ and from
-*install* directory.
+There is a batch script that should help you started with the build process and some old notes are below:
 
-Building and installing of worker is then quite simple, script has command line
-parameters which can be used to specify what will be done:
+The script is placed in *install* directory alongside supportive scripts for UNIX systems and is named *win-build.cmd*. Provided script will do almost all the work connected with building and dependency resolving (using **NuGet** package manager and `msbuild` building system). Script should be run under 64-bit version of _Developer Command Prompt for VS2019_ and from *install* directory.
+
+Building and installing of worker is then quite simple, script has command line parameters which can be used to specify what will be done:
 
 - *-build* -- It is the default options if none specified. Builds worker and its
   tests, all is saved in *build* folder and subfolders.
@@ -157,11 +145,8 @@ install> win-build.cmd -test
 install> win-build.cmd -package
 ```
 
-All build binaries and cmake temporary files can be found in *build* folder,
-classically there will be subfolder *Release* which will contain compiled
-application with all needed dlls. Once if clickable installation binary is
-created, it can be found in *build* folder under name 
-*recodex-worker-VERSION-x64.exe*.
+All build binaries and cmake temporary files can be found in *build* folder, classically there will be subfolder *Release* which will contain compiled application with all needed dlls. Once if clickable installation binary is created, it can be found in *build* folder under name *recodex-worker-VERSION-x64.exe*.
+
 
 #### Usage
 

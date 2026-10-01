@@ -5,9 +5,7 @@
 
 #include <memory>
 #include <vector>
-#include "helpers/logger.h"
 #include "sandbox_base.h"
-#include "config/sandbox_config.h"
 
 /**
  * Class implementing operations with Isolate sandbox.
@@ -45,43 +43,28 @@ public:
 		const std::string &temp_dir,
 		const std::string &data_dir,
 		std::shared_ptr<spdlog::logger> logger = nullptr);
-	/**
-	 * Destructor.
-	 */
-	~isolate_sandbox() override;
-	sandbox_results run(const std::string &binary, const std::vector<std::string> &arguments) override;
 
 private:
-	/** General sandbox configuration */
-	std::shared_ptr<sandbox_config> sandbox_config_;
-	/** Limits for sandboxed program */
-	sandbox_limits limits_;
-	/** Logger */
-	std::shared_ptr<spdlog::logger> logger_;
-	/** Identifier of this isolate's instance. Must be unique on each server. */
-	std::size_t id_;
-	/** Name of isolate binary - defaults "isolate" */
-	std::string isolate_binary_;
-	/** Path to temporary directory used by sandboxes. Subdir with "id_" value will be created. */
-	std::string temp_dir_;
 	/** Path and name of isolate's meta file - here are stored informations about evaluation */
 	std::string meta_file_;
-	/** Maximum time to run separate isolate process */
-	int max_timeout_;
-	/** Path to the directory containing sources moved to sandbox and back */
-	std::string data_dir_;
-	/** Initialize isolate */
-	void isolate_init();
-	/** Actual code for isolate initialization inside a process. Called by isolate_init(). */
-	void isolate_init_child();
-	/** Cleanup isolate after finish evaluation */
-	void isolate_cleanup();
+
+	/** Initialize isolate (called in the constructor) */
+	void sandbox_init() override;
+
 	/** Run isolate evaluation with sandboxed program inside. */
-	void isolate_run(const std::string &binary, const std::vector<std::string> &arguments);
+	void sandbox_run(const std::string &binary, const std::vector<std::string> &arguments) override;
+
+	/** Cleanup isolate after finish evaluation (called in the destructor) */
+	void sandbox_cleanup() override;
+
+	/** Actual code for isolate initialization inside a process. Called by sandbox_init(). */
+	void isolate_init_child();
+
 	/** Get isolate command line arguments as plain C string including sandboxed binary with its arguments. */
 	char **isolate_run_args(const std::string &binary, const std::vector<std::string> &arguments);
-	/** Parse isolate's meta file with evaluation informations. Must be called after isolate_run() method. */
-	sandbox_results process_meta_file();
+
+	/** Parse isolate's meta file with evaluation informations. Must be called after sandbox_run() method. */
+	sandbox_results extract_results() override;
 };
 
 
